@@ -2086,7 +2086,7 @@ tr:hover [data-category-tag] {
 /* ===== FORM STYLES FOR MODAL ===== */
 .form-row {
     display: grid;
-    grid-template-columns: 1fr 200px;
+    grid-template-columns: 1fr 260px;
     gap: 20px;
     margin-bottom: 20px;
 }
@@ -2100,7 +2100,7 @@ tr:hover [data-category-tag] {
 }
 
 .form-group-compact {
-    width: 200px;
+    width: 260px;
 }
 
 .form-label {
@@ -3165,13 +3165,13 @@ tr:hover [data-category-tag] {
                     <!-- PARTNER NAME + DIRECTION INLINE -->
                     <div class="form-row">
                         <div class="form-group form-group-flex">
-                            <label class="form-label">Partner name <span class="required">*</span></label>
+                            <label class="form-label">Partner <span class="required">*</span></label>
                             <div class="input-with-button">
                                 <input 
                                     type="text" 
                                     class="form-input" 
                                     id="modalPartnerName"
-                                    placeholder="Enter partner name"
+                                    placeholder="Name"
                                     required
                                 >
                                 <button type="button" class="add-detail-btn" id="modalTogglePartnerDetails" title="Add partner details">
@@ -3218,6 +3218,18 @@ tr:hover [data-category-tag] {
                         </div>
                     </div>
 
+                    <!-- DESCRIPTION -->
+                    <div class="form-group">
+                        <label class="form-label">Description <span class="required">*</span></label>
+                        <input 
+                            type="text" 
+                            class="form-input" 
+                            id="modalDescription"
+                            placeholder="Brief description of the transaction"
+                            required
+                        >
+                    </div>
+
                     <!-- AMOUNT -->
                     <div class="form-group">
                         <label class="form-label">Amount <span class="required">*</span></label>
@@ -3243,19 +3255,8 @@ tr:hover [data-category-tag] {
                         </div>
                         <button type="button" class="add-line-item-btn" id="modalAddLineItemBtn">
                             <i class="fas fa-plus"></i>
-                            Add line item (max 5)
+                            Add line item (max 4)
                         </button>
-                    </div>
-
-                    <!-- DATE -->
-                    <div class="form-group">
-                        <label class="form-label">Date <span class="required">*</span></label>
-                        <input 
-                            type="date" 
-                            class="form-input" 
-                            id="modalDate"
-                            required
-                        >
                     </div>
 
                     <!-- TRANSACTION ID (Optional button) -->
@@ -3559,8 +3560,6 @@ syncRowSelection();
         openModalBtn.addEventListener('click', () => {
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-            // Set today's date
-            document.getElementById('modalDate').valueAsDate = new Date();
         });
 
         // Close modal
@@ -3658,7 +3657,7 @@ syncRowSelection();
 
         // Line items management
         let modalLineItemCount = 0;
-        const maxModalLineItems = 5;
+        const maxModalLineItems = 4;
         const modalLineItemsContainer = document.getElementById('modalLineItemsContainer');
         const modalAddLineItemBtn = document.getElementById('modalAddLineItemBtn');
 
