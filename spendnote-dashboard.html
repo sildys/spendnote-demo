@@ -3563,6 +3563,23 @@ syncRowSelection();
         openModalBtn.addEventListener('click', () => {
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            
+            // Set modal register to active register
+            const activeCard = document.querySelector('.register-card.active');
+            if (activeCard) {
+                const registerName = activeCard.dataset.name;
+                
+                // Find matching option and select it
+                const options = modalRegisterSelect.options;
+                for (let i = 0; i < options.length; i++) {
+                    const optionText = options[i].textContent.trim();
+                    if (optionText === registerName) {
+                        modalRegisterSelect.selectedIndex = i;
+                        updateModalRegisterColor();
+                        break;
+                    }
+                }
+            }
         });
 
         // Close modal
