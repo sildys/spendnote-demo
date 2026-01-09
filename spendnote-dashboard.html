@@ -1981,20 +1981,28 @@ tr:hover [data-category-tag] {
 }
 
 .header-info-select {
-    border: none;
-    background: transparent;
-    font-weight: 600;
+    border: 2px solid var(--active);
+    background: rgba(var(--active-rgb), 0.08);
+    font-weight: 700;
     color: var(--active);
     cursor: pointer;
     font-family: inherit;
     font-size: 13px;
-    padding: 0;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.header-info-select:hover {
+    background: rgba(var(--active-rgb), 0.15);
+    border-color: var(--active);
 }
 
 .header-info-select:focus {
     outline: 2px solid var(--active);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 6px;
+    background: rgba(var(--active-rgb), 0.12);
 }
 
 .modal-close {
@@ -2020,6 +2028,25 @@ tr:hover [data-category-tag] {
 
 .modal-body {
     padding: 20px 32px 24px 32px;
+}
+
+.expanded-fields {
+    display: none;
+    margin-top: 12px;
+    padding: 16px;
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.expanded-fields.show {
+    display: block;
+    max-height: 500px;
+    opacity: 1;
 }
 
 .modal-info-bar {
