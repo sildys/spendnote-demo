@@ -2205,6 +2205,26 @@ tr:hover [data-category-tag] {
     flex: 1;
 }
 
+.input-with-prefix {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-prefix {
+    position: absolute;
+    left: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-muted);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.input-with-prefix .form-input {
+    padding-left: 32px;
+}
+
 .add-detail-btn {
     width: 40px;
     height: 40px;
