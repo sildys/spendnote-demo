@@ -432,8 +432,31 @@
             border: 2px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border-left-width: 4px;
+            position: relative;
+        }
+
+        .faq-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent
+            );
+            transform: rotate(25deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+
+        .faq-card:hover::after {
+            left: 150%;
+            opacity: 1;
         }
 
         /* Category Colors */
@@ -443,12 +466,15 @@
 
         #getting-started .faq-card:hover {
             border-color: var(--primary);
-            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.15);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 32px rgba(5, 150, 105, 0.25);
         }
 
         #getting-started .faq-card.open {
             border-color: var(--primary);
             background: linear-gradient(to bottom, white, rgba(5, 150, 105, 0.02));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(5, 150, 105, 0.15);
         }
 
         #features .faq-card {
@@ -457,12 +483,15 @@
 
         #features .faq-card:hover {
             border-color: var(--orange);
-            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 32px rgba(245, 158, 11, 0.25);
         }
 
         #features .faq-card.open {
             border-color: var(--orange);
             background: linear-gradient(to bottom, white, rgba(245, 158, 11, 0.02));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
         }
 
         #billing .faq-card {
@@ -471,12 +500,15 @@
 
         #billing .faq-card:hover {
             border-color: var(--blue);
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.25);
         }
 
         #billing .faq-card.open {
             border-color: var(--blue);
             background: linear-gradient(to bottom, white, rgba(59, 130, 246, 0.02));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
         }
 
         #security .faq-card {
@@ -485,12 +517,15 @@
 
         #security .faq-card:hover {
             border-color: var(--purple);
-            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.25);
         }
 
         #security .faq-card.open {
             border-color: var(--purple);
             background: linear-gradient(to bottom, white, rgba(139, 92, 246, 0.02));
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
         }
 
         .faq-header {
