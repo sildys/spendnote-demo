@@ -2740,8 +2740,7 @@ syncRowSelection();
         });
 
         document.getElementById('addTransactionBtn').addEventListener('click', () => {
-            const activeRegister = document.getElementById('activeRegister').textContent;
-            alert(`New transaction for ${activeRegister}!`);
+            window.location.href = 'spendnote-create-transaction.html';
         });
 
         const activeCard = document.querySelector('.register-card.active');
