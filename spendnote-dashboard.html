@@ -1975,8 +1975,25 @@ tr:hover [data-category-tag] {
     font-size: 12px;
     color: var(--active);
 }
+
 .header-info-divider {
     color: var(--border);
+}
+
+.register-selector-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.register-selector-icon {
+    position: absolute;
+    left: 14px;
+    font-size: 18px;
+    color: var(--active);
+    pointer-events: none;
+    z-index: 1;
+    transition: color 0.3s;
 }
 
 .header-info-select {
@@ -1987,7 +2004,7 @@ tr:hover [data-category-tag] {
     cursor: pointer;
     font-family: inherit;
     font-size: 16px;
-    padding: 10px 20px;
+    padding: 10px 20px 10px 44px;
     border-radius: 12px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.15);
@@ -2010,12 +2027,6 @@ tr:hover [data-category-tag] {
 .header-info-select option {
     padding: 10px;
     font-size: 16px;
-}
-
-.header-info-select option::before {
-    content: attr(data-icon);
-    font-family: "Font Awesome 5 Free";
-    margin-right: 10px;
 }
 
 .modal-close {
@@ -3134,11 +3145,14 @@ tr:hover [data-category-tag] {
                     <div class="modal-header-info">
                         <span class="header-info-item"><i class="fas fa-user"></i> John Doe</span>
                         <span class="header-info-divider">•</span>
-                        <select class="header-info-select" id="modalRegister">
-                            <option value="main" data-color="#059669" data-rgb="5, 150, 105" data-icon="fa-building">🏢 Main Office</option>
-                            <option value="event" data-color="#f59e0b" data-rgb="245, 158, 11" data-icon="fa-calendar-alt">📅 Event Fund</option>
-                            <option value="petty" data-color="#3b82f6" data-rgb="59, 130, 246" data-icon="fa-wallet">💼 Petty Cash</option>
-                        </select>
+                        <div class="register-selector-wrapper">
+                            <i class="register-selector-icon fas fa-building" id="registerIcon"></i>
+                            <select class="header-info-select" id="modalRegister">
+                                <option value="main" data-color="#059669" data-rgb="5, 150, 105" data-icon="fa-building">Main Office</option>
+                                <option value="event" data-color="#f59e0b" data-rgb="245, 158, 11" data-icon="fa-calendar-alt">Event Fund</option>
+                                <option value="petty" data-color="#3b82f6" data-rgb="59, 130, 246" data-icon="fa-wallet">Petty Cash</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <button class="modal-close" id="closeModalBtn" type="button" aria-label="Close modal">
@@ -3587,10 +3601,17 @@ syncRowSelection();
             const selectedOption = modalRegisterSelect.options[modalRegisterSelect.selectedIndex];
             const color = selectedOption.dataset.color;
             const rgb = selectedOption.dataset.rgb;
+            const icon = selectedOption.dataset.icon;
             
             if (color && rgb) {
                 document.documentElement.style.setProperty('--active', color);
                 document.documentElement.style.setProperty('--active-rgb', rgb);
+            }
+            
+            // Update icon
+            const registerIcon = document.getElementById('registerIcon');
+            if (registerIcon && icon) {
+                registerIcon.className = 'register-selector-icon fas ' + icon;
             }
         }
         
