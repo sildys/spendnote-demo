@@ -3065,14 +3065,15 @@ tr:hover [data-category-tag] {
                         <div class="form-group form-group-compact">
                             <label class="form-label">Type <span class="required">*</span></label>
                             <div class="direction-toggle-compact">
-                                <button type="button" class="direction-btn direction-btn-in active" data-direction="in">
+                                <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
+                                <label for="modalDirectionIn" class="direction-btn direction-btn-in">
                                     <i class="fas fa-arrow-down"></i> IN
-                                </button>
-                                <button type="button" class="direction-btn direction-btn-out" data-direction="out">
+                                </label>
+                                <input type="radio" name="modalDirection" id="modalDirectionOut" value="out">
+                                <label for="modalDirectionOut" class="direction-btn direction-btn-out">
                                     <i class="fas fa-arrow-up"></i> OUT
-                                </button>
+                                </label>
                             </div>
-                            <input type="hidden" name="modalDirection" id="modalDirection" value="in">
                         </div>
                     </div>
 
@@ -3468,18 +3469,6 @@ syncRowSelection();
         }
         
         modalRegisterSelect.addEventListener('change', updateModalRegisterColor);
-
-        // Direction buttons toggle
-        document.querySelectorAll('.direction-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                // Remove active from all direction buttons
-                document.querySelectorAll('.direction-btn').forEach(b => b.classList.remove('active'));
-                // Add active to clicked button
-                this.classList.add('active');
-                // Update hidden input value
-                document.getElementById('modalDirection').value = this.dataset.direction;
-            });
-        });
 
         // Toggle partner details
         document.getElementById('modalTogglePartnerDetails').addEventListener('click', function() {
