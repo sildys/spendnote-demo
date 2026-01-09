@@ -278,19 +278,14 @@
             text-decoration: none;
             color: var(--text);
             border-radius: 12px;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-weight: 600;
             font-size: 14px;
         }
 
         .nav-menu-link:hover {
             background: var(--surface-elevated);
-            color: var(--primary);
-        }
-
-        .nav-menu-link.active {
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.05));
-            color: var(--primary);
+            transform: translateX(4px);
         }
 
         .nav-menu-icon {
@@ -308,8 +303,84 @@
 
         .nav-menu-link:hover .nav-menu-icon,
         .nav-menu-link.active .nav-menu-icon {
-            background: var(--primary);
             color: white;
+        }
+
+        /* Category-specific colors for navigation */
+        .nav-menu-link[href="#getting-started"]:hover,
+        .nav-menu-link[href="#getting-started"].active {
+            color: var(--primary);
+        }
+
+        .nav-menu-link[href="#getting-started"]:hover {
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
+        }
+
+        .nav-menu-link[href="#getting-started"]:hover .nav-menu-icon,
+        .nav-menu-link[href="#getting-started"].active .nav-menu-icon {
+            background: var(--primary);
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+        }
+
+        .nav-menu-link[href="#getting-started"].active {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.05));
+        }
+
+        .nav-menu-link[href="#features"]:hover,
+        .nav-menu-link[href="#features"].active {
+            color: var(--orange);
+        }
+
+        .nav-menu-link[href="#features"]:hover {
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+        }
+
+        .nav-menu-link[href="#features"]:hover .nav-menu-icon,
+        .nav-menu-link[href="#features"].active .nav-menu-icon {
+            background: var(--orange);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .nav-menu-link[href="#features"].active {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.05));
+        }
+
+        .nav-menu-link[href="#billing"]:hover,
+        .nav-menu-link[href="#billing"].active {
+            color: var(--blue);
+        }
+
+        .nav-menu-link[href="#billing"]:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+        .nav-menu-link[href="#billing"]:hover .nav-menu-icon,
+        .nav-menu-link[href="#billing"].active .nav-menu-icon {
+            background: var(--blue);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-menu-link[href="#billing"].active {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(96, 165, 250, 0.05));
+        }
+
+        .nav-menu-link[href="#security"]:hover,
+        .nav-menu-link[href="#security"].active {
+            color: var(--purple);
+        }
+
+        .nav-menu-link[href="#security"]:hover {
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+        }
+
+        .nav-menu-link[href="#security"]:hover .nav-menu-icon,
+        .nav-menu-link[href="#security"].active .nav-menu-icon {
+            background: var(--purple);
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-menu-link[href="#security"].active {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.05));
         }
 
         .nav-menu-text {
