@@ -699,14 +699,19 @@
 
         .table-grid {
             display: grid;
-            grid-template-columns: 5% 8% 18% 14% 14% 10% 14% 10% 7%;
-            gap: 0;
-            padding: 16px 24px;
+            grid-template-columns: 60px 90px 1fr 160px 160px 100px 140px 100px 90px;
+            gap: 12px;
+            padding: 16px 20px;
             align-items: center;
             border-bottom: 1px solid var(--border);
             transition: all 0.2s;
             position: relative;
             width: 100%;
+            box-sizing: border-box;
+        }
+        .table-grid > div {
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .table-grid:hover {
             background: rgba(var(--active-rgb), 0.03);
