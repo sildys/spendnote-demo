@@ -3550,6 +3550,8 @@ tr:hover [data-category-tag] {
         // Bulk selection
         const selectAllCheckbox = document.getElementById('selectAll');
         const txCheckboxes = document.querySelectorAll('.tx-checkbox');
+        const bulkActions = document.getElementById('bulkActions');
+        const selectedCount = document.getElementById('selectedCount');
         
         // v24: toggle selected row styling
         function syncRowSelection() {
@@ -3558,22 +3560,21 @@ tr:hover [data-category-tag] {
                 if (row) row.classList.toggle('is-selected', cb.checked);
             });
         }
-const bulkActions = document.getElementById('bulkActions');
-        const selectedCount = document.getElementById('selectedCount');
 
         function updateBulkActions() {
             const checkedCount = document.querySelectorAll('.tx-checkbox:checked').length;
-            selectedCount.textContent = checkedCount;
-            bulkActions.classList.toggle('active', checkedCount > 0);
-            selectAllCheckbox.checked = checkedCount === txCheckboxes.length;
-        
+            if (selectedCount) selectedCount.textContent = checkedCount;
+            if (bulkActions) bulkActions.classList.toggle('active', checkedCount > 0);
+            if (selectAllCheckbox) selectAllCheckbox.checked = checkedCount === txCheckboxes.length;
             syncRowSelection();
         }
 
-        selectAllCheckbox.addEventListener('change', () => {
-            txCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
-            updateBulkActions();
-        });
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', () => {
+                txCheckboxes.forEach(cb => cb.checked = selectAllCheckbox.checked);
+                updateBulkActions();
+            });
+        }
         
         txCheckboxes.forEach(cb => {
             cb.addEventListener('change', () => {
@@ -3581,31 +3582,43 @@ const bulkActions = document.getElementById('bulkActions');
                 syncRowSelection();
             });
         });
-syncRowSelection();
-
-        txCheckboxes.forEach(cb => {
-            cb.addEventListener('change', updateBulkActions);
-        });
+        
+        syncRowSelection();
 
         // Export button
-        document.querySelector('.export-btn').addEventListener('click', () => {
-            alert('Exporting transactions to CSV...');
-        });
+        const exportBtn = document.querySelector('.export-btn');
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => {
+                alert('Exporting transactions to CSV...');
+            });
+        }
 
         // Clear filters
-        document.getElementById('clearFilters').addEventListener('click', () => {
-            document.getElementById('filterName').value = '';
-            document.getElementById('filterDesc').value = '';
-            document.getElementById('filterDateFrom').value = '';
-            document.getElementById('filterDateTo').value = '';
-            document.getElementById('filterAmountMin').value = '';
-            document.getElementById('filterAmountMax').value = '';
-        });
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', () => {
+                const filterName = document.getElementById('filterName');
+                const filterDesc = document.getElementById('filterDesc');
+                const filterDateFrom = document.getElementById('filterDateFrom');
+                const filterDateTo = document.getElementById('filterDateTo');
+                const filterAmountMin = document.getElementById('filterAmountMin');
+                const filterAmountMax = document.getElementById('filterAmountMax');
+                if (filterName) filterName.value = '';
+                if (filterDesc) filterDesc.value = '';
+                if (filterDateFrom) filterDateFrom.value = '';
+                if (filterDateTo) filterDateTo.value = '';
+                if (filterAmountMin) filterAmountMin.value = '';
+                if (filterAmountMax) filterAmountMax.value = '';
+            });
+        }
 
         // Apply filters
-        document.getElementById('applyFilters').addEventListener('click', () => {
-            alert('Filters applied! (Demo mode)');
-        });
+        const applyFiltersBtn = document.getElementById('applyFilters');
+        if (applyFiltersBtn) {
+            applyFiltersBtn.addEventListener('click', () => {
+                alert('Filters applied! (Demo mode)');
+            });
+        }
 
         // Modal functionality
         const modal = document.getElementById('createTransactionModal');
@@ -3615,11 +3628,12 @@ syncRowSelection();
         const modalRegisterSelect = document.getElementById('modalRegister');
 
         // Open modal
-        openModalBtn.addEventListener('click', () => {
-            console.log('Button clicked!');
-            console.log('Modal element:', modal);
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+        if (openModalBtn && modal) {
+            openModalBtn.addEventListener('click', () => {
+                console.log('Button clicked!');
+                console.log('Modal element:', modal);
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
             
             // Set modal register to active register
             const activeCard = document.querySelector('.register-card.active');
@@ -3637,7 +3651,8 @@ syncRowSelection();
                     }
                 }
             }
-        });
+            });
+        }
 
         // Close modal
         function closeModal() {
