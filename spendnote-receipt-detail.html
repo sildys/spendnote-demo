@@ -1229,16 +1229,16 @@
             try {
                 const iframeDoc = iframe.contentWindow.document;
                 
-                // Map field names to CSS classes/selectors in the receipt
+                // Map field names to CSS classes/selectors in the actual receipt templates
                 const fieldSelectors = {
-                    'logo': '.company-logo, .logo',
-                    'company': '.company-info, .company-name',
-                    'address': '.receipt-address, .address',
-                    'partner': '.partner-details, .partner-info',
-                    'transaction-id': '.transaction-id, .tx-id',
-                    'note': '.note, .receipt-note',
-                    'signatures': '.signature, .signatures',
-                    'datetime': '.date, .time, .datetime'
+                    'logo': '.logo',
+                    'company': '.title, .meta, .footer-brand',
+                    'address': '.party-info',
+                    'partner': '.parties',
+                    'transaction-id': '.identifiers',
+                    'note': '.notes',
+                    'signatures': '.signature-section, .signatures',
+                    'datetime': '.meta'
                 };
 
                 const selector = fieldSelectors[field];
