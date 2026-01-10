@@ -869,6 +869,38 @@
             justify-content: center;
         }
 
+        /* FORMAT CARDS */
+        .format-card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .format-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.15);
+        }
+
+        .format-card.active {
+            border-color: var(--primary);
+            background: rgba(var(--active-rgb), 0.05);
+            box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.2);
+        }
+
+        /* IFRAME PREVIEW */
+        .receipt-iframe {
+            width: 100%;
+            height: 800px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+        }
+
         /* PRINT STYLES - DUAL COPY */
         .cut-divider {
             display: none;
@@ -1037,139 +1069,36 @@
 
         <!-- CONTENT -->
         <div class="content-layout">
-            <!-- RECEIPT PREVIEW -->
+            <!-- RECEIPT FORMAT SELECTION -->
             <div class="receipt-preview-wrapper">
                 <div class="preview-header">
-                    <div class="preview-title">Receipt Preview</div>
-                    <div class="zoom-controls">
-                        <button class="zoom-btn" id="zoomOut" onclick="zoomOut()" title="Zoom out"><i class="fas fa-minus"></i></button>
-                        <button class="zoom-btn" id="zoomReset" onclick="zoomReset()" title="Reset zoom"><i class="fas fa-expand"></i></button>
-                        <button class="zoom-btn" id="zoomIn" onclick="zoomIn()" title="Zoom in"><i class="fas fa-plus"></i></button>
+                    <div class="preview-title">Select Receipt Format</div>
+                </div>
+
+                <!-- FORMAT CARDS -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+                    <div class="format-card active" onclick="selectFormat('pdf')">
+                        <i class="fas fa-file-pdf" style="font-size: 32px; color: var(--primary); margin-bottom: 12px;"></i>
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">PDF Receipt</h3>
+                        <p style="font-size: 13px; color: var(--text-muted);">Standard A4 format</p>
+                    </div>
+                    <div class="format-card" onclick="selectFormat('email')">
+                        <i class="fas fa-envelope" style="font-size: 32px; color: var(--primary); margin-bottom: 12px;"></i>
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Email Receipt</h3>
+                        <p style="font-size: 13px; color: var(--text-muted);">Compact email format</p>
+                    </div>
+                    <div class="format-card" onclick="selectFormat('a4')">
+                        <i class="fas fa-copy" style="font-size: 32px; color: var(--primary); margin-bottom: 12px;"></i>
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">A4 Two Copies</h3>
+                        <p style="font-size: 13px; color: var(--text-muted);">Print with duplicate</p>
                     </div>
                 </div>
 
-                <!-- RECEIPT -->
-                <div class="preview-container" id="previewContainer" 
-                     data-template="standard"
-                     data-show-logo="1"
-                     data-show-company="1"
-                     data-show-address="0"
-                     data-show-partner="1"
-                     data-show-transaction-id="0"
-                     data-show-note="1"
-                     data-show-created-by="1"
-                     data-show-signatures="1"
-                     data-show-datetime="1">
-                    <div class="receipt-paper" id="receipt">
-                        <!-- Company Header -->
-                        <div class="receipt-header">
-                            <div class="company-logo"></div>
-                            <h2 class="company-name">Your Company Name</h2>
-                            <div class="company-info">
-                                Main Office Register
-                            </div>
-                            <div class="receipt-address">
-                                1234 Business Street, New York, NY 10001<br>
-                                Phone: (555) 123-4567
-                            </div>
-                        </div>
-
-                        <!-- Receipt Title -->
-                        <div class="receipt-title-section">
-                            <h1 class="receipt-title">PAYMENT CONFIRMATION</h1>
-                            <div class="transaction-id-display">Transaction ID: TRX-342</div>
-                        </div>
-
-                        <!-- Info Grid -->
-                        <div class="receipt-info-grid">
-                            <div class="info-group datetime-info">
-                                <h4>Date</h4>
-                                <p>January 6, 2026<br>2:45 PM</p>
-                            </div>
-                            <div class="info-group">
-                                <h4>Register</h4>
-                                <p>Main Office (CR-001)</p>
-                            </div>
-                            <div class="info-group partner-details">
-                                <h4>Partner</h4>
-                                <p>
-                                    <strong>John Smith</strong><br>
-                                    CLIENT-4523
-                                </p>
-                            </div>
-                            <div class="info-group">
-                                <h4>Reference</h4>
-                                <p>PO-2026-0142</p>
-                            </div>
-                        </div>
-
-                        <!-- Line Items -->
-                        <div class="receipt-table">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Consulting Services - Q4 2025</td>
-                                        <td>$5,000.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project Management Fee</td>
-                                        <td>$1,800.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Additional Support Hours</td>
-                                        <td>$400.00</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Total -->
-                        <div class="receipt-total">
-                            <div class="receipt-total-row final">
-                                <div class="total-label"><strong>TOTAL AMOUNT</strong></div>
-                                <div class="total-value">$7,200.00</div>
-                            </div>
-                        </div>
-
-                        <!-- Note -->
-                        <div class="receipt-note">
-                            <h4>Note</h4>
-                            <p>Payment received for Q4 consulting services. Client was very satisfied with the project outcomes.</p>
-                        </div>
-
-                        <!-- Created By -->
-                        <div class="created-by-info">
-                            Logged by Jane Doe
-                        </div>
-
-                        <!-- Signatures -->
-                        <div class="signature-section">
-                            <div class="signature-box">
-                                <div class="signature-line"></div>
-                                <div class="signature-label">At Handover</div>
-                            </div>
-                            <div class="signature-box">
-                                <div class="signature-line"></div>
-                                <div class="signature-label">Received By</div>
-                            </div>
-                        </div>
-
-                        <!-- Footer -->
-                        <div class="receipt-footer">
-                            Thank you for your business!<br>
-                            This is an official payment confirmation for your records.
-                        </div>
-                    </div>
-                </div>
+                <!-- RECEIPT PREVIEW IFRAME -->
+                <iframe id="receiptFrame" class="receipt-iframe" src="spendnote-pdf-receipt.html"></iframe>
             </div>
 
-            <!-- SETTINGS SIDEBAR -->
+            <!-- INFO SIDEBAR -->
             <div class="settings-sidebar">
                 <!-- Template Selection -->
                 <div class="settings-card">
@@ -1498,5 +1427,32 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        // Format selection
+        function selectFormat(format) {
+            // Remove active class from all cards
+            document.querySelectorAll('.format-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to clicked card
+            event.target.closest('.format-card').classList.add('active');
+            
+            // Change iframe source based on format
+            const iframe = document.getElementById('receiptFrame');
+            switch(format) {
+                case 'pdf':
+                    iframe.src = 'spendnote-pdf-receipt.html';
+                    break;
+                case 'email':
+                    iframe.src = 'spendnote-email-receipt.html';
+                    break;
+                case 'a4':
+                    iframe.src = 'spendnote-receipt-a4-two-copies.html';
+                    break;
+            }
+        }
+    </script>
 </body>
 </html>
