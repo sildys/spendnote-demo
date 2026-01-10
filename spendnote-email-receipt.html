@@ -526,5 +526,46 @@
       
     </div>
   </div>
+
+  <script>
+    // Read URL parameters for display options
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Hide elements based on URL parameters
+    if (urlParams.get('logo') === '0') {
+      const logos = document.querySelectorAll('.logo, .footer-brand');
+      logos.forEach(el => el.style.display = 'none');
+    }
+    
+    if (urlParams.get('company') === '0') {
+      const elements = document.querySelectorAll('.receipt-title, .header-title');
+      elements.forEach(el => el.style.display = 'none');
+    }
+    
+    if (urlParams.get('address') === '0') {
+      const elements = document.querySelectorAll('.party-info');
+      elements.forEach(el => el.style.display = 'none');
+    }
+    
+    if (urlParams.get('partner') === '0') {
+      const elements = document.querySelectorAll('.parties');
+      elements.forEach(el => el.style.display = 'none');
+    }
+    
+    if (urlParams.get('transaction-id') === '0') {
+      const elements = document.querySelectorAll('.receipt-ids');
+      elements.forEach(el => el.style.display = 'none');
+    }
+    
+    if (urlParams.get('note') === '0') {
+      const elements = document.querySelectorAll('.notes');
+      elements.forEach(el => el.style.display = 'none');
+    }
+    
+    if (urlParams.get('datetime') === '0') {
+      const elements = document.querySelectorAll('.receipt-meta');
+      elements.forEach(el => el.style.display = 'none');
+    }
+  </script>
 </body>
 </html>

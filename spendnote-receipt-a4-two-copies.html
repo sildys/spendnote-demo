@@ -467,5 +467,57 @@ body {
   </div>
 
 </div>
+
+<script>
+  // Read URL parameters for display options
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Hide elements based on URL parameters
+  if (urlParams.get('logo') === '0') {
+    const logos = document.querySelectorAll('.logo-box, .sn-logo');
+    logos.forEach(el => el.style.display = 'none');
+  }
+  
+  if (urlParams.get('company') === '0') {
+    const elements = document.querySelectorAll('.title');
+    elements.forEach(el => el.style.display = 'none');
+  }
+  
+  if (urlParams.get('address') === '0') {
+    const elements = document.querySelectorAll('.party');
+    elements.forEach(el => {
+      const lines = el.innerHTML.split('<br>');
+      if (lines.length > 1) {
+        el.innerHTML = lines[0] + '<br>' + lines[1];
+      }
+    });
+  }
+  
+  if (urlParams.get('partner') === '0') {
+    const elements = document.querySelectorAll('.parties');
+    elements.forEach(el => el.style.display = 'none');
+  }
+  
+  if (urlParams.get('transaction-id') === '0') {
+    const elements = document.querySelectorAll('.identifiers');
+    elements.forEach(el => el.style.display = 'none');
+  }
+  
+  if (urlParams.get('note') === '0') {
+    const elements = document.querySelectorAll('.notes');
+    elements.forEach(el => el.style.display = 'none');
+  }
+  
+  if (urlParams.get('signatures') === '0') {
+    const elements = document.querySelectorAll('.signatures');
+    elements.forEach(el => el.style.display = 'none');
+  }
+  
+  if (urlParams.get('datetime') === '0') {
+    const elements = document.querySelectorAll('.meta');
+    elements.forEach(el => el.style.display = 'none');
+  }
+</script>
+
 </body>
 </html>
