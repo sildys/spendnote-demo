@@ -297,23 +297,23 @@
 
         /* MAIN */
         .app-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             flex: 1;
-            padding: 28px 24px;
+            padding: 20px 24px;
             width: 100%;
         }
 
         .main-content { 
-            padding-top: 28px;
+            padding-top: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px; 
+            gap: 16px; 
         }
 
         /* HEADER */
         .page-header {
-            margin-bottom: 32px;
+            margin-bottom: 20px;
         }
 
         .breadcrumb {
@@ -433,22 +433,22 @@
         /* CONTENT GRID */
         .content-grid {
             display: grid;
-            gap: 24px;
+            gap: 16px;
         }
 
         .card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 32px;
-            box-shadow: 0 2px 12px var(--shadow);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .card-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
             letter-spacing: -0.01em;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         /* AMOUNT CARD */
@@ -456,6 +456,57 @@
             text-align: center;
             background: linear-gradient(135deg, rgba(var(--active-rgb), 0.05), rgba(var(--active-rgb), 0.02));
             border: 2px solid rgba(var(--active-rgb), 0.15);
+            padding: 16px;
+        }
+
+        /* RECEIPT DROPDOWN */
+        .receipt-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .receipt-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 8px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            min-width: 200px;
+            z-index: 1000;
+        }
+
+        .receipt-menu.show {
+            display: block;
+        }
+
+        .receipt-menu-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .receipt-menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .receipt-menu-item:hover {
+            background: var(--bg);
+        }
+
+        .receipt-menu-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--primary);
         }
 
         .amount-label {
@@ -468,10 +519,10 @@
         }
 
         .amount-value {
-            font-size: 56px;
+            font-size: 42px;
             font-weight: 900;
             letter-spacing: -0.03em;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .amount-value.in { color: var(--primary); }
@@ -480,18 +531,18 @@
         /* INFO GRID */
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
         }
 
         .info-row {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
 
         .info-row.full {
-            grid-column: span 2;
+            grid-column: span 3;
         }
 
         .info-label {
@@ -676,10 +727,27 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button class="btn btn-primary" onclick="window.print()">
-                        <i class="fas fa-print"></i>
-                        Print Receipt
-                    </button>
+                    <div class="receipt-dropdown">
+                        <button class="btn btn-primary" id="receiptBtn">
+                            <i class="fas fa-receipt"></i>
+                            Receipt
+                            <i class="fas fa-chevron-down" style="margin-left: 4px; font-size: 12px;"></i>
+                        </button>
+                        <div class="receipt-menu" id="receiptMenu">
+                            <div class="receipt-menu-item" onclick="window.print()">
+                                <i class="fas fa-print"></i>
+                                Print Receipt
+                            </div>
+                            <div class="receipt-menu-item" onclick="alert('Download PDF\n\nIn production:\n- Generate PDF receipt\n- Download to device\n- Include transaction details')">
+                                <i class="fas fa-file-pdf"></i>
+                                Download PDF
+                            </div>
+                            <div class="receipt-menu-item" onclick="alert('Email Receipt\n\nIn production:\n- Open email dialog\n- Enter recipient email\n- Send receipt as PDF attachment')">
+                                <i class="fas fa-envelope"></i>
+                                Email Receipt
+                            </div>
+                        </div>
+                    </div>
                     <button class="btn btn-danger" onclick="if(confirm('Delete Transaction?\n\n⚠️ Admin access required\n\nThis action cannot be undone.\n\nDeleting this transaction will affect the register balance.\n\nAre you sure you want to delete this transaction?')) { alert('Transaction deleted (Demo mode)\n\nIn production:\n- Check admin role\n- Update register balance\n- Archive transaction\n- Redirect to dashboard'); }">
                         <i class="fas fa-trash"></i>
                         Delete
@@ -697,9 +765,9 @@
                 <div class="status-badge in">⬇ Cash IN (Received)</div>
             </div>
 
-            <!-- TRANSACTION INFO -->
+            <!-- TRANSACTION & PARTNER INFO -->
             <div class="card">
-                <h2 class="card-title">Transaction Details</h2>
+                <h2 class="card-title">Transaction & Partner Details</h2>
                 <div class="info-grid">
                     <div class="info-row">
                         <span class="info-label">Transaction ID</span>
@@ -714,21 +782,6 @@
                         <span class="info-value highlight">Main Office (CR-001)</span>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Direction</span>
-                        <span class="info-value">IN (Received from partner)</span>
-                    </div>
-                    <div class="info-row full">
-                        <span class="info-label">Reference / PO Number</span>
-                        <span class="info-value">PO-2026-0142</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PARTNER INFO -->
-            <div class="card">
-                <h2 class="card-title">Partner Information</h2>
-                <div class="info-grid">
-                    <div class="info-row">
                         <span class="info-label">Partner Name</span>
                         <span class="info-value">John Smith</span>
                     </div>
@@ -736,8 +789,12 @@
                         <span class="info-label">Partner ID</span>
                         <span class="info-value">CLIENT-4523</span>
                     </div>
+                    <div class="info-row">
+                        <span class="info-label">Reference</span>
+                        <span class="info-value">PO-2026-0142</span>
+                    </div>
                     <div class="info-row full">
-                        <span class="info-label">Address</span>
+                        <span class="info-label">Partner Address</span>
                         <span class="info-value">1234 Main Street, New York, NY 10001</span>
                     </div>
                 </div>
@@ -776,18 +833,10 @@
                 </div>
             </div>
 
-            <!-- NOTE -->
+            <!-- NOTE & RECORD INFO -->
             <div class="card">
-                <h2 class="card-title">Note</h2>
-                <div class="note-box">
-                    Payment received for Q4 consulting services. Client was very satisfied with the project outcomes and has indicated interest in continuing work in Q1 2026.
-                </div>
-            </div>
-
-            <!-- LOGGED BY -->
-            <div class="card">
-                <h2 class="card-title">Record Information</h2>
-                <div class="info-grid">
+                <h2 class="card-title">Additional Information</h2>
+                <div class="info-grid" style="margin-bottom: 16px;">
                     <div class="info-row">
                         <span class="info-label">Logged By</span>
                         <span class="info-value">Jane Doe</span>
@@ -797,10 +846,37 @@
                         <span class="info-value">Jan 6, 2026 - 2:45 PM</span>
                     </div>
                 </div>
+                <div class="info-row">
+                    <span class="info-label">Note</span>
+                    <div class="note-box" style="margin-top: 8px;">
+                        Payment received for Q4 consulting services. Client was very satisfied with the project outcomes and has indicated interest in continuing work in Q1 2026.
+                    </div>
+                </div>
             </div>
         </div>
         </main>
     </div>
+
+    <script>
+        // Receipt dropdown menu
+        const receiptBtn = document.getElementById('receiptBtn');
+        const receiptMenu = document.getElementById('receiptMenu');
+
+        receiptBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            receiptMenu.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', () => {
+            receiptMenu.classList.remove('show');
+        });
+
+        // Prevent dropdown from closing when clicking inside
+        receiptMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    </script>
 
     <footer>
         <div class="footer-content">
