@@ -999,6 +999,7 @@
                 <li><a href="spendnote-dashboard.html">Dashboard</a></li>
                 <li><a href="spendnote-register-list.html">Cash Registers</a></li>
                 <li><a href="spendnote-transaction-history.html">Transactions</a></li>
+                <li><a href="spendnote-partner-list.html">Partners</a></li>
                 <li><a href="spendnote-receipt-list.html" class="active">Receipts</a></li>
                 <li><a href="spendnote-user-settings.html">Settings</a></li>
                 <li><a href="spendnote-login.html" class="btn btn-secondary">Log out</a></li>
@@ -1013,7 +1014,7 @@
         <!-- HEADER -->
         <div class="page-header">
             <div class="breadcrumb">
-                <a href="/transaction-detail?id=TRX-342">← Back to Transaction</a>
+                <a href="spendnote-transaction-detail.html">← Back to Transaction</a>
             </div>
             <div class="header-row">
                 <h1 class="page-title">Receipt TRX-342</h1>
@@ -1022,9 +1023,13 @@
                         <i class="fas fa-print"></i>
                         Print
                     </button>
-                    <button class="btn btn-primary" onclick="alert('Download PDF\n\nIn production:\n- Generate PDF from receipt\n- Download file')">
-                        <i class="fas fa-download"></i>
+                    <button class="btn btn-secondary" onclick="alert('Download PDF\n\nIn production:\n- Generate PDF from receipt\n- Download file')">
+                        <i class="fas fa-file-pdf"></i>
                         Download PDF
+                    </button>
+                    <button class="btn btn-primary" onclick="alert('Email Receipt\n\nIn production:\n- Open email dialog\n- Enter recipient email\n- Send receipt as PDF attachment')">
+                        <i class="fas fa-envelope"></i>
+                        Email Receipt
                     </button>
                 </div>
             </div>
