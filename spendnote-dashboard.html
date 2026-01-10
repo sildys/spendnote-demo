@@ -3322,13 +3322,17 @@ tr:hover [data-category-tag] {
                     <div class="form-row-line-item">
                         <div class="form-group">
                             <label class="form-label">Description <span class="required">*</span></label>
-                            <input 
-                                type="text" 
-                                class="form-input" 
-                                id="modalDescription"
-                                placeholder="Brief description"
-                                required
-                            >
+                            <div class="autocomplete-wrapper">
+                                <input 
+                                    type="text" 
+                                    class="form-input" 
+                                    id="modalDescription"
+                                    placeholder="Brief description"
+                                    autocomplete="off"
+                                    required
+                                >
+                                <div class="autocomplete-dropdown" id="descriptionAutocomplete"></div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label" style="white-space: nowrap;">Amount <span class="required">*</span></label>
@@ -3374,12 +3378,16 @@ tr:hover [data-category-tag] {
                     <!-- TRANSACTION ID FIELD -->
                     <div class="form-group" id="modalTransactionIdGroup" style="display: none;">
                         <label class="form-label">Transaction ID</label>
-                        <input 
-                            type="text" 
-                            class="form-input" 
-                            id="modalTransactionId"
-                            placeholder="PO#, Order#, Invoice#, etc."
-                        >
+                        <div class="autocomplete-wrapper">
+                            <input 
+                                type="text" 
+                                class="form-input" 
+                                id="modalTransactionId"
+                                placeholder="PO#, Order#, Invoice#, etc."
+                                autocomplete="off"
+                            >
+                            <div class="autocomplete-dropdown" id="transactionIdAutocomplete"></div>
+                        </div>
                     </div>
 
                     <!-- NOTE FIELD (FULL WIDTH) -->
@@ -3895,6 +3903,122 @@ syncRowSelection();
                 selectedPartnerIndex = -1;
             }
         });
+
+        // Description Autocomplete
+        const descriptionInput = document.getElementById('modalDescription');
+        const descriptionDropdown = document.getElementById('descriptionAutocomplete');
+        
+        const recentDescriptions = [
+            'Office supplies',
+            'Retail cash deposit',
+            'Customer payment',
+            'Marketing campaign',
+            'Product sales',
+            'Employee salary',
+            'Rent payment',
+            'Utility bills',
+            'Equipment purchase',
+            'Consulting services'
+        ];
+        
+        function setupSimpleAutocomplete(input, dropdown, dataArray) {
+            let selectedIndex = -1;
+            
+            input.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                if (!query) {
+                    dropdown.classList.remove('show');
+                    return;
+                }
+                
+                const results = dataArray.filter(item => item.toLowerCase().includes(query));
+                
+                if (results.length === 0) {
+                    dropdown.classList.remove('show');
+                    return;
+                }
+                
+                const html = results.map((item, index) => `
+                    <div class="autocomplete-item ${index === selectedIndex ? 'active' : ''}" data-value="${item}">
+                        <div class="autocomplete-item-name">${item}</div>
+                    </div>
+                `).join('');
+                
+                dropdown.innerHTML = html;
+                dropdown.classList.add('show');
+                
+                dropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        input.value = item.dataset.value;
+                        dropdown.classList.remove('show');
+                        selectedIndex = -1;
+                    });
+                });
+            });
+            
+            input.addEventListener('focus', (e) => {
+                if (e.target.value) {
+                    const event = new Event('input', { bubbles: true });
+                    e.target.dispatchEvent(event);
+                }
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                const items = dropdown.querySelectorAll('.autocomplete-item');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+                    updateItems();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    updateItems();
+                } else if (e.key === 'Enter' && selectedIndex >= 0 && items[selectedIndex]) {
+                    e.preventDefault();
+                    input.value = items[selectedIndex].dataset.value;
+                    dropdown.classList.remove('show');
+                    selectedIndex = -1;
+                } else if (e.key === 'Escape') {
+                    dropdown.classList.remove('show');
+                    selectedIndex = -1;
+                }
+            });
+            
+            function updateItems() {
+                const items = dropdown.querySelectorAll('.autocomplete-item');
+                items.forEach((item, index) => {
+                    item.classList.toggle('active', index === selectedIndex);
+                });
+                if (selectedIndex >= 0 && items[selectedIndex]) {
+                    items[selectedIndex].scrollIntoView({ block: 'nearest' });
+                }
+            }
+            
+            document.addEventListener('click', (e) => {
+                if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.classList.remove('show');
+                    selectedIndex = -1;
+                }
+            });
+        }
+        
+        setupSimpleAutocomplete(descriptionInput, descriptionDropdown, recentDescriptions);
+        
+        // Transaction ID Autocomplete
+        const transactionIdInput = document.getElementById('modalTransactionId');
+        const transactionIdDropdown = document.getElementById('transactionIdAutocomplete');
+        
+        const recentTransactionIds = [
+            'PO-2026-001',
+            'INV-2026-045',
+            'ORD-2025-789',
+            'REF-2026-012',
+            'PO-2025-998',
+            'INV-2025-999'
+        ];
+        
+        setupSimpleAutocomplete(transactionIdInput, transactionIdDropdown, recentTransactionIds);
 
         // Toggle partner details
         document.getElementById('modalTogglePartnerDetails').addEventListener('click', function() {
