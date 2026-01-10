@@ -358,7 +358,7 @@
         /* REGISTERS GRID */
         .registers-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
 
@@ -371,6 +371,9 @@
             transition: all 0.3s;
             cursor: pointer;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: auto;
         }
 
         .register-card:hover {
@@ -510,19 +513,6 @@
 
         .stat-value.in { color: var(--primary); }
         .stat-value.out { color: var(--orange); }
-
-        .register-last-tx {
-            font-size: 13px;
-            color: var(--text-muted);
-            padding: 12px;
-            background: var(--bg);
-            border-radius: 10px;
-            margin-bottom: 16px;
-        }
-
-        .register-last-tx strong {
-            color: var(--text);
-        }
 
         .register-actions {
             display: grid;
@@ -720,6 +710,11 @@
         }
 
         /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .registers-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
         @media (max-width: 768px) {
             .registers-grid {
                 grid-template-columns: 1fr;
