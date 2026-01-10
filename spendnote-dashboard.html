@@ -2528,6 +2528,102 @@ tr:hover [data-category-tag] {
     text-align: right;
 }
 
+.autocomplete-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border: 2px solid var(--primary);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.autocomplete-dropdown.show {
+    display: block;
+}
+
+.autocomplete-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border);
+}
+
+.autocomplete-item:last-child {
+    border-bottom: none;
+}
+
+.autocomplete-item:hover {
+    background: var(--bg);
+}
+
+.autocomplete-item.active {
+    background: rgba(var(--active-rgb), 0.1);
+}
+
+.autocomplete-item-name {
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+
+.autocomplete-item-details {
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.autocomplete-item-detail {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.autocomplete-item-detail i {
+    font-size: 11px;
+}
+
+.autocomplete-add-new {
+    padding: 12px 16px;
+    cursor: pointer;
+    background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.04));
+    color: var(--primary);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-top: 2px solid var(--border);
+    transition: all 0.2s;
+}
+
+.autocomplete-add-new:hover {
+    background: linear-gradient(135deg, rgba(var(--active-rgb), 0.15), rgba(var(--active-rgb), 0.08));
+}
+
+.autocomplete-add-new i {
+    font-size: 14px;
+}
+
+.autocomplete-empty {
+    padding: 20px 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
@@ -3167,13 +3263,17 @@ tr:hover [data-category-tag] {
                         <div class="form-group form-group-flex">
                             <label class="form-label">Partner <span class="required">*</span></label>
                             <div class="input-with-button">
-                                <input 
-                                    type="text" 
-                                    class="form-input" 
-                                    id="modalPartnerName"
-                                    placeholder="Name"
-                                    required
-                                >
+                                <div class="autocomplete-wrapper">
+                                    <input 
+                                        type="text" 
+                                        class="form-input" 
+                                        id="modalPartnerName"
+                                        placeholder="Search or add partner..."
+                                        autocomplete="off"
+                                        required
+                                    >
+                                    <div class="autocomplete-dropdown" id="partnerAutocomplete"></div>
+                                </div>
                                 <button type="button" class="add-detail-btn" id="modalTogglePartnerDetails" title="Add partner details">
                                     <i class="fas fa-plus"></i>
                                 </button>
@@ -3634,6 +3734,167 @@ syncRowSelection();
         }
         
         modalRegisterSelect.addEventListener('change', updateModalRegisterColor);
+
+        // Partner Autocomplete
+        const partnerInput = document.getElementById('modalPartnerName');
+        const partnerDropdown = document.getElementById('partnerAutocomplete');
+        const partnerAddressInput = document.getElementById('modalPartnerAddress');
+        const partnerIdInput = document.getElementById('modalPartnerId');
+        
+        // Partner database (in production, this would come from API)
+        const partners = [
+            { name: 'ABC Supplies', address: '123 Main St, New York, NY 10001', id: 'SUPP-001', contact: 'contact@abcsupplies.com' },
+            { name: 'John Smith', address: '456 Oak Ave, Los Angeles, CA 90001', id: '', contact: 'john.smith@email.com' },
+            { name: 'Mary Johnson', address: '789 Pine Rd, Chicago, IL 60601', id: 'CLI-MJ-2025', contact: 'mary.j@company.com' },
+            { name: 'AdCorp Media', address: '321 Market St, San Francisco, CA 94102', id: 'VEND-AC-789', contact: 'billing@adcorpmedia.com' },
+            { name: 'Sarah Williams', address: '555 Elm St, Boston, MA 02101', id: '', contact: 'sarah.w@email.com' },
+            { name: 'David Chen', address: '777 Maple Dr, Seattle, WA 98101', id: 'EMP-DC-456', contact: 'david.chen@company.com' }
+        ];
+        
+        let selectedPartnerIndex = -1;
+        
+        function filterPartners(query) {
+            if (!query) return [];
+            const lowerQuery = query.toLowerCase();
+            return partners.filter(p => 
+                p.name.toLowerCase().includes(lowerQuery) ||
+                (p.id && p.id.toLowerCase().includes(lowerQuery)) ||
+                (p.address && p.address.toLowerCase().includes(lowerQuery))
+            );
+        }
+        
+        function showAutocomplete(results) {
+            if (results.length === 0 && partnerInput.value.length > 0) {
+                partnerDropdown.innerHTML = `
+                    <div class="autocomplete-add-new" data-action="add-new">
+                        <i class="fas fa-plus"></i>
+                        Add "${partnerInput.value}" as new partner
+                    </div>
+                `;
+                partnerDropdown.classList.add('show');
+                return;
+            }
+            
+            if (results.length === 0) {
+                partnerDropdown.classList.remove('show');
+                return;
+            }
+            
+            let html = results.map((partner, index) => `
+                <div class="autocomplete-item ${index === selectedPartnerIndex ? 'active' : ''}" data-index="${index}">
+                    <div class="autocomplete-item-name">${partner.name}</div>
+                    <div class="autocomplete-item-details">
+                        ${partner.id ? `<div class="autocomplete-item-detail"><i class="fas fa-tag"></i>${partner.id}</div>` : ''}
+                        ${partner.address ? `<div class="autocomplete-item-detail"><i class="fas fa-map-marker-alt"></i>${partner.address.split(',')[0]}</div>` : ''}
+                    </div>
+                </div>
+            `).join('');
+            
+            html += `
+                <div class="autocomplete-add-new" data-action="add-new">
+                    <i class="fas fa-plus"></i>
+                    Add new partner
+                </div>
+            `;
+            
+            partnerDropdown.innerHTML = html;
+            partnerDropdown.classList.add('show');
+            
+            // Add click handlers
+            partnerDropdown.querySelectorAll('.autocomplete-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const index = parseInt(item.dataset.index);
+                    selectPartner(partners.filter(p => 
+                        p.name.toLowerCase().includes(partnerInput.value.toLowerCase()) ||
+                        (p.id && p.id.toLowerCase().includes(partnerInput.value.toLowerCase())) ||
+                        (p.address && p.address.toLowerCase().includes(partnerInput.value.toLowerCase()))
+                    )[index]);
+                });
+            });
+            
+            partnerDropdown.querySelector('.autocomplete-add-new').addEventListener('click', () => {
+                partnerDropdown.classList.remove('show');
+                partnerInput.focus();
+            });
+        }
+        
+        function selectPartner(partner) {
+            partnerInput.value = partner.name;
+            partnerAddressInput.value = partner.address || '';
+            partnerIdInput.value = partner.id || '';
+            partnerDropdown.classList.remove('show');
+            selectedPartnerIndex = -1;
+            
+            // Auto-expand partner details if they have data
+            if (partner.address || partner.id) {
+                const detailsFields = document.getElementById('modalPartnerDetailsFields');
+                const toggleBtn = document.getElementById('modalTogglePartnerDetails');
+                if (!detailsFields.classList.contains('show')) {
+                    detailsFields.classList.add('show');
+                    toggleBtn.classList.add('active');
+                    toggleBtn.innerHTML = '<i class="fas fa-minus"></i>';
+                }
+            }
+        }
+        
+        // Input event
+        partnerInput.addEventListener('input', (e) => {
+            const results = filterPartners(e.target.value);
+            showAutocomplete(results);
+            selectedPartnerIndex = -1;
+        });
+        
+        // Focus event
+        partnerInput.addEventListener('focus', (e) => {
+            if (e.target.value) {
+                const results = filterPartners(e.target.value);
+                showAutocomplete(results);
+            }
+        });
+        
+        // Keyboard navigation
+        partnerInput.addEventListener('keydown', (e) => {
+            const items = partnerDropdown.querySelectorAll('.autocomplete-item');
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedPartnerIndex = Math.min(selectedPartnerIndex + 1, items.length - 1);
+                updateActiveItem();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedPartnerIndex = Math.max(selectedPartnerIndex - 1, -1);
+                updateActiveItem();
+            } else if (e.key === 'Enter' && selectedPartnerIndex >= 0) {
+                e.preventDefault();
+                const results = filterPartners(partnerInput.value);
+                if (results[selectedPartnerIndex]) {
+                    selectPartner(results[selectedPartnerIndex]);
+                }
+            } else if (e.key === 'Escape') {
+                partnerDropdown.classList.remove('show');
+                selectedPartnerIndex = -1;
+            }
+        });
+        
+        function updateActiveItem() {
+            const items = partnerDropdown.querySelectorAll('.autocomplete-item');
+            items.forEach((item, index) => {
+                item.classList.toggle('active', index === selectedPartnerIndex);
+            });
+            
+            // Scroll into view
+            if (selectedPartnerIndex >= 0 && items[selectedPartnerIndex]) {
+                items[selectedPartnerIndex].scrollIntoView({ block: 'nearest' });
+            }
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!partnerInput.contains(e.target) && !partnerDropdown.contains(e.target)) {
+                partnerDropdown.classList.remove('show');
+                selectedPartnerIndex = -1;
+            }
+        });
 
         // Toggle partner details
         document.getElementById('modalTogglePartnerDetails').addEventListener('click', function() {
