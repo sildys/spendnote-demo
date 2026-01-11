@@ -215,18 +215,23 @@ body {
     color: var(--active);
 }
 
-/* Footer */
-.site-footer {
+/* Footer - Modern App Design */
+.app-footer {
     background: var(--surface);
     border-top: 1px solid var(--border);
-    margin-top: auto;
     padding: 2rem 0;
+    margin-top: auto;
 }
 
-.footer-content {
+.app-footer-container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
 }
 
 .footer-bottom {
@@ -251,5 +256,83 @@ body {
     
     .app-container {
         padding: 1rem;
+    }
+}
+
+.app-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.app-footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.app-footer-info {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.app-footer-divider {
+    color: var(--border);
+    margin: 0 0.5rem;
+}
+
+.app-footer-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.app-footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.app-footer-links a:hover {
+    color: var(--active);
+}
+
+.app-footer-disclaimer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    background: var(--bg);
+    border-radius: 8px;
+}
+
+.app-footer-disclaimer i {
+    color: var(--active);
+}
+
+@media (max-width: 768px) {
+    .app-footer-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .app-footer-links {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .app-footer-disclaimer {
+        width: 100%;
     }
 }
