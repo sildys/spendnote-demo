@@ -3985,6 +3985,12 @@ tr:hover [data-category-tag] {
             otherNavItems.forEach(item => {
                 item.style.color = color;
             });
+            
+            // Update New Transaction button background color
+            const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
+            if (newTransactionBtn) {
+                newTransactionBtn.style.background = `linear-gradient(135deg, ${color}, ${color})`;
+            }
         }
 
         // ========================================

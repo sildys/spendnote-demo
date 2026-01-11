@@ -31,6 +31,12 @@ document.addEventListener('DOMContentLoaded', function() {
         otherNavItems.forEach(item => {
             item.style.color = savedColor;
         });
+        
+        // Update New Transaction button background color
+        const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
+        if (newTransactionBtn) {
+            newTransactionBtn.style.background = `linear-gradient(135deg, ${savedColor}, ${savedColor})`;
+        }
     }
 });
 
