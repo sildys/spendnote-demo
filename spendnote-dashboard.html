@@ -3604,10 +3604,14 @@ tr:hover [data-category-tag] {
         const modalRegisterSelect = document.getElementById('modalRegister');
 
         // Open modal
+        console.log('Modal element:', modal);
+        console.log('Open button:', openModalBtn);
+        
         if (openModalBtn && modal) {
-            openModalBtn.addEventListener('click', () => {
+            openModalBtn.addEventListener('click', (e) => {
                 console.log('Button clicked!');
-                console.log('Modal element:', modal);
+                e.preventDefault();
+                e.stopPropagation();
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
             
