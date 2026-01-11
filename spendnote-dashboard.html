@@ -3413,36 +3413,8 @@ tr:hover [data-category-tag] {
 
     <script>
         // ========================================
-        // CASH BOX CARDS - Simple and Clean
+        // CASH BOX KEBAB MENUS
         // ========================================
-        function initCashBoxCards() {
-            const cards = document.querySelectorAll('.register-card');
-            
-            cards.forEach(card => {
-                // Set card color CSS variables
-                const color = card.dataset.color;
-                const rgb = card.dataset.rgb;
-                card.style.setProperty('--card-color', color);
-                card.style.setProperty('--card-rgb', rgb);
-
-                // Click to activate
-                card.addEventListener('click', (e) => {
-                    // Don't activate if clicking menu button
-                    if (e.target.closest('.register-kebab') || e.target.closest('.register-menu')) {
-                        return;
-                    }
-                    
-                    cards.forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    
-                    // Update global active color
-                    document.documentElement.style.setProperty('--active', color);
-                    document.documentElement.style.setProperty('--active-rgb', rgb);
-                });
-            });
-        }
-
-        // Cash Box kebab menus (prevent card click)
         function closeAllRegisterMenus() {
             document.querySelectorAll('.register-menu.open').forEach(m => m.classList.remove('open'));
         }
@@ -4089,7 +4061,39 @@ tr:hover [data-category-tag] {
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
-        // Initialize Swiper FIRST
+        // ========================================
+        // CASH BOX CARDS INITIALIZATION
+        // ========================================
+        function initCashBoxCards() {
+            const cards = document.querySelectorAll('.register-card');
+            
+            cards.forEach(card => {
+                // Set card color CSS variables
+                const color = card.dataset.color;
+                const rgb = card.dataset.rgb;
+                card.style.setProperty('--card-color', color);
+                card.style.setProperty('--card-rgb', rgb);
+
+                // Click to activate
+                card.addEventListener('click', (e) => {
+                    // Don't activate if clicking menu button
+                    if (e.target.closest('.register-kebab') || e.target.closest('.register-menu')) {
+                        return;
+                    }
+                    
+                    cards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    
+                    // Update global active color
+                    document.documentElement.style.setProperty('--active', color);
+                    document.documentElement.style.setProperty('--active-rgb', rgb);
+                });
+            });
+        }
+
+        // ========================================
+        // SWIPER INITIALIZATION
+        // ========================================
         const registersSwiper = new Swiper('.registers-swiper', {
             slidesPerView: 1,
             spaceBetween: 20,
@@ -4115,7 +4119,7 @@ tr:hover [data-category-tag] {
         });
 
         // ========================================
-        // INITIALIZE EVERYTHING
+        // INITIALIZE EVERYTHING AFTER SWIPER
         // ========================================
         initCashBoxCards();
         
