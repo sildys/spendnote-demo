@@ -4012,6 +4012,29 @@ tr:hover [data-category-tag] {
             // Set initial menu colors
             updateMenuColors(activeCard.dataset.color);
         }
+
+        // ========================================
+        // TRANSACTIONS MENU - ADD CASHBOX FILTER
+        // ========================================
+        const transactionsLink = document.getElementById('navTransactions');
+        if (transactionsLink) {
+            transactionsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Get active cash box
+                const activeCashBox = document.querySelector('.register-card.active');
+                if (activeCashBox) {
+                    const cashBoxName = activeCashBox.dataset.name;
+                    const cashBoxColor = activeCashBox.dataset.color;
+                    
+                    // Navigate with URL parameters
+                    window.location.href = `spendnote-transaction-history.html?cashbox=${encodeURIComponent(cashBoxName)}&color=${encodeURIComponent(cashBoxColor)}`;
+                } else {
+                    // No active cash box, navigate without filter
+                    window.location.href = 'spendnote-transaction-history.html';
+                }
+            });
+        }
     </script>
 
     <script src="assets/js/main.js"></script>

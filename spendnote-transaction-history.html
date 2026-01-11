@@ -1183,6 +1183,43 @@
     </a>
 
     <script>
+        // ========================================
+        // AUTO-APPLY CASHBOX FILTER FROM URL
+        // ========================================
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const cashBoxName = urlParams.get('cashbox');
+            const cashBoxColor = urlParams.get('color');
+            
+            if (cashBoxName) {
+                // Set the Cash Box filter dropdown
+                const cashBoxSelect = document.getElementById('filterRegister');
+                if (cashBoxSelect) {
+                    // Try to find and select the matching option
+                    const options = cashBoxSelect.options;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].text === cashBoxName || options[i].value === cashBoxName) {
+                            cashBoxSelect.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+                
+                // Apply the active color if provided
+                if (cashBoxColor) {
+                    document.documentElement.style.setProperty('--active', cashBoxColor);
+                    
+                    // Update menu colors
+                    const navCashItems = document.querySelectorAll('.nav-cash-item');
+                    navCashItems.forEach(item => {
+                        item.style.color = cashBoxColor;
+                    });
+                }
+                
+                console.log('Auto-filtered by Cash Box:', cashBoxName);
+            }
+        });
+
         // Stats note
         console.log('Stats show filtered results only');
 
