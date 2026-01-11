@@ -502,18 +502,26 @@ body {
 .app-footer-links-simple {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1.5rem;
     align-items: flex-end;
 }
 
 .app-footer-links-simple a {
-    color: rgba(255, 255, 255, 0.9);
+    color: white;
     text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: color 0.2s;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    min-width: 150px;
+    text-align: right;
 }
 
 .app-footer-links-simple a:hover {
     color: white;
+    border-bottom-color: white;
+    transform: translateX(-5px);
 }
