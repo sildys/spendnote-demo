@@ -482,7 +482,7 @@ body {
 }
 
 .app-footer-brand-disclaimer {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.5rem;
     margin-top: 1rem;
@@ -491,7 +491,7 @@ body {
     padding: 0.5rem 1rem;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 8px;
-    max-width: 350px;
+    white-space: nowrap;
 }
 
 .app-footer-brand-disclaimer i {
