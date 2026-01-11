@@ -1,0 +1,220 @@
+/* SpendNote - Main Stylesheet */
+
+:root {
+    --primary: #059669;
+    --primary-light: #10b981;
+    --primary-dark: #047857;
+    --orange: #f59e0b;
+    --blue: #3b82f6;
+    --bg: #fafafa;
+    --surface: #ffffff;
+    --surface-elevated: #f5f5f5;
+    --text: #0a0a0a;
+    --text-muted: #737373;
+    --border: rgba(0,0,0,0.08);
+    --shadow: rgba(0,0,0,0.04);
+    --error: #ef4444;
+    --success: #059669;
+    --active: #059669;
+    --active-rgb: 5, 150, 105;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-x: clip;
+}
+
+body {
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: clip;
+}
+
+*:focus {
+    outline: 3px solid var(--active);
+    outline-offset: 2px;
+}
+
+/* Navigation */
+.site-nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-nav .logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 0.5rem;
+}
+
+.site-nav .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    list-style: none;
+}
+
+.site-nav .nav-links a,
+.site-nav .nav-links button {
+    color: #000000;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.site-nav .nav-links a:hover {
+    color: var(--active);
+}
+
+.site-nav .nav-links a.active {
+    color: var(--active);
+    position: relative;
+}
+
+.site-nav .nav-links a.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1.5rem;
+    height: 3px;
+    background: var(--active);
+    border-radius: 3px 3px 0 0;
+}
+
+.nav-new-transaction-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.25);
+}
+
+.nav-new-transaction-btn:hover {
+    filter: brightness(0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.35);
+}
+
+.nav-new-transaction-btn i {
+    font-size: 12px;
+}
+
+/* App Container */
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    flex: 1;
+    padding: 28px 24px;
+    width: 100%;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.25);
+}
+
+.btn-primary:hover {
+    filter: brightness(0.9);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text);
+    border: 2px solid var(--border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--active);
+    color: var(--active);
+}
+
+/* Footer */
+.site-footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+    padding: 2rem 0;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.footer-bottom {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: #000000;
+    font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+    
+    .site-nav .nav-links {
+        gap: 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .app-container {
+        padding: 1rem;
+    }
+}
