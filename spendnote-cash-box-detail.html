@@ -310,7 +310,7 @@
         }
 
         /* HEADER WITH COLOR */
-        .Cash Box-header {
+        .register-header {
             background: linear-gradient(135deg, rgba(var(--active-rgb), 0.1), rgba(var(--active-rgb), 0.05));
             border: 2px solid rgba(var(--active-rgb), 0.2);
             border-radius: 24px;
@@ -342,14 +342,14 @@
             text-decoration: underline;
         }
 
-        .Cash Box-title-row {
+        .register-title-row {
             display: flex;
             align-items: center;
             gap: 16px;
             margin-bottom: 8px;
         }
 
-        .Cash Box-icon {
+        .register-icon {
             width: 64px;
             height: 64px;
             border-radius: 16px;
@@ -362,13 +362,13 @@
             color: var(--active);
         }
 
-        .Cash Box-title {
+        .register-title {
             font-size: 36px;
             font-weight: 900;
             letter-spacing: -0.02em;
         }
 
-        .Cash Box-id {
+        .register-id {
             font-size: 14px;
             color: var(--text-muted);
             font-family: 'Courier New', monospace;
@@ -692,7 +692,7 @@
         }
 
         @media (max-width: 768px) {
-            .Cash Box-header {
+            .register-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
@@ -763,18 +763,18 @@
     <div class="app-container">
         <main class="main-content">
         <!-- Cash Box HEADER -->
-        <div class="Cash Box-header">
+        <div class="register-header">
             <div class="header-left">
                 <div class="breadcrumb">
                     <a href="/Cash Boxes">← Back to Cash Boxes</a>
                 </div>
-                <div class="Cash Box-title-row">
-                    <div class="Cash Box-icon">
+                <div class="register-title-row">
+                    <div class="register-icon">
                         <i class="fas fa-building"></i>
                     </div>
                     <div>
-                        <h1 class="Cash Box-title">Main Office</h1>
-                        <div class="Cash Box-id">CR-001</div>
+                        <h1 class="register-title">Main Office</h1>
+                        <div class="register-id">CR-001</div>
                     </div>
                 </div>
             </div>
@@ -783,7 +783,7 @@
                     <i class="fas fa-plus"></i>
                     New Transaction
                 </button>
-                <button class="btn btn-secondary" onclick="window.location.href='/Cash Box-settings?id=main'">
+                <button class="btn btn-secondary" onclick="window.location.href='/register-settings?id=main'">
                     <i class="fas fa-cog"></i>
                     Settings
                 </button>

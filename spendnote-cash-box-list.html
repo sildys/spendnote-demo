@@ -356,13 +356,13 @@
         }
 
         /* Cash Boxes GRID */
-        .Cash Boxes-grid {
+        .registers-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
 
-        .Cash Box-card {
+        .register-card {
             background: var(--surface);
             border: 2px solid var(--border);
             border-radius: 18px;
@@ -376,31 +376,31 @@
             min-height: auto;
         }
 
-        .Cash Box-card:hover {
+        .register-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
 
-        .Cash Box-card.green { border-color: rgba(5, 150, 105, 0.3); }
-        .Cash Box-card.orange { border-color: rgba(245, 158, 11, 0.3); }
-        .Cash Box-card.blue { border-color: rgba(59, 130, 246, 0.3); }
-        .Cash Box-card.purple { border-color: rgba(139, 92, 246, 0.3); }
-        .Cash Box-card.red { border-color: rgba(239, 68, 68, 0.3); }
+        .register-card.green { border-color: rgba(5, 150, 105, 0.3); }
+        .register-card.orange { border-color: rgba(245, 158, 11, 0.3); }
+        .register-card.blue { border-color: rgba(59, 130, 246, 0.3); }
+        .register-card.purple { border-color: rgba(139, 92, 246, 0.3); }
+        .register-card.red { border-color: rgba(239, 68, 68, 0.3); }
 
-        .Cash Box-card.green:hover { border-color: rgba(5, 150, 105, 0.5); }
-        .Cash Box-card.orange:hover { border-color: rgba(245, 158, 11, 0.5); }
-        .Cash Box-card.blue:hover { border-color: rgba(59, 130, 246, 0.5); }
-        .Cash Box-card.purple:hover { border-color: rgba(139, 92, 246, 0.5); }
-        .Cash Box-card.red:hover { border-color: rgba(239, 68, 68, 0.5); }
+        .register-card.green:hover { border-color: rgba(5, 150, 105, 0.5); }
+        .register-card.orange:hover { border-color: rgba(245, 158, 11, 0.5); }
+        .register-card.blue:hover { border-color: rgba(59, 130, 246, 0.5); }
+        .register-card.purple:hover { border-color: rgba(139, 92, 246, 0.5); }
+        .register-card.red:hover { border-color: rgba(239, 68, 68, 0.5); }
 
-        .Cash Box-header {
+        .register-header {
             display: flex;
             align-items: flex-start;
             gap: 12px;
             margin-bottom: 16px;
         }
 
-        .Cash Box-icon {
+        .register-icon {
             width: 44px;
             height: 44px;
             border-radius: 12px;
@@ -411,55 +411,55 @@
             flex-shrink: 0;
         }
 
-        .Cash Box-icon.green {
+        .register-icon.green {
             background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(5, 150, 105, 0.08));
             color: var(--primary);
             border: 2px solid rgba(5, 150, 105, 0.2);
         }
 
-        .Cash Box-icon.orange {
+        .register-icon.orange {
             background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.08));
             color: var(--orange);
             border: 2px solid rgba(245, 158, 11, 0.2);
         }
 
-        .Cash Box-icon.blue {
+        .register-icon.blue {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.08));
             color: var(--blue);
             border: 2px solid rgba(59, 130, 246, 0.2);
         }
 
-        .Cash Box-icon.purple {
+        .register-icon.purple {
             background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.08));
             color: #8b5cf6;
             border: 2px solid rgba(139, 92, 246, 0.2);
         }
 
-        .Cash Box-icon.red {
+        .register-icon.red {
             background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08));
             color: var(--error);
             border: 2px solid rgba(239, 68, 68, 0.2);
         }
 
-        .Cash Box-info {
+        .register-info {
             flex: 1;
         }
 
-        .Cash Box-name {
+        .register-name {
             font-size: 20px;
             font-weight: 800;
             letter-spacing: -0.01em;
             margin-bottom: 4px;
         }
 
-        .Cash Box-id {
+        .register-id {
             font-size: 12px;
             color: var(--text-muted);
             font-family: 'Courier New', monospace;
             font-weight: 600;
         }
 
-        .Cash Box-balance {
+        .register-balance {
             background: var(--bg);
             border-radius: 10px;
             padding: 12px;
@@ -482,7 +482,7 @@
             color: var(--text);
         }
 
-        .Cash Box-stats {
+        .register-stats {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
@@ -514,7 +514,7 @@
         .stat-value.in { color: var(--primary); }
         .stat-value.out { color: var(--orange); }
 
-        .Cash Box-actions {
+        .register-actions {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             gap: 8px;
@@ -741,12 +741,12 @@
 
         /* RESPONSIVE */
         @media (max-width: 1200px) {
-            .Cash Boxes-grid {
+            .registers-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
         @media (max-width: 768px) {
-            .Cash Boxes-grid {
+            .registers-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -812,25 +812,25 @@
         </div>
 
         <!-- Cash Boxes GRID -->
-        <div class="Cash Boxes-grid">
+        <div class="registers-grid">
             <!-- Cash Box 1 - Main Office (Green) -->
-            <div class="Cash Box-card green">
-                <div class="Cash Box-header">
-                    <div class="Cash Box-icon green">
+            <div class="register-card green">
+                <div class="register-header">
+                    <div class="register-icon green">
                         <i class="fas fa-building"></i>
                     </div>
-                    <div class="Cash Box-info">
-                        <div class="Cash Box-name">Main Office</div>
-                        <div class="Cash Box-id">CR-001</div>
+                    <div class="register-info">
+                        <div class="register-name">Main Office</div>
+                        <div class="register-id">CR-001</div>
                     </div>
                 </div>
 
-                <div class="Cash Box-balance">
+                <div class="register-balance">
                     <div class="balance-label">Current Balance</div>
                     <div class="balance-value">$18,500</div>
                 </div>
 
-                <div class="Cash Box-stats">
+                <div class="register-stats">
                     <div class="stat-item">
                         <div class="stat-label">IN (142)</div>
                         <div class="stat-value in">$78,200</div>
@@ -841,12 +841,12 @@
                     </div>
                 </div>
 
-                <div class="Cash Box-actions">
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-detail?id=main'">
+                <div class="register-actions">
+                    <button class="action-btn" onclick="window.location.href='/register-detail?id=main'">
                         <i class="fas fa-eye"></i>
                         View
                     </button>
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-settings?id=main'">
+                    <button class="action-btn" onclick="window.location.href='/register-settings?id=main'">
                         <i class="fas fa-cog"></i>
                         Settings
                     </button>
@@ -858,23 +858,23 @@
             </div>
 
             <!-- Cash Box 2 - Event Fund (Orange) -->
-            <div class="Cash Box-card orange">
-                <div class="Cash Box-header">
-                    <div class="Cash Box-icon orange">
+            <div class="register-card orange">
+                <div class="register-header">
+                    <div class="register-icon orange">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
-                    <div class="Cash Box-info">
-                        <div class="Cash Box-name">Event Fund</div>
-                        <div class="Cash Box-id">CR-002</div>
+                    <div class="register-info">
+                        <div class="register-name">Event Fund</div>
+                        <div class="register-id">CR-002</div>
                     </div>
                 </div>
 
-                <div class="Cash Box-balance">
+                <div class="register-balance">
                     <div class="balance-label">Current Balance</div>
                     <div class="balance-value">$4,750</div>
                 </div>
 
-                <div class="Cash Box-stats">
+                <div class="register-stats">
                     <div class="stat-item">
                         <div class="stat-label">IN (65)</div>
                         <div class="stat-value in">$28,400</div>
@@ -885,12 +885,12 @@
                     </div>
                 </div>
 
-                <div class="Cash Box-actions">
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-detail?id=event'">
+                <div class="register-actions">
+                    <button class="action-btn" onclick="window.location.href='/register-detail?id=event'">
                         <i class="fas fa-eye"></i>
                         View
                     </button>
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-settings?id=event'">
+                    <button class="action-btn" onclick="window.location.href='/register-settings?id=event'">
                         <i class="fas fa-cog"></i>
                         Settings
                     </button>
@@ -902,23 +902,23 @@
             </div>
 
             <!-- Cash Box 3 - Petty Cash (Blue) -->
-            <div class="Cash Box-card blue">
-                <div class="Cash Box-header">
-                    <div class="Cash Box-icon blue">
+            <div class="register-card blue">
+                <div class="register-header">
+                    <div class="register-icon blue">
                         <i class="fas fa-wallet"></i>
                     </div>
-                    <div class="Cash Box-info">
-                        <div class="Cash Box-name">Petty Cash</div>
-                        <div class="Cash Box-id">CR-003</div>
+                    <div class="register-info">
+                        <div class="register-name">Petty Cash</div>
+                        <div class="register-id">CR-003</div>
                     </div>
                 </div>
 
-                <div class="Cash Box-balance">
+                <div class="register-balance">
                     <div class="balance-label">Current Balance</div>
                     <div class="balance-value">$2,000</div>
                 </div>
 
-                <div class="Cash Box-stats">
+                <div class="register-stats">
                     <div class="stat-item">
                         <div class="stat-label">IN (42)</div>
                         <div class="stat-value in">$12,800</div>
@@ -929,12 +929,12 @@
                     </div>
                 </div>
 
-                <div class="Cash Box-actions">
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-detail?id=petty'">
+                <div class="register-actions">
+                    <button class="action-btn" onclick="window.location.href='/register-detail?id=petty'">
                         <i class="fas fa-eye"></i>
                         View
                     </button>
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-settings?id=petty'">
+                    <button class="action-btn" onclick="window.location.href='/register-settings?id=petty'">
                         <i class="fas fa-cog"></i>
                         Settings
                     </button>
@@ -946,23 +946,23 @@
             </div>
 
             <!-- Cash Box 4 - Marketing Budget (Purple) -->
-            <div class="Cash Box-card purple">
-                <div class="Cash Box-header">
-                    <div class="Cash Box-icon purple">
+            <div class="register-card purple">
+                <div class="register-header">
+                    <div class="register-icon purple">
                         <i class="fas fa-bullhorn"></i>
                     </div>
-                    <div class="Cash Box-info">
-                        <div class="Cash Box-name">Marketing Budget</div>
-                        <div class="Cash Box-id">CR-004</div>
+                    <div class="register-info">
+                        <div class="register-name">Marketing Budget</div>
+                        <div class="register-id">CR-004</div>
                     </div>
                 </div>
 
-                <div class="Cash Box-balance">
+                <div class="register-balance">
                     <div class="balance-label">Current Balance</div>
                     <div class="balance-value">$12,300</div>
                 </div>
 
-                <div class="Cash Box-stats">
+                <div class="register-stats">
                     <div class="stat-item">
                         <div class="stat-label">IN (38)</div>
                         <div class="stat-value in">$42,000</div>
@@ -973,12 +973,12 @@
                     </div>
                 </div>
 
-                <div class="Cash Box-actions">
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-detail?id=marketing'">
+                <div class="register-actions">
+                    <button class="action-btn" onclick="window.location.href='/register-detail?id=marketing'">
                         <i class="fas fa-eye"></i>
                         View
                     </button>
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-settings?id=marketing'">
+                    <button class="action-btn" onclick="window.location.href='/register-settings?id=marketing'">
                         <i class="fas fa-cog"></i>
                         Settings
                     </button>
@@ -990,23 +990,23 @@
             </div>
 
             <!-- Cash Box 5 - Emergency Fund (Red) -->
-            <div class="Cash Box-card red">
-                <div class="Cash Box-header">
-                    <div class="Cash Box-icon red">
+            <div class="register-card red">
+                <div class="register-header">
+                    <div class="register-icon red">
                         <i class="fas fa-exclamation-triangle"></i>
                     </div>
-                    <div class="Cash Box-info">
-                        <div class="Cash Box-name">Emergency Fund</div>
-                        <div class="Cash Box-id">CR-005</div>
+                    <div class="register-info">
+                        <div class="register-name">Emergency Fund</div>
+                        <div class="register-id">CR-005</div>
                     </div>
                 </div>
 
-                <div class="Cash Box-balance">
+                <div class="register-balance">
                     <div class="balance-label">Current Balance</div>
                     <div class="balance-value">$8,900</div>
                 </div>
 
-                <div class="Cash Box-stats">
+                <div class="register-stats">
                     <div class="stat-item">
                         <div class="stat-label">IN (12)</div>
                         <div class="stat-value in">$9,200</div>
@@ -1017,12 +1017,12 @@
                     </div>
                 </div>
 
-                <div class="Cash Box-actions">
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-detail?id=emergency'">
+                <div class="register-actions">
+                    <button class="action-btn" onclick="window.location.href='/register-detail?id=emergency'">
                         <i class="fas fa-eye"></i>
                         View
                     </button>
-                    <button class="action-btn" onclick="window.location.href='/Cash Box-settings?id=emergency'">
+                    <button class="action-btn" onclick="window.location.href='/register-settings?id=emergency'">
                         <i class="fas fa-cog"></i>
                         Settings
                     </button>

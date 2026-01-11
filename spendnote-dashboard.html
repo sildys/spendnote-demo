@@ -252,14 +252,14 @@
 
         /* Cash Box CARDS */
         /* OLD - not used anymore
-        .Cash Boxes-grid {
+        .registers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 16px;
             margin-bottom: 20px;
         }
         */
-        .Cash Box-card {
+        .register-card {
             background: var(--surface);
             border: 2px solid var(--border);
             border-radius: 24px;
@@ -270,29 +270,29 @@
             overflow: hidden;
             box-shadow: 0 4px 20px var(--shadow);
         }
-        .Cash Box-card::before{
+        .register-card::before{
             /* Removed gradient wash to keep cards calm */
             content: none;
         }
-        .Cash Box-card:hover {
+        .register-card:hover {
             border-color: rgba(var(--active-rgb), 0.4);
             transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(var(--active-rgb), 0.12);
         }
-        .Cash Box-card.active {
+        .register-card.active {
             border-color: var(--active);
             background: linear-gradient(135deg, #ffffff 0%, rgba(var(--active-rgb), 0.04) 100%);
             box-shadow: 0 8px 32px rgba(var(--active-rgb), 0.15);
         }
-        .Cash Box-card.active::before { opacity: 0.06; }
+        .register-card.active::before { opacity: 0.06; }
 
-        .Cash Box-top {
+        .register-top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 24px;
         }
-        .Cash Box-info h3 {
+        .register-info h3 {
             font-size: 18px;
             font-weight: 800;
             margin-bottom: 6px;
@@ -300,7 +300,7 @@
             position: relative;
             padding-left: 18px;
         }
-        .Cash Box-info h3::before{
+        .register-info h3::before{
             content: '';
             width: 10px;
             height: 10px;
@@ -312,7 +312,7 @@
             transform: translateY(-50%);
             box-shadow: 0 0 0 3px rgba(var(--card-rgb, var(--active-rgb)), 0.14);
         }
-        .Cash Box-id {
+        .register-id {
             font-size: 12px;
             color: var(--text-muted);
             font-weight: 600;
@@ -322,7 +322,7 @@
             border-radius: 6px;
             display: inline-block;
         }
-        .Cash Box-icon {
+        .register-icon {
             width: 56px;
             height: 56px;
             border-radius: 16px;
@@ -334,7 +334,7 @@
             font-size: 24px;
             border: 1px solid rgba(var(--active-rgb), 0.15);
         }
-        .Cash Box-balance {
+        .register-balance {
             font-size: 40px;
             font-weight: 900;
             color: var(--text);
@@ -358,7 +358,7 @@
         .trend-indicator.down { background: rgba(239,68,68,0.12); color: #dc2626; }
         .trend-indicator i { font-size: 12px; }
 
-        .Cash Box-stats {
+        .register-stats {
             display: none; /* Hidden - only balance shown */
         }
         .stat-item {
@@ -1022,7 +1022,7 @@
         }
     
         /* ===== CAROUSEL STYLES ===== */
-        .Cash Boxes-carousel-section {
+        .registers-carousel-section {
             margin-bottom: 30px;
             width: 100%;
             max-width: 100%;
@@ -1077,7 +1077,7 @@
         }
 
         /* Swiper overrides */
-        .Cash Boxes-swiper {
+        .registers-swiper {
             padding: 10px 0 50px 0;
             overflow: hidden;
             width: 100%;
@@ -1091,7 +1091,7 @@
             height: auto;
         }
 
-        .Cash Boxes-swiper .Cash Box-card {
+        .registers-swiper .register-card {
             margin: 0;
             height: 100%;
             max-width: 100%;
@@ -1118,12 +1118,12 @@
         }
 
         /* Add Cash Box Button */
-        .add-Cash Box-container {
+        .add-register-container {
             text-align: center;
             margin-top: 20px;
         }
 
-        .add-Cash Box-btn {
+        .add-register-btn {
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -1139,12 +1139,12 @@
             box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
         }
 
-        .add-Cash Box-btn:hover {
+        .add-register-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
         }
 
-        .add-Cash Box-btn i {
+        .add-register-btn i {
             font-size: 18px;
         }
 
@@ -1157,36 +1157,36 @@
         }
 
         /* Prevent icon color change on hover */
-        .Cash Box-card:hover .Cash Box-icon i,
-        .Cash Box-card.active .Cash Box-icon i {
+        .register-card:hover .register-icon i,
+        .register-card.active .register-icon i {
             color: inherit;
         }
 
         
                 /* Add New Cash Box Card */
-        .add-new-Cash Box-card {
+        .add-new-register-card {
             border: 3px dashed #10b981 !important;
             background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
             display: flex;
             flex-direction: column;
         }
 
-        .add-new-Cash Box-card:hover {
+        .add-new-register-card:hover {
             background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
             border-color: #059669 !important;
         }
 
-        .add-new-Cash Box-card .Cash Box-icon.add-icon {
+        .add-new-register-card .register-icon.add-icon {
             background: linear-gradient(135deg, #10b981, #059669) !important;
             color: white !important;
             border: none !important;
         }
 
-        .add-new-Cash Box-card .Cash Box-top h3 {
+        .add-new-register-card .register-top h3 {
             color: #10b981;
         }
 
-        .add-Cash Box-message {
+        .add-register-message {
             flex: 1;
             display: flex;
             align-items: center;
@@ -1194,7 +1194,7 @@
             padding: 40px 20px;
         }
 
-        .add-Cash Box-message p {
+        .add-register-message p {
             color: #6b7280;
             font-size: 16px;
             line-height: 1.6;
@@ -1488,7 +1488,7 @@
             font-weight: 900;
             letter-spacing: -0.02em;
         }
-        .Cash Boxes-carousel-section{
+        .registers-carousel-section{
             margin-top: 14px;
         }
         .carousel-title{
@@ -1505,21 +1505,21 @@
 
 
         /* ===== Cash Box card kebab menu (settings/delete) ===== */
-.Cash Box-top{
+.register-top{
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
   gap:14px;
 }
 
-.Cash Box-header-left{
+.register-header-left{
   display:flex;
   align-items:flex-start;
   gap:12px;
   min-width:0;
 }
 
-.Cash Box-icon.small{
+.register-icon.small{
   width:34px;
   height:34px;
   border-radius:10px;
@@ -1530,16 +1530,16 @@
   font-size:14px;
 }
 
-.Cash Box-info{
+.register-info{
   min-width:0;
 }
 
-.Cash Box-actions{
+.register-actions{
   position:relative;
   flex:0 0 auto;
 }
 
-.Cash Box-kebab{
+.register-kebab{
   width:32px;
   height:32px;
   border-radius:10px;
@@ -1553,12 +1553,12 @@
   transition: all .15s ease;
 }
 
-.Cash Box-kebab:hover{
+.register-kebab:hover{
   background: rgba(148, 163, 184, 0.16);
   color: var(--text);
 }
 
-.Cash Box-menu{
+.register-menu{
   position:absolute;
   top: calc(100% + 8px);
   right: 0;
@@ -1572,9 +1572,9 @@
   z-index: 50;
 }
 
-.Cash Box-menu.open{ display:block; }
+.register-menu.open{ display:block; }
 
-.Cash Box-menu button{
+.register-menu button{
   width:100%;
   display:flex;
   align-items:center;
@@ -1590,21 +1590,21 @@
   font-size:14px;
 }
 
-.Cash Box-menu button:hover{
+.register-menu button:hover{
   background: rgba(148, 163, 184, 0.10);
 }
 
-.Cash Box-menu .divider{
+.register-menu .divider{
   height:1px;
   background: var(--border);
   margin: 6px 4px;
 }
 
-.Cash Box-menu .danger{
+.register-menu .danger{
   color: var(--danger);
 }
-.Cash Box-menu.open{ display: block; }
-        .Cash Box-menu button{
+.register-menu.open{ display: block; }
+        .register-menu button{
             width: 100%;
             display: flex;
             align-items: center;
@@ -1618,14 +1618,14 @@
             font-size: 13px;
             color: var(--text);
         }
-        .Cash Box-menu button:hover{ background: rgba(var(--active-rgb), 0.06); }
-        .Cash Box-menu .danger{
+        .register-menu button:hover{ background: rgba(var(--active-rgb), 0.06); }
+        .register-menu .danger{
             color: #dc2626;
         }
-        .Cash Box-menu .danger:hover{
+        .register-menu .danger:hover{
             background: rgba(239, 68, 68, 0.08);
         }
-        .Cash Box-menu .divider{
+        .register-menu .divider{
             height: 1px;
             background: var(--border);
         }
@@ -2093,13 +2093,13 @@ tr:hover [data-category-tag] {
     color: var(--border);
 }
 
-.Cash Box-selector-wrapper {
+.register-selector-wrapper {
     position: relative;
     display: inline-flex;
     align-items: center;
 }
 
-.Cash Box-selector-icon {
+.register-selector-icon {
     position: absolute;
     left: 14px;
     font-size: 18px;
@@ -2785,7 +2785,7 @@ tr:hover [data-category-tag] {
             </div>
 
             <!-- Cash Boxes Carousel -->
-            <div class="Cash Boxes-carousel-section">
+            <div class="registers-carousel-section">
                 <div class="carousel-header">
                     <h2 class="carousel-title">Cash Boxes</h2>
                     <div class="carousel-subtitle">Switch Cash Boxes fast, keep the balance in sight.</div>
@@ -2799,23 +2799,23 @@ tr:hover [data-category-tag] {
                     </div>
                 </div>
 
-                <div class="swiper Cash Boxes-swiper">
+                <div class="swiper registers-swiper">
                     <div class="swiper-wrapper">
                         <!-- Slide 1 - Main Office (Green) -->
                         <div class="swiper-slide">
-                            <div class="Cash Box-card active" data-name="Main Office" data-color="#059669" data-rgb="5, 150, 105" 
+                            <div class="register-card active" data-name="Main Office" data-color="#059669" data-rgb="5, 150, 105" 
                                  role="button" tabindex="0">
-                                <div class="Cash Box-top">
-  <div class="Cash Box-header-left">
-    <div class="Cash Box-icon small" style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(5, 150, 105, 0.05)); color: #059669; border-color: rgba(5, 150, 105, 0.15);"><i class="fas fa-building"></i></div>
-    <div class="Cash Box-info"><h3>Main Office</h3>
-                                        <div class="Cash Box-id">CR-001</div></div>
+                                <div class="register-top">
+  <div class="register-header-left">
+    <div class="register-icon small" style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(5, 150, 105, 0.05)); color: #059669; border-color: rgba(5, 150, 105, 0.15);"><i class="fas fa-building"></i></div>
+    <div class="register-info"><h3>Main Office</h3>
+                                        <div class="register-id">CR-001</div></div>
   </div>
-  <div class="Cash Box-actions">
-    <button class="Cash Box-kebab" aria-label="Cash Box menu" type="button">
+  <div class="register-actions">
+    <button class="register-kebab" aria-label="Cash Box menu" type="button">
       <i class="fas fa-ellipsis-h"></i>
     </button>
-    <div class="Cash Box-menu" role="menu" aria-label="Cash Box actions">
+    <div class="register-menu" role="menu" aria-label="Cash Box actions">
       <button class="menu-settings" type="button">
         <span>Settings</span>
         <i class="fas fa-cog"></i>
@@ -2828,13 +2828,13 @@ tr:hover [data-category-tag] {
     </div>
   </div>
 </div>
-                                <div class="Cash Box-balance">
+                                <div class="register-balance">
                                     $18,500
                                     <span class="trend-indicator up">
                                         <i class="fas fa-arrow-up"></i>+12%
                                     </span>
                                 </div>
-                                <div class="Cash Box-stats">
+                                <div class="register-stats">
                                     <div class="stat-item">
                                         <div class="tooltip">Average: $2,400/day this week</div>
                                         <div class="stat-label">Today In</div>
@@ -2851,19 +2851,19 @@ tr:hover [data-category-tag] {
 
                         <!-- Slide 2 - Event Fund (Orange) -->
                         <div class="swiper-slide">
-                            <div class="Cash Box-card" data-name="Event Fund" data-color="#f59e0b" data-rgb="245, 158, 11"
+                            <div class="register-card" data-name="Event Fund" data-color="#f59e0b" data-rgb="245, 158, 11"
                                  role="button" tabindex="0">
-                                <div class="Cash Box-top">
-  <div class="Cash Box-header-left">
-    <div class="Cash Box-icon small" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05)); color: #f59e0b; border-color: rgba(245, 158, 11, 0.15);"><i class="fas fa-calendar-alt"></i></div>
-    <div class="Cash Box-info"><h3>Event Fund</h3>
-                                        <div class="Cash Box-id">CR-002</div></div>
+                                <div class="register-top">
+  <div class="register-header-left">
+    <div class="register-icon small" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05)); color: #f59e0b; border-color: rgba(245, 158, 11, 0.15);"><i class="fas fa-calendar-alt"></i></div>
+    <div class="register-info"><h3>Event Fund</h3>
+                                        <div class="register-id">CR-002</div></div>
   </div>
-  <div class="Cash Box-actions">
-    <button class="Cash Box-kebab" aria-label="Cash Box menu" type="button">
+  <div class="register-actions">
+    <button class="register-kebab" aria-label="Cash Box menu" type="button">
       <i class="fas fa-ellipsis-h"></i>
     </button>
-    <div class="Cash Box-menu" role="menu" aria-label="Cash Box actions">
+    <div class="register-menu" role="menu" aria-label="Cash Box actions">
       <button class="menu-settings" type="button">
         <span>Settings</span>
         <i class="fas fa-cog"></i>
@@ -2876,13 +2876,13 @@ tr:hover [data-category-tag] {
     </div>
   </div>
 </div>
-                                <div class="Cash Box-balance">
+                                <div class="register-balance">
                                     $4,750
                                     <span class="trend-indicator up">
                                         <i class="fas fa-arrow-up"></i>+8%
                                     </span>
                                 </div>
-                                <div class="Cash Box-stats">
+                                <div class="register-stats">
                                     <div class="stat-item">
                                         <div class="tooltip">2 events pending</div>
                                         <div class="stat-label">Today In</div>
@@ -2899,19 +2899,19 @@ tr:hover [data-category-tag] {
 
                         <!-- Slide 3 - Petty Cash (Blue) -->
                         <div class="swiper-slide">
-                            <div class="Cash Box-card" data-name="Petty Cash" data-color="#3b82f6" data-rgb="59, 130, 246"
+                            <div class="register-card" data-name="Petty Cash" data-color="#3b82f6" data-rgb="59, 130, 246"
                                  role="button" tabindex="0">
-                                <div class="Cash Box-top">
-  <div class="Cash Box-header-left">
-    <div class="Cash Box-icon small" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); color: #3b82f6; border-color: rgba(59, 130, 246, 0.15);"><i class="fas fa-wallet"></i></div>
-    <div class="Cash Box-info"><h3>Petty Cash</h3>
-                                        <div class="Cash Box-id">CR-003</div></div>
+                                <div class="register-top">
+  <div class="register-header-left">
+    <div class="register-icon small" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); color: #3b82f6; border-color: rgba(59, 130, 246, 0.15);"><i class="fas fa-wallet"></i></div>
+    <div class="register-info"><h3>Petty Cash</h3>
+                                        <div class="register-id">CR-003</div></div>
   </div>
-  <div class="Cash Box-actions">
-    <button class="Cash Box-kebab" aria-label="Cash Box menu" type="button">
+  <div class="register-actions">
+    <button class="register-kebab" aria-label="Cash Box menu" type="button">
       <i class="fas fa-ellipsis-h"></i>
     </button>
-    <div class="Cash Box-menu" role="menu" aria-label="Cash Box actions">
+    <div class="register-menu" role="menu" aria-label="Cash Box actions">
       <button class="menu-settings" type="button">
         <span>Settings</span>
         <i class="fas fa-cog"></i>
@@ -2924,13 +2924,13 @@ tr:hover [data-category-tag] {
     </div>
   </div>
 </div>
-                                <div class="Cash Box-balance">
+                                <div class="register-balance">
                                     $2,000
                                     <span class="trend-indicator down">
                                         <i class="fas fa-arrow-down"></i>-5%
                                     </span>
                                 </div>
-                                <div class="Cash Box-stats">
+                                <div class="register-stats">
                                     <div class="stat-item">
                                         <div class="tooltip">No deposits today</div>
                                         <div class="stat-label">Today In</div>
@@ -2947,19 +2947,19 @@ tr:hover [data-category-tag] {
 
                         <!-- Slide 4 - Marketing Budget (Purple) -->
                         <div class="swiper-slide">
-                            <div class="Cash Box-card" data-name="Marketing Budget" data-color="#8b5cf6" data-rgb="139, 92, 246"
+                            <div class="register-card" data-name="Marketing Budget" data-color="#8b5cf6" data-rgb="139, 92, 246"
                                  role="button" tabindex="0">
-                                <div class="Cash Box-top">
-  <div class="Cash Box-header-left">
-    <div class="Cash Box-icon small" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.15);"><i class="fas fa-bullhorn"></i></div>
-    <div class="Cash Box-info"><h3>Marketing Budget</h3>
-                                        <div class="Cash Box-id">CR-004</div></div>
+                                <div class="register-top">
+  <div class="register-header-left">
+    <div class="register-icon small" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.15);"><i class="fas fa-bullhorn"></i></div>
+    <div class="register-info"><h3>Marketing Budget</h3>
+                                        <div class="register-id">CR-004</div></div>
   </div>
-  <div class="Cash Box-actions">
-    <button class="Cash Box-kebab" aria-label="Cash Box menu" type="button">
+  <div class="register-actions">
+    <button class="register-kebab" aria-label="Cash Box menu" type="button">
       <i class="fas fa-ellipsis-h"></i>
     </button>
-    <div class="Cash Box-menu" role="menu" aria-label="Cash Box actions">
+    <div class="register-menu" role="menu" aria-label="Cash Box actions">
       <button class="menu-settings" type="button">
         <span>Settings</span>
         <i class="fas fa-cog"></i>
@@ -2972,13 +2972,13 @@ tr:hover [data-category-tag] {
     </div>
   </div>
 </div>
-                                <div class="Cash Box-balance">
+                                <div class="register-balance">
                                     $12,300
                                     <span class="trend-indicator up">
                                         <i class="fas fa-arrow-up"></i>+25%
                                     </span>
                                 </div>
-                                <div class="Cash Box-stats">
+                                <div class="register-stats">
                                     <div class="stat-item">
                                         <div class="tooltip">Campaign budget increase</div>
                                         <div class="stat-label">Today In</div>
@@ -2995,19 +2995,19 @@ tr:hover [data-category-tag] {
 
                         <!-- Slide 5 - Emergency Fund (Red) -->
                         <div class="swiper-slide">
-                            <div class="Cash Box-card" data-name="Emergency Fund" data-color="#ef4444" data-rgb="239, 68, 68"
+                            <div class="register-card" data-name="Emergency Fund" data-color="#ef4444" data-rgb="239, 68, 68"
                                  role="button" tabindex="0">
-                                <div class="Cash Box-top">
-  <div class="Cash Box-header-left">
-    <div class="Cash Box-icon small" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05)); color: #ef4444; border-color: rgba(239, 68, 68, 0.15);"><i class="fas fa-exclamation-triangle"></i></div>
-    <div class="Cash Box-info"><h3>Emergency Fund</h3>
-                                        <div class="Cash Box-id">CR-005</div></div>
+                                <div class="register-top">
+  <div class="register-header-left">
+    <div class="register-icon small" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05)); color: #ef4444; border-color: rgba(239, 68, 68, 0.15);"><i class="fas fa-exclamation-triangle"></i></div>
+    <div class="register-info"><h3>Emergency Fund</h3>
+                                        <div class="register-id">CR-005</div></div>
   </div>
-  <div class="Cash Box-actions">
-    <button class="Cash Box-kebab" aria-label="Cash Box menu" type="button">
+  <div class="register-actions">
+    <button class="register-kebab" aria-label="Cash Box menu" type="button">
       <i class="fas fa-ellipsis-h"></i>
     </button>
-    <div class="Cash Box-menu" role="menu" aria-label="Cash Box actions">
+    <div class="register-menu" role="menu" aria-label="Cash Box actions">
       <button class="menu-settings" type="button">
         <span>Settings</span>
         <i class="fas fa-cog"></i>
@@ -3020,13 +3020,13 @@ tr:hover [data-category-tag] {
     </div>
   </div>
 </div>
-                                <div class="Cash Box-balance">
+                                <div class="register-balance">
                                     $8,900
                                     <span class="trend-indicator neutral">
                                         <i class="fas fa-minus"></i>0%
                                     </span>
                                 </div>
-                                <div class="Cash Box-stats">
+                                <div class="register-stats">
                                     <div class="stat-item">
                                         <div class="tooltip">No activity</div>
                                         <div class="stat-label">Today In</div>
@@ -3043,17 +3043,17 @@ tr:hover [data-category-tag] {
 
                         <!-- Slide 6 - Add New Cash Box -->
                         <div class="swiper-slide">
-                            <div class="Cash Box-card add-new-Cash Box-card" role="button" tabindex="0">
-                                <div class="Cash Box-top">
-                                    <div class="Cash Box-info">
+                            <div class="register-card add-new-register-card" role="button" tabindex="0">
+                                <div class="register-top">
+                                    <div class="register-info">
                                         <h3>Add New</h3>
-                                        <div class="Cash Box-id">Create</div>
+                                        <div class="register-id">Create</div>
                                     </div>
-                                    <div class="Cash Box-icon add-icon">
+                                    <div class="register-icon add-icon">
                                         <i class="fas fa-plus"></i>
                                     </div>
                                 </div>
-                                <div class="add-Cash Box-message">
+                                <div class="add-register-message">
                                     <p>Create a new Cash Box to track your transactions</p>
                                 </div>
                             </div>
@@ -3064,7 +3064,7 @@ tr:hover [data-category-tag] {
                     <!-- Pagination -->
                     <div class="swiper-pagination"></div>
                 </div>
-                <!-- End of Cash Boxes-swiper -->
+                <!-- End of registers-swiper -->
             <div class="transactions-card">
                 <div class="transactions-header">
                     <div class="header-top">
@@ -3168,8 +3168,8 @@ tr:hover [data-category-tag] {
                     <div class="modal-header-info">
                         <span class="header-info-item"><i class="fas fa-user"></i> John Doe</span>
                         <span class="header-info-divider">â€¢</span>
-                        <div class="Cash Box-selector-wrapper">
-                            <i class="Cash Box-selector-icon fas fa-building" id="registerIcon"></i>
+                        <div class="register-selector-wrapper">
+                            <i class="register-selector-icon fas fa-building" id="registerIcon"></i>
                             <select class="header-info-select" id="modalRegister">
                                 <option value="main" data-color="#059669" data-rgb="5, 150, 105" data-icon="fa-building">Main Office</option>
                                 <option value="event" data-color="#f59e0b" data-rgb="245, 158, 11" data-icon="fa-calendar-alt">Event Fund</option>
@@ -3414,13 +3414,13 @@ tr:hover [data-category-tag] {
             // activeRegister removed
         }
 
-        document.querySelectorAll('.Cash Box-card').forEach(card => {
+        document.querySelectorAll('.register-card').forEach(card => {
             // Per-card color for calm visual coding
             card.style.setProperty('--card-color', card.dataset.color);
             card.style.setProperty('--card-rgb', card.dataset.rgb);
 
             card.addEventListener('click', () => {
-                document.querySelectorAll('.Cash Box-card').forEach(c => c.classList.remove('active'));
+                document.querySelectorAll('.register-card').forEach(c => c.classList.remove('active'));
                 card.classList.add('active');
                 updateActiveRegister(card);
             });
@@ -3435,14 +3435,14 @@ tr:hover [data-category-tag] {
 
         // Cash Box kebab menus (prevent card click)
         function closeAllRegisterMenus() {
-            document.querySelectorAll('.Cash Box-menu.open').forEach(m => m.classList.remove('open'));
+            document.querySelectorAll('.register-menu.open').forEach(m => m.classList.remove('open'));
         }
 
-        document.querySelectorAll('.Cash Box-kebab').forEach(btn => {
+        document.querySelectorAll('.register-kebab').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const card = btn.closest('.Cash Box-card');
-                const menu = card ? card.querySelector('.Cash Box-menu') : null;
+                const card = btn.closest('.register-card');
+                const menu = card ? card.querySelector('.register-menu') : null;
                 if (!menu) return;
                 const isOpen = menu.classList.contains('open');
                 closeAllRegisterMenus();
@@ -3457,14 +3457,14 @@ tr:hover [data-category-tag] {
             });
         });
 
-        document.querySelectorAll('.Cash Box-menu').forEach(menu => {
+        document.querySelectorAll('.register-menu').forEach(menu => {
             menu.addEventListener('click', (e) => e.stopPropagation());
         });
 
         document.querySelectorAll('.menu-settings').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const card = btn.closest('.Cash Box-card');
+                const card = btn.closest('.register-card');
                 const name = card?.dataset?.name || 'this Cash Box';
                 alert(`Open settings for ${name} (demo).`);
                 closeAllRegisterMenus();
@@ -3474,7 +3474,7 @@ tr:hover [data-category-tag] {
         document.querySelectorAll('.menu-delete').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const card = btn.closest('.Cash Box-card');
+                const card = btn.closest('.register-card');
                 const name = card?.dataset?.name || 'this Cash Box';
                 alert(`Delete ${name} (demo).`);
                 closeAllRegisterMenus();
@@ -3603,7 +3603,7 @@ tr:hover [data-category-tag] {
                 document.body.style.overflow = 'hidden';
             
             // Set modal Cash Box to active Cash Box
-            const activeCard = document.querySelector('.Cash Box-card.active');
+            const activeCard = document.querySelector('.register-card.active');
             if (activeCard) {
                 const registerName = activeCard.dataset.name;
                 
@@ -3666,7 +3666,7 @@ tr:hover [data-category-tag] {
             // Update icon
             const registerIcon = document.getElementById('registerIcon');
             if (registerIcon && icon) {
-                registerIcon.className = 'Cash Box-selector-icon fas ' + icon;
+                registerIcon.className = 'register-selector-icon fas ' + icon;
             }
         }
         
@@ -4091,7 +4091,7 @@ tr:hover [data-category-tag] {
             closeModal();
         });
 
-        const activeCard = document.querySelector('.Cash Box-card.active');
+        const activeCard = document.querySelector('.register-card.active');
         if (activeCard) updateActiveRegister(activeCard);
     </script>
 
@@ -4099,7 +4099,7 @@ tr:hover [data-category-tag] {
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         // Initialize Swiper
-        const registersSwiper = new Swiper('.Cash Boxes-swiper', {
+        const registersSwiper = new Swiper('.registers-swiper', {
             slidesPerView: 1,
             spaceBetween: 20,
             loop: false,
