@@ -2764,8 +2764,8 @@ tr:hover [data-category-tag] {
             </a>
             <ul class="nav-links">
                 <li><a href="index.html" class="nav-cash-item active">Dashboard</a></li>
-                <li><a href="spendnote-cash-box-list.html" class="nav-cash-item">Cash Boxes</a></li>
-                <li><a href="spendnote-transaction-history.html" class="nav-cash-item">Transactions</a></li>
+                <li><a href="spendnote-cash-box-list.html" class="nav-cash-item" id="navCashBoxes">Cash Boxes</a></li>
+                <li><a href="spendnote-transaction-history.html" class="nav-cash-item" id="navTransactions">Transactions</a></li>
                 <li><a href="spendnote-partner-list.html">Contacts</a></li>
                 <li><a href="spendnote-user-settings.html">Settings</a></li>
                 <li><button class="nav-new-transaction-btn" id="addTransactionBtn"><i class="fas fa-plus"></i> New Transaction</button></li>
@@ -4078,8 +4078,24 @@ tr:hover [data-category-tag] {
                     // Update global active color
                     document.documentElement.style.setProperty('--active', color);
                     document.documentElement.style.setProperty('--active-rgb', rgb);
+                    
+                    // Update menu item colors
+                    updateMenuColors(color);
                 });
             });
+        }
+
+        // Update menu item colors based on active cash box
+        function updateMenuColors(color) {
+            const navCashBoxes = document.getElementById('navCashBoxes');
+            const navTransactions = document.getElementById('navTransactions');
+            
+            if (navCashBoxes) {
+                navCashBoxes.style.color = color;
+            }
+            if (navTransactions) {
+                navTransactions.style.color = color;
+            }
         }
 
         // ========================================
@@ -4119,6 +4135,8 @@ tr:hover [data-category-tag] {
         if (activeCard) {
             document.documentElement.style.setProperty('--active', activeCard.dataset.color);
             document.documentElement.style.setProperty('--active-rgb', activeCard.dataset.rgb);
+            // Set initial menu colors
+            updateMenuColors(activeCard.dataset.color);
         }
     </script>
 
