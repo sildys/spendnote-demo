@@ -502,7 +502,7 @@ body {
 .app-footer-links-simple {
     display: flex;
     flex-direction: row;
-    gap: 3rem;
+    gap: 1rem;
     align-items: center;
 }
 
@@ -514,7 +514,6 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     transition: all 0.2s;
-    padding: 0 1rem;
     white-space: nowrap;
     position: relative;
 }
@@ -522,9 +521,12 @@ body {
 .app-footer-links-simple a:not(:last-child)::after {
     content: '•';
     position: absolute;
-    right: -1rem;
+    right: -0.65rem;
+    top: 50%;
+    transform: translateY(-50%);
     color: rgba(255, 255, 255, 0.5);
-    font-size: 1.2rem;
+    font-weight: 400;
+    font-size: 1rem;
 }
 
 .app-footer-links-simple a:hover {
