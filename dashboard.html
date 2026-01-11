@@ -3986,10 +3986,11 @@ tr:hover [data-category-tag] {
                 item.style.color = color;
             });
             
-            // Update New Transaction button background color
+            // Update New Transaction button background color (keep text white)
             const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
             if (newTransactionBtn) {
                 newTransactionBtn.style.background = `linear-gradient(135deg, ${color}, ${color})`;
+                newTransactionBtn.style.color = 'white';
             }
         }
 

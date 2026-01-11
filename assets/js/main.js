@@ -32,10 +32,11 @@ document.addEventListener('DOMContentLoaded', function() {
             item.style.color = savedColor;
         });
         
-        // Update New Transaction button background color
+        // Update New Transaction button background color (keep text white)
         const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
         if (newTransactionBtn) {
             newTransactionBtn.style.background = `linear-gradient(135deg, ${savedColor}, ${savedColor})`;
+            newTransactionBtn.style.color = 'white';
         }
     }
 });
