@@ -509,7 +509,7 @@ body {
 .app-footer-links-simple a {
     color: white;
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 0.875rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
