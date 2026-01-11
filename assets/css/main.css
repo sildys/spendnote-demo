@@ -514,13 +514,17 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     transition: all 0.2s;
-    padding: 0 1.5rem;
-    border-right: 2px solid rgba(255, 255, 255, 0.3);
+    padding: 0 1rem;
     white-space: nowrap;
+    position: relative;
 }
 
-.app-footer-links-simple a:last-child {
-    border-right: none;
+.app-footer-links-simple a:not(:last-child)::after {
+    content: '•';
+    position: absolute;
+    right: -1rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.2rem;
 }
 
 .app-footer-links-simple a:hover {
