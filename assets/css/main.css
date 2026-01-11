@@ -498,3 +498,22 @@ body {
     color: white;
     flex-shrink: 0;
 }
+
+.app-footer-links-simple {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.app-footer-links-simple a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.app-footer-links-simple a:hover {
+    color: white;
+}
