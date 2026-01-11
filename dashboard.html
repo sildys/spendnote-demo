@@ -3479,8 +3479,25 @@ tr:hover [data-category-tag] {
             const icon = selectedOption.dataset.icon;
             
             if (color && rgb) {
+                // Update CSS variables
                 document.documentElement.style.setProperty('--active', color);
                 document.documentElement.style.setProperty('--active-rgb', rgb);
+                
+                // Save to localStorage
+                localStorage.setItem('activeCashBoxColor', color);
+                localStorage.setItem('activeCashBoxRgb', rgb);
+                
+                // Update menu colors
+                updateMenuColors(color);
+                
+                // Update active card on dashboard
+                const cards = document.querySelectorAll('.register-card');
+                cards.forEach(card => {
+                    if (card.dataset.color === color) {
+                        cards.forEach(c => c.classList.remove('active'));
+                        card.classList.add('active');
+                    }
+                });
             }
             
             // Update icon
