@@ -10,173 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css">
-    <style>.app-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            flex: 1;
-            padding: 28px 24px;
-            width: 100%;
-        }
-
-.site-nav .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .site-nav .logo {
-            display: flex;
-            align-items: center;
-            gap: 0;
-            text-decoration: none;
-            transition: transform 0.2s;
-        }
-
-        .site-nav .logo:hover {
-            transform: scale(1.05);
-        }
-
-        .site-nav .logo img {
-            height: 36px;
-            width: auto;
-        }
-
-        .site-nav .btn-large {
-            padding: 1rem 2rem;
-            font-size: 1.05rem;
-        }
-
-        
-/* FOOTER */
-        footer {
-            background: var(--surface);
-            padding: 3rem 2rem 2rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-brand p {
-            color: #000000;
-            line-height: 1.6;
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .newsletter-form {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .newsletter-form input {
-            flex: 1;
-            padding: 0.65rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-family: inherit;
-        }
-
-        .newsletter-form button {
-            padding: 0.65rem 1.25rem;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .newsletter-form button:hover {
-            transform: translateY(-2px);
-        }
-
-        .footer-links h4 {
-            margin-bottom: 1rem;
-            font-weight: 800;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links a {
-            color: #000000;
-            text-decoration: none;
-            display: block;
-            padding: 0.4rem 0;
-            transition: color 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .footer-bottom {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #000000;
-            font-size: 0.85rem;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .footer-social a {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(5, 150, 105, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary);
-            transition: all 0.2s;
-        }
-
-        .footer-social a:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        
-
-        .site-nav .nav-links a.active {
-            color: var(--active);
-        }
-
-        .site-nav .nav-links a{
-            position: relative;
-        }
-        .site-nav .nav-links a.active::after{
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -10px;
-            height: 3px;
-            border-radius: 999px;
-            background: var(--active);
-            opacity: 0.9;
-        }
-
-/* ===== End imported ===== */
+    <style>
+        /* ===== Page-specific styles ===== */
 
         /* BREADCRUMB */
         .breadcrumb {
@@ -223,7 +58,7 @@
 
         /* SETTINGS SECTIONS */
         .settings-container {
-            max-width: 800px;
+            max-width: 1100px;
             display: flex;
             flex-direction: column;
             gap: 24px;
@@ -235,6 +70,190 @@
             border-radius: 20px;
             padding: 28px;
             box-shadow: 0 2px 16px var(--shadow);
+        }
+        
+        /* RECEIPTS SECTION - two column layout */
+        .receipts-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 32px;
+        }
+        
+        .receipts-settings {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .receipt-preview-panel {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .preview-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .preview-title i {
+            color: var(--active);
+        }
+        
+        .receipt-preview-frame {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+        }
+        
+        /* Mock Receipt Preview */
+        .receipt-preview-mock {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            max-height: 520px;
+            overflow-y: auto;
+        }
+        
+        .mock-receipt {
+            font-size: 12px;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        
+        .mock-logo {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .mock-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--active);
+            color: white;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+        }
+        
+        .mock-company {
+            text-align: center;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .mock-address {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+        
+        .mock-divider {
+            border-top: 1px dashed var(--border);
+            margin: 12px 0;
+        }
+        
+        .mock-title {
+            text-align: center;
+            font-weight: 800;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        
+        .mock-id {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-bottom: 12px;
+        }
+        
+        .mock-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        
+        .mock-label {
+            color: var(--text-muted);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .mock-partner {
+            margin-bottom: 12px;
+        }
+        
+        .mock-amount {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+            padding: 10px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            margin: 12px 0;
+        }
+        
+        .mock-amount strong {
+            color: var(--active);
+        }
+        
+        .mock-txid, .mock-note {
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+        
+        .mock-signatures {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .mock-sig {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .mock-sig-line {
+            border-top: 1px solid var(--text);
+            margin-bottom: 4px;
+            margin-top: 30px;
+        }
+        
+        .mock-sig span {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+        
+        /* Hidden state for preview elements */
+        .mock-receipt .hidden {
+            display: none !important;
+        }
+        
+        @media (max-width: 900px) {
+            .receipts-layout {
+                grid-template-columns: 1fr;
+            }
+            .receipt-preview-panel {
+                position: static;
+            }
         }
 
         .section-header {
@@ -262,6 +281,23 @@
 
         .form-group:last-child {
             margin-bottom: 0;
+        }
+
+        .form-row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-row-2col .form-group {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 600px) {
+            .form-row-2col {
+                grid-template-columns: 1fr;
+            }
         }
 
         .form-label {
@@ -552,6 +588,92 @@
             text-align: center;
         }
 
+        /* FORMAT CARDS (Receipts section) */
+        .format-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .format-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .format-card:hover {
+            border-color: var(--active);
+            background: rgba(var(--active-rgb), 0.02);
+        }
+
+        .format-card.active {
+            border-color: var(--active);
+            background: rgba(var(--active-rgb), 0.05);
+            box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.15);
+        }
+
+        .format-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(var(--active-rgb), 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--active);
+            flex-shrink: 0;
+        }
+
+        .format-info {
+            flex: 1;
+        }
+
+        .format-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .format-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* RECEIPT TOGGLES */
+        .receipt-toggles {
+            display: flex;
+            flex-direction: column;
+            background: var(--surface-elevated);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .receipt-toggle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .receipt-toggle-item:last-child {
+            border-bottom: none;
+        }
+
+        .receipt-toggle-item .toggle-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
         /* UPGRADE BADGE */
         .upgrade-badge {
             display: inline-flex;
@@ -652,10 +774,6 @@
             <ul class="nav-links">
                 <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="spendnote-cash-box-list.html" class="active">Cash Boxes</a></li>
-                <li><a href="spendnote-transaction-history.html">Transactions</a></li>
-                <li><a href="spendnote-partner-list.html">Partners</a></li>
-                <li><a href="spendnote-user-settings.html">Settings</a></li>
-                <li><a href="index.html" class="btn btn-secondary">Log out</a></li>
             </ul>
         </div>
     </nav>
@@ -685,38 +803,27 @@
                     <p class="section-description">Basic information about this Cash Box</p>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Cash Box name</label>
-                    <input type="text" class="form-input" value="Main Office" placeholder="e.g., Main Office">
-                    <p class="form-hint">This name appears on receipts and in your dashboard</p>
-                </div>
+                <div class="form-row-2col">
+                    <div class="form-group">
+                        <label class="form-label">Cash Box name</label>
+                        <input type="text" class="form-input" value="Main Office" placeholder="e.g., Main Office">
+                        <p class="form-hint">This name appears on receipts and in your dashboard</p>
+                    </div>
 
-                <div class="form-group">
-                    <label class="form-label">Description (optional)</label>
-                    <textarea class="form-input" placeholder="Internal note for this Cash Box (not shown on receipts)"></textarea>
-                    <p class="form-hint">For your reference only — customers won't see this</p>
-                </div>
-            </section>
-
-            <!-- CURRENCY -->
-            <section class="settings-section">
-                <div class="section-header">
-                    <h2 class="section-title">Currency</h2>
-                    <p class="section-description">Choose the currency for this Cash Box</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Currency</label>
-                    <select class="form-select" id="currencySelect">
-                        <option value="USD">USD - United States Dollar ($)</option>
-                        <option value="EUR">EUR - Euro (€)</option>
-                        <option value="GBP">GBP - British Pound (£)</option>
-                        <option value="HUF" selected>HUF - Hungarian Forint (Ft)</option>
-                        <option value="JPY">JPY - Japanese Yen (¥)</option>
-                        <option value="CAD">CAD - Canadian Dollar ($)</option>
-                        <option value="AUD">AUD - Australian Dollar ($)</option>
-                        <option value="CHF">CHF - Swiss Franc (CHF)</option>
-                    </select>
+                    <div class="form-group">
+                        <label class="form-label">Currency</label>
+                        <select class="form-select" id="currencySelect">
+                            <option value="USD" selected>USD - US Dollar ($)</option>
+                            <option value="EUR">EUR - Euro (€)</option>
+                            <option value="GBP">GBP - British Pound (£)</option>
+                            <option value="HUF">HUF - Hungarian Forint (Ft)</option>
+                            <option value="JPY">JPY - Japanese Yen (¥)</option>
+                            <option value="CAD">CAD - Canadian Dollar ($)</option>
+                            <option value="AUD">AUD - Australian Dollar ($)</option>
+                            <option value="CHF">CHF - Swiss Franc (CHF)</option>
+                        </select>
+                        <p class="form-hint">Currency for all transactions in this Cash Box</p>
+                    </div>
                 </div>
 
                 <div class="warning-box hidden" id="currencyWarning">
@@ -725,6 +832,12 @@
                         <strong>Changing currency affects existing data.</strong><br>
                         This Cash Box has 47 transactions. Changing currency won't convert amounts — balances will display in the new currency symbol.
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description (optional)</label>
+                    <textarea class="form-input" placeholder="Internal note for this Cash Box (not shown on receipts)"></textarea>
+                    <p class="form-hint">For your reference only — customers won't see this</p>
                 </div>
             </section>
 
@@ -812,90 +925,181 @@
             <section class="settings-section">
                 <div class="section-header">
                     <h2 class="section-title">Receipts</h2>
-                    <p class="section-description">Configure receipt template and visible fields</p>
+                    <p class="section-description">Default receipt settings for this Cash Box</p>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Receipt template</label>
-                    <div class="template-grid">
-                        <div class="template-card selected">
-                            <div class="template-preview">
-                                <i class="fas fa-file-alt"></i>
+                <div class="receipts-layout">
+                    <!-- LEFT: Settings -->
+                    <div class="receipts-settings">
+                        <!-- DEFAULT FORMAT -->
+                        <div class="form-group">
+                            <label class="form-label">Default format</label>
+                            <p class="form-hint" style="margin-bottom: 12px;">When you click "Save & Print", this format will be used</p>
+                            <div class="format-cards">
+                                <div class="format-card active" data-format="a4">
+                                    <div class="format-icon">
+                                        <i class="fas fa-copy"></i>
+                                    </div>
+                                    <div class="format-info">
+                                        <div class="format-name">Print A4 (2 copies)</div>
+                                        <div class="format-desc">One for you, one for recipient</div>
+                                    </div>
+                                </div>
+                                <div class="format-card" data-format="pdf">
+                                    <div class="format-icon">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div class="format-info">
+                                        <div class="format-name">PDF Receipt</div>
+                                        <div class="format-desc">Download as PDF file</div>
+                                    </div>
+                                </div>
+                                <div class="format-card" data-format="email">
+                                    <div class="format-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="format-info">
+                                        <div class="format-name">Email Receipt</div>
+                                        <div class="format-desc">Send to recipient</div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="template-name">Classic</div>
                         </div>
-                        <div class="template-card">
-                            <div class="template-preview">
-                                <i class="fas fa-receipt"></i>
-                            </div>
-                            <div class="template-name">Compact</div>
-                        </div>
-                        <div class="template-card">
-                            <div class="template-preview">
-                                <i class="fas fa-file-invoice"></i>
-                            </div>
-                            <div class="template-name">Detailed</div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label">Optional fields on receipt</label>
-                    <p class="form-hint" style="margin-bottom: 16px;">Receipt #, payer/receiver names, amount, and date are always shown</p>
-                    <div class="toggle-list">
-                        <div class="toggle-item">
-                            <span class="toggle-label">Company header (your business details)</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
+                        <!-- FIELDS TO SHOW -->
+                        <div class="form-group">
+                            <label class="form-label">Fields to show</label>
+                            <p class="form-hint" style="margin-bottom: 12px;">Receipt ID, Amount, Date, and Payer/Receiver names are always shown</p>
+                            
+                            <div class="receipt-toggles">
+                                <div class="receipt-toggle-item">
+                                    <span class="toggle-label">Show Logo</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked data-field="logo">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="receipt-toggle-item">
+                                    <span class="toggle-label">Show Company Info</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked data-field="company">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="receipt-toggle-item">
+                                    <span class="toggle-label">Show Address</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked data-field="address">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="receipt-toggle-item">
+                                    <span class="toggle-label">Show Partner Details</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked data-field="partner">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="receipt-toggle-item">
+                                    <span class="toggle-label">Show Transaction ID</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked data-field="transaction-id">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="receipt-toggle-item">
+                                    <span class="toggle-label">Show Note</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked data-field="note">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="receipt-toggle-item">
+                                    <span class="toggle-label">Show Signatures</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked data-field="signatures">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="receipt-toggle-item">
+                                    <span class="toggle-label">Show Date/Time</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked data-field="datetime">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
-                        <div class="toggle-item">
-                            <span class="toggle-label">Partner details (recipient's info)</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        <div class="toggle-item">
-                            <span class="toggle-label">Line items (itemized breakdown)</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        <div class="toggle-item">
-                            <span class="toggle-label">Extra identifier field (e.g., Project #, PO #)</span>
-                            <label class="toggle-switch">
-                                <input type="checkbox">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label">
-                        Custom receipt note
-                        <span class="upgrade-badge">
-                            <i class="fas fa-crown"></i> Pro
-                        </span>
-                    </label>
-                    <textarea class="form-input" placeholder="e.g., Thank you for your business!" disabled></textarea>
-                    <p class="form-hint">Add a custom message to every receipt — available on paid plans</p>
-                <div class="inline-cta">
-                    <div class="cta-text">
-                        Need different wording on receipts?<br>
-                        Edit titles and field names in the labels editor.
+                        <!-- CUSTOM FOOTER NOTE -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                Custom footer note
+                                <span class="upgrade-badge">
+                                    <i class="fas fa-crown"></i> Pro
+                                </span>
+                            </label>
+                            <textarea class="form-input" placeholder="e.g., Thank you for your business!" disabled></textarea>
+                            <p class="form-hint">Add a custom message printed on every receipt from this Cash Box</p>
+                        </div>
                     </div>
-                    <a class="btn btn-secondary btn-small" href="/settings/receipts-labels">
-                        <i class="fas fa-pen"></i>
-                        Customize receipt labels
-                        <span class="upgrade-badge" style="margin-left: 6px;">
-                            <i class="fas fa-crown"></i> Pro
-                        </span>
-                    </a>
-                </div>
+
+                    <!-- RIGHT: Preview -->
+                    <div class="receipt-preview-panel">
+                        <div class="preview-title">
+                            <i class="fas fa-eye"></i>
+                            Live Preview
+                        </div>
+                        <div class="receipt-preview-mock" id="receiptPreview">
+                            <!-- Mini receipt preview -->
+                            <div class="mock-receipt">
+                                <div class="mock-logo" id="previewLogo">
+                                    <div class="mock-logo-icon">S</div>
+                                </div>
+                                <div class="mock-company" id="previewCompany">
+                                    <strong>Your Company Name</strong>
+                                </div>
+                                <div class="mock-address" id="previewAddress">
+                                    123 Main Street, City
+                                </div>
+                                <div class="mock-divider"></div>
+                                <div class="mock-title">CASH RECEIPT</div>
+                                <div class="mock-id">#TRX-001</div>
+                                <div class="mock-row">
+                                    <span>Date:</span>
+                                    <span id="previewDatetime">Jan 11, 2026</span>
+                                </div>
+                                <div class="mock-divider"></div>
+                                <div class="mock-partner" id="previewPartner">
+                                    <div class="mock-label">Received from:</div>
+                                    <div>John Smith</div>
+                                </div>
+                                <div class="mock-amount">
+                                    <span>Amount:</span>
+                                    <strong>$500.00</strong>
+                                </div>
+                                <div class="mock-txid" id="previewTxId">
+                                    <span class="mock-label">Transaction ID:</span>
+                                    <span>TXN-2026-0111</span>
+                                </div>
+                                <div class="mock-note" id="previewNote">
+                                    <span class="mock-label">Note:</span>
+                                    <span>Office supplies payment</span>
+                                </div>
+                                <div class="mock-divider"></div>
+                                <div class="mock-signatures" id="previewSignatures">
+                                    <div class="mock-sig">
+                                        <div class="mock-sig-line"></div>
+                                        <span>Payer</span>
+                                    </div>
+                                    <div class="mock-sig">
+                                        <div class="mock-sig-line"></div>
+                                        <span>Receiver</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -1025,6 +1229,52 @@
                     c.classList.remove('selected');
                 });
                 this.classList.add('selected');
+            });
+        });
+
+        // Format card selector (Receipts section)
+        document.querySelectorAll('.format-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.format-card').forEach(c => {
+                    c.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // Receipt preview - toggle visibility of elements
+        const previewElementMap = {
+            'logo': 'previewLogo',
+            'company': 'previewCompany',
+            'address': 'previewAddress',
+            'partner': 'previewPartner',
+            'transaction-id': 'previewTxId',
+            'note': 'previewNote',
+            'signatures': 'previewSignatures',
+            'datetime': 'previewDatetime'
+        };
+
+        function updateMockPreview(field, show) {
+            const elementId = previewElementMap[field];
+            if (elementId) {
+                const element = document.getElementById(elementId);
+                if (element) {
+                    if (show) {
+                        element.classList.remove('hidden');
+                    } else {
+                        element.classList.add('hidden');
+                    }
+                }
+            }
+        }
+
+        // Toggle switches for receipt fields
+        document.querySelectorAll('.receipt-toggles input[type="checkbox"]').forEach(toggle => {
+            toggle.addEventListener('change', function() {
+                const field = this.dataset.field;
+                if (field) {
+                    updateMockPreview(field, this.checked);
+                }
             });
         });
 
