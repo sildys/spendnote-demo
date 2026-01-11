@@ -3412,13 +3412,25 @@ tr:hover [data-category-tag] {
         const cancelModalBtn = document.getElementById('modalCancelBtn');
 
         function openModal() {
-            if (!modal) return;
+            console.log('openModal called, modal element:', modal);
+            if (!modal) {
+                console.error('Modal element not found!');
+                return;
+            }
+            console.log('Adding active class to modal');
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            console.log('Modal should be visible now');
         }
+
+        // Make openModal available globally for testing
+        window.openModal = openModal;
 
         if (openModalBtn) {
             openModalBtn.addEventListener('click', openModal);
+            console.log('Modal button listener attached');
+        } else {
+            console.warn('Modal button not found');
         }
 
         // Open modal if hash is #new-transaction
