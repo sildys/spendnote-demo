@@ -504,7 +504,7 @@
         }
 
         .toggle-switch input:checked + .toggle-slider {
-            background-color: var(--active);
+            background-color: #059669;
         }
 
         .toggle-switch input:checked + .toggle-slider:before {
@@ -668,8 +668,8 @@
 
         /* DANGER ZONE */
         .danger-zone {
-            background: rgba(239, 68, 68, 0.02);
-            border-color: rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.08);
+            border: 2px solid rgba(239, 68, 68, 0.4);
         }
 
         .danger-button {
@@ -700,6 +700,16 @@
             gap: 12px;
             justify-content: flex-end;
             margin-top: 32px;
+            padding: 20px 28px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            position: sticky;
+            bottom: 0;
+            z-index: 50;
+            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+            margin-left: -28px;
+            margin-right: -28px;
+            margin-bottom: -28px;
         }
 
         .btn-small {
