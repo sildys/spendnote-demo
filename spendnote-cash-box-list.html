@@ -654,7 +654,7 @@
                 <li><a href="spendnote-transaction-history.html" class="nav-cash-item" id="navTransactions">Transactions</a></li>
                 <li><a href="spendnote-partner-list.html">Contacts</a></li>
                 <li><a href="spendnote-user-settings.html">Settings</a></li>
-                <li><button class="nav-new-transaction-btn" id="addTransactionBtn"><i class="fas fa-plus"></i> New Transaction</button></li>
+                <li><a href="dashboard.html#new-transaction" class="nav-new-transaction-btn"><i class="fas fa-plus"></i> New Transaction</a></li>
                 <li><a href="spendnote-login.html" class="btn btn-secondary">Log out</a></li>
             </ul>
         </div>
@@ -672,7 +672,7 @@
             <button class="btn btn-primary" onclick="alert('Create New Cash Box\n\nIn production:\n- Open create Cash Box modal\n- Set name, icon, color\n- Initialize balance')">
                 <i class="fas fa-plus"></i>
                 Create Cash Box
-            </button>
+            </a>
         </div>
 
         <!-- Cash Boxes GRID -->
@@ -709,15 +709,15 @@
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=main'">
                         <i class="fas fa-eye"></i>
                         View
-                    </button>
+                    </a>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=main'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </button>
+                    </a>
                     <button class="action-btn delete" onclick="showDeleteModal('Main Office', 'CR-001', 240)">
                         <i class="fas fa-trash"></i>
                         Delete
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -753,15 +753,15 @@
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=event'">
                         <i class="fas fa-eye"></i>
                         View
-                    </button>
+                    </a>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=event'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </button>
+                    </a>
                     <button class="action-btn delete" onclick="showDeleteModal('Event Fund', 'CR-002', 117)">
                         <i class="fas fa-trash"></i>
                         Delete
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -797,15 +797,15 @@
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=petty'">
                         <i class="fas fa-eye"></i>
                         View
-                    </button>
+                    </a>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=petty'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </button>
+                    </a>
                     <button class="action-btn delete" onclick="showDeleteModal('Petty Cash', 'CR-003', 90)">
                         <i class="fas fa-trash"></i>
                         Delete
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -841,15 +841,15 @@
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=marketing'">
                         <i class="fas fa-eye"></i>
                         View
-                    </button>
+                    </a>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=marketing'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </button>
+                    </a>
                     <button class="action-btn delete" onclick="showDeleteModal('Marketing Budget', 'CR-004', 93)">
                         <i class="fas fa-trash"></i>
                         Delete
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -885,15 +885,15 @@
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=emergency'">
                         <i class="fas fa-eye"></i>
                         View
-                    </button>
+                    </a>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=emergency'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </button>
+                    </a>
                     <button class="action-btn delete" onclick="showDeleteModal('Emergency Fund', 'CR-005', 15)">
                         <i class="fas fa-trash"></i>
                         Delete
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -994,11 +994,11 @@
             <div class="modal-actions">
                 <button class="modal-btn modal-btn-cancel" onclick="hideDeleteModal()">
                     Cancel
-                </button>
+                </a>
                 <button class="modal-btn modal-btn-delete" onclick="confirmDelete()">
                     <i class="fas fa-trash"></i>
                     Delete Permanently
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -1006,7 +1006,7 @@
     <!-- Sticky Add Transaction Button -->
     <button class="sticky-add-btn" onclick="window.location.href='spendnote-create-transaction.html'" aria-label="Add Transaction">
         <i class="fas fa-plus"></i>
-    </button>
+    </a>
 
     <script>
         let currentRegisterToDelete = null;

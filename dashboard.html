@@ -3421,6 +3421,13 @@ tr:hover [data-category-tag] {
             openModalBtn.addEventListener('click', openModal);
         }
 
+        // Open modal if hash is #new-transaction
+        if (window.location.hash === '#new-transaction') {
+            openModal();
+            // Remove hash from URL
+            history.replaceState(null, null, ' ');
+        }
+
         // Close modal
         function closeModal() {
             modal.classList.remove('active');
