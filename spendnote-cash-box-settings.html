@@ -160,7 +160,7 @@
             border: none;
             background: white;
             display: block;
-            zoom: 1;
+            zoom: 0.65;
             transition: zoom 0.2s ease;
         }
         
@@ -1355,10 +1355,10 @@
         });
 
         // Zoom functionality
-        let currentZoom = 1.0;
-        const zoomStep = 0.1;
-        const minZoom = 0.5;
-        const maxZoom = 2.0;
+        let currentZoom = 0.65;
+        const zoomStep = 0.05;
+        const minZoom = 0.4;
+        const maxZoom = 1.5;
 
         function updateZoom() {
             const iframe = document.getElementById('receiptFrame');
@@ -1384,7 +1384,7 @@
         }
 
         function resetZoom() {
-            currentZoom = 1.0;
+            currentZoom = 0.65;
             updateZoom();
         }
 
