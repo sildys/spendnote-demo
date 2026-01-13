@@ -228,15 +228,13 @@
         .register-card {
             background: var(--surface);
             border: 2px solid var(--border);
-            border-radius: 18px;
-            padding: 20px;
+            border-radius: 24px;
+            padding: 28px;
             box-shadow: 0 2px 12px var(--shadow);
             transition: all 0.3s;
-            cursor: pointer;
             position: relative;
             display: flex;
             flex-direction: column;
-            min-height: auto;
         }
 
         .register-card:hover {
@@ -244,33 +242,33 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
         }
 
-        .register-card.green { border-color: rgba(5, 150, 105, 0.3); }
-        .register-card.orange { border-color: rgba(245, 158, 11, 0.3); }
-        .register-card.blue { border-color: rgba(59, 130, 246, 0.3); }
-        .register-card.purple { border-color: rgba(139, 92, 246, 0.3); }
-        .register-card.red { border-color: rgba(239, 68, 68, 0.3); }
+        .register-card.green { border-color: rgba(5, 150, 105, 0.25); }
+        .register-card.orange { border-color: rgba(245, 158, 11, 0.25); }
+        .register-card.blue { border-color: rgba(59, 130, 246, 0.25); }
+        .register-card.purple { border-color: rgba(139, 92, 246, 0.25); }
+        .register-card.red { border-color: rgba(239, 68, 68, 0.25); }
 
-        .register-card.green:hover { border-color: rgba(5, 150, 105, 0.5); }
-        .register-card.orange:hover { border-color: rgba(245, 158, 11, 0.5); }
-        .register-card.blue:hover { border-color: rgba(59, 130, 246, 0.5); }
-        .register-card.purple:hover { border-color: rgba(139, 92, 246, 0.5); }
-        .register-card.red:hover { border-color: rgba(239, 68, 68, 0.5); }
+        .register-card.green:hover { border-color: rgba(5, 150, 105, 0.4); }
+        .register-card.orange:hover { border-color: rgba(245, 158, 11, 0.4); }
+        .register-card.blue:hover { border-color: rgba(59, 130, 246, 0.4); }
+        .register-card.purple:hover { border-color: rgba(139, 92, 246, 0.4); }
+        .register-card.red:hover { border-color: rgba(239, 68, 68, 0.4); }
 
         .register-header {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: 16px;
+            margin-bottom: 24px;
         }
 
         .register-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            width: 72px;
+            height: 72px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 32px;
             flex-shrink: 0;
         }
 
@@ -309,111 +307,154 @@
         }
 
         .register-name {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             letter-spacing: -0.01em;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 18px;
         }
+
+        .register-name::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .register-card.green .register-name::before { background: #059669; box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.14); }
+        .register-card.orange .register-name::before { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.14); }
+        .register-card.blue .register-name::before { background: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.14); }
+        .register-card.purple .register-name::before { background: #8b5cf6; box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.14); }
+        .register-card.red .register-name::before { background: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.14); }
 
         .register-id {
             font-size: 12px;
             color: var(--text-muted);
             font-family: 'Courier New', monospace;
             font-weight: 600;
+            background: var(--bg);
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
         }
 
         .register-balance {
-            background: var(--bg);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-
-        .balance-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 4px;
-        }
-
-        .balance-value {
-            font-size: 22px;
+            font-size: 40px;
             font-weight: 900;
-            letter-spacing: -0.02em;
             color: var(--text);
+            margin-bottom: 24px;
+            letter-spacing: -0.04em;
+            text-align: right;
         }
 
-        .register-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .stat-item {
-            background: var(--bg);
-            border-radius: 8px;
-            padding: 8px 10px;
-            text-align: center;
-        }
-
-        .stat-label {
-            font-size: 10px;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 2px;
-        }
-
-        .stat-value {
-            font-size: 15px;
-            font-weight: 800;
-            letter-spacing: -0.01em;
-        }
-
-        .stat-value.in { color: var(--primary); }
-        .stat-value.out { color: var(--orange); }
 
         .register-actions {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: auto;
         }
 
         .action-btn {
-            padding: 10px 12px;
-            border-radius: 10px;
+            padding: 14px 20px;
+            border-radius: 12px;
             border: 2px solid var(--border);
             background: var(--surface);
             color: var(--text);
-            font-weight: 600;
-            font-size: 13px;
+            font-weight: 700;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
         }
 
         .action-btn:hover {
             border-color: var(--primary);
             color: var(--primary);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
-        .action-btn.delete {
-            border-color: rgba(239, 68, 68, 0.3);
-            color: var(--error);
+        .action-btn.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
         }
 
-        .action-btn.delete:hover {
-            border-color: var(--error);
-            background: rgba(239, 68, 68, 0.05);
+        .action-btn.primary:hover {
+            background: #047857;
+            border-color: #047857;
+            color: white;
+        }
+
+        /* PLACEHOLDER CARD */
+        .placeholder-card {
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            border-radius: 24px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 280px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .placeholder-card:hover {
+            border-color: var(--primary);
+            background: rgba(5, 150, 105, 0.02);
+            transform: translateY(-4px);
+        }
+
+        .placeholder-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 18px;
+            background: rgba(5, 150, 105, 0.1);
+            border: 2px solid rgba(5, 150, 105, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .placeholder-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .placeholder-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .placeholder-upgrade {
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 8px;
+            color: #f59e0b;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         /* DELETE MODAL */
@@ -706,35 +747,17 @@
                     </div>
                 </div>
 
-                <div class="register-balance">
-                    <div class="balance-label">Current Balance</div>
-                    <div class="balance-value">$18,500</div>
-                </div>
-
-                <div class="register-stats">
-                    <div class="stat-item">
-                        <div class="stat-label">IN (142)</div>
-                        <div class="stat-value in">$78,200</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">OUT (98)</div>
-                        <div class="stat-value out">$59,700</div>
-                    </div>
-                </div>
+                <div class="register-balance">$18,500</div>
 
                 <div class="register-actions">
-                    <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=main'">
+                    <button class="action-btn primary" onclick="window.location.href='spendnote-cash-box-detail.html?id=main'">
                         <i class="fas fa-eye"></i>
                         View
-                    </a>
+                    </button>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=main'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </a>
-                    <button class="action-btn delete" onclick="showDeleteModal('Main Office', 'CR-001', 240)">
-                        <i class="fas fa-trash"></i>
-                        Delete
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -750,35 +773,17 @@
                     </div>
                 </div>
 
-                <div class="register-balance">
-                    <div class="balance-label">Current Balance</div>
-                    <div class="balance-value">$4,750</div>
-                </div>
-
-                <div class="register-stats">
-                    <div class="stat-item">
-                        <div class="stat-label">IN (65)</div>
-                        <div class="stat-value in">$28,400</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">OUT (52)</div>
-                        <div class="stat-value out">$23,650</div>
-                    </div>
-                </div>
+                <div class="register-balance">$4,750</div>
 
                 <div class="register-actions">
-                    <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=event'">
+                    <button class="action-btn primary" onclick="window.location.href='spendnote-cash-box-detail.html?id=event'">
                         <i class="fas fa-eye"></i>
                         View
-                    </a>
+                    </button>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=event'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </a>
-                    <button class="action-btn delete" onclick="showDeleteModal('Event Fund', 'CR-002', 117)">
-                        <i class="fas fa-trash"></i>
-                        Delete
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -794,35 +799,17 @@
                     </div>
                 </div>
 
-                <div class="register-balance">
-                    <div class="balance-label">Current Balance</div>
-                    <div class="balance-value">$2,000</div>
-                </div>
-
-                <div class="register-stats">
-                    <div class="stat-item">
-                        <div class="stat-label">IN (42)</div>
-                        <div class="stat-value in">$12,800</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">OUT (48)</div>
-                        <div class="stat-value out">$10,800</div>
-                    </div>
-                </div>
+                <div class="register-balance">$2,000</div>
 
                 <div class="register-actions">
-                    <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=petty'">
+                    <button class="action-btn primary" onclick="window.location.href='spendnote-cash-box-detail.html?id=petty'">
                         <i class="fas fa-eye"></i>
                         View
-                    </a>
+                    </button>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=petty'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </a>
-                    <button class="action-btn delete" onclick="showDeleteModal('Petty Cash', 'CR-003', 90)">
-                        <i class="fas fa-trash"></i>
-                        Delete
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -838,35 +825,17 @@
                     </div>
                 </div>
 
-                <div class="register-balance">
-                    <div class="balance-label">Current Balance</div>
-                    <div class="balance-value">$12,300</div>
-                </div>
-
-                <div class="register-stats">
-                    <div class="stat-item">
-                        <div class="stat-label">IN (38)</div>
-                        <div class="stat-value in">$42,000</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">OUT (55)</div>
-                        <div class="stat-value out">$29,700</div>
-                    </div>
-                </div>
+                <div class="register-balance">$12,300</div>
 
                 <div class="register-actions">
-                    <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=marketing'">
+                    <button class="action-btn primary" onclick="window.location.href='spendnote-cash-box-detail.html?id=marketing'">
                         <i class="fas fa-eye"></i>
                         View
-                    </a>
+                    </button>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=marketing'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </a>
-                    <button class="action-btn delete" onclick="showDeleteModal('Marketing Budget', 'CR-004', 93)">
-                        <i class="fas fa-trash"></i>
-                        Delete
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -882,36 +851,29 @@
                     </div>
                 </div>
 
-                <div class="register-balance">
-                    <div class="balance-label">Current Balance</div>
-                    <div class="balance-value">$8,900</div>
-                </div>
-
-                <div class="register-stats">
-                    <div class="stat-item">
-                        <div class="stat-label">IN (12)</div>
-                        <div class="stat-value in">$9,200</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-label">OUT (3)</div>
-                        <div class="stat-value out">$300</div>
-                    </div>
-                </div>
+                <div class="register-balance">$8,900</div>
 
                 <div class="register-actions">
-                    <button class="action-btn" onclick="window.location.href='spendnote-cash-box-detail.html?id=emergency'">
+                    <button class="action-btn primary" onclick="window.location.href='spendnote-cash-box-detail.html?id=emergency'">
                         <i class="fas fa-eye"></i>
                         View
-                    </a>
+                    </button>
                     <button class="action-btn" onclick="window.location.href='spendnote-cash-box-settings.html?id=emergency'">
                         <i class="fas fa-cog"></i>
                         Settings
-                    </a>
-                    <button class="action-btn delete" onclick="showDeleteModal('Emergency Fund', 'CR-005', 15)">
-                        <i class="fas fa-trash"></i>
-                        Delete
-                    </a>
+                    </button>
                 </div>
+            </div>
+
+            <!-- Placeholder Card - Add New Cash Box -->
+            <div class="placeholder-card" onclick="window.location.href='spendnote-cash-box-settings.html'">
+                <div class="placeholder-icon">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="placeholder-title">Add Cash Box</div>
+                <div class="placeholder-subtitle">Create a new Cash Box to organize your transactions</div>
+                <!-- Change based on plan: Free, Standard, or Pro -->
+                <div class="placeholder-upgrade">Upgrade to Standard for more Cash Boxes</div>
             </div>
         </div>
         </main>
