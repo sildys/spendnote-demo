@@ -1125,25 +1125,77 @@
         }
 
         
-                /* Add New Cash Box Card */
-        .add-new-register-card {
-            border: 3px dashed #10b981 !important;
-            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+        /* ADD CASH BOX CARD - UNIFIED DESIGN */
+        .add-cash-box-card {
+            background: var(--surface);
+            border: 2px dashed var(--border);
+            border-radius: 24px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 280px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px var(--shadow);
         }
 
-        .add-new-register-card:hover {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
-            border-color: #059669 !important;
+        .add-cash-box-card:hover {
+            border-color: var(--primary);
+            background: rgba(5, 150, 105, 0.02);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(5, 150, 105, 0.12);
         }
 
-        .add-new-register-card .register-icon.add-icon {
-            background: linear-gradient(135deg, #10b981, #059669) !important;
-            color: white !important;
-            border: none !important;
+        .add-cash-box-card.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
-        .add-new-register-card .register-top h3 {
-            color: #10b981;
+        .add-cash-box-card.disabled:hover {
+            border-color: var(--border);
+            background: var(--surface);
+            transform: none;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .add-cash-box-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(5, 150, 105, 0.1);
+            border: 2px solid rgba(5, 150, 105, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .add-cash-box-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 16px;
+        }
+
+        .add-cash-box-upgrade {
+            margin-top: 8px;
+            padding: 10px 18px;
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 10px;
+            color: #f59e0b;
+            font-size: 13px;
+            font-weight: 700;
+            display: none;
+        }
+
+        .add-cash-box-card.disabled .add-cash-box-upgrade {
+            display: block;
         }
 
         .add-register-message {
@@ -2835,24 +2887,17 @@ tr:hover [data-category-tag] {
                             </div>
                         </div>
 
-                        <!-- Slide 6 - Add New Cash Box -->
+                        <!-- Slide 6 - Add Cash Box Card (Unified Design) -->
                         <div class="swiper-slide">
-                            <a href="spendnote-cash-box-settings.html" style="text-decoration: none; color: inherit;">
-                                <div class="register-card add-new-register-card" role="button" tabindex="0">
-                                    <div class="register-top">
-                                        <div class="register-info">
-                                            <h3>Add New</h3>
-                                            <div class="register-id">Create</div>
-                                        </div>
-                                        <div class="register-icon add-icon">
-                                            <i class="fas fa-plus"></i>
-                                        </div>
-                                    </div>
-                                    <div class="register-balance" style="font-size: 16px; font-weight: 600; color: #6b7280; line-height: 1.6; padding: 20px 0;">
-                                        Create a new Cash Box to track your transactions
-                                    </div>
+                            <div class="add-cash-box-card" onclick="handleAddCashBoxDashboard()" data-plan="free" data-box-count="5" role="button" tabindex="0">
+                                <div class="add-cash-box-icon">
+                                    <i class="fas fa-plus"></i>
                                 </div>
-                            </a>
+                                <div class="add-cash-box-title">Add Cash Box</div>
+                                <!-- Conditional upgrade message based on plan and box count -->
+                                <div class="add-cash-box-upgrade" data-upgrade-text="standard">Upgrade to Standard for more Cash Boxes</div>
+                                <div class="add-cash-box-upgrade" data-upgrade-text="pro">Upgrade to Pro for unlimited Cash Boxes</div>
+                            </div>
                         </div>
                     </div>
                     <!-- End of swiper-wrapper -->
@@ -4041,6 +4086,73 @@ tr:hover [data-category-tag] {
                 }
             });
         }
+
+        // ========================================
+        // ADD CASH BOX CARD - CONDITIONAL LOGIC
+        // ========================================
+        function handleAddCashBoxDashboard() {
+            const card = document.querySelector('.add-cash-box-card');
+            const plan = card.getAttribute('data-plan'); // 'free', 'standard', 'pro'
+            const boxCount = parseInt(card.getAttribute('data-box-count'));
+            
+            // Plan limits: Free = 1, Standard = 2, Pro = unlimited
+            const planLimits = {
+                'free': 1,
+                'standard': 2,
+                'pro': Infinity
+            };
+            
+            const limit = planLimits[plan] || 1;
+            
+            if (boxCount >= limit) {
+                // User reached limit - show upgrade message
+                if (plan === 'free') {
+                    alert('You have reached the Free plan limit (1 Cash Box).\n\nUpgrade to Standard to create up to 2 Cash Boxes.');
+                } else if (plan === 'standard') {
+                    alert('You have reached the Standard plan limit (2 Cash Boxes).\n\nUpgrade to Pro for unlimited Cash Boxes.');
+                }
+            } else {
+                // User can still add more - open create flow
+                window.location.href = 'spendnote-cash-box-settings.html';
+            }
+        }
+
+        // Initialize Add Cash Box card state on page load
+        (function initAddCashBoxCard() {
+            const card = document.querySelector('.add-cash-box-card');
+            if (!card) return;
+            
+            const plan = card.getAttribute('data-plan');
+            const boxCount = parseInt(card.getAttribute('data-box-count'));
+            
+            const planLimits = {
+                'free': 1,
+                'standard': 2,
+                'pro': Infinity
+            };
+            
+            const limit = planLimits[plan] || 1;
+            const upgradeMessages = card.querySelectorAll('.add-cash-box-upgrade');
+            
+            if (boxCount >= limit) {
+                // Disable card and show appropriate upgrade message
+                card.classList.add('disabled');
+                
+                upgradeMessages.forEach(msg => {
+                    const upgradeType = msg.getAttribute('data-upgrade-text');
+                    if ((plan === 'free' && upgradeType === 'standard') ||
+                        (plan === 'standard' && upgradeType === 'pro')) {
+                        msg.style.display = 'block';
+                    } else {
+                        msg.style.display = 'none';
+                    }
+                });
+            } else {
+                // Card is clickable, hide all upgrade messages
+                card.classList.remove('disabled');
+                upgradeMessages.forEach(msg => msg.style.display = 'none');
+            }
+        })();
 
     </script>
 

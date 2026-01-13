@@ -397,8 +397,8 @@
             color: white;
         }
 
-        /* PLACEHOLDER CARD */
-        .placeholder-card {
+        /* ADD CASH BOX CARD - UNIFIED DESIGN */
+        .add-cash-box-card {
             background: var(--surface);
             border: 2px dashed var(--border);
             border-radius: 24px;
@@ -413,16 +413,27 @@
             transition: all 0.3s;
         }
 
-        .placeholder-card:hover {
+        .add-cash-box-card:hover {
             border-color: var(--primary);
             background: rgba(5, 150, 105, 0.02);
             transform: translateY(-4px);
         }
 
-        .placeholder-icon {
+        .add-cash-box-card.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .add-cash-box-card.disabled:hover {
+            border-color: var(--border);
+            background: var(--surface);
+            transform: none;
+        }
+
+        .add-cash-box-icon {
             width: 72px;
             height: 72px;
-            border-radius: 18px;
+            border-radius: 50%;
             background: rgba(5, 150, 105, 0.1);
             border: 2px solid rgba(5, 150, 105, 0.2);
             display: flex;
@@ -433,28 +444,27 @@
             margin-bottom: 16px;
         }
 
-        .placeholder-title {
+        .add-cash-box-title {
             font-size: 18px;
             font-weight: 800;
             color: var(--text);
-            margin-bottom: 8px;
+            margin-bottom: 16px;
         }
 
-        .placeholder-subtitle {
-            font-size: 14px;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .placeholder-upgrade {
-            margin-top: 12px;
-            padding: 8px 16px;
+        .add-cash-box-upgrade {
+            margin-top: 8px;
+            padding: 10px 18px;
             background: rgba(245, 158, 11, 0.1);
             border: 1px solid rgba(245, 158, 11, 0.3);
-            border-radius: 8px;
+            border-radius: 10px;
             color: #f59e0b;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 700;
+            display: none;
+        }
+
+        .add-cash-box-card.disabled .add-cash-box-upgrade {
+            display: block;
         }
 
         /* DELETE MODAL */
@@ -726,12 +736,8 @@
                 <div class="page-title-group">
                     <h1>Cash Boxes</h1>
                     <p class="page-subtitle">Manage and monitor all your Cash Boxes</p>
+                </div>
             </div>
-            <button class="btn btn-primary" onclick="alert('Create New Cash Box\n\nIn production:\n- Open create Cash Box modal\n- Set name, icon, color\n- Initialize balance')">
-                <i class="fas fa-plus"></i>
-                Create Cash Box
-            </a>
-        </div>
 
         <!-- Cash Boxes GRID -->
         <div class="registers-grid">
@@ -865,15 +871,15 @@
                 </div>
             </div>
 
-            <!-- Placeholder Card - Add New Cash Box -->
-            <div class="placeholder-card" onclick="window.location.href='spendnote-cash-box-settings.html'">
-                <div class="placeholder-icon">
+            <!-- Add Cash Box Card - Unified Design -->
+            <div class="add-cash-box-card" onclick="handleAddCashBox()" data-plan="free" data-box-count="5">
+                <div class="add-cash-box-icon">
                     <i class="fas fa-plus"></i>
                 </div>
-                <div class="placeholder-title">Add Cash Box</div>
-                <div class="placeholder-subtitle">Create a new Cash Box to organize your transactions</div>
-                <!-- Change based on plan: Free, Standard, or Pro -->
-                <div class="placeholder-upgrade">Upgrade to Standard for more Cash Boxes</div>
+                <div class="add-cash-box-title">Add Cash Box</div>
+                <!-- Conditional upgrade message based on plan and box count -->
+                <div class="add-cash-box-upgrade" data-upgrade-text="standard">Upgrade to Standard for more Cash Boxes</div>
+                <div class="add-cash-box-upgrade" data-upgrade-text="pro">Upgrade to Pro for unlimited Cash Boxes</div>
             </div>
         </div>
         </main>
@@ -1024,6 +1030,69 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 hideDeleteModal();
+            }
+        });
+
+        // Handle Add Cash Box card click with conditional logic
+        function handleAddCashBox() {
+            const card = document.querySelector('.add-cash-box-card');
+            const plan = card.getAttribute('data-plan'); // 'free', 'standard', 'pro'
+            const boxCount = parseInt(card.getAttribute('data-box-count'));
+            
+            // Plan limits: Free = 1, Standard = 2, Pro = unlimited
+            const planLimits = {
+                'free': 1,
+                'standard': 2,
+                'pro': Infinity
+            };
+            
+            const limit = planLimits[plan] || 1;
+            
+            if (boxCount >= limit) {
+                // User reached limit - show upgrade message
+                if (plan === 'free') {
+                    alert('You have reached the Free plan limit (1 Cash Box).\n\nUpgrade to Standard to create up to 2 Cash Boxes.');
+                } else if (plan === 'standard') {
+                    alert('You have reached the Standard plan limit (2 Cash Boxes).\n\nUpgrade to Pro for unlimited Cash Boxes.');
+                }
+            } else {
+                // User can still add more - open create flow
+                window.location.href = 'spendnote-cash-box-settings.html';
+            }
+        }
+
+        // Initialize Add Cash Box card state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.querySelector('.add-cash-box-card');
+            const plan = card.getAttribute('data-plan');
+            const boxCount = parseInt(card.getAttribute('data-box-count'));
+            
+            const planLimits = {
+                'free': 1,
+                'standard': 2,
+                'pro': Infinity
+            };
+            
+            const limit = planLimits[plan] || 1;
+            const upgradeMessages = card.querySelectorAll('.add-cash-box-upgrade');
+            
+            if (boxCount >= limit) {
+                // Disable card and show appropriate upgrade message
+                card.classList.add('disabled');
+                
+                upgradeMessages.forEach(msg => {
+                    const upgradeType = msg.getAttribute('data-upgrade-text');
+                    if ((plan === 'free' && upgradeType === 'standard') ||
+                        (plan === 'standard' && upgradeType === 'pro')) {
+                        msg.style.display = 'block';
+                    } else {
+                        msg.style.display = 'none';
+                    }
+                });
+            } else {
+                // Card is clickable, hide all upgrade messages
+                card.classList.remove('disabled');
+                upgradeMessages.forEach(msg => msg.style.display = 'none');
             }
         });
     </script>
