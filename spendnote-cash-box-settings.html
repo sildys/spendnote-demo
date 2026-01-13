@@ -760,8 +760,29 @@
                 <span style="font-weight: 900; font-size: 1.5rem; margin-left: 10px; color: #000000; letter-spacing: -0.02em;">SpendNote</span>
             </a>
             <ul class="nav-links">
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="spendnote-cash-box-list.html" class="active">Cash Boxes</a></li>
+                <li><a href="dashboard.html" class="nav-cash-item">Dashboard</a></li>
+                <li><a href="spendnote-cash-box-list.html" class="nav-cash-item active" id="navCashBoxes">Cash Boxes</a></li>
+                <li><a href="spendnote-transaction-history.html" class="nav-cash-item" id="navTransactions">Transactions</a></li>
+                <li><a href="spendnote-contact-list.html">Contacts</a></li>
+                <li><button class="nav-new-transaction-btn" id="addTransactionBtn"><i class="fas fa-plus"></i> New Transaction</button></li>
+                <li class="user-avatar-wrapper" id="userAvatarBtn">
+                    <div class="user-avatar">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="User">
+                    </div>
+                    <span class="user-name">John</span>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown-menu">
+                            <a href="spendnote-user-settings.html" class="user-dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                <span>Settings</span>
+                            </a>
+                            <a href="spendnote-login.html" class="user-dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Log out</span>
+                            </a>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
     </nav>
@@ -915,7 +936,7 @@
                                         <i class="fas fa-copy"></i>
                                     </div>
                                     <div class="format-info">
-                                        <div class="format-name">Print A4 (2 copies)</div>
+                                        <div class="format-name">Print (2 copies)</div>
                                         <div class="format-desc">One for you, one for recipient</div>
                                     </div>
                                 </div>
@@ -1024,55 +1045,8 @@
                             <i class="fas fa-eye"></i>
                             Live Preview
                         </div>
-                        <div class="receipt-preview-mock" id="receiptPreview">
-                            <!-- Mini receipt preview -->
-                            <div class="mock-receipt">
-                                <div class="mock-logo" id="previewLogo">
-                                    <div class="mock-logo-icon">S</div>
-                                </div>
-                                <div class="mock-company" id="previewCompany">
-                                    <strong>Your Company Name</strong>
-                                </div>
-                                <div class="mock-address" id="previewAddress">
-                                    123 Main Street, City
-                                </div>
-                                <div class="mock-divider"></div>
-                                <div class="mock-title">CASH RECEIPT</div>
-                                <div class="mock-id">#TRX-001</div>
-                                <div class="mock-row">
-                                    <span>Date:</span>
-                                    <span id="previewDatetime">Jan 11, 2026</span>
-                                </div>
-                                <div class="mock-divider"></div>
-                                <div class="mock-Contact" id="previewContact">
-                                    <div class="mock-label">Received from:</div>
-                                    <div>John Smith</div>
-                                </div>
-                                <div class="mock-amount">
-                                    <span>Amount:</span>
-                                    <strong>$500.00</strong>
-                                </div>
-                                <div class="mock-txid" id="previewTxId">
-                                    <span class="mock-label">Transaction ID:</span>
-                                    <span>TXN-2026-0111</span>
-                                </div>
-                                <div class="mock-note" id="previewNote">
-                                    <span class="mock-label">Note:</span>
-                                    <span>Office supplies payment</span>
-                                </div>
-                                <div class="mock-divider"></div>
-                                <div class="mock-signatures" id="previewSignatures">
-                                    <div class="mock-sig">
-                                        <div class="mock-sig-line"></div>
-                                        <span>Payer</span>
-                                    </div>
-                                    <div class="mock-sig">
-                                        <div class="mock-sig-line"></div>
-                                        <span>Receiver</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- RECEIPT PREVIEW IFRAME -->
+                        <iframe id="receiptFrame" class="receipt-preview-frame" src="spendnote-pdf-receipt.html"></iframe>
                     </div>
                 </div>
             </section>
@@ -1218,40 +1192,75 @@
             });
         });
 
-        // Receipt preview - toggle visibility of elements
-        const previewElementMap = {
-            'logo': 'previewLogo',
-            'company': 'previewCompany',
-            'address': 'previewAddress',
-            'Contact': 'previewContact',
-            'transaction-id': 'previewTxId',
-            'note': 'previewNote',
-            'signatures': 'previewSignatures',
-            'datetime': 'previewDatetime'
+        // Receipt preview - track display options
+        let displayOptions = {
+            logo: '1',
+            company: '1',
+            address: '1',
+            Contact: '1',
+            'transaction-id': '1',
+            note: '1',
+            signatures: '1',
+            datetime: '1'
         };
 
-        function updateMockPreview(field, show) {
-            const elementId = previewElementMap[field];
-            if (elementId) {
-                const element = document.getElementById(elementId);
-                if (element) {
-                    if (show) {
-                        element.classList.remove('hidden');
-                    } else {
-                        element.classList.add('hidden');
-                    }
-                }
+        // Track current format
+        let currentFormat = 'a4';
+
+        // Build URL with parameters
+        function buildReceiptUrl(format) {
+            const baseUrls = {
+                'a4': 'spendnote-receipt-a4-two-copies.html',
+                'pdf': 'spendnote-pdf-receipt.html',
+                'email': 'spendnote-email-receipt.html'
+            };
+            
+            const params = new URLSearchParams();
+            for (const [key, value] of Object.entries(displayOptions)) {
+                params.append(key, value);
+            }
+            
+            return `${baseUrls[format]}?${params.toString()}`;
+        }
+
+        // Reload iframe with current settings
+        function reloadIframe() {
+            const iframe = document.getElementById('receiptFrame');
+            if (iframe) {
+                iframe.src = buildReceiptUrl(currentFormat);
             }
         }
 
-        // Toggle switches for receipt fields
+        // Toggle switches for receipt fields - update iframe in real-time
         document.querySelectorAll('.receipt-toggles input[type="checkbox"]').forEach(toggle => {
             toggle.addEventListener('change', function() {
                 const field = this.dataset.field;
                 if (field) {
-                    updateMockPreview(field, this.checked);
+                    // Update display options
+                    displayOptions[field] = this.checked ? '1' : '0';
+                    // Reload iframe with new settings
+                    reloadIframe();
                 }
             });
+        });
+
+        // Format card selector - update preview format
+        document.querySelectorAll('.format-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.format-card').forEach(c => {
+                    c.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Update current format and reload preview
+                currentFormat = this.dataset.format;
+                reloadIframe();
+            });
+        });
+
+        // Initialize iframe on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            reloadIframe();
         });
 
         // Delete confirmation
