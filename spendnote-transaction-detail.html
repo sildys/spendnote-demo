@@ -300,9 +300,15 @@
 
         .transaction-summary-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px 32px;
             margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .transaction-summary-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .receipts-layout {
@@ -660,6 +666,133 @@
             display: block;
         }
 
+        /* RECEIPT TOGGLES */
+        .receipt-toggles {
+            display: flex;
+            flex-direction: column;
+            background: var(--surface-elevated);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .receipt-toggle-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .receipt-toggle-item:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            border-radius: 28px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--active);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--surface);
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: var(--active);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(var(--active-rgb), 0.1);
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .upgrade-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: white;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 8px;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .header-top {
@@ -751,13 +884,17 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button class="btn btn-primary" onclick="window.print()">
+                    <button class="btn btn-secondary" onclick="window.print()">
                         <i class="fas fa-print"></i>
-                        Print Receipt
+                        Print
                     </button>
                     <button class="btn btn-secondary" onclick="alert('Download PDF\n\nIn production:\n- Generate PDF from receipt\n- Download file')">
                         <i class="fas fa-file-pdf"></i>
                         Download PDF
+                    </button>
+                    <button class="btn btn-primary" onclick="alert('Email Receipt\n\nIn production:\n- Open email dialog\n- Enter recipient email\n- Send receipt as PDF attachment')">
+                        <i class="fas fa-envelope"></i>
+                        Email Receipt
                     </button>
                     <button class="btn btn-danger" onclick="if(confirm('Delete Transaction?\n\n⚠️ Admin access required\n\nThis action cannot be undone.\n\nDeleting this transaction will affect the Cash Box balance.\n\nAre you sure you want to delete this transaction?')) { alert('Transaction deleted (Demo mode)\n\nIn production:\n- Check admin role\n- Update Cash Box balance\n- Archive transaction\n- Redirect to dashboard'); }">
                         <i class="fas fa-trash"></i>
@@ -857,9 +994,10 @@
             <div class="receipts-layout">
                 <!-- LEFT: Receipt Settings -->
                 <div class="receipts-settings">
-                    <div class="card">
-                        <h2 class="card-title">Receipt Format</h2>
-                        <label class="receipt-settings-label">Select format to preview</label>
+                    <!-- FORMAT SELECTOR -->
+                    <div class="form-group">
+                        <label class="form-label">Receipt format</label>
+                        <p class="form-hint" style="margin-bottom: 12px;">Select which format to preview</p>
                         <div class="format-cards">
                             <div class="format-card active" data-format="a4">
                                 <div class="format-icon">
@@ -888,6 +1026,95 @@
                                     <div class="format-desc">Send to recipient</div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- FIELDS TO SHOW -->
+                    <div class="form-group">
+                        <label class="form-label">Fields to show</label>
+                        <p class="form-hint" style="margin-bottom: 12px;">Amount, Date, and Payer/Receiver names are always shown</p>
+                        
+                        <div class="receipt-toggles">
+                            <div class="receipt-toggle-item">
+                                <span class="toggle-label">Show Logo</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked data-field="logo">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="receipt-toggle-item">
+                                <span class="toggle-label">Show Addresses</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked data-field="addresses">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="receipt-toggle-item">
+                                <span class="toggle-label">Show Tracking Details</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked data-field="tracking">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="receipt-toggle-item">
+                                <span class="toggle-label">Show Additional Info</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked data-field="additional">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="receipt-toggle-item">
+                                <span class="toggle-label">Show Note</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked data-field="note">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="receipt-toggle-item">
+                                <span class="toggle-label">Show Signatures</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked data-field="signatures">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CUSTOMIZE RECEIPT TEXT (PRO) -->
+                    <div class="form-group">
+                        <label class="form-label">
+                            Customize Receipt Text
+                            <span class="upgrade-badge">
+                                <i class="fas fa-crown"></i> Pro
+                            </span>
+                        </label>
+                        <p class="form-hint" style="margin-bottom: 16px;">Customize the text labels and messages on your receipts</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Receipt title</label>
+                                <input type="text" class="form-input" placeholder="Cash Receipt" style="font-size: 13px; padding: 8px 12px;">
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Total label</label>
+                                <input type="text" class="form-input" placeholder="Total handed over" style="font-size: 13px; padding: 8px 12px;">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">From label</label>
+                                <input type="text" class="form-input" placeholder="FROM" style="font-size: 13px; padding: 8px 12px;">
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">To label</label>
+                                <input type="text" class="form-input" placeholder="TO" style="font-size: 13px; padding: 8px 12px;">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Footer note</label>
+                            <textarea class="form-input" placeholder="e.g., Thank you for your business!" rows="2" style="font-size: 13px; padding: 8px 12px;"></textarea>
                         </div>
                     </div>
                 </div>
@@ -984,6 +1211,16 @@
 
 
     <script>
+        // Track current display options
+        let displayOptions = {
+            logo: '1',
+            addresses: '1',
+            tracking: '1',
+            additional: '1',
+            note: '1',
+            signatures: '1'
+        };
+
         // Track current format
         let currentFormat = 'a4';
 
@@ -995,7 +1232,12 @@
                 'email': 'spendnote-email-receipt.html'
             };
             
-            return baseUrls[format];
+            const params = new URLSearchParams();
+            for (const [key, value] of Object.entries(displayOptions)) {
+                params.append(key, value);
+            }
+            
+            return `${baseUrls[format]}?${params.toString()}`;
         }
 
         // Reload iframe with current settings
@@ -1021,6 +1263,19 @@
                     // Update current format and reload preview
                     currentFormat = this.dataset.format;
                     reloadIframe();
+                });
+            });
+
+            // Toggle switches for receipt fields
+            document.querySelectorAll('.receipt-toggles input[type="checkbox"]').forEach(toggle => {
+                toggle.addEventListener('change', function() {
+                    const field = this.dataset.field;
+                    if (field) {
+                        // Update display options
+                        displayOptions[field] = this.checked ? '1' : '0';
+                        // Reload iframe with new settings
+                        reloadIframe();
+                    }
                 });
             });
 
