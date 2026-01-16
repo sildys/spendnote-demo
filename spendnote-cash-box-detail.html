@@ -1416,35 +1416,49 @@
             return urlParams.get(name);
         }
 
+        // Color mapping
+        const colorMap = {
+            'green': { hex: '#059669', rgb: '5, 150, 105' },
+            'orange': { hex: '#f59e0b', rgb: '245, 158, 11' },
+            'blue': { hex: '#3b82f6', rgb: '59, 130, 246' },
+            'purple': { hex: '#8b5cf6', rgb: '139, 92, 246' },
+            'red': { hex: '#ef4444', rgb: '239, 68, 68' }
+        };
+
         // Apply cash box color dynamically
         function applyCashBoxColor() {
             const color = getUrlParameter('color') || 'green'; // Default to green
+            const colorData = colorMap[color] || colorMap['green'];
+            
+            // Set CSS variables for the entire page
+            document.documentElement.style.setProperty('--active', colorData.hex);
+            document.documentElement.style.setProperty('--active-rgb', colorData.rgb);
             
             // Update header card
             const compactHeader = document.querySelector('.compact-header');
             if (compactHeader) {
-                compactHeader.classList.remove('green', 'orange', 'blue');
+                compactHeader.classList.remove('green', 'orange', 'blue', 'purple', 'red');
                 compactHeader.classList.add(color);
             }
             
             // Update icon
             const cashBoxIcon = document.querySelector('.cash-box-icon');
             if (cashBoxIcon) {
-                cashBoxIcon.classList.remove('green', 'orange', 'blue');
+                cashBoxIcon.classList.remove('green', 'orange', 'blue', 'purple', 'red');
                 cashBoxIcon.classList.add(color);
             }
             
             // Update active menu item
             const activeMenuItem = document.querySelector('.nav-links a.active');
             if (activeMenuItem) {
-                activeMenuItem.classList.remove('green-active', 'orange-active', 'blue-active');
+                activeMenuItem.classList.remove('green-active', 'orange-active', 'blue-active', 'purple-active', 'red-active');
                 activeMenuItem.classList.add(color + '-active');
             }
             
             // Update New Transaction button
             const newTransactionBtn = document.querySelector('.btn-new-transaction');
             if (newTransactionBtn) {
-                newTransactionBtn.classList.remove('green', 'orange', 'blue');
+                newTransactionBtn.classList.remove('green', 'orange', 'blue', 'purple', 'red');
                 newTransactionBtn.classList.add(color);
             }
         }
