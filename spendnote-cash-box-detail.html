@@ -952,11 +952,11 @@
             </a>
             <ul class="nav-links">
                 <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="spendnote-cash-box-list.html" class="active green-active">Cash Boxes</a></li>
+                <li><a href="spendnote-cash-box-list.html" class="active">Cash Boxes</a></li>
                 <li><a href="spendnote-transaction-history.html">Transactions</a></li>
                 <li><a href="spendnote-contact-list.html">Contacts</a></li>
                 <li>
-                    <button class="btn-new-transaction green" onclick="window.location.href='#'">
+                    <button class="btn-new-transaction" onclick="window.location.href='#'">
                         <i class="fas fa-plus"></i>
                         New Transaction
                     </button>
@@ -995,10 +995,10 @@
             </a>
         </div>
 
-        <div class="compact-header green">
+        <div class="compact-header">
             <div class="header-info">
                 <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 8px;">
-                    <div class="cash-box-icon green">
+                    <div class="cash-box-icon">
                         <i class="fas fa-building"></i>
                     </div>
                     <div>
@@ -1410,6 +1410,45 @@
 
 
     <script>
+        // Get color from URL parameter
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Apply cash box color dynamically
+        function applyCashBoxColor() {
+            const color = getUrlParameter('color') || 'green'; // Default to green
+            
+            // Update header card
+            const compactHeader = document.querySelector('.compact-header');
+            if (compactHeader) {
+                compactHeader.classList.remove('green', 'orange', 'blue');
+                compactHeader.classList.add(color);
+            }
+            
+            // Update icon
+            const cashBoxIcon = document.querySelector('.cash-box-icon');
+            if (cashBoxIcon) {
+                cashBoxIcon.classList.remove('green', 'orange', 'blue');
+                cashBoxIcon.classList.add(color);
+            }
+            
+            // Update active menu item
+            const activeMenuItem = document.querySelector('.nav-links a.active');
+            if (activeMenuItem) {
+                activeMenuItem.classList.remove('green-active', 'orange-active', 'blue-active');
+                activeMenuItem.classList.add(color + '-active');
+            }
+            
+            // Update New Transaction button
+            const newTransactionBtn = document.querySelector('.btn-new-transaction');
+            if (newTransactionBtn) {
+                newTransactionBtn.classList.remove('green', 'orange', 'blue');
+                newTransactionBtn.classList.add(color);
+            }
+        }
+
         // Toggle filter panel
         function toggleFilters() {
             const filterPanel = document.getElementById('filterPanel');
@@ -1424,7 +1463,11 @@
             }
         }
 
-        // Direct navigation already handled inline with onclick
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            applyCashBoxColor();
+        });
+
         console.log('Cash Box Detail page loaded');
     </script>
     <script src="assets/js/main.js"></script>
