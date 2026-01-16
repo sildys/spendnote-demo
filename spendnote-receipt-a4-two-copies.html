@@ -357,7 +357,7 @@ body {
     <div class="items">
       <table>
         <thead>
-          <tr><th>Description</th><th class="amount">Amount</th></tr>
+          <tr><th class="description-header">Description</th><th class="amount">Amount</th></tr>
         </thead>
         <tbody>
           <tr><td>Office supplies</td><td class="amount">$175.00</td></tr>
@@ -442,7 +442,7 @@ body {
     <div class="items">
       <table>
         <thead>
-          <tr><th>Description</th><th class="amount">Amount</th></tr>
+          <tr><th class="description-header">Description</th><th class="amount">Amount</th></tr>
         </thead>
         <tbody>
           <tr><td>Office supplies</td><td class="amount">$175.00</td></tr>
@@ -516,9 +516,7 @@ body {
     });
   }
   if (descriptionLabel) {
-    document.querySelectorAll('thead th').forEach((el, index) => {
-      if (index === 0) el.textContent = descriptionLabel;
-    });
+    document.querySelectorAll('.description-header').forEach(el => el.textContent = descriptionLabel);
   }
   if (notesLabel) {
     document.querySelectorAll('.notes strong').forEach(el => el.textContent = notesLabel);

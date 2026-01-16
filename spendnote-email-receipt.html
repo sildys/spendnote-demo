@@ -484,7 +484,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Description</th>
+                  <th class="description-header">Description</th>
                   <th class="amount">Amount</th>
                 </tr>
               </thead>
@@ -601,12 +601,10 @@ if (toLabel) {
     });
 }
 if (descriptionLabel) {
-    document.querySelectorAll('thead th').forEach((el, index) => {
-        if (index === 0) el.textContent = descriptionLabel;
-    });
+    document.querySelectorAll('.description-header').forEach(el => el.textContent = descriptionLabel);
 }
 if (notesLabel) {
-    document.querySelectorAll('.notes strong').forEach(el => el.textContent = notesLabel);
+    document.querySelectorAll('.notes-label').forEach(el => el.textContent = notesLabel);
 }
 if (issuedByLabel) {
     document.querySelectorAll('.signature-label').forEach((el, index) => {
@@ -619,7 +617,11 @@ if (receivedByLabel) {
     });
 }
 if (footerNote) {
-    document.querySelectorAll('.footer-disclaimer').forEach(el => el.textContent = footerNote);
+    const footerNoteEl = document.querySelector('.custom-footer-note');
+    if (footerNoteEl) {
+        footerNoteEl.textContent = footerNote;
+        footerNoteEl.style.display = 'block';
+    }
 }
 
 // Logo

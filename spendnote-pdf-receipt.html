@@ -353,7 +353,7 @@
       <table>
         <thead>
           <tr>
-            <th>Description</th>
+            <th class="description-header">Description</th>
             <th class="amount">Amount</th>
           </tr>
         </thead>
@@ -408,6 +408,7 @@
 
     <!-- FOOTER -->
     <div class="footer">
+      <div class="custom-footer-note" style="display: none; text-align: center; font-size: 13px; color: #666; margin-bottom: 16px; font-style: italic;"></div>
       <div class="footer-brand">
         <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#pdf-gradient)"/>
@@ -466,12 +467,10 @@ if (toLabel) {
     });
 }
 if (descriptionLabel) {
-    document.querySelectorAll('thead th').forEach((el, index) => {
-        if (index === 0) el.textContent = descriptionLabel;
-    });
+    document.querySelectorAll('.description-header').forEach(el => el.textContent = descriptionLabel);
 }
 if (notesLabel) {
-    document.querySelectorAll('.notes strong').forEach(el => el.textContent = notesLabel);
+    document.querySelectorAll('.notes-label').forEach(el => el.textContent = notesLabel);
 }
 if (issuedByLabel) {
     document.querySelectorAll('.signature-label').forEach((el, index) => {
@@ -484,7 +483,11 @@ if (receivedByLabel) {
     });
 }
 if (footerNote) {
-    document.querySelectorAll('.footer-disclaimer').forEach(el => el.textContent = footerNote);
+    const footerNoteEl = document.querySelector('.custom-footer-note');
+    if (footerNoteEl) {
+        footerNoteEl.textContent = footerNote;
+        footerNoteEl.style.display = 'block';
+    }
 }
 
 // Logo
