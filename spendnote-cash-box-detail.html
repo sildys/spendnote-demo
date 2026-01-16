@@ -185,29 +185,18 @@
             border-bottom: 2px solid rgba(var(--active-rgb), 0.15) !important;
         }
 
-        /* Cash Box Color Active States */
-        .site-nav .nav-links a.green-active {
-            color: var(--primary) !important;
+        /* All navigation links use active color */
+        .site-nav .nav-links a {
+            color: var(--active) !important;
         }
 
-        .site-nav .nav-links a.green-active::after {
-            background: var(--primary) !important;
+        .site-nav .nav-links a:hover {
+            opacity: 0.7;
         }
 
-        .site-nav .nav-links a.orange-active {
-            color: var(--orange) !important;
-        }
-
-        .site-nav .nav-links a.orange-active::after {
-            background: var(--orange) !important;
-        }
-
-        .site-nav .nav-links a.blue-active {
-            color: var(--blue) !important;
-        }
-
-        .site-nav .nav-links a.blue-active::after {
-            background: var(--blue) !important;
+        /* Active menu item gets underline */
+        .site-nav .nav-links a.active::after {
+            background: var(--active) !important;
         }
 
         /* New Transaction Button */
