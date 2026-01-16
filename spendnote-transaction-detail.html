@@ -318,6 +318,46 @@
             box-shadow: 0 2px 8px var(--shadow);
         }
 
+        .amount-card-standalone {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.08), rgba(16, 185, 129, 0.05));
+            border: 2px solid rgba(5, 150, 105, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.1);
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .amount-card-standalone.out {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 146, 60, 0.05));
+            border: 2px solid rgba(245, 158, 11, 0.2);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+        }
+
+        .amount-direction {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .amount-direction.in {
+            color: var(--primary);
+        }
+
+        .amount-direction.out {
+            color: var(--orange);
+        }
+
+        .amount-direction i {
+            font-size: 20px;
+        }
+
         .transaction-info-grid {
             display: flex;
             flex-direction: column;
@@ -963,11 +1003,13 @@
 
                 <!-- RIGHT: Details -->
                 <div class="transaction-details-info">
-                    <!-- AMOUNT -->
-                    <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 2px solid var(--border);">
-                        <div class="info-label" style="margin-bottom: 8px;">Amount</div>
-                        <div class="amount-value in" style="font-size: 36px;">$7,200.00</div>
-                        <div class="status-badge in" style="margin-top: 8px;">⬇ Cash IN (Received)</div>
+                    <!-- AMOUNT CARD -->
+                    <div class="amount-card-standalone in">
+                        <div class="amount-direction in">
+                            <i class="fas fa-arrow-down"></i>
+                            Cash IN (Received)
+                        </div>
+                        <div class="amount-value in" style="font-size: 42px; margin: 0;">$7,200.00</div>
                     </div>
 
                     <h2 class="card-title" style="margin-bottom: 20px;">Line Items</h2>
