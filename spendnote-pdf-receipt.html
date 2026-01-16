@@ -276,8 +276,8 @@
       </div>
       <div class="header-right">
         <div class="identifiers">
-          <strong>Cash Box ID:</strong> REG-000123<br>
-          <strong>Receipt ID:</strong> TRX-2026-00342
+          <strong class="register-id">Cash Box ID:</strong> <span class="register-id">REG-000123</span><br>
+          <strong class="receipt-id-line">Receipt ID:</strong> <span class="receipt-id-line">TRX-2026-00342</span>
         </div>
         <svg class="logo" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <!-- ... -->
@@ -290,7 +290,7 @@
       <div>
         <div class="party-label">From</div>
         <div class="party-name company-name">Johnson Hardware Store</div>
-        <div class="party-info from-address">
+        <div class="party-info company-address from-address">
           123 Main Street<br>
           Springfield, IL 62701
         </div>
@@ -298,7 +298,7 @@
       <div>
         <div class="party-label">To</div>
         <div class="party-name">Sarah Johnson</div>
-        <div class="party-info to-address">
+        <div class="party-info contact-address to-address">
           456 Oak Avenue<br>
           Springfield, IL 62702
         </div>
@@ -330,44 +330,47 @@
   </div>
 
   <script>
-    // Read URL parameters for display options
-    const urlParams = new URLSearchParams(window.location.search);
-    
-    // Hide elements based on URL parameters
-    if (urlParams.get('logo') === '0') {
-      const logos = document.querySelectorAll('.logo');
-      logos.forEach(el => el.style.display = 'none');
-    }
-    
-    if (urlParams.get('company') === '0') {
-      const elements = document.querySelectorAll('.company-name');
-      elements.forEach(el => el.style.display = 'none');
-    }
-    
-    if (urlParams.get('address') === '0') {
-      const elements = document.querySelectorAll('.from-address');
-      elements.forEach(el => el.style.display = 'none');
-    }
-    
-    if (urlParams.get('Contact') === '0') {
-      const elements = document.querySelectorAll('.parties');
-      elements.forEach(el => el.style.display = 'none');
-    }
-    
-    if (urlParams.get('transaction-id') === '0') {
-      const elements = document.querySelectorAll('.identifiers');
-      elements.forEach(el => el.style.display = 'none');
-    }
-    
-    if (urlParams.get('note') === '0') {
-      const elements = document.querySelectorAll('.notes');
-      elements.forEach(el => el.style.display = 'none');
-    }
-    
-    if (urlParams.get('datetime') === '0') {
-      const elements = document.querySelectorAll('.receipt-date');
-      elements.forEach(el => el.style.display = 'none');
-    }
+const urlParams = new URLSearchParams(window.location.search);
+
+// Logo
+if (urlParams.get('logo') === '0') {
+    document.querySelectorAll('.logo, .logo-box, .sn-logo').forEach(el => el.style.display = 'none');
+}
+
+// Company Name (From party name)
+if (urlParams.get('company-name') === '0') {
+    document.querySelectorAll('.company-name').forEach(el => el.style.display = 'none');
+}
+
+// Company Address (From party address)
+if (urlParams.get('company-address') === '0') {
+    document.querySelectorAll('.company-address, .from-address').forEach(el => el.style.display = 'none');
+}
+
+// Contact Details (To party address only, keep To party name)
+if (urlParams.get('contact') === '0') {
+    document.querySelectorAll('.contact-address, .to-address').forEach(el => el.style.display = 'none');
+}
+
+// Receipt ID
+if (urlParams.get('receipt-id') === '0') {
+    document.querySelectorAll('.receipt-id, .receipt-id-line').forEach(el => el.style.display = 'none');
+}
+
+// Transaction ID (Cash Box ID)
+if (urlParams.get('transaction-id') === '0') {
+    document.querySelectorAll('.register-id').forEach(el => el.style.display = 'none');
+}
+
+// Note
+if (urlParams.get('note') === '0') {
+    document.querySelectorAll('.notes').forEach(el => el.style.display = 'none');
+}
+
+// Signatures
+if (urlParams.get('signatures') === '0') {
+    document.querySelectorAll('.signatures').forEach(el => el.style.display = 'none');
+}
   </script>
   <script src="assets/js/main.js"></script>
 </body>

@@ -1048,23 +1048,30 @@
                                     </label>
                                 </div>
                                 <div class="receipt-toggle-item">
-                                    <span class="toggle-label">Show Company Info</span>
+                                    <span class="toggle-label">Show Company Name</span>
                                     <label class="toggle-switch">
-                                        <input type="checkbox" checked data-field="company">
+                                        <input type="checkbox" checked data-field="company-name">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
                                 <div class="receipt-toggle-item">
-                                    <span class="toggle-label">Show Address</span>
+                                    <span class="toggle-label">Show Company Address</span>
                                     <label class="toggle-switch">
-                                        <input type="checkbox" checked data-field="address">
+                                        <input type="checkbox" checked data-field="company-address">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
                                 <div class="receipt-toggle-item">
                                     <span class="toggle-label">Show Contact Details</span>
                                     <label class="toggle-switch">
-                                        <input type="checkbox" checked data-field="partner">
+                                        <input type="checkbox" checked data-field="contact">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="receipt-toggle-item">
+                                    <span class="toggle-label">Show Receipt ID</span>
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" checked data-field="receipt-id">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
@@ -1086,13 +1093,6 @@
                                     <span class="toggle-label">Show Signatures</span>
                                     <label class="toggle-switch">
                                         <input type="checkbox" checked data-field="signatures">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="receipt-toggle-item">
-                                    <span class="toggle-label">Show Date/Time</span>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" checked data-field="datetime">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
@@ -1286,13 +1286,13 @@
         // Receipt preview - track display options
         let displayOptions = {
             logo: '1',
-            company: '1',
-            address: '1',
-            partner: '1',
+            'company-name': '1',
+            'company-address': '1',
+            contact: '1',
+            'receipt-id': '1',
             'transaction-id': '1',
             note: '1',
-            signatures: '1',
-            datetime: '1'
+            signatures: '1'
         };
 
         // Track current format
