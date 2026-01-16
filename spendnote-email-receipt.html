@@ -593,9 +593,14 @@ if (urlParams.get('contact') === '0') {
     document.querySelectorAll('.contact-address, .to-address').forEach(el => el.style.display = 'none');
 }
 
-// Partner IDs (both company and contact IDs)
-if (urlParams.get('partner-id') === '0') {
-    document.querySelectorAll('.party-id, .company-id, .contact-id').forEach(el => el.style.display = 'none');
+// Company ID (FROM)
+if (urlParams.get('company-id') === '0') {
+    document.querySelectorAll('.company-id').forEach(el => el.style.display = 'none');
+}
+
+// Contact ID (TO)
+if (urlParams.get('contact-id') === '0') {
+    document.querySelectorAll('.contact-id').forEach(el => el.style.display = 'none');
 }
 
 // Recorded By
