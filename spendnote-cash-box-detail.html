@@ -212,37 +212,13 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: white;
-        }
-
-        .btn-new-transaction.green {
-            background: linear-gradient(135deg, var(--primary), #10b981);
             color: white !important;
+            background: var(--active) !important;
         }
 
-        .btn-new-transaction.green:hover {
+        .btn-new-transaction:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
-        }
-
-        .btn-new-transaction.orange {
-            background: linear-gradient(135deg, var(--orange), #fb923c);
-            color: white !important;
-        }
-
-        .btn-new-transaction.orange:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-        }
-
-        .btn-new-transaction.blue {
-            background: linear-gradient(135deg, var(--blue), #60a5fa);
-            color: white !important;
-        }
-
-        .btn-new-transaction.blue:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.3);
         }
 
 /* ===== End imported ===== */
@@ -265,8 +241,8 @@
 
         /* COMPACT HEADER */
         .compact-header {
-            background: var(--surface);
-            border: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(var(--active-rgb), 0.05), rgba(var(--active-rgb), 0.02));
+            border: 2px solid rgba(var(--active-rgb), 0.2);
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 24px;
@@ -274,21 +250,6 @@
             align-items: center;
             gap: 32px;
             box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .compact-header.green {
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.05), rgba(5, 150, 105, 0.02));
-            border: 2px solid rgba(5, 150, 105, 0.2);
-        }
-
-        .compact-header.orange {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.02));
-            border: 2px solid rgba(245, 158, 11, 0.2);
-        }
-
-        .compact-header.blue {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02));
-            border: 2px solid rgba(59, 130, 246, 0.2);
         }
 
         .header-info {
@@ -299,31 +260,13 @@
             width: 48px;
             height: 48px;
             border-radius: 12px;
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(5, 150, 105, 0.08));
-            border: 2px solid rgba(5, 150, 105, 0.25);
+            background: linear-gradient(135deg, rgba(var(--active-rgb), 0.15), rgba(var(--active-rgb), 0.08));
+            border: 2px solid rgba(var(--active-rgb), 0.25);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
-            color: var(--primary);
-        }
-
-        .cash-box-icon.green {
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(5, 150, 105, 0.08));
-            border: 2px solid rgba(5, 150, 105, 0.25);
-            color: var(--primary);
-        }
-
-        .cash-box-icon.orange {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.08));
-            border: 2px solid rgba(245, 158, 11, 0.25);
-            color: var(--orange);
-        }
-
-        .cash-box-icon.blue {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.08));
-            border: 2px solid rgba(59, 130, 246, 0.25);
-            color: var(--blue);
+            color: var(--active);
         }
 
         .header-balance {
@@ -1425,37 +1368,11 @@
             const color = getUrlParameter('color') || 'green'; // Default to green
             const colorData = colorMap[color] || colorMap['green'];
             
-            // Set CSS variables for the entire page
+            // Set CSS variables for the entire page - this updates everything automatically
             document.documentElement.style.setProperty('--active', colorData.hex);
             document.documentElement.style.setProperty('--active-rgb', colorData.rgb);
             
-            // Update header card
-            const compactHeader = document.querySelector('.compact-header');
-            if (compactHeader) {
-                compactHeader.classList.remove('green', 'orange', 'blue', 'purple', 'red');
-                compactHeader.classList.add(color);
-            }
-            
-            // Update icon
-            const cashBoxIcon = document.querySelector('.cash-box-icon');
-            if (cashBoxIcon) {
-                cashBoxIcon.classList.remove('green', 'orange', 'blue', 'purple', 'red');
-                cashBoxIcon.classList.add(color);
-            }
-            
-            // Update active menu item
-            const activeMenuItem = document.querySelector('.nav-links a.active');
-            if (activeMenuItem) {
-                activeMenuItem.classList.remove('green-active', 'orange-active', 'blue-active', 'purple-active', 'red-active');
-                activeMenuItem.classList.add(color + '-active');
-            }
-            
-            // Update New Transaction button
-            const newTransactionBtn = document.querySelector('.btn-new-transaction');
-            if (newTransactionBtn) {
-                newTransactionBtn.classList.remove('green', 'orange', 'blue', 'purple', 'red');
-                newTransactionBtn.classList.add(color);
-            }
+            console.log('Applied color:', color, colorData);
         }
 
         // Toggle filter panel
