@@ -366,10 +366,29 @@
         }
 
         /* LAYOUT */
-        .content-layout {
+        .receipts-layout {
             display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 32px;
+            grid-template-columns: 1fr 600px;
+            gap: 24px;
+        }
+        
+        @media (max-width: 1400px) {
+            .receipts-layout {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            
+            .receipt-preview-panel {
+                position: relative;
+                top: 0;
+                order: -1;
+            }
+        }
+        
+        .receipts-settings {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         /* RECEIPT PREVIEW */
@@ -476,7 +495,7 @@
             display: none;
         }
 
-        .preview-container[data-show-Contact="0"] .Contact-details {
+        .preview-container[data-show-partner="0"] .partner-details {
             display: none;
         }
 
@@ -717,26 +736,82 @@
             line-height: 1.8;
         }
 
-        /* SETTINGS SIDEBAR */
-        .settings-sidebar {
+        /* FORM ELEMENTS */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* FORMAT CARDS */
+        .format-cards {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 12px;
         }
 
-        .settings-card {
+        .format-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
             background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 2px 12px var(--shadow);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .settings-card-title {
-            font-size: 16px;
-            font-weight: 800;
-            letter-spacing: -0.01em;
-            margin-bottom: 8px;
+        .format-card:hover {
+            border-color: var(--active);
+            background: rgba(var(--active-rgb), 0.02);
+        }
+
+        .format-card.active {
+            border-color: var(--active);
+            background: rgba(var(--active-rgb), 0.05);
+            box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.15);
+        }
+
+        .format-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(var(--active-rgb), 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--active);
+            flex-shrink: 0;
+        }
+
+        .format-info {
+            flex: 1;
+        }
+
+        .format-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .format-desc {
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
         /* RECEIPT TOGGLES */
@@ -760,10 +835,163 @@
             border-bottom: none;
         }
 
-        .receipt-toggle-item .toggle-label {
+        .toggle-label {
             font-size: 14px;
             font-weight: 600;
             color: var(--text);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border);
+            border-radius: 28px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--active);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        /* RECEIPT PREVIEW PANEL */
+        .receipt-preview-panel {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-title i {
+            color: var(--active);
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .zoom-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .zoom-btn:hover {
+            background: var(--surface-elevated);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .zoom-level {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .receipt-preview-container {
+            flex: 1;
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            position: relative;
+        }
+
+        .receipt-preview-wrapper {
+            width: 100%;
+            display: block;
+        }
+
+        .receipt-preview-frame {
+            width: 100%;
+            height: 1400px;
+            border: none;
+            background: white;
+            display: block;
+            zoom: 0.7;
+            transition: zoom 0.2s ease;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .setting-description {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
         /* TEMPLATE DROPDOWN */
@@ -1006,10 +1234,10 @@
                 <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="spendnote-cash-box-list.html">Cash Boxes</a></li>
                 <li><a href="spendnote-transaction-history.html">Transactions</a></li>
-                <li><a href="spendnote-contact-list.html">Contacts</a></li>
+                <li><a href="spendnote-partner-list.html">Partners</a></li>
                 <li><a href="spendnote-receipt-list.html" class="active">Receipts</a></li>
                 <li><a href="spendnote-user-settings.html">Settings</a></li>
-                <li><a href="index.html" class="btn btn-secondary">Log out</a></li>
+                <li><a href="spendnote-login.html" class="btn btn-secondary">Log out</a></li>
             </ul>
         </div>
     </nav>
@@ -1043,41 +1271,48 @@
         </div>
 
         <!-- CONTENT -->
-        <div class="content-layout">
-            <!-- RECEIPT FORMAT SELECTION & PREVIEW -->
-            <div class="receipt-preview-wrapper">
-                <div class="preview-header">
-                    <div class="preview-title">Select Receipt Format</div>
+        <div class="receipts-layout">
+            <!-- LEFT: Settings -->
+            <div class="receipts-settings">
+                <!-- DEFAULT FORMAT -->
+                <div class="form-group">
+                    <label class="form-label">Receipt format</label>
+                    <p class="form-hint" style="margin-bottom: 12px;">Select which format to preview</p>
+                    <div class="format-cards">
+                        <div class="format-card active" data-format="a4">
+                            <div class="format-icon">
+                                <i class="fas fa-copy"></i>
+                            </div>
+                            <div class="format-info">
+                                <div class="format-name">Print (2 copies)</div>
+                                <div class="format-desc">One for you, one for recipient</div>
+                            </div>
+                        </div>
+                        <div class="format-card" data-format="pdf">
+                            <div class="format-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="format-info">
+                                <div class="format-name">PDF Receipt</div>
+                                <div class="format-desc">Download as PDF file</div>
+                            </div>
+                        </div>
+                        <div class="format-card" data-format="email">
+                            <div class="format-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="format-info">
+                                <div class="format-name">Email Receipt</div>
+                                <div class="format-desc">Send to recipient</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- FORMAT CARDS -->
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
-                    <div class="format-card active" onclick="selectFormat('pdf')">
-                        <i class="fas fa-file-pdf" style="font-size: 32px; color: var(--primary); margin-bottom: 12px;"></i>
-                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">PDF Receipt</h3>
-                        <p style="font-size: 13px; color: var(--text-muted);">Standard A4 format</p>
-                    </div>
-                    <div class="format-card" onclick="selectFormat('email')">
-                        <i class="fas fa-envelope" style="font-size: 32px; color: var(--primary); margin-bottom: 12px;"></i>
-                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Email Receipt</h3>
-                        <p style="font-size: 13px; color: var(--text-muted);">Compact email format</p>
-                    </div>
-                    <div class="format-card" onclick="selectFormat('a4')">
-                        <i class="fas fa-copy" style="font-size: 32px; color: var(--primary); margin-bottom: 12px;"></i>
-                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">A4 Two Copies</h3>
-                        <p style="font-size: 13px; color: var(--text-muted);">Print with duplicate</p>
-                    </div>
-                </div>
-
-                <!-- RECEIPT PREVIEW IFRAME -->
-                <iframe id="receiptFrame" class="receipt-iframe" src="spendnote-pdf-receipt.html"></iframe>
-            </div>
-
-            <!-- DISPLAY OPTIONS SIDEBAR -->
-            <div class="settings-sidebar">
-                <div class="settings-card">
-                    <h3 class="settings-card-title">Fields to show</h3>
-                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">Amount, Date, and Payer/Receiver names are always shown</p>
+                <!-- FIELDS TO SHOW -->
+                <div class="form-group">
+                    <label class="form-label">Fields to show</label>
+                    <p class="form-hint" style="margin-bottom: 12px;">Amount, Date, and Payer/Receiver names are always shown</p>
                     
                     <div class="receipt-toggles">
                         <div class="receipt-toggle-item">
@@ -1087,7 +1322,6 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-
                         <div class="receipt-toggle-item">
                             <span class="toggle-label">Show Addresses</span>
                             <label class="toggle-switch">
@@ -1095,7 +1329,6 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-
                         <div class="receipt-toggle-item">
                             <span class="toggle-label">Show Tracking Details</span>
                             <label class="toggle-switch">
@@ -1103,7 +1336,6 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-
                         <div class="receipt-toggle-item">
                             <span class="toggle-label">Show Additional Info</span>
                             <label class="toggle-switch">
@@ -1111,7 +1343,6 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-
                         <div class="receipt-toggle-item">
                             <span class="toggle-label">Show Note</span>
                             <label class="toggle-switch">
@@ -1119,7 +1350,6 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
-
                         <div class="receipt-toggle-item">
                             <span class="toggle-label">Show Signatures</span>
                             <label class="toggle-switch">
@@ -1127,6 +1357,34 @@
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: Preview -->
+            <div class="receipt-preview-panel">
+                <div class="preview-header">
+                    <div class="preview-title">
+                        <i class="fas fa-eye"></i>
+                        Live Preview
+                    </div>
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="zoom-level" id="zoomLevel">70%</span>
+                        <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- RECEIPT PREVIEW IFRAME -->
+                <div class="receipt-preview-container">
+                    <div class="receipt-preview-wrapper" id="receiptWrapper">
+                        <iframe id="receiptFrame" class="receipt-preview-frame" src="spendnote-receipt-a4-two-copies.html"></iframe>
                     </div>
                 </div>
             </div>
@@ -1147,14 +1405,14 @@
         };
 
         // Track current format
-        let currentFormat = 'pdf';
+        let currentFormat = 'a4';
 
         // Build URL with parameters
         function buildReceiptUrl(format) {
             const baseUrls = {
+                'a4': 'spendnote-receipt-a4-two-copies.html',
                 'pdf': 'spendnote-pdf-receipt.html',
-                'email': 'spendnote-email-receipt.html',
-                'a4': 'spendnote-receipt-a4-two-copies.html'
+                'email': 'spendnote-email-receipt.html'
             };
             
             const params = new URLSearchParams();
@@ -1171,24 +1429,24 @@
             iframe.src = buildReceiptUrl(currentFormat);
         }
 
-        // Format selection
-        function selectFormat(format) {
-            // Remove active class from all cards
-            document.querySelectorAll('.format-card').forEach(card => {
-                card.classList.remove('active');
+        // Format card selection
+        document.querySelectorAll('.format-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove active class from all cards
+                document.querySelectorAll('.format-card').forEach(c => {
+                    c.classList.remove('active');
+                });
+                
+                // Add active class to clicked card
+                this.classList.add('active');
+                
+                // Update current format and reload preview
+                currentFormat = this.dataset.format;
+                reloadIframe();
             });
-            
-            // Add active class to clicked card
-            event.currentTarget.classList.add('active');
-            
-            // Update current format
-            currentFormat = format;
-            
-            // Reload iframe with new format
-            reloadIframe();
-        }
+        });
 
-        // Toggle switches for receipt fields - update iframe in real-time
+        // Toggle switches for receipt fields
         document.querySelectorAll('.receipt-toggles input[type="checkbox"]').forEach(toggle => {
             toggle.addEventListener('change', function() {
                 const field = this.dataset.field;
@@ -1201,9 +1459,44 @@
             });
         });
 
+        // Zoom functionality
+        let currentZoom = 0.7;
+        const zoomStep = 0.05;
+        const minZoom = 0.5;
+        const maxZoom = 1.2;
+
+        function updateZoom() {
+            const iframe = document.getElementById('receiptFrame');
+            const zoomLevel = document.getElementById('zoomLevel');
+            if (iframe && zoomLevel) {
+                iframe.style.zoom = currentZoom;
+                zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
+            }
+        }
+
+        function zoomIn() {
+            if (currentZoom < maxZoom) {
+                currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
+                updateZoom();
+            }
+        }
+
+        function zoomOut() {
+            if (currentZoom > minZoom) {
+                currentZoom = Math.max(currentZoom - zoomStep, minZoom);
+                updateZoom();
+            }
+        }
+
+        function resetZoom() {
+            currentZoom = 0.7;
+            updateZoom();
+        }
+
         // Initialize iframe on page load
         window.addEventListener('DOMContentLoaded', function() {
             reloadIframe();
+            updateZoom();
         });
     </script>
 
