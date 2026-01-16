@@ -440,47 +440,22 @@ const urlParams = new URLSearchParams(window.location.search);
 
 // Logo
 if (urlParams.get('logo') === '0') {
-    document.querySelectorAll('.logo, .logo-box, .sn-logo').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.logo, .logo-box, .logo-img, .sn-logo').forEach(el => el.style.display = 'none');
 }
 
-// Company Name (From party name)
-if (urlParams.get('company-name') === '0') {
-    document.querySelectorAll('.company-name').forEach(el => el.style.display = 'none');
+// Addresses (FROM and TO addresses, but keep names visible)
+if (urlParams.get('addresses') === '0') {
+    document.querySelectorAll('.from-address, .to-address, .party-address, .company-address, .contact-address').forEach(el => el.style.display = 'none');
 }
 
-// Company Address (From party address)
-if (urlParams.get('company-address') === '0') {
-    document.querySelectorAll('.company-address, .from-address').forEach(el => el.style.display = 'none');
+// Tracking Details (Receipt ID, Cash Box ID, Recorded by)
+if (urlParams.get('tracking') === '0') {
+    document.querySelectorAll('.identifiers, .receipt-ids, .recorded-by, .register-id, .receipt-id').forEach(el => el.style.display = 'none');
 }
 
-// Contact Details (To party address only, keep To party name)
-if (urlParams.get('contact') === '0') {
-    document.querySelectorAll('.contact-address, .to-address').forEach(el => el.style.display = 'none');
-}
-
-// Company ID (FROM)
-if (urlParams.get('company-id') === '0') {
-    document.querySelectorAll('.company-id').forEach(el => el.style.display = 'none');
-}
-
-// Contact ID (TO)
-if (urlParams.get('contact-id') === '0') {
-    document.querySelectorAll('.contact-id').forEach(el => el.style.display = 'none');
-}
-
-// Recorded By
-if (urlParams.get('recorded-by') === '0') {
-    document.querySelectorAll('.recorded-by').forEach(el => el.style.display = 'none');
-}
-
-// Receipt ID
-if (urlParams.get('receipt-id') === '0') {
-    document.querySelectorAll('.receipt-id, .receipt-id-line').forEach(el => el.style.display = 'none');
-}
-
-// Transaction ID (Cash Box ID)
-if (urlParams.get('transaction-id') === '0') {
-    document.querySelectorAll('.register-id').forEach(el => el.style.display = 'none');
+// Additional Info (two custom info lines)
+if (urlParams.get('additional') === '0') {
+    document.querySelectorAll('.additional-info, .custom-info, .extra-info, .company-id, .contact-id').forEach(el => el.style.display = 'none');
 }
 
 // Note
