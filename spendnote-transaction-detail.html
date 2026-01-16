@@ -286,6 +286,23 @@
         /* CONTENT GRID */
         .content-grid {
             display: grid;
+            grid-template-columns: 1fr 600px;
+            gap: 24px;
+        }
+
+        @media (max-width: 1400px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .receipt-preview-panel {
+                order: -1;
+            }
+        }
+
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
             gap: 16px;
         }
 
@@ -448,6 +465,177 @@
             font-size: 14px;
         }
 
+        /* RECEIPT PREVIEW PANEL */
+        .receipt-preview-panel {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .preview-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-title i {
+            color: var(--active);
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .zoom-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .zoom-btn:hover {
+            background: var(--surface-elevated);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .zoom-level {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            min-width: 45px;
+            text-align: center;
+            user-select: none;
+        }
+
+        .receipt-preview-container {
+            flex: 1;
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: white;
+            position: relative;
+        }
+
+        .receipt-preview-wrapper {
+            width: 100%;
+            display: block;
+        }
+
+        .receipt-preview-frame {
+            width: 100%;
+            height: 1400px;
+            border: none;
+            background: white;
+            display: block;
+            zoom: 0.7;
+            transition: zoom 0.2s ease;
+        }
+
+        /* FORMAT CARDS */
+        .format-cards {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .format-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 12px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            text-align: center;
+        }
+
+        .format-card:hover {
+            border-color: var(--active);
+            background: rgba(var(--active-rgb), 0.02);
+        }
+
+        .format-card.active {
+            border-color: var(--active);
+            background: rgba(var(--active-rgb), 0.05);
+            box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.15);
+        }
+
+        .format-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(var(--active-rgb), 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--active);
+            flex-shrink: 0;
+        }
+
+        .format-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .format-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .format-desc {
+            font-size: 10px;
+            color: var(--text-muted);
+            line-height: 1.2;
+            display: none;
+        }
+
+        .receipt-settings-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            display: block;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .header-top {
@@ -542,9 +730,13 @@
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button class="btn btn-primary" onclick="window.location.href='spendnote-receipt-detail.html'">
-                        <i class="fas fa-receipt"></i>
-                        View Receipt
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="fas fa-print"></i>
+                        Print Receipt
+                    </button>
+                    <button class="btn btn-secondary" onclick="alert('Download PDF\n\nIn production:\n- Generate PDF from receipt\n- Download file')">
+                        <i class="fas fa-file-pdf"></i>
+                        Download PDF
                     </button>
                     <button class="btn btn-danger" onclick="if(confirm('Delete Transaction?\n\n⚠️ Admin access required\n\nThis action cannot be undone.\n\nDeleting this transaction will affect the Cash Box balance.\n\nAre you sure you want to delete this transaction?')) { alert('Transaction deleted (Demo mode)\n\nIn production:\n- Check admin role\n- Update Cash Box balance\n- Archive transaction\n- Redirect to dashboard'); }">
                         <i class="fas fa-trash"></i>
@@ -556,98 +748,163 @@
 
         <!-- CONTENT -->
         <div class="content-grid">
-            <!-- AMOUNT CARD -->
-            <div class="card amount-card">
-                <div class="amount-label">Transaction Amount</div>
-                <div class="amount-value in">$7,200.00</div>
-                <div class="status-badge in">⬇ Cash IN (Received)</div>
-            </div>
+            <!-- LEFT: Transaction Details -->
+            <div class="transaction-details">
+                <!-- AMOUNT CARD -->
+                <div class="card amount-card">
+                    <div class="amount-label">Transaction Amount</div>
+                    <div class="amount-value in">$7,200.00</div>
+                    <div class="status-badge in">⬇ Cash IN (Received)</div>
+                </div>
 
-            <!-- TRANSACTION & Contact INFO -->
-            <div class="card">
-                <h2 class="card-title">Transaction & Contact Details</h2>
-                <div class="info-grid">
-                    <div class="info-row">
-                        <span class="info-label">Transaction ID</span>
-                        <span class="info-value"><code>TRX-342</code></span>
+                <!-- TRANSACTION & Contact INFO -->
+                <div class="card">
+                    <h2 class="card-title">Transaction & Contact Details</h2>
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="info-label">Transaction ID</span>
+                            <span class="info-value"><code>TRX-342</code></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Date</span>
+                            <span class="info-value">January 6, 2026</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Cash Box</span>
+                            <span class="info-value highlight">Main Office (CR-001)</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Contact Name</span>
+                            <span class="info-value">John Smith</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Contact ID</span>
+                            <span class="info-value">CLIENT-4523</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Reference</span>
+                            <span class="info-value">PO-2026-0142</span>
+                        </div>
+                        <div class="info-row full">
+                            <span class="info-label">Contact Address</span>
+                            <span class="info-value">1234 Main Street, New York, NY 10001</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LINE ITEMS -->
+                <div class="card">
+                    <h2 class="card-title">Line Items</h2>
+                    <div class="line-items-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Consulting Services - Q4 2025</td>
+                                    <td>$5,000.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Project Management Fee</td>
+                                    <td>$1,800.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Additional Support Hours</td>
+                                    <td>$400.00</td>
+                                </tr>
+                                <tr class="table-total">
+                                    <td><strong>Total</strong></td>
+                                    <td><strong>$7,200.00</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- NOTE & RECORD INFO -->
+                <div class="card">
+                    <h2 class="card-title">Additional Information</h2>
+                    <div class="info-grid" style="margin-bottom: 16px;">
+                        <div class="info-row">
+                            <span class="info-label">Logged By</span>
+                            <span class="info-value">Jane Doe</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Created At</span>
+                            <span class="info-value">Jan 6, 2026 - 2:45 PM</span>
+                        </div>
                     </div>
                     <div class="info-row">
-                        <span class="info-label">Date</span>
-                        <span class="info-value">January 6, 2026</span>
+                        <span class="info-label">Note</span>
+                        <div class="note-box" style="margin-top: 8px;">
+                            Payment received for Q4 consulting services. Client was very satisfied with the project outcomes and has indicated interest in continuing work in Q1 2026.
+                        </div>
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Cash Box</span>
-                        <span class="info-value highlight">Main Office (CR-001)</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Contact Name</span>
-                        <span class="info-value">John Smith</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Contact ID</span>
-                        <span class="info-value">CLIENT-4523</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Reference</span>
-                        <span class="info-value">PO-2026-0142</span>
-                    </div>
-                    <div class="info-row full">
-                        <span class="info-label">Contact Address</span>
-                        <span class="info-value">1234 Main Street, New York, NY 10001</span>
+                </div>
+
+                <!-- RECEIPT FORMAT SELECTOR -->
+                <div class="card">
+                    <h2 class="card-title">Receipt Format</h2>
+                    <label class="receipt-settings-label">Select format to preview</label>
+                    <div class="format-cards">
+                        <div class="format-card active" data-format="a4">
+                            <div class="format-icon">
+                                <i class="fas fa-copy"></i>
+                            </div>
+                            <div class="format-info">
+                                <div class="format-name">Print (2 copies)</div>
+                                <div class="format-desc">One for you, one for recipient</div>
+                            </div>
+                        </div>
+                        <div class="format-card" data-format="pdf">
+                            <div class="format-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="format-info">
+                                <div class="format-name">PDF Receipt</div>
+                                <div class="format-desc">Download as PDF file</div>
+                            </div>
+                        </div>
+                        <div class="format-card" data-format="email">
+                            <div class="format-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="format-info">
+                                <div class="format-name">Email Receipt</div>
+                                <div class="format-desc">Send to recipient</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- LINE ITEMS -->
-            <div class="card">
-                <h2 class="card-title">Line Items</h2>
-                <div class="line-items-table">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Consulting Services - Q4 2025</td>
-                                <td>$5,000.00</td>
-                            </tr>
-                            <tr>
-                                <td>Project Management Fee</td>
-                                <td>$1,800.00</td>
-                            </tr>
-                            <tr>
-                                <td>Additional Support Hours</td>
-                                <td>$400.00</td>
-                            </tr>
-                            <tr class="table-total">
-                                <td><strong>Total</strong></td>
-                                <td><strong>$7,200.00</strong></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- NOTE & RECORD INFO -->
-            <div class="card">
-                <h2 class="card-title">Additional Information</h2>
-                <div class="info-grid" style="margin-bottom: 16px;">
-                    <div class="info-row">
-                        <span class="info-label">Logged By</span>
-                        <span class="info-value">Jane Doe</span>
+            <!-- RIGHT: Receipt Preview -->
+            <div class="receipt-preview-panel">
+                <div class="preview-header">
+                    <div class="preview-title">
+                        <i class="fas fa-eye"></i>
+                        Live Preview
                     </div>
-                    <div class="info-row">
-                        <span class="info-label">Created At</span>
-                        <span class="info-value">Jan 6, 2026 - 2:45 PM</span>
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="zoom-level" id="zoomLevel">70%</span>
+                        <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom">
+                            <i class="fas fa-redo"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="info-row">
-                    <span class="info-label">Note</span>
-                    <div class="note-box" style="margin-top: 8px;">
-                        Payment received for Q4 consulting services. Client was very satisfied with the project outcomes and has indicated interest in continuing work in Q1 2026.
+                <div class="receipt-preview-container">
+                    <div class="receipt-preview-wrapper" id="receiptWrapper">
+                        <iframe id="receiptFrame" class="receipt-preview-frame" src="spendnote-receipt-a4-two-copies.html"></iframe>
                     </div>
                 </div>
             </div>
@@ -715,6 +972,86 @@
 
 
 
+    <script>
+        // Track current format
+        let currentFormat = 'a4';
+
+        // Build URL with parameters
+        function buildReceiptUrl(format) {
+            const baseUrls = {
+                'a4': 'spendnote-receipt-a4-two-copies.html',
+                'pdf': 'spendnote-pdf-receipt.html',
+                'email': 'spendnote-email-receipt.html'
+            };
+            
+            return baseUrls[format];
+        }
+
+        // Reload iframe with current settings
+        function reloadIframe() {
+            const iframe = document.getElementById('receiptFrame');
+            if (iframe) {
+                iframe.src = buildReceiptUrl(currentFormat);
+            }
+        }
+
+        // Format card selection
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.format-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove active class from all cards
+                    document.querySelectorAll('.format-card').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked card
+                    this.classList.add('active');
+                    
+                    // Update current format and reload preview
+                    currentFormat = this.dataset.format;
+                    reloadIframe();
+                });
+            });
+
+            // Initialize iframe
+            reloadIframe();
+            updateZoom();
+        });
+
+        // Zoom functionality
+        let currentZoom = 0.7;
+        const zoomStep = 0.05;
+        const minZoom = 0.5;
+        const maxZoom = 1.2;
+
+        function updateZoom() {
+            const iframe = document.getElementById('receiptFrame');
+            const zoomLevel = document.getElementById('zoomLevel');
+            if (iframe && zoomLevel) {
+                iframe.style.zoom = currentZoom;
+                zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
+            }
+        }
+
+        function zoomIn() {
+            if (currentZoom < maxZoom) {
+                currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
+                updateZoom();
+            }
+        }
+
+        function zoomOut() {
+            if (currentZoom > minZoom) {
+                currentZoom = Math.max(currentZoom - zoomStep, minZoom);
+                updateZoom();
+            }
+        }
+
+        function resetZoom() {
+            currentZoom = 0.7;
+            updateZoom();
+        }
+    </script>
     <script src="assets/js/main.js"></script>
 </body>
 </html>
