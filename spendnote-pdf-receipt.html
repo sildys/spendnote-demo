@@ -354,7 +354,7 @@
         <thead>
           <tr>
             <th class="description-header">Description</th>
-            <th class="amount">Amount</th>
+            <th class="amount-header">Amount</th>
           </tr>
         </thead>
         <tbody>
@@ -445,6 +445,7 @@ const totalLabel = urlParams.get('totalLabel');
 const fromLabel = urlParams.get('fromLabel');
 const toLabel = urlParams.get('toLabel');
 const descriptionLabel = urlParams.get('descriptionLabel');
+const amountLabel = urlParams.get('amountLabel');
 const notesLabel = urlParams.get('notesLabel');
 const issuedByLabel = urlParams.get('issuedByLabel');
 const receivedByLabel = urlParams.get('receivedByLabel');
@@ -468,6 +469,9 @@ if (toLabel) {
 }
 if (descriptionLabel) {
     document.querySelectorAll('.description-header').forEach(el => el.textContent = descriptionLabel);
+}
+if (amountLabel) {
+    document.querySelectorAll('.amount-header').forEach(el => el.textContent = amountLabel);
 }
 if (notesLabel) {
     document.querySelectorAll('.notes-label').forEach(el => el.textContent = notesLabel);

@@ -1102,7 +1102,7 @@
                                     <p class="form-hint" style="font-size: 12px; margin-top: 4px;">The main heading on your receipt</p>
                                 </div>
                                 <div>
-                                    <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Amount label</label>
+                                    <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Total label</label>
                                     <input type="text" class="form-input" id="totalLabel" placeholder="Total handed over">
                                 </div>
                             </div>
@@ -1124,9 +1124,17 @@
                                     <input type="text" class="form-input" id="descriptionLabel" placeholder="Description">
                                 </div>
                                 <div>
+                                    <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Amount label</label>
+                                    <input type="text" class="form-input" id="amountLabel" placeholder="Amount">
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                                <div>
                                     <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Note label</label>
                                     <input type="text" class="form-input" id="notesLabel" placeholder="Notes">
                                 </div>
+                                <div></div>
                             </div>
                             
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
@@ -1362,6 +1370,7 @@
             const fromLabel = document.getElementById('fromLabel')?.value;
             const toLabel = document.getElementById('toLabel')?.value;
             const descriptionLabel = document.getElementById('descriptionLabel')?.value;
+            const amountLabel = document.getElementById('amountLabel')?.value;
             const notesLabel = document.getElementById('notesLabel')?.value;
             const issuedByLabel = document.getElementById('issuedByLabel')?.value;
             const receivedByLabel = document.getElementById('receivedByLabel')?.value;
@@ -1372,6 +1381,7 @@
             if (fromLabel) params.append('fromLabel', fromLabel);
             if (toLabel) params.append('toLabel', toLabel);
             if (descriptionLabel) params.append('descriptionLabel', descriptionLabel);
+            if (amountLabel) params.append('amountLabel', amountLabel);
             if (notesLabel) params.append('notesLabel', notesLabel);
             if (issuedByLabel) params.append('issuedByLabel', issuedByLabel);
             if (receivedByLabel) params.append('receivedByLabel', receivedByLabel);
@@ -1402,7 +1412,7 @@
         });
 
         // Custom text fields - update iframe on input change
-        ['receiptTitle', 'totalLabel', 'fromLabel', 'toLabel', 'descriptionLabel', 'notesLabel', 'issuedByLabel', 'receivedByLabel', 'footerNote'].forEach(fieldId => {
+        ['receiptTitle', 'totalLabel', 'fromLabel', 'toLabel', 'descriptionLabel', 'amountLabel', 'notesLabel', 'issuedByLabel', 'receivedByLabel', 'footerNote'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('input', function() {
