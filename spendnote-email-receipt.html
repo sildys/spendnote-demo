@@ -11,6 +11,7 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Arial, sans-serif;
       background-color: #f5f5f5;
       -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
     }
     
     .email-wrapper {
@@ -18,6 +19,17 @@
       margin: 0 auto;
       background: #f5f5f5;
       padding: 40px 20px;
+    }
+    
+    /* Remove padding when in iframe to prevent double scrollbar */
+    body.in-iframe {
+      background: white;
+    }
+    
+    body.in-iframe .email-wrapper {
+      padding: 0;
+      max-width: 100%;
+      background: white;
     }
     
     .email-container {
@@ -528,6 +540,11 @@
   </div>
 
   <script>
+// Detect if in iframe and add class to body
+if (window.self !== window.top) {
+    document.body.classList.add('in-iframe');
+}
+
 const urlParams = new URLSearchParams(window.location.search);
 
 // Logo
