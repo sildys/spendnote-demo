@@ -179,6 +179,12 @@
             opacity: 0.9;
         }
 
+        /* Dynamic navigation background based on cash box color */
+        .site-nav {
+            background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.04)) !important;
+            border-bottom: 2px solid rgba(var(--active-rgb), 0.15) !important;
+        }
+
         /* Cash Box Color Active States */
         .site-nav .nav-links a.green-active {
             color: var(--primary) !important;
