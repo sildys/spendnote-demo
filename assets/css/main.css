@@ -49,13 +49,14 @@ body {
 
 /* Navigation */
 .site-nav {
-    background: var(--surface);
+    background: #ffffff;
     border-bottom: 1px solid var(--border);
     padding: 1rem 0;
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: 0 2px 8px var(--shadow);
+    backdrop-filter: blur(10px);
 }
 
 .nav-container {
