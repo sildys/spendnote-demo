@@ -285,25 +285,49 @@
 
         /* CONTENT GRID */
         .content-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .transaction-summary {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .transaction-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .receipts-layout {
             display: grid;
             grid-template-columns: 1fr 600px;
             gap: 24px;
         }
-
+        
         @media (max-width: 1400px) {
-            .content-grid {
+            .receipts-layout {
                 grid-template-columns: 1fr;
+                gap: 24px;
             }
             
             .receipt-preview-panel {
+                position: relative;
+                top: 0;
                 order: -1;
             }
         }
-
-        .transaction-details {
+        
+        .receipts-settings {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
 
         .card {
@@ -717,9 +741,6 @@
     <main class="main-content">
         <!-- HEADER -->
         <div class="page-header">
-            <div class="breadcrumb">
-                <a href="dashboard.html">← Back to Dashboard</a>
-            </div>
             <div class="header-top">
                 <div class="header-left">
                     <h1>Transaction TRX-342</h1>
@@ -748,53 +769,51 @@
 
         <!-- CONTENT -->
         <div class="content-grid">
-            <!-- LEFT: Transaction Details -->
-            <div class="transaction-details">
-                <!-- AMOUNT CARD -->
-                <div class="card amount-card">
-                    <div class="amount-label">Transaction Amount</div>
-                    <div class="amount-value in">$7,200.00</div>
-                    <div class="status-badge in">⬇ Cash IN (Received)</div>
+            <!-- TRANSACTION SUMMARY -->
+            <div class="transaction-summary">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="card-title" style="margin: 0;">Transaction Details</h2>
+                    <div class="amount-value in" style="margin: 0;">$7,200.00</div>
                 </div>
-
-                <!-- TRANSACTION & Contact INFO -->
-                <div class="card">
-                    <h2 class="card-title">Transaction & Contact Details</h2>
-                    <div class="info-grid">
-                        <div class="info-row">
-                            <span class="info-label">Transaction ID</span>
-                            <span class="info-value"><code>TRX-342</code></span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Date</span>
-                            <span class="info-value">January 6, 2026</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Cash Box</span>
-                            <span class="info-value highlight">Main Office (CR-001)</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Contact Name</span>
-                            <span class="info-value">John Smith</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Contact ID</span>
-                            <span class="info-value">CLIENT-4523</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Reference</span>
-                            <span class="info-value">PO-2026-0142</span>
-                        </div>
-                        <div class="info-row full">
-                            <span class="info-label">Contact Address</span>
-                            <span class="info-value">1234 Main Street, New York, NY 10001</span>
-                        </div>
+                
+                <div class="transaction-summary-grid">
+                    <div class="info-row">
+                        <span class="info-label">Transaction ID</span>
+                        <span class="info-value"><code>TRX-342</code></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Date</span>
+                        <span class="info-value">January 6, 2026</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Cash Box</span>
+                        <span class="info-value highlight">Main Office (CR-001)</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Contact Name</span>
+                        <span class="info-value">John Smith</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Contact ID</span>
+                        <span class="info-value">CLIENT-4523</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Reference</span>
+                        <span class="info-value">PO-2026-0142</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Logged By</span>
+                        <span class="info-value">Jane Doe</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Created At</span>
+                        <span class="info-value">Jan 6, 2026 - 2:45 PM</span>
                     </div>
                 </div>
 
                 <!-- LINE ITEMS -->
-                <div class="card">
-                    <h2 class="card-title">Line Items</h2>
+                <div style="margin-top: 24px;">
+                    <h3 style="font-size: 14px; font-weight: 700; margin-bottom: 12px;">Line Items</h3>
                     <div class="line-items-table">
                         <table>
                             <thead>
@@ -825,86 +844,78 @@
                     </div>
                 </div>
 
-                <!-- NOTE & RECORD INFO -->
-                <div class="card">
-                    <h2 class="card-title">Additional Information</h2>
-                    <div class="info-grid" style="margin-bottom: 16px;">
-                        <div class="info-row">
-                            <span class="info-label">Logged By</span>
-                            <span class="info-value">Jane Doe</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Created At</span>
-                            <span class="info-value">Jan 6, 2026 - 2:45 PM</span>
-                        </div>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Note</span>
-                        <div class="note-box" style="margin-top: 8px;">
-                            Payment received for Q4 consulting services. Client was very satisfied with the project outcomes and has indicated interest in continuing work in Q1 2026.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- RECEIPT FORMAT SELECTOR -->
-                <div class="card">
-                    <h2 class="card-title">Receipt Format</h2>
-                    <label class="receipt-settings-label">Select format to preview</label>
-                    <div class="format-cards">
-                        <div class="format-card active" data-format="a4">
-                            <div class="format-icon">
-                                <i class="fas fa-copy"></i>
-                            </div>
-                            <div class="format-info">
-                                <div class="format-name">Print (2 copies)</div>
-                                <div class="format-desc">One for you, one for recipient</div>
-                            </div>
-                        </div>
-                        <div class="format-card" data-format="pdf">
-                            <div class="format-icon">
-                                <i class="fas fa-file-pdf"></i>
-                            </div>
-                            <div class="format-info">
-                                <div class="format-name">PDF Receipt</div>
-                                <div class="format-desc">Download as PDF file</div>
-                            </div>
-                        </div>
-                        <div class="format-card" data-format="email">
-                            <div class="format-icon">
-                                <i class="fas fa-envelope"></i>
-                            </div>
-                            <div class="format-info">
-                                <div class="format-name">Email Receipt</div>
-                                <div class="format-desc">Send to recipient</div>
-                            </div>
-                        </div>
+                <!-- NOTE -->
+                <div style="margin-top: 24px;">
+                    <span class="info-label">Note</span>
+                    <div class="note-box" style="margin-top: 8px;">
+                        Payment received for Q4 consulting services. Client was very satisfied with the project outcomes and has indicated interest in continuing work in Q1 2026.
                     </div>
                 </div>
             </div>
 
-            <!-- RIGHT: Receipt Preview -->
-            <div class="receipt-preview-panel">
-                <div class="preview-header">
-                    <div class="preview-title">
-                        <i class="fas fa-eye"></i>
-                        Live Preview
-                    </div>
-                    <div class="zoom-controls">
-                        <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                        <span class="zoom-level" id="zoomLevel">70%</span>
-                        <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom">
-                            <i class="fas fa-redo"></i>
-                        </button>
+            <!-- RECEIPT SETTINGS & PREVIEW -->
+            <div class="receipts-layout">
+                <!-- LEFT: Receipt Settings -->
+                <div class="receipts-settings">
+                    <div class="card">
+                        <h2 class="card-title">Receipt Format</h2>
+                        <label class="receipt-settings-label">Select format to preview</label>
+                        <div class="format-cards">
+                            <div class="format-card active" data-format="a4">
+                                <div class="format-icon">
+                                    <i class="fas fa-copy"></i>
+                                </div>
+                                <div class="format-info">
+                                    <div class="format-name">Print (2 copies)</div>
+                                    <div class="format-desc">One for you, one for recipient</div>
+                                </div>
+                            </div>
+                            <div class="format-card" data-format="pdf">
+                                <div class="format-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="format-info">
+                                    <div class="format-name">PDF Receipt</div>
+                                    <div class="format-desc">Download as PDF file</div>
+                                </div>
+                            </div>
+                            <div class="format-card" data-format="email">
+                                <div class="format-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="format-info">
+                                    <div class="format-name">Email Receipt</div>
+                                    <div class="format-desc">Send to recipient</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="receipt-preview-container">
-                    <div class="receipt-preview-wrapper" id="receiptWrapper">
-                        <iframe id="receiptFrame" class="receipt-preview-frame" src="spendnote-receipt-a4-two-copies.html"></iframe>
+
+                <!-- RIGHT: Receipt Preview -->
+                <div class="receipt-preview-panel">
+                    <div class="preview-header">
+                        <div class="preview-title">
+                            <i class="fas fa-eye"></i>
+                            Live Preview
+                        </div>
+                        <div class="zoom-controls">
+                            <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="zoom-level" id="zoomLevel">70%</span>
+                            <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="receipt-preview-container">
+                        <div class="receipt-preview-wrapper" id="receiptWrapper">
+                            <iframe id="receiptFrame" class="receipt-preview-frame" src="spendnote-receipt-a4-two-copies.html"></iframe>
+                        </div>
                     </div>
                 </div>
             </div>
