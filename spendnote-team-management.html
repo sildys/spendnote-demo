@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Team Management - SpendNote">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <title>Team Management - SpendNote</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <style>
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            flex: 1;
+            padding: 28px 24px;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .team-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 16px var(--shadow);
+        }
+
+        .section-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .section-description {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .add-member-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .form-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-select {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            min-width: 150px;
+        }
+
+        .team-members-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .team-member-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .team-member-card:hover {
+            border-color: rgba(var(--active-rgb), 0.3);
+            box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.1);
+        }
+
+        .member-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border);
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 2px;
+        }
+
+        .member-email {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .member-role-badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .member-role-badge.owner {
+            background: rgba(var(--active-rgb), 0.1);
+            color: var(--active);
+        }
+
+        .member-role-badge.admin {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .member-role-badge.viewer {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-muted);
+        }
+
+        .member-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-remove {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-remove:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .member-note {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<nav class="site-nav">
+  <div class="nav-container">
+            <a href="dashboard.html" class="logo">
+                <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#nav-logo-gradient)"/>
+                    <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                    <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                    <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                    <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                    <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="nav-logo-gradient" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#059669"/>
+                            <stop offset="100%" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span style="font-weight: 900; font-size: 1.5rem; margin-left: 10px; color: #000000; letter-spacing: -0.02em;">SpendNote</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="spendnote-cash-box-list.html">Cash Boxes</a></li>
+                <li><a href="spendnote-transaction-history.html">Transactions</a></li>
+                <li><a href="spendnote-contact-list.html">Contacts</a></li>
+                <li class="user-avatar-wrapper" id="userAvatarBtn">
+                    <div class="user-avatar">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="User">
+                    </div>
+                    <span class="user-name">John</span>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown-menu">
+                            <a href="spendnote-user-settings.html" class="user-dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="user-dropdown-divider"></div>
+                            <a href="index.html" class="user-dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Log out
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <div class="page-header">
+            <h1 class="page-title">Team Management</h1>
+            <p class="page-subtitle">Manage team members and their access to cash boxes</p>
+        </div>
+
+        <div class="team-section">
+            <div class="section-header">
+                <h2 class="section-title">Team Members</h2>
+                <p class="section-description">Add or remove team members and manage their roles</p>
+            </div>
+
+            <div class="add-member-form">
+                <input type="email" class="form-input" placeholder="Email address" id="newMemberEmail">
+                <select class="form-select" id="newMemberRole">
+                    <option value="admin">Admin</option>
+                    <option value="viewer">Viewer</option>
+                </select>
+                <button class="btn btn-primary" onclick="addMember()">
+                    <i class="fas fa-plus"></i>
+                    Add Member
+                </button>
+            </div>
+
+            <div class="team-members-list">
+                <div class="team-member-card">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="John Doe" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">John Doe</div>
+                        <div class="member-email">john.doe@example.com</div>
+                    </div>
+                    <div class="member-role-badge owner">Owner</div>
+                    <div class="member-actions">
+                        <span class="member-note">Cannot be removed</span>
+                    </div>
+                </div>
+
+                <div class="team-member-card">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="Jane Smith" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Jane Smith</div>
+                        <div class="member-email">jane.smith@example.com</div>
+                    </div>
+                    <div class="member-role-badge admin">Admin</div>
+                    <div class="member-actions">
+                        <button class="btn-remove" onclick="removeMember(this)" title="Remove member">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="team-member-card">
+                    <img src="https://i.pravatar.cc/150?img=8" alt="Mike Johnson" class="member-avatar">
+                    <div class="member-info">
+                        <div class="member-name">Mike Johnson</div>
+                        <div class="member-email">mike.johnson@example.com</div>
+                    </div>
+                    <div class="member-role-badge viewer">Viewer</div>
+                    <div class="member-actions">
+                        <button class="btn-remove" onclick="removeMember(this)" title="Remove member">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addMember() {
+            const email = document.getElementById('newMemberEmail').value;
+            const role = document.getElementById('newMemberRole').value;
+            
+            if (!email) {
+                alert('Please enter an email address');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            alert(`Member ${email} added as ${role} (demo only)`);
+            document.getElementById('newMemberEmail').value = '';
+        }
+        
+        function removeMember(button) {
+            const card = button.closest('.team-member-card');
+            const name = card.querySelector('.member-name').textContent;
+            
+            if (confirm(`Remove ${name} from the team?\n\nThey will lose access to all cash boxes.`)) {
+                card.style.opacity = '0.5';
+                setTimeout(() => {
+                    card.remove();
+                    alert(`${name} removed (demo only)`);
+                }, 300);
+            }
+        }
+    </script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
