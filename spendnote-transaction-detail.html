@@ -963,7 +963,16 @@
             <div class="transaction-summary">
                 <!-- LEFT: Main Info -->
                 <div class="transaction-main-info">
-                    <h2 class="card-title" style="margin-bottom: 20px;">Transaction Info</h2>
+                    <!-- Cash Box Header -->
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid rgba(5, 150, 105, 0.2);">
+                        <div style="width: 48px; height: 48px; background: rgba(5, 150, 105, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <i class="fas fa-building" style="font-size: 24px; color: #059669;"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 20px; font-weight: 800; color: #059669; margin-bottom: 2px;">Main Office</div>
+                            <div style="font-size: 13px; color: var(--text-muted); font-weight: 600;">CR-001</div>
+                        </div>
+                    </div>
                     
                     <div class="transaction-info-grid">
                         <div class="info-row">
@@ -973,10 +982,6 @@
                         <div class="info-row">
                             <span class="info-label">Date</span>
                             <span class="info-value">January 6, 2026</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Cash Box</span>
-                            <span class="info-value highlight">Main Office (CR-001)</span>
                         </div>
                         <div class="info-row">
                             <span class="info-label">Contact Name</span>
