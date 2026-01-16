@@ -1239,85 +1239,48 @@
             <section class="settings-section" id="team">
                 <div class="section-header">
                     <h2 class="section-title">Team Access</h2>
-                    <p class="section-description">Manage who can access this Cash Box</p>
+                    <p class="section-description">3 members have access to this Cash Box</p>
                 </div>
 
-                <!-- Add User Form -->
-                <div class="add-user-form">
-                    <div class="form-row">
-                        <div class="form-group" style="flex: 1;">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-input" placeholder="user@example.com" id="newUserEmail">
+                <div class="team-members-simple">
+                    <div class="team-member-row">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="John Doe" class="team-avatar-simple">
+                        <div class="team-info-simple">
+                            <div class="team-name-simple">John Doe</div>
+                            <div class="team-email-simple">john.doe@example.com</div>
                         </div>
-                        <div class="form-group" style="width: 200px;">
-                            <label class="form-label">Role</label>
-                            <select class="form-select" id="newUserRole">
-                                <option value="admin">Admin</option>
-                                <option value="viewer">Viewer</option>
-                            </select>
+                        <span class="team-role-badge owner">Owner</span>
+                    </div>
+
+                    <div class="team-member-row">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Jane Smith" class="team-avatar-simple">
+                        <div class="team-info-simple">
+                            <div class="team-name-simple">Jane Smith</div>
+                            <div class="team-email-simple">jane.smith@example.com</div>
                         </div>
-                        <div class="form-group" style="align-self: flex-end;">
-                            <button class="btn btn-primary" onclick="addUser()">
-                                <i class="fas fa-plus"></i>
-                                Add User
-                            </button>
+                        <span class="team-role-badge admin">Admin</span>
+                        <button class="btn-remove-simple" onclick="removeUser(this)" title="Remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <div class="team-member-row">
+                        <img src="https://i.pravatar.cc/150?img=8" alt="Mike Johnson" class="team-avatar-simple">
+                        <div class="team-info-simple">
+                            <div class="team-name-simple">Mike Johnson</div>
+                            <div class="team-email-simple">mike.johnson@example.com</div>
                         </div>
+                        <span class="team-role-badge viewer">Viewer</span>
+                        <button class="btn-remove-simple" onclick="removeUser(this)" title="Remove">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
                 </div>
 
-                <!-- Team Members List -->
-                <div class="team-members-list">
-                    <div class="team-member-item">
-                        <img src="https://i.pravatar.cc/150?img=12" alt="John Doe" class="team-member-avatar">
-                        <div class="team-member-info">
-                            <div class="team-member-name">John Doe</div>
-                            <div class="team-member-email">john.doe@example.com</div>
-                        </div>
-                        <div class="team-member-role owner-badge">Owner</div>
-                        <div class="team-member-actions">
-                            <span class="team-member-note">Cannot be removed</span>
-                        </div>
-                    </div>
-
-                    <div class="team-member-item">
-                        <img src="https://i.pravatar.cc/150?img=5" alt="Jane Smith" class="team-member-avatar">
-                        <div class="team-member-info">
-                            <div class="team-member-name">Jane Smith</div>
-                            <div class="team-member-email">jane.smith@example.com</div>
-                        </div>
-                        <select class="team-role-select">
-                            <option value="admin" selected>Admin</option>
-                            <option value="viewer">Viewer</option>
-                        </select>
-                        <div class="team-member-actions">
-                            <button class="btn-icon-danger" onclick="removeUser(this)" title="Remove user">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="team-member-item">
-                        <img src="https://i.pravatar.cc/150?img=8" alt="Mike Johnson" class="team-member-avatar">
-                        <div class="team-member-info">
-                            <div class="team-member-name">Mike Johnson</div>
-                            <div class="team-member-email">mike.johnson@example.com</div>
-                        </div>
-                        <select class="team-role-select">
-                            <option value="admin">Admin</option>
-                            <option value="viewer" selected>Viewer</option>
-                        </select>
-                        <div class="team-member-actions">
-                            <button class="btn-icon-danger" onclick="removeUser(this)" title="Remove user">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-hint" style="margin-top: 16px;">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>Admin:</strong> Can view and create transactions. <strong>Viewer:</strong> Can only view transactions.
-                </div>
+                <button class="btn btn-secondary" style="margin-top: 16px;" onclick="alert('Add user functionality (demo)')">
+                    <i class="fas fa-plus"></i>
+                    Add Team Member
+                </button>
             </section>
 
             <!-- DANGER ZONE -->

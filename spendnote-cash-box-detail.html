@@ -815,86 +815,69 @@
             color: white;
         }
 
-        /* TEAM ACCESS */
-        .team-access-section {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .team-members {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .team-member {
+        /* TEAM ACCESS - Compact */
+        .team-access-compact {
             display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 16px;
-            background: var(--bg);
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .team-avatars {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .team-avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--surface);
+            box-shadow: 0 0 0 1px var(--border);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .team-avatar-small:hover {
+            transform: scale(1.1);
+            z-index: 1;
+        }
+
+        .team-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .team-manage-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            text-decoration: none;
             transition: all 0.2s;
         }
 
-        .team-member:hover {
-            border-color: rgba(var(--active-rgb), 0.3);
-            box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.1);
-        }
-
-        .team-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border);
-        }
-
-        .team-info {
-            flex: 1;
-        }
-
-        .team-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 2px;
-        }
-
-        .team-role {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .team-badge {
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .team-badge.owner {
-            background: rgba(var(--active-rgb), 0.1);
+        .team-manage-link:hover {
+            border-color: var(--active);
             color: var(--active);
         }
 
-        .team-badge.admin {
-            background: rgba(59, 130, 246, 0.1);
-            color: #3b82f6;
-        }
-
-        .team-badge.viewer {
-            background: rgba(0, 0, 0, 0.05);
-            color: var(--text-muted);
+        .team-manage-link i {
+            font-size: 12px;
         }
 
         /* PAGINATION */
@@ -1086,41 +1069,18 @@
             </div>
         </div>
 
-        <!-- TEAM ACCESS -->
-        <div class="team-access-section">
-            <div class="section-header">
-                <h2 class="section-title">Team Access</h2>
-                <a href="spendnote-cash-box-settings.html?id=main#team" class="section-link">
-                    Manage
-                    <i class="fas fa-cog"></i>
-                </a>
+        <!-- TEAM ACCESS - Compact -->
+        <div class="team-access-compact">
+            <div class="team-avatars">
+                <img src="https://i.pravatar.cc/150?img=12" alt="John Doe" class="team-avatar-small" title="John Doe (Owner)">
+                <img src="https://i.pravatar.cc/150?img=5" alt="Jane Smith" class="team-avatar-small" title="Jane Smith (Admin)">
+                <img src="https://i.pravatar.cc/150?img=8" alt="Mike Johnson" class="team-avatar-small" title="Mike Johnson (Viewer)">
+                <div class="team-count">3 members</div>
             </div>
-            <div class="team-members">
-                <div class="team-member">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="John Doe" class="team-avatar">
-                    <div class="team-info">
-                        <div class="team-name">John Doe</div>
-                        <div class="team-role">Owner</div>
-                    </div>
-                    <div class="team-badge owner">Owner</div>
-                </div>
-                <div class="team-member">
-                    <img src="https://i.pravatar.cc/150?img=5" alt="Jane Smith" class="team-avatar">
-                    <div class="team-info">
-                        <div class="team-name">Jane Smith</div>
-                        <div class="team-role">Full Access</div>
-                    </div>
-                    <div class="team-badge admin">Admin</div>
-                </div>
-                <div class="team-member">
-                    <img src="https://i.pravatar.cc/150?img=8" alt="Mike Johnson" class="team-avatar">
-                    <div class="team-info">
-                        <div class="team-name">Mike Johnson</div>
-                        <div class="team-role">View Only</div>
-                    </div>
-                    <div class="team-badge viewer">Viewer</div>
-                </div>
-            </div>
+            <a href="spendnote-cash-box-settings.html?id=main#team" class="team-manage-link">
+                <i class="fas fa-users"></i>
+                Manage Team
+            </a>
         </div>
 
         <!-- RECENT TRANSACTIONS -->
