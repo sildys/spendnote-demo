@@ -970,16 +970,19 @@
 
         <!-- FILTER SECTION -->
         <div class="filter-section" style="margin-bottom: 24px;">
-            <div class="filter-header">
-                <div class="filter-title">Filters</div>
+            <div class="filter-header" style="cursor: pointer;" onclick="toggleFilters()">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="filter-title">Filters</div>
+                    <i class="fas fa-chevron-down" id="filterToggleIcon" style="transition: transform 0.3s; color: var(--text-muted);"></i>
+                </div>
                 <div class="filter-tabs">
-                    <button class="filter-tab active" data-filter="all">All</button>
-                    <button class="filter-tab" data-filter="in">IN</button>
-                    <button class="filter-tab" data-filter="out">OUT</button>
+                    <button class="filter-tab active" data-filter="all" onclick="event.stopPropagation()">All</button>
+                    <button class="filter-tab" data-filter="in" onclick="event.stopPropagation()">IN</button>
+                    <button class="filter-tab" data-filter="out" onclick="event.stopPropagation()">OUT</button>
                 </div>
             </div>
 
-            <div class="filter-panel" id="filterPanel">
+            <div class="filter-panel" id="filterPanel" style="display: none;">
                 <div class="filter-grid">
                     <!-- Contact Name -->
                     <div class="filter-group">
@@ -1300,6 +1303,20 @@
 
 
     <script>
+        // Toggle filter panel
+        function toggleFilters() {
+            const filterPanel = document.getElementById('filterPanel');
+            const toggleIcon = document.getElementById('filterToggleIcon');
+            
+            if (filterPanel.style.display === 'none') {
+                filterPanel.style.display = 'block';
+                toggleIcon.style.transform = 'rotate(180deg)';
+            } else {
+                filterPanel.style.display = 'none';
+                toggleIcon.style.transform = 'rotate(0deg)';
+            }
+        }
+
         // Direct navigation already handled inline with onclick
         console.log('Cash Box Detail page loaded');
     </script>
