@@ -573,6 +573,55 @@ if (window.self !== window.top) {
 
 const urlParams = new URLSearchParams(window.location.search);
 
+// Custom text replacements
+const receiptTitle = urlParams.get('receiptTitle');
+const totalLabel = urlParams.get('totalLabel');
+const fromLabel = urlParams.get('fromLabel');
+const toLabel = urlParams.get('toLabel');
+const descriptionLabel = urlParams.get('descriptionLabel');
+const notesLabel = urlParams.get('notesLabel');
+const issuedByLabel = urlParams.get('issuedByLabel');
+const receivedByLabel = urlParams.get('receivedByLabel');
+const footerNote = urlParams.get('footerNote');
+
+if (receiptTitle) {
+    document.querySelectorAll('.header-title, .receipt-title').forEach(el => el.textContent = receiptTitle);
+}
+if (totalLabel) {
+    document.querySelectorAll('.total-label').forEach(el => el.textContent = totalLabel);
+}
+if (fromLabel) {
+    document.querySelectorAll('.party-label').forEach((el, index) => {
+        if (index === 0) el.textContent = fromLabel;
+    });
+}
+if (toLabel) {
+    document.querySelectorAll('.party-label').forEach((el, index) => {
+        if (index === 1) el.textContent = toLabel;
+    });
+}
+if (descriptionLabel) {
+    document.querySelectorAll('thead th').forEach((el, index) => {
+        if (index === 0) el.textContent = descriptionLabel;
+    });
+}
+if (notesLabel) {
+    document.querySelectorAll('.notes strong').forEach(el => el.textContent = notesLabel);
+}
+if (issuedByLabel) {
+    document.querySelectorAll('.signature-label').forEach((el, index) => {
+        if (index === 0) el.textContent = issuedByLabel;
+    });
+}
+if (receivedByLabel) {
+    document.querySelectorAll('.signature-label').forEach((el, index) => {
+        if (index === 1) el.textContent = receivedByLabel;
+    });
+}
+if (footerNote) {
+    document.querySelectorAll('.footer-disclaimer').forEach(el => el.textContent = footerNote);
+}
+
 // Logo
 if (urlParams.get('logo') === '0') {
     document.querySelectorAll('.logo, .logo-box, .logo-img, .logo-container, .sn-logo').forEach(el => el.style.display = 'none');

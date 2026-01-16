@@ -1098,29 +1098,51 @@
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                                 <div>
                                     <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Receipt title</label>
-                                    <input type="text" class="form-input" placeholder="Cash Receipt">
+                                    <input type="text" class="form-input" id="receiptTitle" placeholder="Cash Receipt">
                                     <p class="form-hint" style="font-size: 12px; margin-top: 4px;">The main heading on your receipt</p>
                                 </div>
                                 <div>
                                     <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Total label</label>
-                                    <input type="text" class="form-input" placeholder="Total handed over">
+                                    <input type="text" class="form-input" id="totalLabel" placeholder="Total handed over">
                                 </div>
                             </div>
                             
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
                                 <div>
                                     <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">From label</label>
-                                    <input type="text" class="form-input" placeholder="FROM">
+                                    <input type="text" class="form-input" id="fromLabel" placeholder="FROM">
                                 </div>
                                 <div>
                                     <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">To label</label>
-                                    <input type="text" class="form-input" placeholder="TO">
+                                    <input type="text" class="form-input" id="toLabel" placeholder="TO">
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                                <div>
+                                    <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Description label</label>
+                                    <input type="text" class="form-input" id="descriptionLabel" placeholder="Description">
+                                </div>
+                                <div>
+                                    <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Notes label</label>
+                                    <input type="text" class="form-input" id="notesLabel" placeholder="Notes">
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                                <div>
+                                    <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Issued by label</label>
+                                    <input type="text" class="form-input" id="issuedByLabel" placeholder="Issued by">
+                                </div>
+                                <div>
+                                    <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Received by label</label>
+                                    <input type="text" class="form-input" id="receivedByLabel" placeholder="Received by">
                                 </div>
                             </div>
                             
                             <div>
                                 <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Footer note</label>
-                                <textarea class="form-input" placeholder="e.g., Thank you for your business!" rows="3"></textarea>
+                                <textarea class="form-input" id="footerNote" placeholder="e.g., Thank you for your business!" rows="3"></textarea>
                                 <p class="form-hint" style="font-size: 12px; margin-top: 4px;">Custom message printed on every receipt</p>
                             </div>
                             
@@ -1334,6 +1356,27 @@
                 params.append(key, value);
             }
             
+            // Add custom text parameters
+            const receiptTitle = document.getElementById('receiptTitle')?.value;
+            const totalLabel = document.getElementById('totalLabel')?.value;
+            const fromLabel = document.getElementById('fromLabel')?.value;
+            const toLabel = document.getElementById('toLabel')?.value;
+            const descriptionLabel = document.getElementById('descriptionLabel')?.value;
+            const notesLabel = document.getElementById('notesLabel')?.value;
+            const issuedByLabel = document.getElementById('issuedByLabel')?.value;
+            const receivedByLabel = document.getElementById('receivedByLabel')?.value;
+            const footerNote = document.getElementById('footerNote')?.value;
+            
+            if (receiptTitle) params.append('receiptTitle', receiptTitle);
+            if (totalLabel) params.append('totalLabel', totalLabel);
+            if (fromLabel) params.append('fromLabel', fromLabel);
+            if (toLabel) params.append('toLabel', toLabel);
+            if (descriptionLabel) params.append('descriptionLabel', descriptionLabel);
+            if (notesLabel) params.append('notesLabel', notesLabel);
+            if (issuedByLabel) params.append('issuedByLabel', issuedByLabel);
+            if (receivedByLabel) params.append('receivedByLabel', receivedByLabel);
+            if (footerNote) params.append('footerNote', footerNote);
+            
             return `${baseUrls[format]}?${params.toString()}`;
         }
 
@@ -1356,6 +1399,16 @@
                     reloadIframe();
                 }
             });
+        });
+
+        // Custom text fields - update iframe on input change
+        ['receiptTitle', 'totalLabel', 'fromLabel', 'toLabel', 'descriptionLabel', 'notesLabel', 'issuedByLabel', 'receivedByLabel', 'footerNote'].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('input', function() {
+                    reloadIframe();
+                });
+            }
         });
 
         // Format card selector - update preview format
