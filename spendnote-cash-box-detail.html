@@ -890,8 +890,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
-<!-- Force white nav background -->
-<nav class="site-nav" style="background:#ffffff !important;">
+<nav class="site-nav">
   <div class="nav-container">
             <a href="dashboard.html" class="logo">
                 <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -913,11 +912,11 @@
                 <span style="font-weight: 900; font-size: 1.5rem; margin-left: 10px; color: #000000; letter-spacing: -0.02em;">SpendNote</span>
             </a>
             <ul class="nav-links">
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="spendnote-cash-box-list.html" class="active">Cash Boxes</a></li>
-                <li><a href="spendnote-transaction-history.html">Transactions</a></li>
+                <li><a href="dashboard.html" class="nav-cash-item">Dashboard</a></li>
+                <li><a href="spendnote-cash-box-list.html" class="nav-cash-item active" id="navCashBoxes">Cash Boxes</a></li>
+                <li><a href="spendnote-transaction-history.html" class="nav-cash-item" id="navTransactions">Transactions</a></li>
                 <li><a href="spendnote-contact-list.html">Contacts</a></li>
-                <li><button class="nav-new-transaction-btn" id="addTransactionBtn" style="color:#fff;"><i class="fas fa-plus"></i> New Transaction</button></li>
+                <li><button class="nav-new-transaction-btn" id="addTransactionBtn"><i class="fas fa-plus"></i> New Transaction</button></li>
                 <li class="user-avatar-wrapper" id="userAvatarBtn">
                     <div class="user-avatar">
                         <img src="https://i.pravatar.cc/150?img=12" alt="User">
