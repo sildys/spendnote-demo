@@ -106,16 +106,19 @@ body {
     margin-bottom: 32px;
 }
 
+.page-title,
 .page-title-group h1 {
     font-size: 28px !important;
     font-weight: 800 !important;
     letter-spacing: -0.02em !important;
     margin-bottom: 6px !important;
+    color: var(--text) !important;
 }
 
 .page-subtitle {
     color: var(--text-muted) !important;
     font-size: 14px !important;
+    line-height: 1.5;
 }
 
 /* COMMON APP CARD STYLES */
