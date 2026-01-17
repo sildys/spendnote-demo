@@ -432,11 +432,20 @@ label {
     font-size: var(--font-xs);
     color: var(--text-muted);
     border: 1px solid rgba(var(--active-rgb), 0.1);
+    max-width: 350px;
 }
 
 .app-footer-brand-disclaimer i {
     color: var(--active);
     margin-top: 2px;
+}
+
+.app-footer-right {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    align-items: flex-end;
+    text-align: right;
 }
 
 .app-footer-links-simple {
