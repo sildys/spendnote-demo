@@ -275,8 +275,27 @@
 
         table {
             width: 100%;
-            min-width: 0;
+            min-width: 700px;
             border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        /* Column widths */
+        th:nth-child(1), td:nth-child(1) { width: 40px; }  /* checkbox */
+        th:nth-child(2), td:nth-child(2) { width: 60px; }  /* type */
+        th:nth-child(3), td:nth-child(3) { width: 80px; }  /* id */
+        th:nth-child(4), td:nth-child(4) { width: 90px; }  /* date */
+        th:nth-child(5), td:nth-child(5) { width: 100px; } /* contact */
+        th:nth-child(6), td:nth-child(6) { width: 100px; } /* contact id */
+        th:nth-child(7), td:nth-child(7) { width: 100px; } /* ref id */
+        th:nth-child(8), td:nth-child(8) { width: 80px; }  /* amount */
+        th:nth-child(9), td:nth-child(9) { width: 80px; }  /* created by */
+        th:nth-child(10), td:nth-child(10) { width: 40px; } /* action */
+
+        td, th {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         thead {
