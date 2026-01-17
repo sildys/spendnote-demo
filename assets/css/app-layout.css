@@ -98,11 +98,29 @@ body {
     background: transparent;
     border: none;
     text-decoration: none;
+    position: relative;
 }
 
 .nav-links a:hover {
     color: var(--text);
     background: var(--surface-elevated);
+}
+
+/* Active menu item indicator */
+.nav-links a.active {
+    color: var(--active);
+    font-weight: 700;
+}
+
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background: var(--active);
+    border-radius: 3px 3px 0 0;
 }
 
 /* Cash-related nav items (Dashboard, Cash Boxes, Transactions) */
