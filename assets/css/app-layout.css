@@ -12,7 +12,56 @@ body {
    NAVIGATION OVERRIDES FOR APP PAGES
    ============================================ */
 
-/* Top Nav Container (dashboard specific) */
+/* Site Nav - Override for App Pages */
+.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0; /* Slightly less padding for app pages */
+    box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* Nav Container - Consistent padding */
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem; /* Consistent 32px horizontal */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Logo - Consistent styling */
+.site-nav .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between SVG and text */
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.site-nav .logo:hover {
+    transform: scale(1.02);
+}
+
+.site-nav .logo svg {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.site-nav .logo span {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: -0.02em;
+}
+
+/* Top Nav Container (dashboard specific - if used) */
 .top-nav {
     background: var(--surface);
     border: 1px solid var(--border);
