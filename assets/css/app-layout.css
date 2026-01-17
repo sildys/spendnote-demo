@@ -115,12 +115,13 @@ body {
 .nav-links a.active::after {
     content: '';
     position: absolute;
-    bottom: -17px;
-    left: 20px;
-    right: 20px;
+    left: 0;
+    right: 0;
+    bottom: -10px;
     height: 3px;
+    border-radius: 999px;
     background: var(--active);
-    border-radius: 3px 3px 0 0;
+    opacity: 0.9;
 }
 
 /* Cash-related nav items (Dashboard, Cash Boxes, Transactions) - only color, not active state */
