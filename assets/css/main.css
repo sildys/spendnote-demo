@@ -53,22 +53,22 @@ body {
     background: #ffffff;
     background-color: #ffffff;
     border-bottom: 1px solid var(--border);
-    padding: 1.2rem 0;
+    padding: 1rem 0;
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: 0 2px 8px var(--shadow);
     opacity: 1;
-    font-size: 133.33%; /* Counteract the 75% scaling */
 }
 
 .nav-container {
-    max-width: 1190px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1.7rem;
+    padding: 0 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 1.25rem;
 }
 
 .site-nav .logo {
@@ -90,7 +90,7 @@ body {
     color: #000000;
     text-decoration: none;
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 0.95rem;
     transition: color 0.2s;
 }
 
@@ -123,10 +123,10 @@ body {
 }
 
 .nav-links a {
-    padding: 10px 20px;
+    padding: 0.6rem 1.2rem;
     cursor: pointer;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 0.95rem;
     color: var(--text-muted);
     border-radius: 12px;
     transition: all 0.2s;
@@ -152,18 +152,18 @@ body {
 .nav-new-transaction-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 0.5rem;
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 0.6rem 1.2rem;
     border-radius: 10px;
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
     transition: all 0.2s;
     box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.25);
-    font-size: 15px;
+    font-size: 0.95rem;
 }
 
 .nav-new-transaction-btn:hover {
@@ -173,7 +173,7 @@ body {
 }
 
 .nav-new-transaction-btn i {
-    font-size: 14px;
+    font-size: 0.85rem;
 }
 
 /* App Container */
@@ -224,16 +224,16 @@ body {
 .app-footer {
     background: linear-gradient(135deg, #047857, #059669, #10b981);
     border-top: none;
-    padding: 3.5rem 0 2.5rem 0;
+    padding: 3rem 0 2rem 0;
     margin-top: auto;
     color: white;
-    font-size: 133.33%; /* Counteract the 75% scaling */
 }
 
 .app-footer-container {
-    max-width: 1190px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 1.7rem;
+    padding: 0 2rem;
+    font-size: 1.15rem;
 }
 
 .app-footer-top {
@@ -545,14 +545,14 @@ body {
 }
 
 .user-avatar {
-    width: 38px;
-    height: 38px;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 1rem;
     color: white;
     transition: all 0.2s;
     border: 2px solid transparent;
@@ -561,7 +561,7 @@ body {
 
 .user-name {
     font-weight: 600;
-    font-size: 15px;
+    font-size: 0.95rem;
     color: var(--text);
     white-space: nowrap;
 }
