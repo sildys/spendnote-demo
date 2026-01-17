@@ -1019,18 +1019,11 @@
         }
 
         .carousel-title {
-            font-size: 24px; /* Modern quiet header size */
-            font-weight: 700; /* Semi-bold */
+            font-size: 18px; /* Section subtitle size */
+            font-weight: 700;
             color: var(--text);
             margin: 0;
             letter-spacing: -0.01em;
-        }
-
-        .carousel-subtitle {
-            font-size: 14px; /* Slightly larger */
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            font-weight: 400;
         }
 
         .carousel-nav {
@@ -1419,12 +1412,15 @@
             font-weight: 900;
             letter-spacing: -0.02em;
         }
-        .registers-carousel-section{
-            margin-top: 28px;
+        .registers-carousel-section {
+            margin-top: 0; /* No extra margin, page-header handles spacing */
         }
-        .carousel-header{
+        .carousel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding-top: 0;
-            margin-bottom: 24px; /* Consistent with page-header */
+            margin-bottom: 16px; /* Tighter spacing */
         }
 
 
@@ -2694,11 +2690,18 @@ tr:hover [data-category-tag] {
 
 <div class="app-container">
     <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="page-title-group">
+                    <h1>Dashboard</h1>
+                    <p class="page-subtitle">Your financial overview and quick access to Cash Boxes</p>
+                </div>
+            </div>
+
             <!-- Cash Boxes Carousel -->
             <div class="registers-carousel-section">
                 <div class="carousel-header">
                     <h2 class="carousel-title">Cash Boxes</h2>
-                    <div class="carousel-subtitle">Switch Cash Boxes fast, keep the balance in sight.</div>
                     <div class="carousel-nav">
                         <button class="carousel-arrow swiper-button-prev-custom" aria-label="Previous">
                             <i class="fas fa-chevron-left"></i>
