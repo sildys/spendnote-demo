@@ -1253,24 +1253,21 @@
             }
         }
 
-        // This transaction belongs to "Main Office" Cash Box (green)
-        // In production, this would come from the transaction data
-        const transactionCashBox = {
-            name: 'Main Office',
-            color: 'green',
-            colorData: colorMap['green']
-        };
+        // Get the Cash Box color from URL parameter (passed from the detail page)
+        const urlParams = new URLSearchParams(window.location.search);
+        const cashBoxColor = urlParams.get('cashBoxColor') || 'green';
+        const transactionCashBoxData = colorMap[cashBoxColor] || colorMap['green'];
         
         // Apply the Cash Box color that this transaction belongs to
-        document.documentElement.style.setProperty('--active', transactionCashBox.colorData.hex);
-        document.documentElement.style.setProperty('--active-rgb', transactionCashBox.colorData.rgb);
+        document.documentElement.style.setProperty('--active', transactionCashBoxData.hex);
+        document.documentElement.style.setProperty('--active-rgb', transactionCashBoxData.rgb);
         
         // Update nav menu colors
-        updateMenuColors(transactionCashBox.colorData.hex);
+        updateMenuColors(transactionCashBoxData.hex);
         
         // Restore the Cash Box selection in localStorage to match this transaction's Cash Box
-        localStorage.setItem('activeCashBoxColor', transactionCashBox.colorData.hex);
-        localStorage.setItem('activeCashBoxRgb', transactionCashBox.colorData.rgb);
+        localStorage.setItem('activeCashBoxColor', transactionCashBoxData.hex);
+        localStorage.setItem('activeCashBoxRgb', transactionCashBoxData.rgb);
     </script>
     <script src="assets/js/main.js"></script>
 </body>

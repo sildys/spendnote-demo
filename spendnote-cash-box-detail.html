@@ -1001,7 +1001,13 @@
             // Update nav menu colors
             updateMenuColors(colorData.hex);
             
-            // View links don't need color parameter - transaction detail will use its own Cash Box color
+            // Update all View links to pass the Cash Box color parameter
+            document.querySelectorAll('.action-btn').forEach(link => {
+                const currentHref = link.getAttribute('href');
+                if (currentHref && !currentHref.includes('cashBoxColor=')) {
+                    link.setAttribute('href', currentHref + '?cashBoxColor=' + color);
+                }
+            });
         });
     </script>
 </body>
