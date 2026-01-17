@@ -1,0 +1,73 @@
+/* ============================================
+   SPENDNOTE - APPLICATION LAYOUT STYLES
+   Shared styles for app pages (dashboard, etc.)
+   ============================================ */
+
+/* APP-SPECIFIC OVERRIDES */
+body {
+    font-size: 12px; /* App uses smaller base font */
+}
+
+/* APP CONTAINER OVERRIDE (if needed) */
+.app-container {
+    padding: 28px 24px;
+}
+
+.main-content {
+    padding-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* PAGE HEADER */
+.page-header {
+    margin-bottom: 32px;
+}
+
+.page-title-group h1 {
+    font-size: 28px !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em !important;
+    margin-bottom: 6px !important;
+}
+
+.page-subtitle {
+    color: var(--text-muted) !important;
+    font-size: 14px !important;
+}
+
+/* COMMON APP CARD STYLES */
+.card-header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-body {
+    padding: 24px 32px;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+/* TABLE STYLES (if not in main.css) */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 20px 16px;
+    }
+    
+    .page-title-group h1 {
+        font-size: 24px !important;
+    }
+}
