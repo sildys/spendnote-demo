@@ -183,16 +183,16 @@ body {
     color: var(--active);
 }
 
-/* Cash-related nav items (Dashboard, Cash Boxes, Transactions) - ALWAYS GREEN */
+/* Cash-related nav items (Dashboard, Cash Boxes, Transactions) - Dynamic color via JS */
 .site-nav .nav-links a.nav-cash-item {
-    color: var(--active) !important;
+    color: var(--active);
     font-weight: 700;
     text-decoration: none;
     transition: all 0.2s ease;
 }
 
 .site-nav .nav-links a.nav-cash-item:hover {
-    color: var(--primary) !important;
+    opacity: 0.8;
 }
 
 /* Nav buttons keep their button styling */
