@@ -220,8 +220,8 @@
             background: var(--surface);
             border: 2px solid var(--border);
             border-left: 4px solid transparent;
-            border-radius: 24px;
-            padding: 28px;
+            border-radius: 20px;
+            padding: 20px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
@@ -253,60 +253,60 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
         .register-info h3 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             color: var(--text);
             position: relative;
-            padding-left: 18px;
+            padding-left: 16px;
         }
         .register-info h3::before{
             content: '';
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 999px;
             background: var(--card-color, var(--active));
             position: absolute;
             left: 0;
             top: 50%;
             transform: translateY(-50%);
-            box-shadow: 0 0 0 3px rgba(var(--card-rgb, var(--active-rgb)), 0.14);
+            box-shadow: 0 0 0 2px rgba(var(--card-rgb, var(--active-rgb)), 0.14);
         }
         .register-id {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             font-weight: 600;
             font-family: monospace;
             background: var(--surface-elevated);
-            padding: 4px 8px;
-            border-radius: 6px;
+            padding: 3px 6px;
+            border-radius: 5px;
             display: inline-block;
         }
         .register-icon {
-            width: 72px;
-            height: 72px;
-            border-radius: 18px;
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
             background: linear-gradient(135deg, rgba(var(--active-rgb), 0.1), rgba(var(--active-rgb), 0.05));
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--active);
-            font-size: 32px;
+            font-size: 24px;
             border: 2px solid rgba(var(--active-rgb), 0.2);
         }
         .register-balance {
-            font-size: 40px;
+            font-size: 32px;
             font-weight: 900;
             color: var(--text);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             letter-spacing: -0.04em;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 12px;
+            gap: 10px;
         }
 
         .trend-indicator {
