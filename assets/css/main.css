@@ -53,7 +53,7 @@ body {
     background: #ffffff;
     background-color: #ffffff;
     border-bottom: 1px solid var(--border);
-    padding: 1rem 0;
+    padding: 1.2rem 0;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -68,7 +68,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.25rem;
+    font-size: 1.6rem;
 }
 
 .site-nav .logo {
@@ -224,7 +224,7 @@ body {
 .app-footer {
     background: linear-gradient(135deg, #047857, #059669, #10b981);
     border-top: none;
-    padding: 3rem 0 2rem 0;
+    padding: 3.5rem 0 2.5rem 0;
     margin-top: auto;
     color: white;
 }
@@ -233,7 +233,7 @@ body {
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 2rem;
-    font-size: 1.15rem;
+    font-size: 1.5rem;
 }
 
 .app-footer-top {
