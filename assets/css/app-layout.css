@@ -3,6 +3,12 @@
    Shared styles for app pages (dashboard, etc.)
    ============================================ */
 
+/* GLOBAL OVERFLOW FIX - Prevent page expansion */
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
 /* APP-SPECIFIC OVERRIDES */
 body {
     font-size: 12px; /* App uses smaller base font */
