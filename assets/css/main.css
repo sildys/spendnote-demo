@@ -78,6 +78,15 @@ body {
     gap: 0.5rem;
 }
 
+.site-nav .logo svg {
+    width: 44px;
+    height: 44px;
+}
+
+.site-nav .logo span {
+    font-size: 24px !important;
+}
+
 .site-nav .nav-links {
     display: flex;
     gap: 2rem;
@@ -227,7 +236,7 @@ body {
     padding: 48px 0 36px 0;
     margin-top: auto;
     color: white;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .app-footer-container {
