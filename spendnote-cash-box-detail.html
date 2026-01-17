@@ -930,12 +930,30 @@
             'red': { hex: '#ef4444', rgb: '239, 68, 68' }
         };
 
+        // Update menu item colors based on Cash Box color
+        function updateMenuColors(color) {
+            // Update all nav-cash-item links (Dashboard, Cash Boxes, Transactions)
+            document.querySelectorAll('.nav-cash-item').forEach(item => {
+                item.style.color = color;
+            });
+            
+            // Update New Transaction button background color
+            const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
+            if (newTransactionBtn) {
+                newTransactionBtn.style.background = color;
+                newTransactionBtn.style.borderColor = color;
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const color = urlParams.get('color') || 'green';
             const colorData = colorMap[color] || colorMap['green'];
             document.documentElement.style.setProperty('--active', colorData.hex);
             document.documentElement.style.setProperty('--active-rgb', colorData.rgb);
+            
+            // Update nav menu colors
+            updateMenuColors(colorData.hex);
         });
     </script>
 </body>
