@@ -18,7 +18,7 @@
     /* Backgrounds */
     --bg: #fafafa;
     --surface: #ffffff;
-    --surface-elevated: #f0f0f0;
+    --surface-elevated: #e8e8e8;
     
     /* Text */
     --text: #0a0a0a;
@@ -124,7 +124,7 @@ body {
 .nav-container {
     max-width: var(--max-width-page);
     margin: 0 auto;
-    padding: 0 var(--space-xl); /* 32px horizontal */
+    padding: 0 3rem; /* 48px horizontal */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -161,7 +161,7 @@ body {
 /* Navigation Links */
 .site-nav .nav-links {
     display: flex;
-    gap: var(--space-xl); /* 32px */
+    gap: 1.5rem; /* 24px - tighter spacing */
     align-items: center;
     list-style: none;
 }
@@ -403,12 +403,13 @@ label {
 .app-footer-brand-logo svg {
     width: 32px;
     height: 32px;
+    opacity: 0.7;
 }
 
 .app-footer-brand-logo span {
     font-size: var(--font-xl);
     font-weight: 900;
-    color: var(--text);
+    color: #666666;
     letter-spacing: -0.02em;
 }
 
