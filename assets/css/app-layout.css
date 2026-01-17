@@ -99,7 +99,6 @@ body {
     border: none;
     text-decoration: none;
     position: relative;
-    border-bottom: 3px solid transparent;
 }
 
 .nav-links a:hover {
@@ -111,8 +110,17 @@ body {
 .nav-links a.active {
     color: var(--active);
     font-weight: 700;
-    border-bottom-color: var(--active);
-    border-radius: 12px 12px 0 0;
+}
+
+.nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -17px;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background: var(--active);
+    border-radius: 3px 3px 0 0;
 }
 
 /* Cash-related nav items (Dashboard, Cash Boxes, Transactions) - only color, not active state */
