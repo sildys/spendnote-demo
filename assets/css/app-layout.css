@@ -123,10 +123,10 @@ body {
     border-radius: 3px 3px 0 0;
 }
 
-/* Cash-related nav items (Dashboard, Cash Boxes, Transactions) */
-.nav-links a.nav-cash-item {
-    color: var(--active); /* Green color */
-    font-weight: 700;
+/* Cash-related nav items (Dashboard, Cash Boxes, Transactions) - only color, not active state */
+.nav-links a.nav-cash-item:not(.active) {
+    color: var(--text-muted);
+    font-weight: 600;
 }
 
 .nav-links a.nav-cash-item:hover {
