@@ -198,9 +198,18 @@
         /* UNIFIED CARD STRUCTURE - SAME AS CASH BOX LIST */
         .register-header {
             display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .register-header-left {
+            display: flex;
             align-items: flex-start;
             gap: 12px;
-            margin-bottom: 16px;
+            flex: 1;
+            min-width: 0;
         }
 
         .register-name {
@@ -293,12 +302,10 @@
             font-size: 28px;
             font-weight: 900;
             color: var(--text);
-            margin-bottom: 6px;
+            margin: 0;
             letter-spacing: -0.04em;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
+            text-align: right;
+            white-space: nowrap;
         }
 
         .trend-indicator {
@@ -2693,17 +2700,16 @@ tr:hover [data-category-tag] {
                             <div class="register-card active" data-name="Main Office" data-color="#059669" data-rgb="5, 150, 105" 
                                  role="button" tabindex="0">
                                 <div class="register-header">
-                                    <div class="register-icon green">
-                                        <i class="fas fa-building"></i>
+                                    <div class="register-header-left">
+                                        <div class="register-icon green">
+                                            <i class="fas fa-building"></i>
+                                        </div>
+                                        <div class="register-info">
+                                            <div class="register-name">Main Office</div>
+                                            <div class="register-id">CR-001</div>
+                                        </div>
                                     </div>
-                                    <div class="register-info">
-                                        <div class="register-name">Main Office</div>
-                                        <div class="register-id">CR-001</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="register-balance">
-                                    $18,500
+                                    <div class="register-balance">$18,500</div>
                                 </div>
                                 
                                 <div class="register-stats">
@@ -2725,21 +2731,19 @@ tr:hover [data-category-tag] {
                         <div class="swiper-slide">
                             <div class="register-card" data-name="Event Fund" data-color="#f59e0b" data-rgb="245, 158, 11"
                                  role="button" tabindex="0">
-                                <div class="register-top">
-  <div class="register-header-left">
-    <div class="register-icon small" style="width: 72px; height: 72px; font-size: 32px; border-radius: 18px; border-width: 2px; background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05)); color: #f59e0b; border-color: rgba(245, 158, 11, 0.15);"><i class="fas fa-calendar-alt"></i></div>
-    <div class="register-info"><h3>Event Fund</h3>
-                                        <div class="register-id">CR-002</div></div>
-  </div>
-  <div class="register-actions">
-    <a href="spendnote-cash-box-settings.html" class="register-kebab" aria-label="Cash Box settings" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center;">
-      <i class="fas fa-ellipsis-h"></i>
-    </a>
-  </div>
-</div>
-                                <div class="register-balance">
-                                    $4,750
+                                <div class="register-header">
+                                    <div class="register-header-left">
+                                        <div class="register-icon orange">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="register-info">
+                                            <div class="register-name">Event Fund</div>
+                                            <div class="register-id">CR-002</div>
+                                        </div>
+                                    </div>
+                                    <div class="register-balance">$4,750</div>
                                 </div>
+                                
                                 <div class="register-stats">
                                     <div class="stat-item">
                                         <div class="tooltip">2 events pending</div>
@@ -2759,21 +2763,19 @@ tr:hover [data-category-tag] {
                         <div class="swiper-slide">
                             <div class="register-card" data-name="Petty Cash" data-color="#3b82f6" data-rgb="59, 130, 246"
                                  role="button" tabindex="0">
-                                <div class="register-top">
-  <div class="register-header-left">
-    <div class="register-icon small" style="width: 72px; height: 72px; font-size: 32px; border-radius: 18px; border-width: 2px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); color: #3b82f6; border-color: rgba(59, 130, 246, 0.15);"><i class="fas fa-wallet"></i></div>
-    <div class="register-info"><h3>Petty Cash</h3>
-                                        <div class="register-id">CR-003</div></div>
-  </div>
-  <div class="register-actions">
-    <a href="spendnote-cash-box-settings.html" class="register-kebab" aria-label="Cash Box settings" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center;">
-      <i class="fas fa-ellipsis-h"></i>
-    </a>
-  </div>
-</div>
-                                <div class="register-balance">
-                                    $2,000
+                                <div class="register-header">
+                                    <div class="register-header-left">
+                                        <div class="register-icon blue">
+                                            <i class="fas fa-wallet"></i>
+                                        </div>
+                                        <div class="register-info">
+                                            <div class="register-name">Petty Cash</div>
+                                            <div class="register-id">CR-003</div>
+                                        </div>
+                                    </div>
+                                    <div class="register-balance">$2,000</div>
                                 </div>
+                                
                                 <div class="register-stats">
                                     <div class="stat-item">
                                         <div class="tooltip">No deposits today</div>
@@ -2793,21 +2795,19 @@ tr:hover [data-category-tag] {
                         <div class="swiper-slide">
                             <div class="register-card" data-name="Marketing Budget" data-color="#8b5cf6" data-rgb="139, 92, 246"
                                  role="button" tabindex="0">
-                                <div class="register-top">
-  <div class="register-header-left">
-    <div class="register-icon small" style="width: 72px; height: 72px; font-size: 32px; border-radius: 18px; border-width: 2px; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.15);"><i class="fas fa-bullhorn"></i></div>
-    <div class="register-info"><h3>Marketing Budget</h3>
-                                        <div class="register-id">CR-004</div></div>
-  </div>
-  <div class="register-actions">
-    <a href="spendnote-cash-box-settings.html" class="register-kebab" aria-label="Cash Box settings" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center;">
-      <i class="fas fa-ellipsis-h"></i>
-    </a>
-  </div>
-</div>
-                                <div class="register-balance">
-                                    $12,300
+                                <div class="register-header">
+                                    <div class="register-header-left">
+                                        <div class="register-icon purple">
+                                            <i class="fas fa-bullhorn"></i>
+                                        </div>
+                                        <div class="register-info">
+                                            <div class="register-name">Marketing Budget</div>
+                                            <div class="register-id">CR-004</div>
+                                        </div>
+                                    </div>
+                                    <div class="register-balance">$12,300</div>
                                 </div>
+                                
                                 <div class="register-stats">
                                     <div class="stat-item">
                                         <div class="tooltip">Campaign budget increase</div>
@@ -2827,21 +2827,19 @@ tr:hover [data-category-tag] {
                         <div class="swiper-slide">
                             <div class="register-card" data-name="Emergency Fund" data-color="#ef4444" data-rgb="239, 68, 68"
                                  role="button" tabindex="0">
-                                <div class="register-top">
-  <div class="register-header-left">
-    <div class="register-icon small" style="width: 72px; height: 72px; font-size: 32px; border-radius: 18px; border-width: 2px; background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05)); color: #ef4444; border-color: rgba(239, 68, 68, 0.15);"><i class="fas fa-exclamation-triangle"></i></div>
-    <div class="register-info"><h3>Emergency Fund</h3>
-                                        <div class="register-id">CR-005</div></div>
-  </div>
-  <div class="register-actions">
-    <a href="spendnote-cash-box-settings.html" class="register-kebab" aria-label="Cash Box settings" style="text-decoration: none; color: inherit; display: flex; align-items: center; justify-content: center;">
-      <i class="fas fa-ellipsis-h"></i>
-    </a>
-  </div>
-</div>
-                                <div class="register-balance">
-                                    $8,900
+                                <div class="register-header">
+                                    <div class="register-header-left">
+                                        <div class="register-icon red">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="register-info">
+                                            <div class="register-name">Emergency Fund</div>
+                                            <div class="register-id">CR-005</div>
+                                        </div>
+                                    </div>
+                                    <div class="register-balance">$8,900</div>
                                 </div>
+                                
                                 <div class="register-stats">
                                     <div class="stat-item">
                                         <div class="tooltip">No activity</div>
