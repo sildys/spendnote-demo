@@ -41,7 +41,7 @@
             outline: 3px solid var(--active);
             outline-offset: 2px;
         }
-
+        
         /* HERO */
         .faq-hero {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -230,9 +230,12 @@
         }
 
         /* Category-specific colors for navigation */
-        .nav-menu-link[href="#getting-started"]:hover,
-        .nav-menu-link[href="#getting-started"].active {
+        .nav-menu-link[href="#getting-started"]:hover {
             color: var(--primary);
+        }
+        
+        .nav-menu-link[href="#getting-started"].active {
+            color: white;
         }
 
         .nav-menu-link[href="#getting-started"]:hover {
@@ -246,12 +249,15 @@
         }
 
         .nav-menu-link[href="#getting-started"].active {
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.05));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
         }
 
-        .nav-menu-link[href="#features"]:hover,
-        .nav-menu-link[href="#features"].active {
+        .nav-menu-link[href="#features"]:hover {
             color: var(--orange);
+        }
+        
+        .nav-menu-link[href="#features"].active {
+            color: white;
         }
 
         .nav-menu-link[href="#features"]:hover {
@@ -265,12 +271,15 @@
         }
 
         .nav-menu-link[href="#features"].active {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.05));
+            background: linear-gradient(135deg, var(--orange), #fbbf24);
         }
 
-        .nav-menu-link[href="#billing"]:hover,
-        .nav-menu-link[href="#billing"].active {
+        .nav-menu-link[href="#billing"]:hover {
             color: var(--blue);
+        }
+        
+        .nav-menu-link[href="#billing"].active {
+            color: white;
         }
 
         .nav-menu-link[href="#billing"]:hover {
@@ -284,12 +293,15 @@
         }
 
         .nav-menu-link[href="#billing"].active {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(96, 165, 250, 0.05));
+            background: linear-gradient(135deg, var(--blue), #60a5fa);
         }
 
-        .nav-menu-link[href="#security"]:hover,
-        .nav-menu-link[href="#security"].active {
+        .nav-menu-link[href="#security"]:hover {
             color: var(--purple);
+        }
+        
+        .nav-menu-link[href="#security"].active {
+            color: white;
         }
 
         .nav-menu-link[href="#security"]:hover {
@@ -303,7 +315,7 @@
         }
 
         .nav-menu-link[href="#security"].active {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.05));
+            background: linear-gradient(135deg, var(--purple), #a78bfa);
         }
 
         .nav-menu-text {
@@ -314,6 +326,11 @@
             font-size: 12px;
             color: var(--text-muted);
             font-weight: 600;
+        }
+        
+        .nav-menu-link.active .nav-menu-count {
+            color: white;
+            opacity: 0.9;
         }
 
         /* HELP CTA */
@@ -720,7 +737,7 @@
                 grid-template-columns: 1fr 1fr;
             }
 
-            }
+        }
     </style>
 </head>
 <body>
@@ -770,11 +787,11 @@
             <!-- Search -->
             <div class="sidebar-section">
                 <div class="sidebar-title">Search</div>
-                <div class="search-box">
+        <div class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Search questions..." id="searchInput">
-                </div>
-            </div>
+        </div>
+    </div>
 
             <!-- Stats -->
             <div class="sidebar-section">
@@ -789,7 +806,7 @@
                         <span class="stat-label">Categories</span>
                     </div>
                 </div>
-            </div>
+        </div>
 
             <!-- Navigation -->
             <div class="sidebar-section">
@@ -856,11 +873,11 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 SpendNote is a <strong>simple cash receipt management tool</strong> for teams. It helps you track internal cash movements, create printable receipts, and maintain visibility across your team — all without the complexity of accounting software. Perfect for petty cash, employee advances, and team handoffs.
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="faq-card">
                         <div class="faq-header">
@@ -869,11 +886,11 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 Getting started is easy! <strong>Sign up for a free trial</strong> (no credit card required), create your first Cash Box, and you can start creating receipts immediately. The whole process takes less than 2 minutes. We provide guided tours and templates to help you get up and running quickly.
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="faq-card">
                         <div class="faq-header">
@@ -882,19 +899,19 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 <strong>No</strong>, SpendNote is not an accounting or tax tool. It's designed specifically for internal cash tracking and creating proof of handoff. The receipts you create are for internal documentation purposes — they're not invoices and shouldn't be used for tax purposes. Think of it as a digital receipt book, not a ledger.
-                            </div>
-                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
             </section>
 
             <!-- Features -->
             <section class="faq-section" id="features">
                 <div class="section-header">
                     <div class="section-icon orange">
-                        <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
                     </div>
                     <div class="section-info">
                         <h2>Features <span class="question-count">4 Questions</span></h2>
@@ -922,11 +939,11 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 You can share receipts in <strong>multiple ways</strong>: email them directly from SpendNote, download as PDF and share via any platform, or print them for physical handoff. All team members with access can also view receipts in real-time from the dashboard. You can also generate shareable links for specific receipts.
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="faq-card">
                         <div class="faq-header">
@@ -935,11 +952,11 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 <strong>Absolutely!</strong> The Free Trial includes 1 Cash Box, Starter includes 2 Cash Boxes, and Pro gives you unlimited Cash Boxes. This is perfect for tracking cash at different locations, events, or departments. Each Cash Box can have its own color coding and settings for easy organization.
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="faq-card">
                         <div class="faq-header">
@@ -948,19 +965,19 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 SpendNote is a <strong>web-based application</strong> that requires an internet connection to create and sync receipts. However, once a receipt is created, you can download it as a PDF for offline access. We're exploring offline capabilities for future updates.
-                            </div>
-                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
             </section>
 
             <!-- Billing -->
             <section class="faq-section" id="billing">
                 <div class="section-header">
                     <div class="section-icon blue">
-                        <i class="fas fa-credit-card"></i>
+                <i class="fas fa-credit-card"></i>
                     </div>
                     <div class="section-info">
                         <h2>Billing & Plans <span class="question-count">5 Questions</span></h2>
@@ -988,11 +1005,11 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 <strong>Yes!</strong> You can cancel your subscription at any time with no questions asked. We also offer a 30-day money-back guarantee on all paid plans. Your data remains accessible for export even after cancellation, and you can reactivate your account anytime within 90 days.
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="faq-card">
                         <div class="faq-header">
@@ -1001,11 +1018,11 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 We accept all <strong>major credit cards</strong> (Visa, Mastercard, American Express) through our secure payment processor. For annual plans, we can also arrange bank transfers for larger organizations. All payments are processed securely and encrypted.
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="faq-card">
                         <div class="faq-header">
@@ -1014,18 +1031,18 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 Yes! When you choose an <strong>annual subscription</strong>, you save 20% compared to monthly billing. For example, the Starter plan costs €12/month or €115/year (equivalent to €9.58/month). We also offer custom pricing for teams larger than 10 users.
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="faq-card">
                         <div class="faq-header">
                             <div class="faq-number">12</div>
                             <div class="faq-question-text">What happens if I exceed my plan limits?</div>
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
+        </div>
                         <div class="faq-body">
                             <div class="faq-answer">
                                 If you exceed your plan's receipt limit, we'll <strong>notify you in advance</strong> and give you options: upgrade to a higher plan, purchase additional receipt packs, or wait until your limit resets next month. Your existing receipts remain accessible regardless of your plan status.
@@ -1039,7 +1056,7 @@
             <section class="faq-section" id="security">
                 <div class="section-header">
                     <div class="section-icon purple">
-                        <i class="fas fa-shield-alt"></i>
+                <i class="fas fa-shield-alt"></i>
                     </div>
                     <div class="section-info">
                         <h2>Security & Privacy <span class="question-count">4 Questions</span></h2>
@@ -1067,11 +1084,11 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 <strong>Absolutely!</strong> You can export all your receipts and transaction history as CSV files at any time. PDFs of individual receipts can also be downloaded in bulk. Your data belongs to you, and we make it easy to take it with you. Exports include all metadata and timestamps.
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="faq-card">
                         <div class="faq-header">
@@ -1080,11 +1097,11 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 Our servers are located in the <strong>European Union</strong>, ensuring compliance with GDPR and other EU data protection regulations. This provides strong privacy protections for all users. We use redundant data centers for reliability and automated backups for data safety.
-                            </div>
-                        </div>
                     </div>
+                </div>
+            </div>
 
                     <div class="faq-card">
                         <div class="faq-header">
@@ -1093,12 +1110,12 @@
                             <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                         </div>
                         <div class="faq-body">
-                            <div class="faq-answer">
+                <div class="faq-answer">
                                 <strong>Yes!</strong> Two-factor authentication (2FA) is available on all plans to add an extra layer of security to your account. You can enable it using authenticator apps like Google Authenticator or Authy. We also support security keys for Pro plan users.
-                            </div>
-                        </div>
                     </div>
                 </div>
+            </div>
+        </div>
             </section>
 
             <!-- No Results Message -->
@@ -1106,8 +1123,8 @@
                 <i class="fas fa-search"></i>
                 <h3>No results found</h3>
                 <p>Try adjusting your search or browse the categories above</p>
-            </div>
-        </main>
+        </div>
+    </main>
     </div>
 
     <!-- Back to Top Button -->
@@ -1143,7 +1160,7 @@
                     <p class="app-footer-brand-desc">
                         Cash receipt management for modern teams. Simple, secure, transparent.
                     </p>
-                </div>
+            </div>
                 
                 <!-- Right: Links + Disclaimer -->
                 <div class="app-footer-right">
@@ -1152,15 +1169,15 @@
                         <a href="spendnote-pricing.html">Pricing</a>
                         <a href="spendnote-faq.html">FAQ</a>
                         <a href="spendnote-terms.html">Legal</a>
-                    </div>
+            </div>
                     
                     <!-- Disclaimer on right side -->
                     <div class="app-footer-brand-disclaimer">
                         <i class="fas fa-info-circle"></i>
                         <span>Cash handoff documentation only. Not a tax or accounting tool.</span>
-                    </div>
-                </div>
             </div>
+            </div>
+        </div>
             
             <!-- Bottom Row -->
             <div class="app-footer-bottom">
@@ -1301,11 +1318,11 @@
             faqSections.forEach(section => {
                 const visibleCards = section.querySelectorAll('.faq-card[style="display: block;"]');
                 if (visibleCards.length > 0) {
-                    section.style.display = 'block';
-                } else {
-                    section.style.display = 'none';
-                }
-            });
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
 
             // Show/hide no results message
             if (hasResults) {
