@@ -28,7 +28,7 @@ body {
 .nav-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 2rem; /* Consistent 32px horizontal */
+    padding: 0 3rem; /* 48px horizontal - SAME as main.css */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -140,7 +140,7 @@ body {
 
 /* APP CONTAINER OVERRIDE (if needed) */
 .app-container {
-    padding: 28px 2rem; /* 2rem = 32px horizontal - same as nav-container */
+    padding: 28px 3rem; /* 3rem = 48px horizontal - SAME as nav-container */
     max-width: 1400px;
     margin: 0 auto;
     flex: 1;
