@@ -774,7 +774,7 @@
             display: grid;
             grid-template-columns: 70px 130px 140px 160px 1fr 110px 130px 80px;
             gap: 16px;
-            padding: 14px 20px;
+            padding: 12px 16px; /* ✅ Alacsonyabb (volt: 14px 20px) */
             align-items: center;
             border-bottom: 1px solid var(--border);
             transition: all 0.2s;
@@ -794,18 +794,21 @@
         }
         .table-grid:hover .row-tooltip { opacity: 1; }
         .table-header {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
-            font-weight: 800;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            background: var(--surface-elevated);
-            border-bottom: 2px solid var(--border);
+            background: rgba(var(--cashbox-rgb, var(--active-rgb)), 0.08); /* ✅ Dinamikus szín */
+            border-bottom: 2px solid rgba(var(--cashbox-rgb, var(--active-rgb)), 0.15);
             position: sticky;
             top: 0;
             z-index: 10;
+            padding: 10px 12px; /* ✅ Alacsonyabb fejléc */
         }
-        .table-header:hover { background: var(--surface-elevated); }
+        .table-header:hover { 
+            background: rgba(var(--cashbox-rgb, var(--active-rgb)), 0.12);
+        }
 
         .row-checkbox {
             width: 18px;
@@ -897,13 +900,13 @@
             font-family: monospace;
         }
         .tx-desc {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text);
+            font-size: 13px; /* ⬇️ Kisebb (volt: 15px) */
+            font-weight: 500; /* ⬇️ Vékonyabb (volt: 700) */
+            color: var(--text-muted); /* ⬇️ Halvány (volt: text) */
         }
         .tx-person {
-            font-size: 13px;
-            color: var(--text-muted);
+            font-size: 14px; /* ⬆️ Nagyobb (volt: 13px) */
+            color: var(--text); /* ⬆️ Sötétebb (volt: text-muted) */
             font-weight: 600;
         }
         .tx-amount {
