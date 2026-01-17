@@ -10,7 +10,7 @@ html {
 
 /* APP-SPECIFIC OVERRIDES */
 body {
-    font-size: 12px; /* App uses smaller base font */
+    font-size: 11px; /* App uses smaller base font - reduced for more compact layout */
 }
 
 /* ============================================
@@ -145,7 +145,7 @@ body {
 
 /* APP CONTAINER OVERRIDE (if needed) */
 .app-container {
-    padding: 20px 3rem; /* Reduced from 28px - more compact */
+    padding: 16px 3rem; /* Further reduced for more compact layout */
     max-width: 1400px;
     margin: 0 auto;
     flex: 1;
@@ -153,17 +153,17 @@ body {
 }
 
 .main-content {
-    padding-top: 20px; /* Reduced from 28px */
+    padding-top: 16px; /* Further reduced */
     display: flex;
     flex-direction: column;
-    gap: 16px; /* Reduced from 20px */
+    gap: 12px; /* Further reduced */
 }
 
 /* ============================================
    PAGE HEADER - Modern "Quiet Header" Style
    ============================================ */
 .page-header {
-    margin-bottom: 16px; /* Reduced from 24px - more compact */
+    margin-bottom: 12px; /* Further reduced for more compact layout */
 }
 
 .page-title-group {
