@@ -14,37 +14,6 @@
     <style>
         /* ===== CASH BOX DETAIL PAGE SPECIFIC STYLES ===== */
 
-        /* New Transaction Button */
-        .btn-new-transaction {
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: none;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: white !important;
-            background: var(--active) !important;
-        }
-
-        .btn-new-transaction:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.3);
-        }
-
-/* ===== End imported ===== */
-
-        /* MAIN */
-        .register-title {
-            font-size: 28px !important;
-            font-weight: 800 !important;
-            letter-spacing: -0.02em !important;
-        }
-
         /* COMPACT HEADER */
         .compact-header {
             background: linear-gradient(135deg, rgba(var(--active-rgb), 0.05), rgba(var(--active-rgb), 0.02));
@@ -58,9 +27,7 @@
             box-shadow: 0 2px 8px var(--shadow);
         }
 
-        .header-info {
-            flex: 1;
-        }
+        .header-info { flex: 1; }
 
         .cash-box-icon {
             width: 48px;
@@ -85,72 +52,6 @@
         .header-actions-compact {
             display: flex;
             gap: 12px;
-        }
-
-        .register-title {
-            font-size: 36px;
-            font-weight: 900;
-            letter-spacing: -0.02em;
-        }
-
-        .register-id {
-            font-size: 14px;
-            color: var(--text-muted);
-            font-family: 'Courier New', monospace;
-            font-weight: 600;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        /* BALANCE CARD */
-        .balance-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 32px;
-            box-shadow: 0 2px 12px var(--shadow);
-        }
-
-        .balance-label {
-            font-size: 14px;
-            color: var(--text-muted);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
-        }
-
-        .balance-amount {
-            font-size: 64px;
-            font-weight: 900;
-            letter-spacing: -0.03em;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-
-        .balance-trend {
-            font-size: 16px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 8px;
-        }
-
-        .balance-trend.up {
-            color: var(--primary);
-            background: rgba(5, 150, 105, 0.1);
-        }
-
-        .balance-trend.down {
-            color: var(--orange);
-            background: rgba(245, 158, 11, 0.1);
         }
 
         /* STATS GRID */
@@ -230,7 +131,7 @@
         .stat-value.in { color: var(--primary); }
         .stat-value.out { color: var(--orange); }
 
-        /* RECENT TRANSACTIONS */
+        /* SECTION HEADER */
         .section-header {
             display: flex;
             justify-content: space-between;
@@ -254,172 +155,48 @@
             gap: 6px;
         }
 
-        .section-link:hover {
-            text-decoration: underline;
-        }
+        .section-link:hover { text-decoration: underline; }
 
-        .transactions-table {
+        /* TEAM ACCESS */
+        .team-access-collapsible {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: var(--bg);
-        }
-
-        th {
-            text-align: left;
-            padding: 14px 20px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        tbody tr {
-            border-bottom: 1px solid var(--border);
-            transition: all 0.2s;
-        }
-
-        tbody tr:hover {
-            background: var(--bg);
-        }
-
-        tbody tr:last-child {
-            border-bottom: none;
-        }
-
-        td {
+            border-radius: 12px;
             padding: 16px 20px;
-            font-size: 14px;
+            margin-bottom: 24px;
         }
 
-        .tx-id {
-            font-family: 'Courier New', monospace;
+        .team-members-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .team-member-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .team-avatar-mini {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border);
+        }
+
+        .team-info-mini { flex: 1; }
+
+        .team-name-mini {
+            font-size: 13px;
             font-weight: 600;
             color: var(--text);
         }
 
-        .tx-date {
+        .team-role-mini {
+            font-size: 11px;
             color: var(--text-muted);
-            font-size: 13px;
-        }
-
-        .tx-Contact {
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .tx-direction {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .tx-direction.in {
-            background: var(--primary);
-            color: white;
-        }
-
-        .tx-direction.out {
-            background: var(--orange);
-            color: white;
-        }
-
-        .tx-amount {
-            font-size: 15px;
-            font-weight: 700;
-        }
-
-        .tx-amount.in { color: var(--primary); }
-        .tx-amount.out { color: var(--orange); }
-
-        .tx-actions {
-            display: flex;
-            gap: 4px;
-            justify-content: flex-end;
-        }
-
-        .action-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            color: var(--text-muted);
-            font-size: 14px;
-        }
-
-        .action-btn:hover {
-            background: var(--bg);
-            color: var(--text);
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 1024px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .compact-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-            }
-
-            .header-balance {
-                border-left: none;
-                border-right: none;
-                border-top: 1px solid var(--border);
-                border-bottom: 1px solid var(--border);
-                padding: 16px 0;
-                text-align: left;
-                width: 100%;
-            }
-
-            .header-actions-compact {
-                width: 100%;
-            }
-
-            .header-actions-compact .btn {
-                flex: 1;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            table {
-                font-size: 13px;
-            }
-
-            th, td {
-                padding: 12px 16px;
-            }
         }
 
         /* FILTER SECTION */
@@ -473,9 +250,7 @@
             color: white;
         }
 
-        .filter-panel {
-            padding: 24px;
-        }
+        .filter-panel { padding: 24px; }
 
         .filter-grid {
             display: grid;
@@ -504,8 +279,7 @@
             font-size: 12px;
         }
 
-        .filter-input,
-        .filter-select {
+        .filter-input {
             padding: 10px 14px;
             border: 2px solid var(--border);
             border-radius: 10px;
@@ -515,8 +289,7 @@
             background: var(--surface);
         }
 
-        .filter-input:focus,
-        .filter-select:focus {
+        .filter-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
@@ -528,9 +301,7 @@
             gap: 8px;
         }
 
-        .amount-range input {
-            flex: 1;
-        }
+        .amount-range input { flex: 1; }
 
         .amount-range span {
             color: var(--text-muted);
@@ -573,110 +344,114 @@
             border: 2px solid var(--border);
         }
 
-        .filter-btn.clear:hover {
-            border-color: var(--text);
-        }
+        .filter-btn.clear:hover { border-color: var(--text); }
 
-        /* BULK ACTIONS */
-        .bulk-actions {
-            display: none;
-            align-items: center;
-            gap: 16px;
-            padding: 16px 24px;
-            background: rgba(5, 150, 105, 0.05);
-            border: 1px solid rgba(5, 150, 105, 0.2);
-            border-radius: 16px;
-            margin-bottom: 16px;
-        }
-
-        .bulk-actions.show {
-            display: flex;
-        }
-
-        .bulk-actions-text {
-            font-weight: 600;
-            color: var(--text);
-            flex: 1;
-        }
-
-        .bulk-action-btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: none;
+        /* TRANSACTIONS TABLE */
+        .transactions-table {
             background: var(--surface);
-            color: var(--text);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
-        .bulk-action-btn:hover {
+        .table-wrapper { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead { background: var(--bg); }
+
+        th {
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+
+        tbody tr:hover { background: var(--bg); }
+
+        tbody tr:last-child { border-bottom: none; }
+
+        td {
+            padding: 14px 16px;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .tx-id {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .tx-date {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .tx-Contact {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .tx-direction {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .tx-direction.in {
             background: var(--primary);
             color: white;
         }
 
-        .bulk-action-btn.delete:hover {
-            background: #ef4444;
+        .tx-direction.out {
+            background: var(--orange);
             color: white;
         }
 
-        /* TEAM ACCESS - Collapsible */
-        .team-access-collapsible {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 24px;
+        .tx-amount {
+            font-size: 15px;
+            font-weight: 700;
         }
 
-        .team-header {
+        .tx-amount.in { color: var(--primary); }
+        .tx-amount.out { color: var(--orange); }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-        }
-
-        .team-header:hover {
-            opacity: 0.8;
-        }
-
-        .team-members-compact {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .team-member-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .team-avatar-mini {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border);
-        }
-
-        .team-info-mini {
-            flex: 1;
-        }
-
-        .team-name-mini {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .team-role-mini {
-            font-size: 11px;
+            justify-content: center;
+            transition: all 0.2s;
             color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: var(--bg);
+            color: var(--text);
         }
 
         /* PAGINATION */
@@ -728,8 +503,33 @@
             cursor: not-allowed;
         }
 
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .filter-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .compact-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            .header-balance {
+                border-left: none;
+                border-right: none;
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+                padding: 16px 0;
+                text-align: left;
+                width: 100%;
+            }
+            .stats-grid { grid-template-columns: 1fr; }
+            .filter-grid { grid-template-columns: 1fr; }
+        }
     </style>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" /></head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
 <body>
 <nav class="site-nav">
   <div class="nav-container">
@@ -813,42 +613,31 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-header">
-                    <div class="stat-icon in">
-                        <i class="fas fa-arrow-down"></i>
-                    </div>
+                    <div class="stat-icon in"><i class="fas fa-arrow-down"></i></div>
                     <span class="stat-trend-mini up">+15%</span>
                 </div>
                 <div class="stat-label">Today IN</div>
                 <div class="stat-value in">$7,200</div>
             </div>
-
             <div class="stat-card">
                 <div class="stat-header">
-                    <div class="stat-icon out">
-                        <i class="fas fa-arrow-up"></i>
-                    </div>
+                    <div class="stat-icon out"><i class="fas fa-arrow-up"></i></div>
                     <span class="stat-trend-mini down">-5%</span>
                 </div>
                 <div class="stat-label">Today OUT</div>
                 <div class="stat-value out">$2,800</div>
             </div>
-
             <div class="stat-card">
                 <div class="stat-header">
-                    <div class="stat-icon in">
-                        <i class="fas fa-calendar-week"></i>
-                    </div>
+                    <div class="stat-icon in"><i class="fas fa-calendar-week"></i></div>
                     <span class="stat-trend-mini up">+8%</span>
                 </div>
                 <div class="stat-label">Week IN</div>
                 <div class="stat-value in">$45,200</div>
             </div>
-
             <div class="stat-card">
                 <div class="stat-header">
-                    <div class="stat-icon out">
-                        <i class="fas fa-calendar-week"></i>
-                    </div>
+                    <div class="stat-icon out"><i class="fas fa-calendar-week"></i></div>
                     <span class="stat-trend-mini down">-3%</span>
                 </div>
                 <div class="stat-label">Week OUT</div>
@@ -856,9 +645,9 @@
             </div>
         </div>
 
-        <!-- TEAM ACCESS - Collapsible -->
+        <!-- TEAM ACCESS -->
         <div class="team-access-collapsible">
-            <div class="team-header" onclick="toggleTeamAccess()" style="cursor: pointer;">
+            <div class="team-header" onclick="toggleTeamAccess()" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center; gap: 8px;">
                     <i class="fas fa-users" style="color: var(--text-muted);"></i>
                     <span style="font-size: 14px; font-weight: 600; color: var(--text);">Team Access</span>
@@ -900,151 +689,69 @@
         <!-- RECENT TRANSACTIONS -->
         <div class="section-header">
             <h2 class="section-title">Recent Transactions</h2>
-            <a href="/history?Cash Box=main" class="section-link">
-                View all
-                <i class="fas fa-arrow-right"></i>
+            <a href="spendnote-transaction-history.html" class="section-link">
+                View all <i class="fas fa-arrow-right"></i>
             </a>
         </div>
 
         <!-- FILTER SECTION -->
-        <div class="filter-section" style="margin-bottom: 24px;">
+        <div class="filter-section">
             <div class="filter-header" style="cursor: pointer;" onclick="toggleFilters()">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div class="filter-title">Filters</div>
                     <i class="fas fa-chevron-down" id="filterToggleIcon" style="transition: transform 0.3s; color: var(--text-muted);"></i>
                 </div>
                 <div class="filter-tabs">
-                    <button class="filter-tab active" data-filter="all" onclick="event.stopPropagation()">All</button>
-                    <button class="filter-tab" data-filter="in" onclick="event.stopPropagation()">IN</button>
-                    <button class="filter-tab" data-filter="out" onclick="event.stopPropagation()">OUT</button>
+                    <button class="filter-tab active" onclick="event.stopPropagation()">All</button>
+                    <button class="filter-tab" onclick="event.stopPropagation()">IN</button>
+                    <button class="filter-tab" onclick="event.stopPropagation()">OUT</button>
                 </div>
             </div>
-
             <div class="filter-panel" id="filterPanel" style="display: none;">
                 <div class="filter-grid">
-                    <!-- Contact Name -->
                     <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-user"></i>
-                            Contact Name
-                        </label>
-                        <input type="text" class="filter-input" placeholder="Search by name..." id="filterContact">
+                        <label class="filter-label"><i class="fas fa-user"></i> Contact Name</label>
+                        <input type="text" class="filter-input" placeholder="Search by name...">
                     </div>
-
-                    <!-- Contact ID -->
                     <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-tag"></i>
-                            Contact ID
-                        </label>
-                        <input type="text" class="filter-input" placeholder="e.g., CLIENT-4523" id="filterContactId">
+                        <label class="filter-label"><i class="fas fa-tag"></i> Contact ID</label>
+                        <input type="text" class="filter-input" placeholder="e.g., CLIENT-4523">
                     </div>
-
-                    <!-- Reference ID -->
                     <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-hashtag"></i>
-                            Reference ID
-                        </label>
-                        <input type="text" class="filter-input" placeholder="e.g., PO-2026-0142" id="filterReferenceId">
+                        <label class="filter-label"><i class="fas fa-hashtag"></i> Reference ID</label>
+                        <input type="text" class="filter-input" placeholder="e.g., PO-2026-0142">
                     </div>
-
-                    <!-- Description/Note -->
                     <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-file-alt"></i>
-                            Description / Note
-                        </label>
-                        <input type="text" class="filter-input" placeholder="Search description..." id="filterDescription">
+                        <label class="filter-label"><i class="fas fa-calendar"></i> Date From</label>
+                        <input type="date" class="filter-input">
                     </div>
-
-                    <!-- Created By -->
                     <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-user-check"></i>
-                            Created by
-                        </label>
-                        <input type="text" class="filter-input" placeholder="Search creator..." id="filterCreator">
+                        <label class="filter-label"><i class="fas fa-calendar"></i> Date To</label>
+                        <input type="date" class="filter-input">
                     </div>
-
-                    <!-- Date From -->
                     <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-calendar"></i>
-                            Date From
-                        </label>
-                        <input type="date" class="filter-input" id="filterDateFrom">
-                    </div>
-
-                    <!-- Date To -->
-                    <div class="filter-group">
-                        <label class="filter-label">
-                            <i class="fas fa-calendar"></i>
-                            Date To
-                        </label>
-                        <input type="date" class="filter-input" id="filterDateTo">
-                    </div>
-
-                    <!-- Amount Range -->
-                    <div class="filter-group" style="grid-column: span 2;">
-                        <label class="filter-label">
-                            <i class="fas fa-dollar-sign"></i>
-                            Amount Range
-                        </label>
+                        <label class="filter-label"><i class="fas fa-dollar-sign"></i> Amount Range</label>
                         <div class="amount-range">
-                            <input type="number" class="filter-input" placeholder="Min" id="filterAmountMin" step="0.01">
+                            <input type="number" class="filter-input" placeholder="Min">
                             <span>–</span>
-                            <input type="number" class="filter-input" placeholder="Max" id="filterAmountMax" step="0.01">
+                            <input type="number" class="filter-input" placeholder="Max">
                         </div>
                     </div>
                 </div>
-
                 <div class="filter-actions">
-                    <button class="filter-btn clear" id="clearFilters">
-                        <i class="fas fa-times"></i>
-                        Clear All
-                    </button>
-                    <button class="filter-btn primary" id="applyFilters">
-                        <i class="fas fa-check"></i>
-                        Apply Filters
-                    </button>
-                    <div style="flex: 1;"></div>
-                    <button class="filter-btn clear" id="exportCSV">
-                        <i class="fas fa-file-csv"></i>
-                        Export CSV
-                    </button>
-                    <button class="filter-btn clear" id="exportPDF">
-                        <i class="fas fa-file-pdf"></i>
-                        Export PDF
-                    </button>
+                    <button class="filter-btn clear"><i class="fas fa-times"></i> Clear</button>
+                    <button class="filter-btn primary"><i class="fas fa-check"></i> Apply</button>
                 </div>
             </div>
         </div>
 
-        <!-- BULK ACTIONS -->
-        <div class="bulk-actions" id="bulkActions" style="display: none;">
-            <input type="checkbox" id="selectAll">
-            <span class="bulk-actions-text"><strong><span id="selectedCount">0</span> selected</strong></span>
-            <button class="bulk-action-btn">
-                <i class="fas fa-file-pdf"></i>
-                Print Selected
-            </button>
-            <button class="bulk-action-btn">
-                <i class="fas fa-envelope"></i>
-                Email Selected
-            </button>
-            <button class="bulk-action-btn delete">
-                <i class="fas fa-trash"></i>
-                Delete Selected
-            </button>
-        </div>
-
+        <!-- TRANSACTIONS TABLE -->
         <div class="transactions-table">
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
-                            <th></th>
+                            <th style="width: 40px;"></th>
                             <th>Type</th>
                             <th>ID</th>
                             <th>Date</th>
@@ -1053,106 +760,90 @@
                             <th>Reference ID</th>
                             <th>Amount</th>
                             <th>Created by</th>
-                            <th></th>
+                            <th style="width: 40px;"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="checkbox" class="row-checkbox"></td>
+                            <td><input type="checkbox"></td>
                             <td><span class="tx-direction in">⬇ IN</span></td>
                             <td><span class="tx-id">TRX-342</span></td>
                             <td><span class="tx-date">Jan 6, 2026</span></td>
                             <td><span class="tx-Contact">John Smith</span></td>
-                            <td><span class="tx-contact-id">CLIENT-4523</span></td>
-                            <td><span class="tx-reference-id">PO-2026-0142</span></td>
+                            <td>CLIENT-4523</td>
+                            <td>PO-2026-0142</td>
                             <td><span class="tx-amount in">$7,200</span></td>
                             <td><span class="tx-date">Jane Doe</span></td>
-                            <td>
-                                <button class="action-btn" title="View transaction details" onclick="window.location.href='/transaction-detail?id=TRX-342'"><i class="fas fa-eye"></i></button>
-                            </td>
+                            <td><button class="action-btn"><i class="fas fa-eye"></i></button></td>
                         </tr>
                         <tr>
-                            <td><input type="checkbox" class="row-checkbox"></td>
+                            <td><input type="checkbox"></td>
                             <td><span class="tx-direction out">⬆ OUT</span></td>
                             <td><span class="tx-id">TRX-339</span></td>
                             <td><span class="tx-date">Jan 4, 2026</span></td>
                             <td><span class="tx-Contact">Emily Davis</span></td>
-                            <td><span class="tx-contact-id">EMP-ED-789</span></td>
-                            <td><span class="tx-reference-id">EXP-2026-045</span></td>
+                            <td>EMP-ED-789</td>
+                            <td>EXP-2026-045</td>
                             <td><span class="tx-amount out">$2,350</span></td>
                             <td><span class="tx-date">John Doe</span></td>
-                            <td>
-                                <button class="action-btn" title="View transaction details" onclick="window.location.href='/transaction-detail?id=TRX-339'"><i class="fas fa-eye"></i></button>
-                            </td>
+                            <td><button class="action-btn"><i class="fas fa-eye"></i></button></td>
                         </tr>
                         <tr>
-                            <td><input type="checkbox" class="row-checkbox"></td>
+                            <td><input type="checkbox"></td>
                             <td><span class="tx-direction in">⬇ IN</span></td>
                             <td><span class="tx-id">TRX-335</span></td>
                             <td><span class="tx-date">Jan 3, 2026</span></td>
                             <td><span class="tx-Contact">Michael Brown</span></td>
-                            <td><span class="tx-contact-id"></span></td>
-                            <td><span class="tx-reference-id">REF-2026-078</span></td>
+                            <td></td>
+                            <td>REF-2026-078</td>
                             <td><span class="tx-amount in">$4,580</span></td>
                             <td><span class="tx-date">Jane Doe</span></td>
-                            <td>
-                                <button class="action-btn" title="View transaction details" onclick="window.location.href='/transaction-detail?id=TRX-335'"><i class="fas fa-eye"></i></button>
-                            </td>
+                            <td><button class="action-btn"><i class="fas fa-eye"></i></button></td>
                         </tr>
                         <tr>
-                            <td><input type="checkbox" class="row-checkbox"></td>
+                            <td><input type="checkbox"></td>
                             <td><span class="tx-direction out">⬆ OUT</span></td>
                             <td><span class="tx-id">TRX-332</span></td>
                             <td><span class="tx-date">Jan 2, 2026</span></td>
                             <td><span class="tx-Contact">Lisa Wilson</span></td>
-                            <td><span class="tx-contact-id">CLI-LW-2025</span></td>
-                            <td><span class="tx-reference-id"></span></td>
+                            <td>CLI-LW-2025</td>
+                            <td></td>
                             <td><span class="tx-amount out">$1,890</span></td>
                             <td><span class="tx-date">John Doe</span></td>
-                            <td>
-                                <button class="action-btn" title="View transaction details" onclick="window.location.href='/transaction-detail?id=TRX-332'"><i class="fas fa-eye"></i></button>
-                            </td>
+                            <td><button class="action-btn"><i class="fas fa-eye"></i></button></td>
                         </tr>
                         <tr>
-                            <td><input type="checkbox" class="row-checkbox"></td>
+                            <td><input type="checkbox"></td>
                             <td><span class="tx-direction in">⬇ IN</span></td>
                             <td><span class="tx-id">TRX-328</span></td>
                             <td><span class="tx-date">Jan 1, 2026</span></td>
                             <td><span class="tx-Contact">David Lee</span></td>
-                            <td><span class="tx-contact-id"></span></td>
-                            <td><span class="tx-reference-id">INV-2026-001</span></td>
+                            <td></td>
+                            <td>INV-2026-001</td>
                             <td><span class="tx-amount in">$3,250</span></td>
                             <td><span class="tx-date">Jane Doe</span></td>
-                            <td>
-                                <button class="action-btn" title="View transaction details" onclick="window.location.href='/transaction-detail?id=TRX-328'"><i class="fas fa-eye"></i></button>
-                            </td>
+                            <td><button class="action-btn"><i class="fas fa-eye"></i></button></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-
-            <!-- PAGINATION -->
             <div class="pagination">
                 <div class="pagination-info">
                     Showing 1-5 of 87
-                    <select id="perPageSelect" style="margin-left: 8px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
-                        <option value="10">10 per page</option>
-                        <option value="25">25 per page</option>
-                        <option value="50">50 per page</option>
+                    <select style="margin-left: 8px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
+                        <option>10 per page</option>
+                        <option>25 per page</option>
+                        <option>50 per page</option>
                     </select>
                 </div>
                 <div class="pagination-controls">
-                    <button class="pagination-btn" disabled>
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
+                    <button class="pagination-btn" disabled><i class="fas fa-chevron-left"></i></button>
                     <button class="pagination-btn active">1</button>
                     <button class="pagination-btn">2</button>
                     <button class="pagination-btn">3</button>
                     <button class="pagination-btn">...</button>
                     <button class="pagination-btn">9</button>
-                    <button class="pagination-btn">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+                    <button class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </div>
@@ -1215,46 +906,11 @@
     </div>
 </footer>
 
-
-
-
-
-
-
-
     <script>
-        // Get color from URL parameter
-        function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
-        }
-
-        // Color mapping
-        const colorMap = {
-            'green': { hex: '#059669', rgb: '5, 150, 105' },
-            'orange': { hex: '#f59e0b', rgb: '245, 158, 11' },
-            'blue': { hex: '#3b82f6', rgb: '59, 130, 246' },
-            'purple': { hex: '#8b5cf6', rgb: '139, 92, 246' },
-            'red': { hex: '#ef4444', rgb: '239, 68, 68' }
-        };
-
-        // Apply cash box color dynamically
-        function applyCashBoxColor() {
-            const color = getUrlParameter('color') || 'green'; // Default to green
-            const colorData = colorMap[color] || colorMap['green'];
-            
-            // Set CSS variables for the entire page - this updates everything automatically
-            document.documentElement.style.setProperty('--active', colorData.hex);
-            document.documentElement.style.setProperty('--active-rgb', colorData.rgb);
-            
-            console.log('Applied color:', color, colorData);
-        }
-
         // Toggle filter panel
         function toggleFilters() {
             const filterPanel = document.getElementById('filterPanel');
             const toggleIcon = document.getElementById('filterToggleIcon');
-            
             if (filterPanel.style.display === 'none') {
                 filterPanel.style.display = 'block';
                 toggleIcon.style.transform = 'rotate(180deg)';
@@ -1268,7 +924,6 @@
         function toggleTeamAccess() {
             const teamContent = document.getElementById('teamContent');
             const toggleIcon = document.getElementById('teamToggleIcon');
-            
             if (teamContent.style.display === 'none') {
                 teamContent.style.display = 'block';
                 toggleIcon.style.transform = 'rotate(180deg)';
@@ -1278,12 +933,22 @@
             }
         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            applyCashBoxColor();
-        });
+        // Color from URL
+        const colorMap = {
+            'green': { hex: '#059669', rgb: '5, 150, 105' },
+            'orange': { hex: '#f59e0b', rgb: '245, 158, 11' },
+            'blue': { hex: '#3b82f6', rgb: '59, 130, 246' },
+            'purple': { hex: '#8b5cf6', rgb: '139, 92, 246' },
+            'red': { hex: '#ef4444', rgb: '239, 68, 68' }
+        };
 
-        console.log('Cash Box Detail page loaded');
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const color = urlParams.get('color') || 'green';
+            const colorData = colorMap[color] || colorMap['green'];
+            document.documentElement.style.setProperty('--active', colorData.hex);
+            document.documentElement.style.setProperty('--active-rgb', colorData.rgb);
+        });
     </script>
 </body>
 </html>
