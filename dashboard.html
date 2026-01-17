@@ -305,13 +305,13 @@
             width: 72px !important;
             height: 72px !important;
             border-radius: 18px !important;
-            background: linear-gradient(135deg, rgba(var(--active-rgb), 0.1), rgba(var(--active-rgb), 0.05));
+            background: linear-gradient(135deg, rgba(var(--card-rgb, var(--active-rgb)), 0.1), rgba(var(--card-rgb, var(--active-rgb)), 0.05));
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--active);
+            color: var(--card-color, var(--active));
             font-size: 32px !important;
-            border: 2px solid rgba(var(--active-rgb), 0.2);
+            border: 2px solid rgba(var(--card-rgb, var(--active-rgb)), 0.2);
         }
         .register-balance {
             font-size: 32px;
