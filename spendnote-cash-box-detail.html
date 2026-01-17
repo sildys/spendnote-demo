@@ -269,11 +269,13 @@
         .table-wrapper {
             overflow-x: auto;
             max-width: 100%;
+            width: 100%;
+            -webkit-overflow-scrolling: touch;
         }
 
         table {
-            min-width: 800px;
             width: 100%;
+            min-width: 0;
             border-collapse: collapse;
         }
 
@@ -728,6 +730,20 @@
         .pagination-btn:disabled {
             opacity: 0.4;
             cursor: not-allowed;
+        }
+
+        /* OVERFLOW FIX - Prevent page width expansion */
+        .app-container, .main-content {
+            max-width: 100%;
+        }
+        .main-content {
+            min-width: 0;
+        }
+        .transactions-table {
+            max-width: 100%;
+        }
+        html, body {
+            overflow-x: hidden;
         }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" /></head>
