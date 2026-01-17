@@ -27,7 +27,7 @@
 
 html {
     overflow-x: clip;
-    font-size: 75%; /* Scale down all rem-based sizes by 25% */
+    font-size: 65%; /* Scale down all rem-based sizes by 35% */
 }
 
 body {
@@ -35,7 +35,7 @@ body {
     background: var(--bg);
     color: var(--text);
     line-height: 1.6;
-    font-size: 13px;
+    font-size: 12px;
     -webkit-font-smoothing: antialiased;
     min-height: 100vh;
     display: flex;
@@ -233,10 +233,10 @@ body {
 .app-footer {
     background: linear-gradient(135deg, #047857, #059669, #10b981);
     border-top: none;
-    padding: 48px 0 36px 0;
+    padding: 56px 0 42px 0;
     margin-top: auto;
     color: white;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .app-footer-container {
