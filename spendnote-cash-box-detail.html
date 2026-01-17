@@ -169,16 +169,29 @@
         }
 
         .section-link {
-            font-size: 14px;
-            color: var(--active);
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            padding: 10px 18px;
+            background: var(--active);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.2);
         }
 
-        .section-link:hover { text-decoration: underline; }
+        .section-link:hover {
+            filter: brightness(0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(var(--active-rgb), 0.3);
+        }
+
+        .section-link i {
+            font-size: 13px;
+        }
 
         /* TEAM ACCESS */
         .team-access-collapsible {
