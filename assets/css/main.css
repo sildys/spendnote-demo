@@ -73,7 +73,7 @@ body {
     display: flex;
     align-items: center;
     text-decoration: none;
-    gap: 0.5rem;
+    gap: 0;
 }
 
 .site-nav .logo svg {
@@ -84,6 +84,9 @@ body {
 .site-nav .logo span {
     font-size: 24px !important;
     font-weight: 900;
+    color: #000000;
+    letter-spacing: -0.02em;
+    margin-left: 10px;
 }
 
 .site-nav .nav-links {
@@ -209,13 +212,14 @@ body {
 
 .btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    color: white;
+    color: white !important;
     box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.25);
 }
 
 .btn-primary:hover {
     filter: brightness(0.9);
     transform: translateY(-1px);
+    color: white !important;
 }
 
 .btn-secondary {
