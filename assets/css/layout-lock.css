@@ -1,0 +1,19 @@
+/* === GLOBAL LAYOUT LOCK === */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;max-width:100%;overflow-x:hidden}
+
+/* forbid viewport-width based layouts */
+*[style*="100vw"], .w-100vw, .vw-100 {max-width:100%}
+
+/* canonical content width enforcement */
+.app-content{
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+  padding:24px;
+}
+
+/* safety: never allow root wrappers to exceed viewport */
+.app-shell, .sidebar, main, header, footer{
+  max-width:100%;
+}
