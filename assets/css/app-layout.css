@@ -61,6 +61,101 @@ body {
     overflow-x: auto;
 }
 
+/* USER AVATAR / PROFILE PICTURES */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-elevated);
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.user-avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-elevated);
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.user-avatar-small img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.user-avatar-large {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-elevated);
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.user-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Avatar with name (in tables, etc.) */
+.avatar-with-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar-with-name span {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* User avatar wrapper (in nav) */
+.user-avatar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+
+.user-avatar-wrapper:hover {
+    background: var(--surface-elevated);
+}
+
+.user-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
     .app-container {
