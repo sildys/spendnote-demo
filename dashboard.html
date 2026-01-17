@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=4">
-    <link rel="stylesheet" href="assets/css/app-layout.css?v=4">
+    <link rel="stylesheet" href="assets/css/app-layout.css?v=5">
     <style>
         /* ===== DASHBOARD PAGE SPECIFIC STYLES ===== */
         
@@ -1019,16 +1019,18 @@
         }
 
         .carousel-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #1f2937;
+            font-size: 24px; /* Modern quiet header size */
+            font-weight: 700; /* Semi-bold */
+            color: var(--text);
             margin: 0;
+            letter-spacing: -0.01em;
         }
 
         .carousel-subtitle {
-            font-size: 13px;
-            color: #6b7280;
+            font-size: 14px; /* Slightly larger */
+            color: var(--text-muted);
             margin-bottom: 16px;
+            font-weight: 400;
         }
 
         .carousel-nav {
@@ -1257,7 +1259,7 @@
             }
             
             .carousel-title {
-                font-size: 20px;
+                font-size: 22px; /* Slightly smaller on mobile */
             }
             
             .carousel-nav {
@@ -1420,16 +1422,9 @@
         .registers-carousel-section{
             margin-top: 28px;
         }
-        .carousel-title{
-            letter-spacing: -0.02em;
-        }
         .carousel-header{
-            padding-top: 6px;
-        }
-        .carousel-subtitle{
-            margin-top: 2px;
-            font-size: 0.95rem;
-            color: var(--text-muted);
+            padding-top: 0;
+            margin-bottom: 24px; /* Consistent with page-header */
         }
 
 
