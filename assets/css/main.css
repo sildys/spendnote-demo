@@ -166,9 +166,9 @@ body {
     list-style: none;
 }
 
-.site-nav .nav-links a:not(.btn),
+.site-nav .nav-links a:not(.btn):not(.nav-cash-item),
 .site-nav .nav-links button:not(.btn) {
-    color: var(--text);
+    color: var(--text-muted);
     text-decoration: none;
     font-weight: 600;
     font-size: var(--font-base); /* 15px */
@@ -179,8 +179,20 @@ body {
     font-family: inherit;
 }
 
-.site-nav .nav-links a:not(.btn):hover {
+.site-nav .nav-links a:not(.btn):not(.nav-cash-item):hover {
     color: var(--active);
+}
+
+/* Cash-related nav items (Dashboard, Cash Boxes, Transactions) - ALWAYS GREEN */
+.site-nav .nav-links a.nav-cash-item {
+    color: var(--active) !important;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.site-nav .nav-links a.nav-cash-item:hover {
+    color: var(--primary) !important;
 }
 
 /* Nav buttons keep their button styling */
