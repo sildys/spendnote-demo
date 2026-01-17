@@ -27,7 +27,7 @@
 
 html {
     overflow-x: clip;
-    font-size: 65%; /* Scale down all rem-based sizes by 35% */
+    font-size: 60%; /* Scale down all rem-based sizes by 40% */
 }
 
 body {
@@ -250,57 +250,39 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
-    gap: 3rem;
-    padding-bottom: 2rem;
+    gap: 48px;
+    padding-bottom: 32px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    margin-bottom: 1.5rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .nav-container {
-        padding: 0 1rem;
-    }
-    
-    .site-nav .nav-links {
-        gap: 1rem;
-        font-size: 0.85rem;
-    }
-    
-    .app-container {
-        padding: 1rem;
-    }
+    margin-bottom: 24px;
 }
 
 .app-footer-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 16px;
 }
 
 .app-footer-logo {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
     text-decoration: none;
-    color: var(--text);
-    font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 18px;
 }
 
 .app-footer-info {
-    font-size: 0.875rem;
+    font-size: 14px;
     color: var(--text-muted);
 }
 
 .app-footer-divider {
     color: var(--border);
-    margin: 0 0.5rem;
+    margin: 0 8px;
 }
 
 .app-footer-links {
     display: flex;
-    gap: 2rem;
+    gap: 32px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -309,8 +291,8 @@ body {
 .app-footer-links a {
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
     transition: color 0.2s;
 }
 
@@ -321,11 +303,11 @@ body {
 .app-footer-disclaimer {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
+    gap: 8px;
+    font-size: 12px;
     color: var(--text-muted);
-    padding: 0.5rem 1rem;
-    background: var(--bg);
+    background: rgba(0, 0, 0, 0.05);
+    padding: 8px 16px;
     border-radius: 8px;
 }
 
@@ -337,12 +319,12 @@ body {
     .app-footer-container {
         flex-direction: column;
         align-items: flex-start;
-        gap: 1rem;
+        gap: 16px;
     }
     
     .app-footer-links {
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 16px;
     }
     
     .app-footer-disclaimer {
@@ -387,19 +369,19 @@ body {
 .app-footer-brand-logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
+    gap: 12px;
+    margin-bottom: 16px;
     text-decoration: none;
     color: white;
 }
 
 .app-footer-brand-logo span {
-    font-size: 1.25rem;
+    font-size: 20px;
     font-weight: 900;
 }
 
 .app-footer-brand-desc {
-    font-size: 0.875rem;
+    font-size: 14px;
     line-height: 1.6;
     color: rgba(255, 255, 255, 0.8);
     max-width: 300px;
@@ -410,9 +392,9 @@ body {
 }
 
 .app-footer-section-title {
-    font-size: 0.875rem;
+    font-size: 14px;
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: 16px;
     color: white;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -424,13 +406,13 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 12px;
 }
 
 .app-footer-section-links a {
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    font-size: 0.875rem;
+    font-size: 14px;
     transition: color 0.2s;
 }
 
@@ -443,21 +425,22 @@ body {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 16px;
+    padding-top: 32px;
 }
 
 .app-footer-copyright {
-    font-size: 0.875rem;
+    font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
 }
 
 .app-footer-disclaimer {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
+    gap: 8px;
+    font-size: 12px;
     color: white;
-    padding: 0.5rem 1rem;
+    padding: 8px 16px;
     background: rgba(255, 255, 255, 0.15);
     border-radius: 8px;
 }
@@ -465,7 +448,7 @@ body {
 @media (max-width: 768px) {
     .app-footer-top {
         flex-direction: column;
-        gap: 2rem;
+        gap: 24px;
     }
     
     .app-footer-bottom {
@@ -477,9 +460,9 @@ body {
 .app-footer-brand-links {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-top: 1rem;
-    font-size: 0.875rem;
+    gap: 12px;
+    margin-top: 16px;
+    font-size: 14px;
 }
 
 .app-footer-brand-links a {
@@ -499,13 +482,13 @@ body {
 .app-footer-brand-disclaimer {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    font-size: 0.75rem;
-    color: white;
-    padding: 0.5rem 1rem;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
     background: rgba(255, 255, 255, 0.15);
+    padding: 8px 16px;
     border-radius: 8px;
+    margin-top: 16px;
     white-space: nowrap;
 }
 
@@ -524,18 +507,16 @@ body {
 .app-footer-links-simple a {
     color: white;
     text-decoration: none;
-    font-size: 0.875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition: all 0.2s;
-    white-space: nowrap;
-    padding: 0 1rem;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s;
+    position: relative;
+    padding: 0 16px;
 }
 
 .app-footer-links-simple a::before {
     content: '•';
-    margin-right: 1rem;
+    margin-right: 16px;
     color: rgba(255, 255, 255, 0.5);
     font-weight: 400;
 }
