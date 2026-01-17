@@ -90,7 +90,7 @@
             gap: 8px;
         }
 
-        /* STATS GRID - Simple Style */
+        /* STATS GRID - Compact Inline Style */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -102,15 +102,18 @@
             background: var(--surface);
             border: 2px solid var(--border);
             border-radius: 12px;
-            padding: 16px;
+            padding: 12px 16px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-        .stat-header {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .stat-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .stat-icon {
@@ -135,17 +138,17 @@
         }
 
         .stat-label {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-muted);
             font-weight: 600;
-            margin-bottom: 6px;
         }
 
         .stat-value {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 900;
             letter-spacing: -0.02em;
-            color: var(--text);
+            text-align: right;
+            white-space: nowrap;
         }
 
         .stat-value.in { color: var(--primary); }
@@ -667,31 +670,31 @@
         <!-- STATS GRID -->
         <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-header">
+                <div class="stat-left">
                     <div class="stat-icon in"><i class="fas fa-arrow-down"></i></div>
+                    <div class="stat-label">Today IN</div>
                 </div>
-                <div class="stat-label">Today IN</div>
                 <div class="stat-value in">$7,200</div>
             </div>
             <div class="stat-card">
-                <div class="stat-header">
+                <div class="stat-left">
                     <div class="stat-icon out"><i class="fas fa-arrow-up"></i></div>
+                    <div class="stat-label">Today OUT</div>
                 </div>
-                <div class="stat-label">Today OUT</div>
                 <div class="stat-value out">$2,800</div>
             </div>
             <div class="stat-card">
-                <div class="stat-header">
+                <div class="stat-left">
                     <div class="stat-icon in"><i class="fas fa-calendar-week"></i></div>
+                    <div class="stat-label">Week IN</div>
                 </div>
-                <div class="stat-label">Week IN</div>
                 <div class="stat-value in">$45,200</div>
             </div>
             <div class="stat-card">
-                <div class="stat-header">
+                <div class="stat-left">
                     <div class="stat-icon out"><i class="fas fa-calendar-week"></i></div>
+                    <div class="stat-label">Week OUT</div>
                 </div>
-                <div class="stat-label">Week OUT</div>
                 <div class="stat-value out">$28,500</div>
             </div>
         </div>
