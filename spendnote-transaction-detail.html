@@ -990,6 +990,36 @@
                         </label>
                         <p class="form-hint" style="margin-bottom: 16px;">Customize the text labels and messages on your receipts</p>
                         
+                        <!-- CASH BOX LOGO UPLOAD -->
+                        <div style="margin-bottom: 16px; padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">
+                                Cash Box Logo
+                                <span class="upgrade-badge" style="font-size: 10px; padding: 2px 6px;">
+                                    <i class="fas fa-crown"></i> Pro
+                                </span>
+                            </label>
+                            <p class="form-hint" style="font-size: 11px; margin-bottom: 10px;">Override the default logo for receipts from this Cash Box. Leave empty to use your account logo.</p>
+                            
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <!-- Logo Preview -->
+                                <div id="logoPreview" style="display: none; width: 48px; height: 48px; border: 2px solid #e2e8f0; border-radius: 6px; overflow: hidden; background: white;">
+                                    <img id="logoPreviewImg" src="" alt="Logo preview" style="width: 100%; height: 100%; object-fit: contain;">
+                                </div>
+                                
+                                <!-- Upload Controls -->
+                                <div style="flex: 1;">
+                                    <input type="file" id="cashBoxLogoInput" accept="image/png,image/jpeg,image/jpg,image/svg+xml" style="display: none;">
+                                    <button type="button" class="btn btn-secondary" id="uploadLogoBtn" style="margin-right: 8px; font-size: 12px; padding: 6px 12px;">
+                                        <i class="fas fa-upload"></i> Upload Logo
+                                    </button>
+                                    <button type="button" class="btn btn-outline" id="removeLogoBtn" style="display: none; font-size: 12px; padding: 6px 12px;">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                                    <p class="form-hint" style="font-size: 11px; margin-top: 6px;">PNG, JPG, SVG. Max 2MB.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                             <div>
                                 <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Receipt title</label>
@@ -1301,6 +1331,70 @@
         // Restore the Cash Box selection in localStorage to match this transaction's Cash Box
         localStorage.setItem('activeCashBoxColor', transactionCashBoxData.hex);
         localStorage.setItem('activeCashBoxRgb', transactionCashBoxData.rgb);
+
+        // Cash Box Logo Upload functionality
+        const logoInput = document.getElementById('cashBoxLogoInput');
+        const uploadLogoBtn = document.getElementById('uploadLogoBtn');
+        const removeLogoBtn = document.getElementById('removeLogoBtn');
+        const logoPreview = document.getElementById('logoPreview');
+        const logoPreviewImg = document.getElementById('logoPreviewImg');
+        let currentLogoData = null;
+
+        // Upload button click - trigger file input
+        if (uploadLogoBtn) {
+            uploadLogoBtn.addEventListener('click', function() {
+                logoInput.click();
+            });
+        }
+
+        // Handle file selection
+        if (logoInput) {
+            logoInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                // Validate file type
+                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Please upload a PNG, JPG, or SVG file.');
+                    return;
+                }
+
+                // Validate file size (2MB max)
+                const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+                if (file.size > maxSize) {
+                    alert('File size must be less than 2MB.');
+                    return;
+                }
+
+                // Read and preview the file
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    currentLogoData = event.target.result;
+                    logoPreviewImg.src = currentLogoData;
+                    logoPreview.style.display = 'block';
+                    removeLogoBtn.style.display = 'inline-block';
+                    
+                    // TODO: Save logo data to localStorage or send to backend
+                    console.log('Logo uploaded:', file.name);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Remove logo
+        if (removeLogoBtn) {
+            removeLogoBtn.addEventListener('click', function() {
+                currentLogoData = null;
+                logoPreviewImg.src = '';
+                logoPreview.style.display = 'none';
+                removeLogoBtn.style.display = 'none';
+                logoInput.value = '';
+                
+                // TODO: Remove logo data from localStorage or backend
+                console.log('Logo removed');
+            });
+        }
     </script>
     <script src="assets/js/main.js"></script>
 </body>
