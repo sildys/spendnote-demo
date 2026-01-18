@@ -523,25 +523,23 @@
 
         <div class="Contacts-card">
         <div class="Contacts-header">
-            <div class="header-top">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 class="Contacts-title">All Contacts</h2>
-                    <button class="add-Contact-btn-large" id="addContactBtn">
-                        <i class="fas fa-plus"></i>
-                        Add Contact
-                    </button>
-                </div>
-                <div class="header-actions">
-                    <select id="cashBoxFilter" style="padding: 10px 16px; border: 2px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; background: var(--surface); cursor: pointer; color: var(--text);">
+            <div class="header-top" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h2 class="Contacts-title" style="margin: 0;">All Contacts</h2>
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <select id="cashBoxFilter" style="padding: 10px 16px; border: 2px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; background: var(--surface); cursor: pointer; color: var(--text); min-width: 180px;">
                         <option value="">All Cash Boxes</option>
                         <option value="main">Main Office</option>
                         <option value="event">Event Fund</option>
                         <option value="petty">Petty Cash</option>
                     </select>
-                    <div class="search-box">
+                    <div class="search-box" style="width: 320px;">
                         <i class="fas fa-search"></i>
                         <input type="text" id="searchInput" placeholder="Search Contacts...">
                     </div>
+                    <button class="add-Contact-btn-large" id="addContactBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Contact
+                    </button>
                 </div>
             </div>
             
