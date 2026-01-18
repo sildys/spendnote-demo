@@ -694,15 +694,15 @@
 
         <!-- FILTER SECTION -->
         <div class="filter-section">
-            <div class="filter-header" style="cursor: pointer;" onclick="toggleFilters()">
+            <div class="filter-header" id="filterHeader" style="cursor: pointer;">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <div class="filter-title">Filters</div>
                     <i class="fas fa-chevron-down" id="filterToggleIcon" style="transition: transform 0.3s; color: var(--text-muted);"></i>
                 </div>
                 <div class="filter-tabs">
-                    <button class="filter-tab active" data-filter="all" onclick="event.stopPropagation()">All</button>
-                    <button class="filter-tab" data-filter="in" onclick="event.stopPropagation()">IN</button>
-                    <button class="filter-tab" data-filter="out" onclick="event.stopPropagation()">OUT</button>
+                    <button class="filter-tab active" data-filter="all">All</button>
+                    <button class="filter-tab" data-filter="in">IN</button>
+                    <button class="filter-tab" data-filter="out">OUT</button>
                 </div>
             </div>
             <div class="filter-panel" id="filterPanel" style="display: none;">
@@ -1014,30 +1014,36 @@
     </button>
 
     <script>
-        // Toggle filters panel
-        function toggleFilters() {
-            console.log('toggleFilters called');
-            const panel = document.getElementById('filterPanel');
-            const icon = document.getElementById('filterToggleIcon');
+        // Toggle filters panel - using event listener instead of inline onclick
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterHeader = document.getElementById('filterHeader');
+            const filterPanel = document.getElementById('filterPanel');
+            const filterIcon = document.getElementById('filterToggleIcon');
+            const filterTabs = document.querySelectorAll('.filter-tab');
             
-            console.log('panel:', panel);
-            console.log('icon:', icon);
-            
-            if (!panel || !icon) {
-                console.error('Panel or icon not found!');
-                return;
+            // Toggle filters on header click
+            if (filterHeader) {
+                filterHeader.addEventListener('click', function(e) {
+                    // Don't toggle if clicking on filter tabs
+                    if (e.target.closest('.filter-tab')) {
+                        return;
+                    }
+                    
+                    console.log('Filter header clicked');
+                    if (filterPanel && filterIcon) {
+                        if (filterPanel.style.display === 'none' || filterPanel.style.display === '') {
+                            filterPanel.style.display = 'block';
+                            filterIcon.style.transform = 'rotate(180deg)';
+                            console.log('Filters opened');
+                        } else {
+                            filterPanel.style.display = 'none';
+                            filterIcon.style.transform = 'rotate(0deg)';
+                            console.log('Filters closed');
+                        }
+                    }
+                });
             }
-            
-            if (panel.style.display === 'none' || panel.style.display === '') {
-                panel.style.display = 'block';
-                icon.style.transform = 'rotate(180deg)';
-                console.log('Filters opened');
-            } else {
-                panel.style.display = 'none';
-                icon.style.transform = 'rotate(0deg)';
-                console.log('Filters closed');
-            }
-        }
+        });
 
         // ========================================
         // AUTO-APPLY CASHBOX FILTER FROM URL
