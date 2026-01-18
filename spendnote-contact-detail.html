@@ -611,7 +611,7 @@
                 field.disabled = false;
             });
         } else {
-            // View mode
+            // Edit mode - form is always editable
             const contact = contactData[contactId] || contactData['CONT-001'];
             
             document.getElementById('contactIdBadge').textContent = contactId;
@@ -627,20 +627,23 @@
             document.getElementById('contactAddress').value = contact.address || '';
             document.getElementById('contactNotes').value = contact.notes || '';
             
-            // Disable all form fields (view only)
+            // Enable all form fields
             document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(field => {
-                field.disabled = true;
+                field.disabled = false;
             });
             
-            // Add header actions
+            // Add header actions - Save and Cancel buttons
             document.getElementById('headerActions').innerHTML = `
-                <button class="btn btn-primary" onclick="enableEdit()">
-                    <i class="fas fa-edit"></i> Edit
+                <button type="submit" form="contactForm" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save
                 </button>
                 <button class="btn btn-secondary" onclick="window.location.href='spendnote-contact-list.html'">
-                    <i class="fas fa-arrow-left"></i> Back to List
+                    <i class="fas fa-times"></i> Cancel
                 </button>
             `;
+            
+            // Hide form actions (we use header actions instead)
+            document.getElementById('formActions').style.display = 'none';
             
             // Fill stats
             document.getElementById('statTransactions').textContent = contact.transactions;
@@ -671,19 +674,6 @@
                     </div>
                 `;
             }
-        }
-
-        // Enable edit mode
-        function enableEdit() {
-            document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(field => {
-                field.disabled = false;
-            });
-            
-            document.getElementById('formActions').style.display = 'flex';
-            document.getElementById('formActions').style.gap = '12px';
-            
-            // No header actions in edit mode - only Save/Cancel in form
-            document.getElementById('headerActions').innerHTML = '';
         }
 
         // Handle form submission
