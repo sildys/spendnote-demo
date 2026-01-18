@@ -386,13 +386,13 @@
         .bulk-actions {
             display: none;
             align-items: center;
-            gap: 12px;
-            padding: 10px 16px;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 8px var(--shadow);
+            justify-content: space-between;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.03));
+            border-left: 3px solid var(--active);
+            border-radius: 0;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border);
         }
 
         .bulk-actions.show {
@@ -400,23 +400,33 @@
         }
 
         .bulk-actions-text {
-            font-weight: 700;
+            font-weight: 600;
             font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .bulk-actions-text strong {
             color: var(--text);
-            flex: 1;
+            font-weight: 700;
         }
 
         .bulk-actions-text span {
             color: var(--active);
+            font-weight: 800;
+        }
+
+        .bulk-actions-buttons {
+            display: flex;
+            gap: 8px;
         }
 
         .bulk-action-btn {
-            padding: 6px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--bg);
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
             color: var(--text);
-            font-weight: 700;
+            font-weight: 600;
             font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
@@ -427,20 +437,13 @@
         }
 
         .bulk-action-btn:hover {
-            background: var(--active);
-            color: white;
-            border-color: var(--active);
-            transform: translateY(-1px);
-        }
-
-        .bulk-action-btn.delete {
-            color: #ef4444;
+            background: rgba(var(--active-rgb), 0.1);
+            color: var(--active);
         }
 
         .bulk-action-btn.delete:hover {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
         }
 
         /* TRANSACTIONS TABLE */
@@ -884,20 +887,21 @@
 
         <!-- BULK ACTIONS -->
         <div class="bulk-actions" id="bulkActions">
-            <input type="checkbox" id="selectAll">
             <span class="bulk-actions-text"><strong><span id="selectedCount">0</span> selected</strong></span>
-            <button class="bulk-action-btn">
-                <i class="fas fa-file-pdf"></i>
-                Print Selected
-            </button>
-            <button class="bulk-action-btn">
-                <i class="fas fa-envelope"></i>
-                Email Selected
-            </button>
-            <button class="bulk-action-btn delete">
-                <i class="fas fa-trash"></i>
-                Delete Selected
-            </button>
+            <div class="bulk-actions-buttons">
+                <button class="bulk-action-btn">
+                    <i class="fas fa-print"></i>
+                    Print
+                </button>
+                <button class="bulk-action-btn">
+                    <i class="fas fa-envelope"></i>
+                    Email
+                </button>
+                <button class="bulk-action-btn delete">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
+            </div>
         </div>
 
         <!-- TRANSACTIONS TABLE -->
