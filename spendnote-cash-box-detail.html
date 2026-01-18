@@ -450,6 +450,7 @@
         .transactions-table {
             background: var(--surface);
             border: 1px solid var(--border);
+            border-top: 3px solid rgba(var(--cashbox-rgb, 5, 150, 105), 0.6);
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 2px 8px var(--shadow);
@@ -1159,9 +1160,22 @@
             const colorData = colorMap[color] || colorMap['green'];
             document.documentElement.style.setProperty('--active', colorData.hex);
             document.documentElement.style.setProperty('--active-rgb', colorData.rgb);
+            document.documentElement.style.setProperty('--cashbox-rgb', colorData.rgb);
             
             // Update nav menu colors
             updateMenuColors(colorData.hex);
+            
+            // Update table border and row hover colors
+            const transactionsTable = document.querySelector('.transactions-table');
+            if (transactionsTable) {
+                transactionsTable.style.setProperty('--cashbox-rgb', colorData.rgb);
+            }
+            
+            // Update all table rows with cashbox color
+            document.querySelectorAll('tbody tr').forEach(row => {
+                row.style.setProperty('--cashbox-rgb', colorData.rgb);
+                row.style.setProperty('--cashbox-color', colorData.hex);
+            });
             
             // Update all View links to pass the Cash Box color parameter
             document.querySelectorAll('.action-btn').forEach(link => {
