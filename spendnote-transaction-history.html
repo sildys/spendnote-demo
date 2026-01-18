@@ -1201,6 +1201,17 @@
             
             const rows = document.querySelectorAll('tbody tr');
             
+            rows.forEach(row => {
+                let show = true;
+                
+                // Cash box filter
+                if (cashBoxFilter) {
+                    const cashBoxEl = row.querySelector('.cashbox-badge');
+                    const cashBoxText = cashBoxEl?.textContent.toLowerCase() || '';
+                    if (!cashBoxText.includes(cashBoxFilter)) {
+                        show = false;
+                    }
+                }
                 
                 // Date filter (simple text comparison for demo)
                 if (dateFromFilter || dateToFilter) {
