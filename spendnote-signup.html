@@ -443,11 +443,31 @@
         </div>
     </div>
 
-    <!-- Load Supabase library synchronously -->
+    <!-- Load Supabase library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
-    <!-- Load config after library is ready -->
-    <script src="assets/js/supabase-config.js"></script>
     <script>
+        // Initialize Supabase inline to ensure library is loaded
+        const SUPABASE_URL = 'https://zrnnharudlgxuvewqryj.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_Vg44Z7eJacwji3iLii0Dxg_mQlSfwi-';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Auth helper
+        const auth = {
+            async getCurrentUser() {
+                const { data: { user }, error } = await supabase.auth.getUser();
+                return error ? null : user;
+            },
+            async signUp(email, password, fullName) {
+                const { data, error } = await supabase.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { full_name: fullName } }
+                });
+                if (error) return { success: false, error: error.message };
+                return { success: true, user: data.user };
+            }
+        };
+        
         // Wait for DOM and scripts to load
         document.addEventListener('DOMContentLoaded', async function() {
             // Check if already logged in
