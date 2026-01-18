@@ -443,7 +443,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Load Supabase library synchronously -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
+    <!-- Load config after library is ready -->
     <script src="assets/js/supabase-config.js"></script>
     <script>
         // Wait for DOM and scripts to load
