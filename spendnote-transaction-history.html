@@ -1222,17 +1222,6 @@
             });
         });
 
-        // Filter tabs
-        document.querySelectorAll('.filter-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                const filter = this.dataset.filter;
-                console.log('Filter by direction:', filter);
-                alert(`Filtering by: ${filter.toUpperCase()}\n\nIn production:\n- Filter table\n- Update stats to show filtered totals only`);
-            });
-        });
 
         // Apply filters
         document.getElementById('applyFilters').addEventListener('click', function() {
