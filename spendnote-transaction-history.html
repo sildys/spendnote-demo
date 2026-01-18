@@ -1106,6 +1106,54 @@
                 
                 console.log('Auto-filtered by Cash Box:', cashBoxName);
             }
+
+            // Bulk actions functionality
+            const bulkActionsPanel = document.getElementById('bulkActions');
+            const selectAllCheckbox = document.getElementById('selectAllHeader');
+            const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+            const selectedCountSpan = document.getElementById('selectedCount');
+
+            function updateBulkActions() {
+                const checkedBoxes = Array.from(rowCheckboxes).filter(cb => cb.checked);
+                const count = checkedBoxes.length;
+                
+                if (count > 0) {
+                    bulkActionsPanel.classList.add('show');
+                    selectedCountSpan.textContent = count;
+                } else {
+                    bulkActionsPanel.classList.remove('show');
+                }
+                
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.checked = count === rowCheckboxes.length && count > 0;
+                }
+            }
+
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    rowCheckboxes.forEach(cb => cb.checked = this.checked);
+                    updateBulkActions();
+                });
+            }
+
+            rowCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateBulkActions);
+            });
+
+            // Delete button confirmation
+            const deleteBtn = document.querySelector('.bulk-action-btn.delete');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function() {
+                    const count = Array.from(rowCheckboxes).filter(cb => cb.checked).length;
+                    const confirmMessage = count === 1 
+                        ? 'Are you sure you want to delete this transaction?' 
+                        : `Are you sure you want to delete ${count} transactions?`;
+                    
+                    if (confirm(confirmMessage)) {
+                        alert('Delete functionality will be implemented here');
+                    }
+                });
+            }
         });
 
         // Stats note
@@ -1228,55 +1276,6 @@
             const perPage = this.value;
             console.log(`Show ${perPage} transactions per page`);
             alert(`Per page changed to ${perPage}\n\nIn production:\n- Reload table with ${perPage} rows\n- Update pagination buttons\n- Update "Showing X-Y of Z" text`);
-        });
-        // Bulk actions functionality for Transaction History
-        document.addEventListener('DOMContentLoaded', function() {
-            const bulkActionsPanel = document.getElementById('bulkActions');
-            const selectAllCheckbox = document.getElementById('selectAllHeader');
-            const rowCheckboxes = document.querySelectorAll('.row-checkbox');
-            const selectedCountSpan = document.getElementById('selectedCount');
-
-            function updateBulkActions() {
-                const checkedBoxes = Array.from(rowCheckboxes).filter(cb => cb.checked);
-                const count = checkedBoxes.length;
-                
-                if (count > 0) {
-                    bulkActionsPanel.classList.add('show');
-                    selectedCountSpan.textContent = count;
-                } else {
-                    bulkActionsPanel.classList.remove('show');
-                }
-                
-                if (selectAllCheckbox) {
-                    selectAllCheckbox.checked = count === rowCheckboxes.length && count > 0;
-                }
-            }
-
-            if (selectAllCheckbox) {
-                selectAllCheckbox.addEventListener('change', function() {
-                    rowCheckboxes.forEach(cb => cb.checked = this.checked);
-                    updateBulkActions();
-                });
-            }
-
-            rowCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateBulkActions);
-            });
-
-            // Delete button confirmation
-            const deleteBtn = document.querySelector('.bulk-action-btn.delete');
-            if (deleteBtn) {
-                deleteBtn.addEventListener('click', function() {
-                    const count = Array.from(rowCheckboxes).filter(cb => cb.checked).length;
-                    const confirmMessage = count === 1 
-                        ? 'Are you sure you want to delete this transaction?' 
-                        : `Are you sure you want to delete ${count} transactions?`;
-                    
-                    if (confirm(confirmMessage)) {
-                        alert('Delete functionality will be implemented here');
-                    }
-                });
-            }
         });
     </script>
     <script src="assets/js/main.js"></script>
