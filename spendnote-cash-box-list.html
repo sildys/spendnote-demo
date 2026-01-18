@@ -882,8 +882,41 @@
             }
         }
 
+        // Cashbox ID to color mapping
+        const cashboxColorMap = {
+            'CR-001': { hex: '#059669', rgb: '5, 150, 105' },
+            'CR-002': { hex: '#f59e0b', rgb: '245, 158, 11' },
+            'CR-003': { hex: '#3b82f6', rgb: '59, 130, 246' },
+            'CR-004': { hex: '#8b5cf6', rgb: '139, 92, 246' },
+            'CR-005': { hex: '#ef4444', rgb: '239, 68, 68' }
+        };
+
+        // Update menu colors based on cashbox
+        function updateMenuColors(color) {
+            document.querySelectorAll('.nav-cash-item').forEach(item => {
+                item.style.color = color;
+            });
+            document.querySelectorAll('.nav-links a:not(.nav-cash-item):not(.nav-new-transaction-btn)').forEach(item => {
+                item.style.color = color;
+            });
+            const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
+            if (newTransactionBtn) {
+                newTransactionBtn.style.background = color;
+                newTransactionBtn.style.borderColor = color;
+                newTransactionBtn.style.color = 'white';
+            }
+        }
+
         // Initialize Add Cash Box card state on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Set cashbox color from URL or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const cashboxId = urlParams.get('cashbox') || localStorage.getItem('activeCashBoxId') || 'CR-001';
+            const colorData = cashboxColorMap[cashboxId] || cashboxColorMap['CR-001'];
+            
+            document.documentElement.style.setProperty('--active', colorData.hex);
+            document.documentElement.style.setProperty('--active-rgb', colorData.rgb);
+            updateMenuColors(colorData.hex);
             const card = document.querySelector('.add-cash-box-card');
             const plan = card.getAttribute('data-plan');
             const boxCount = parseInt(card.getAttribute('data-box-count'));
