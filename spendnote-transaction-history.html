@@ -264,11 +264,9 @@
 
         .table-wrapper {
             overflow-x: auto;
-            max-width: 100%;
         }
 
         table {
-            min-width: 900px;
             width: 100%;
             border-collapse: collapse;
         }
@@ -285,6 +283,36 @@
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        th:hover {
+            color: var(--text);
+            background: rgba(var(--active-rgb), 0.05);
+        }
+
+        th.sortable::after {
+            content: '\f0dc';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: 6px;
+            opacity: 0.3;
+            font-size: 10px;
+        }
+
+        th.sortable.asc::after {
+            content: '\f0de';
+            opacity: 1;
+            color: var(--active);
+        }
+
+        th.sortable.desc::after {
+            content: '\f0dd';
+            opacity: 1;
+            color: var(--active);
         }
 
         th input[type="checkbox"] {
@@ -300,18 +328,6 @@
             background: var(--bg);
         }
 
-        tbody tr.register-main:hover {
-            background: rgba(5, 150, 105, 0.03);
-        }
-
-        tbody tr.register-event:hover {
-            background: rgba(245, 158, 11, 0.03);
-        }
-
-        tbody tr.register-petty:hover {
-            background: rgba(59, 130, 246, 0.03);
-        }
-
         tbody tr:last-child {
             border-bottom: none;
         }
@@ -319,6 +335,7 @@
         td {
             padding: 8px 10px;
             font-size: 13px;
+            white-space: nowrap;
         }
 
         .tx-id {
@@ -401,28 +418,35 @@
 
         .tx-actions {
             display: flex;
-            gap: 4px;
+            gap: 6px;
             justify-content: flex-end;
         }
 
         .action-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            border: none;
-            background: transparent;
+            padding: 8px 16px;
+            background: rgba(var(--active-rgb), 0.1);
+            color: var(--active);
+            border: 1px solid rgba(var(--active-rgb), 0.2);
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 12px;
             cursor: pointer;
-            display: flex;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            color: var(--text-muted);
-            font-size: 14px;
         }
 
         .action-btn:hover {
-            background: var(--bg);
-            color: var(--text);
+            background: var(--active);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .action-btn.delete:hover {
+            background: #ef4444;
+            border-color: #ef4444;
         }
 
         .action-btn.delete:hover {
@@ -801,17 +825,17 @@
                 <table id="transactionsTable">
                     <thead>
                         <tr>
-                            <th><input type="checkbox" id="selectAllHeader"></th>
-                            <th>Type</th>
-                            <th>ID</th>
-                            <th>Date</th>
-                            <th>Cash Box</th>
-                            <th>Contact</th>
-                            <th>Contact ID</th>
-                            <th>Reference ID</th>
-                            <th>Amount</th>
-                            <th>Created by</th>
-                            <th style="text-align: right;">Actions</th>
+                            <th style="width: 40px;"><input type="checkbox" id="selectAllHeader"></th>
+                            <th class="sortable">Type</th>
+                            <th class="sortable">ID</th>
+                            <th class="sortable">Date</th>
+                            <th class="sortable">Cash Box</th>
+                            <th class="sortable">Contact</th>
+                            <th class="sortable">Contact ID</th>
+                            <th class="sortable">Reference ID</th>
+                            <th class="sortable">Amount</th>
+                            <th class="sortable">Created by</th>
+                            <th style="width: 40px;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -827,16 +851,9 @@
                             <td><span class="tx-reference-id">PO-2026-0142</span></td>
                             <td><span class="tx-amount in">$1,200.00</span></td>
                             <td><span class="tx-recorder">Jane Doe</span></td>
-                            <td>
-                                <div class="tx-actions">
-                                    <button class="action-btn" title="View details"><i class="fas fa-eye"></i></a>
-                                    <button class="action-btn" title="Print receipt"><i class="fas fa-print"></i></a>
-                                    <button class="action-btn" title="Email receipt"><i class="fas fa-envelope"></i></a>
-                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </td>
+                            <td><a href="spendnote-transaction-detail.html" class="action-btn">View</a></td>
                         </tr>
-                        <tr class="register-event">
+                        <tr>
                             <td><input type="checkbox" class="row-checkbox"></td>
                             <td><span class="tx-direction out">OUT</span></td>
                             <td><span class="tx-id">TRX-341</span></td>
@@ -846,17 +863,10 @@
                             <td><span class="tx-contact-id"></span></td>
                             <td><span class="tx-reference-id">INV-2026-089</span></td>
                             <td><span class="tx-amount out">$450.00</span></td>
-                            <td><span class="tx-recorder">John Doe</span></td>
-                            <td>
-                                <div class="tx-actions">
-                                    <button class="action-btn" title="View details"><i class="fas fa-eye"></i></a>
-                                    <button class="action-btn" title="Print receipt"><i class="fas fa-print"></i></a>
-                                    <button class="action-btn" title="Email receipt"><i class="fas fa-envelope"></i></a>
-                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </td>
+                            <td><span class="tx-recorder">Jane Doe</span></td>
+                            <td><a href="spendnote-transaction-detail.html" class="action-btn">View</a></td>
                         </tr>
-                        <tr class="register-petty">
+                        <tr>
                             <td><input type="checkbox" class="row-checkbox"></td>
                             <td><span class="tx-direction in">IN</span></td>
                             <td><span class="tx-id">TRX-340</span></td>
@@ -867,16 +877,9 @@
                             <td><span class="tx-reference-id"></span></td>
                             <td><span class="tx-amount in">$85.50</span></td>
                             <td><span class="tx-recorder">Jane Doe</span></td>
-                            <td>
-                                <div class="tx-actions">
-                                    <button class="action-btn" title="View details"><i class="fas fa-eye"></i></a>
-                                    <button class="action-btn" title="Print receipt"><i class="fas fa-print"></i></a>
-                                    <button class="action-btn" title="Email receipt"><i class="fas fa-envelope"></i></a>
-                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </td>
+                            <td><a href="spendnote-transaction-detail.html" class="action-btn">View</a></td>
                         </tr>
-                        <tr class="register-main">
+                        <tr>
                             <td><input type="checkbox" class="row-checkbox"></td>
                             <td><span class="tx-direction out">OUT</span></td>
                             <td><span class="tx-id">TRX-339</span></td>
@@ -887,16 +890,9 @@
                             <td><span class="tx-reference-id">EXP-2026-045</span></td>
                             <td><span class="tx-amount out">$2,350.00</span></td>
                             <td><span class="tx-recorder">John Doe</span></td>
-                            <td>
-                                <div class="tx-actions">
-                                    <button class="action-btn" title="View details"><i class="fas fa-eye"></i></a>
-                                    <button class="action-btn" title="Print receipt"><i class="fas fa-print"></i></a>
-                                    <button class="action-btn" title="Email receipt"><i class="fas fa-envelope"></i></a>
-                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </td>
+                            <td><a href="spendnote-transaction-detail.html" class="action-btn">View</a></td>
                         </tr>
-                        <tr class="register-event">
+                        <tr>
                             <td><input type="checkbox" class="row-checkbox"></td>
                             <td><span class="tx-direction in">IN</span></td>
                             <td><span class="tx-id">TRX-338</span></td>
@@ -907,16 +903,9 @@
                             <td><span class="tx-reference-id"></span></td>
                             <td><span class="tx-amount in">$750.00</span></td>
                             <td><span class="tx-recorder">Jane Doe</span></td>
-                            <td>
-                                <div class="tx-actions">
-                                    <button class="action-btn" title="View details"><i class="fas fa-eye"></i></a>
-                                    <button class="action-btn" title="Print receipt"><i class="fas fa-print"></i></a>
-                                    <button class="action-btn" title="Email receipt"><i class="fas fa-envelope"></i></a>
-                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </td>
+                            <td><a href="spendnote-transaction-detail.html" class="action-btn">View</a></td>
                         </tr>
-                        <tr class="register-petty">
+                        <tr>
                             <td><input type="checkbox" class="row-checkbox"></td>
                             <td><span class="tx-direction out">OUT</span></td>
                             <td><span class="tx-id">TRX-337</span></td>
@@ -927,14 +916,7 @@
                             <td><span class="tx-reference-id">REF-2026-012</span></td>
                             <td><span class="tx-amount out">$125.00</span></td>
                             <td><span class="tx-recorder">John Doe</span></td>
-                            <td>
-                                <div class="tx-actions">
-                                    <button class="action-btn" title="View details"><i class="fas fa-eye"></i></a>
-                                    <button class="action-btn" title="Print receipt"><i class="fas fa-print"></i></a>
-                                    <button class="action-btn" title="Email receipt"><i class="fas fa-envelope"></i></a>
-                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </td>
+                            <td><a href="spendnote-transaction-detail.html" class="action-btn">View</a></td>
                         </tr>
                     </tbody>
                 </table>
