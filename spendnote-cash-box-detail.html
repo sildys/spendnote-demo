@@ -1125,11 +1125,11 @@
 
         // Color from URL
         const colorMap = {
-            'green': { hex: '#059669', rgb: '5, 150, 105', name: 'main-office' },
-            'orange': { hex: '#f59e0b', rgb: '245, 158, 11', name: 'event-fund' },
-            'blue': { hex: '#3b82f6', rgb: '59, 130, 246', name: 'petty-cash' },
-            'purple': { hex: '#8b5cf6', rgb: '139, 92, 246', name: 'marketing-budget' },
-            'red': { hex: '#ef4444', rgb: '239, 68, 68', name: 'emergency-fund' }
+            'green': { hex: '#059669', rgb: '5, 150, 105', id: 'CR-001' },
+            'orange': { hex: '#f59e0b', rgb: '245, 158, 11', id: 'CR-002' },
+            'blue': { hex: '#3b82f6', rgb: '59, 130, 246', id: 'CR-003' },
+            'purple': { hex: '#8b5cf6', rgb: '139, 92, 246', id: 'CR-004' },
+            'red': { hex: '#ef4444', rgb: '239, 68, 68', id: 'CR-005' }
         };
 
         // Update menu item colors based on Cash Box color
@@ -1185,9 +1185,9 @@
             });
             
             // Update Dashboard links to include cashbox parameter for carousel navigation
-            const cashBoxNameParam = colorData.name; // Use cashbox name (main-office, event-fund, etc.)
+            const cashBoxIdParam = colorData.id; // Use cashbox ID (CR-001, CR-002, etc.)
             document.querySelectorAll('a[href="dashboard.html"]').forEach(link => {
-                link.setAttribute('href', `dashboard.html?cashbox=${cashBoxNameParam}`);
+                link.setAttribute('href', `dashboard.html?cashbox=${cashBoxIdParam}`);
             });
 
             // Bulk actions functionality

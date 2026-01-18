@@ -2714,7 +2714,7 @@ tr:hover [data-category-tag] {
                     <div class="swiper-wrapper">
                         <!-- Slide 1 - Main Office (Green) -->
                         <div class="swiper-slide">
-                            <div class="register-card active" data-name="Main Office" data-color="#059669" data-rgb="5, 150, 105" 
+                            <div class="register-card active" data-id="CR-001" data-name="Main Office" data-color="#059669" data-rgb="5, 150, 105" 
                                  role="button" tabindex="0">
                                 <div class="register-top">
                                     <div class="register-header-left">
@@ -2752,7 +2752,7 @@ tr:hover [data-category-tag] {
 
                         <!-- Slide 2 - Event Fund (Orange) -->
                         <div class="swiper-slide">
-                            <div class="register-card" data-name="Event Fund" data-color="#f59e0b" data-rgb="245, 158, 11"
+                            <div class="register-card" data-id="CR-002" data-name="Event Fund" data-color="#f59e0b" data-rgb="245, 158, 11"
                                  role="button" tabindex="0">
                                 <div class="register-top">
                                     <div class="register-header-left">
@@ -2790,7 +2790,7 @@ tr:hover [data-category-tag] {
 
                         <!-- Slide 3 - Petty Cash (Blue) -->
                         <div class="swiper-slide">
-                            <div class="register-card" data-name="Petty Cash" data-color="#3b82f6" data-rgb="59, 130, 246"
+                            <div class="register-card" data-id="CR-003" data-name="Petty Cash" data-color="#3b82f6" data-rgb="59, 130, 246"
                                  role="button" tabindex="0">
                                 <div class="register-top">
                                     <div class="register-header-left">
@@ -2828,7 +2828,7 @@ tr:hover [data-category-tag] {
 
                         <!-- Slide 4 - Marketing Budget (Purple) -->
                         <div class="swiper-slide">
-                            <div class="register-card" data-name="Marketing Budget" data-color="#8b5cf6" data-rgb="139, 92, 246"
+                            <div class="register-card" data-id="CR-004" data-name="Marketing Budget" data-color="#8b5cf6" data-rgb="139, 92, 246"
                                  role="button" tabindex="0">
                                 <div class="register-top">
                                     <div class="register-header-left">
@@ -2866,7 +2866,7 @@ tr:hover [data-category-tag] {
 
                         <!-- Slide 5 - Emergency Fund (Red) -->
                         <div class="swiper-slide">
-                            <div class="register-card" data-name="Emergency Fund" data-color="#ef4444" data-rgb="239, 68, 68"
+                            <div class="register-card" data-id="CR-005" data-name="Emergency Fund" data-color="#ef4444" data-rgb="239, 68, 68"
                                  role="button" tabindex="0">
                                 <div class="register-top">
                                     <div class="register-header-left">
@@ -4095,16 +4095,16 @@ tr:hover [data-category-tag] {
         // ========================================
         initCashBoxCards();
         
-        // Navigate to the correct slide based on URL parameter
+        // Navigate to the correct slide based on URL parameter (cashbox ID)
         const urlParams = new URLSearchParams(window.location.search);
-        const returnFromCashBox = urlParams.get('cashbox');
-        if (returnFromCashBox) {
-            // Find the slide index for the cashbox
+        const returnFromCashBoxId = urlParams.get('cashbox');
+        if (returnFromCashBoxId) {
+            // Find the slide index for the cashbox ID
             const slides = document.querySelectorAll('.swiper-slide .register-card');
             let targetIndex = 0;
             slides.forEach((card, index) => {
-                const cashBoxName = card.dataset.name;
-                if (cashBoxName && cashBoxName.toLowerCase().replace(/\s+/g, '-') === returnFromCashBox.toLowerCase()) {
+                const cashBoxId = card.dataset.id;
+                if (cashBoxId && cashBoxId === returnFromCashBoxId) {
                     targetIndex = index;
                 }
             });
