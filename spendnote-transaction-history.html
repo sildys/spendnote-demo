@@ -209,12 +209,13 @@
         .bulk-actions {
             display: none;
             align-items: center;
-            gap: 16px;
-            padding: 16px 24px;
-            background: rgba(5, 150, 105, 0.05);
-            border: 1px solid rgba(5, 150, 105, 0.2);
+            gap: 12px;
+            padding: 10px 16px;
+            background: var(--surface);
+            border: 2px solid var(--border);
             border-radius: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .bulk-actions.show {
@@ -222,35 +223,47 @@
         }
 
         .bulk-actions-text {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 13px;
             color: var(--text);
             flex: 1;
         }
 
+        .bulk-actions-text span {
+            color: var(--active);
+        }
+
         .bulk-action-btn {
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: none;
-            background: var(--surface);
+            padding: 6px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
             color: var(--text);
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .bulk-action-btn:hover {
-            background: var(--primary);
+            background: var(--active);
             color: white;
+            border-color: var(--active);
+            transform: translateY(-1px);
+        }
+
+        .bulk-action-btn.delete {
+            color: #ef4444;
         }
 
         .bulk-action-btn.delete:hover {
             background: #ef4444;
             color: white;
+            border-color: #ef4444;
         }
 
         /* TABLE */
