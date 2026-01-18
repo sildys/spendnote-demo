@@ -1016,20 +1016,28 @@
     <script>
         // Toggle filters panel - using event listener instead of inline onclick
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== TOGGLE FILTERS SCRIPT LOADED ===');
             const filterHeader = document.getElementById('filterHeader');
             const filterPanel = document.getElementById('filterPanel');
             const filterIcon = document.getElementById('filterToggleIcon');
             const filterTabs = document.querySelectorAll('.filter-tab');
             
+            console.log('filterHeader:', filterHeader);
+            console.log('filterPanel:', filterPanel);
+            console.log('filterIcon:', filterIcon);
+            
             // Toggle filters on header click
             if (filterHeader) {
+                console.log('Adding click listener to filterHeader');
                 filterHeader.addEventListener('click', function(e) {
+                    console.log('Filter header clicked!', e.target);
+                    
                     // Don't toggle if clicking on filter tabs
                     if (e.target.closest('.filter-tab')) {
+                        console.log('Clicked on filter tab, ignoring');
                         return;
                     }
                     
-                    console.log('Filter header clicked');
                     if (filterPanel && filterIcon) {
                         if (filterPanel.style.display === 'none' || filterPanel.style.display === '') {
                             filterPanel.style.display = 'block';
@@ -1040,8 +1048,12 @@
                             filterIcon.style.transform = 'rotate(0deg)';
                             console.log('Filters closed');
                         }
+                    } else {
+                        console.error('filterPanel or filterIcon not found!');
                     }
                 });
+            } else {
+                console.error('filterHeader not found!');
             }
         });
 
