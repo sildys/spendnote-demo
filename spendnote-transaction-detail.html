@@ -990,31 +990,63 @@
                         </label>
                         <p class="form-hint" style="margin-bottom: 16px;">Customize the text labels and messages on your receipts</p>
                         
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                             <div>
-                                <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Receipt title</label>
-                                <input type="text" class="form-input" placeholder="Cash Receipt" style="font-size: 13px; padding: 8px 12px;">
+                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Receipt title</label>
+                                <input type="text" class="form-input" id="receiptTitle" placeholder="Cash Receipt" style="font-size: 12px; padding: 6px 10px;">
+                                <p class="form-hint" style="font-size: 11px; margin-top: 2px;">The main heading on your receipt</p>
                             </div>
                             <div>
-                                <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Total label</label>
-                                <input type="text" class="form-input" placeholder="Total handed over" style="font-size: 13px; padding: 8px 12px;">
+                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Total label</label>
+                                <input type="text" class="form-input" id="totalLabel" placeholder="Total handed over" style="font-size: 12px; padding: 6px 10px;">
                             </div>
                         </div>
                         
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                             <div>
-                                <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">From label</label>
-                                <input type="text" class="form-input" placeholder="FROM" style="font-size: 13px; padding: 8px 12px;">
+                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">From label</label>
+                                <input type="text" class="form-input" id="fromLabel" placeholder="FROM" style="font-size: 12px; padding: 6px 10px;">
                             </div>
                             <div>
-                                <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">To label</label>
-                                <input type="text" class="form-input" placeholder="TO" style="font-size: 13px; padding: 8px 12px;">
+                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">To label</label>
+                                <input type="text" class="form-input" id="toLabel" placeholder="TO" style="font-size: 12px; padding: 6px 10px;">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                            <div>
+                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Description label</label>
+                                <input type="text" class="form-input" id="descriptionLabel" placeholder="Description" style="font-size: 12px; padding: 6px 10px;">
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Amount label</label>
+                                <input type="text" class="form-input" id="amountLabel" placeholder="Amount" style="font-size: 12px; padding: 6px 10px;">
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                            <div>
+                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Note label</label>
+                                <input type="text" class="form-input" id="notesLabel" placeholder="Notes" style="font-size: 12px; padding: 6px 10px;">
+                            </div>
+                            <div></div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                            <div>
+                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Issued by label</label>
+                                <input type="text" class="form-input" id="issuedByLabel" placeholder="Issued by" style="font-size: 12px; padding: 6px 10px;">
+                            </div>
+                            <div>
+                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Received by label</label>
+                                <input type="text" class="form-input" id="receivedByLabel" placeholder="Received by" style="font-size: 12px; padding: 6px 10px;">
                             </div>
                         </div>
                         
                         <div>
-                            <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">Footer note</label>
-                            <textarea class="form-input" placeholder="e.g., Thank you for your business!" rows="2" style="font-size: 13px; padding: 8px 12px;"></textarea>
+                            <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Footer note</label>
+                            <textarea class="form-input" id="footerNote" placeholder="e.g., Thank you for your business!" rows="2" style="font-size: 12px; padding: 6px 10px;"></textarea>
+                            <p class="form-hint" style="font-size: 11px; margin-top: 2px;">Custom message printed on every receipt</p>
                         </div>
                     </div>
                 </div>
