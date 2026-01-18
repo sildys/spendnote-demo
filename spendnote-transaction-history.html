@@ -1016,15 +1016,26 @@
     <script>
         // Toggle filters panel
         function toggleFilters() {
+            console.log('toggleFilters called');
             const panel = document.getElementById('filterPanel');
             const icon = document.getElementById('filterToggleIcon');
+            
+            console.log('panel:', panel);
+            console.log('icon:', icon);
+            
+            if (!panel || !icon) {
+                console.error('Panel or icon not found!');
+                return;
+            }
             
             if (panel.style.display === 'none' || panel.style.display === '') {
                 panel.style.display = 'block';
                 icon.style.transform = 'rotate(180deg)';
+                console.log('Filters opened');
             } else {
                 panel.style.display = 'none';
                 icon.style.transform = 'rotate(0deg)';
+                console.log('Filters closed');
             }
         }
 
