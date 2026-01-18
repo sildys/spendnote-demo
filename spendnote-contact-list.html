@@ -524,7 +524,13 @@
         <div class="Contacts-card">
         <div class="Contacts-header">
             <div class="header-top">
-                <h2 class="Contacts-title">All Contacts</h2>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 class="Contacts-title">All Contacts</h2>
+                    <button class="add-Contact-btn-large" id="addContactBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Contact
+                    </button>
+                </div>
                 <div class="header-actions">
                     <select id="cashBoxFilter" style="padding: 10px 16px; border: 2px solid var(--border); border-radius: 10px; font-size: 13px; font-weight: 600; background: var(--surface); cursor: pointer; color: var(--text);">
                         <option value="">All Cash Boxes</option>
@@ -536,10 +542,6 @@
                         <i class="fas fa-search"></i>
                         <input type="text" id="searchInput" placeholder="Search Contacts...">
                     </div>
-                    <button class="add-Contact-btn-large" id="addContactBtn">
-                        <i class="fas fa-plus"></i>
-                        Add Contact
-                    </button>
                 </div>
             </div>
             
