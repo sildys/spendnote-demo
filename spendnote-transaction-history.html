@@ -693,16 +693,18 @@
 
         <!-- FILTER SECTION -->
         <div class="filter-section">
-            <div class="filter-header">
-                <div class="filter-title">Filters</div>
+            <div class="filter-header" style="cursor: pointer;" onclick="toggleFilters()">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="filter-title">Filters</div>
+                    <i class="fas fa-chevron-down" id="filterToggleIcon" style="transition: transform 0.3s; color: var(--text-muted);"></i>
+                </div>
                 <div class="filter-tabs">
-                    <button class="filter-tab active" data-filter="all">All</a>
-                    <button class="filter-tab" data-filter="in">IN</a>
-                    <button class="filter-tab" data-filter="out">OUT</a>
+                    <button class="filter-tab active" onclick="event.stopPropagation()">All</button>
+                    <button class="filter-tab" onclick="event.stopPropagation()">IN</button>
+                    <button class="filter-tab" onclick="event.stopPropagation()">OUT</button>
                 </div>
             </div>
-
-            <div class="filter-panel" id="filterPanel">
+            <div class="filter-panel" id="filterPanel" style="display: none;">
                 <div class="filter-grid">
                     <!-- Contact Name -->
                     <div class="filter-group">
@@ -796,23 +798,11 @@
                 </div>
 
                 <div class="filter-actions">
-                    <button class="filter-btn clear" id="clearFilters">
-                        <i class="fas fa-times"></i>
-                        Clear All
-                    </a>
-                    <button class="filter-btn primary" id="applyFilters">
-                        <i class="fas fa-check"></i>
-                        Apply Filters
-                    </a>
+                    <button class="filter-btn clear" id="clearFilters"><i class="fas fa-times"></i> Clear All</button>
+                    <button class="filter-btn primary" id="applyFilters"><i class="fas fa-check"></i> Apply Filters</button>
                     <div style="flex: 1;"></div>
-                    <button class="filter-btn clear" id="exportCSV">
-                        <i class="fas fa-file-csv"></i>
-                        Export CSV
-                    </a>
-                    <button class="filter-btn clear" id="exportPDF">
-                        <i class="fas fa-file-pdf"></i>
-                        Export PDF
-                    </a>
+                    <button class="filter-btn clear" id="exportCSV"><i class="fas fa-file-csv"></i> Export CSV</button>
+                    <button class="filter-btn clear" id="exportPDF"><i class="fas fa-file-pdf"></i> Export PDF</button>
                 </div>
             </div>
         </div>
