@@ -4095,6 +4095,25 @@ tr:hover [data-category-tag] {
         // ========================================
         initCashBoxCards();
         
+        // Navigate to the correct slide based on URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const returnFromCashBox = urlParams.get('cashbox');
+        if (returnFromCashBox) {
+            // Find the slide index for the cashbox
+            const slides = document.querySelectorAll('.swiper-slide .register-card');
+            let targetIndex = 0;
+            slides.forEach((card, index) => {
+                const cashBoxName = card.dataset.name;
+                if (cashBoxName && cashBoxName.toLowerCase().replace(/\s+/g, '-') === returnFromCashBox.toLowerCase()) {
+                    targetIndex = index;
+                }
+            });
+            // Navigate to the slide
+            if (targetIndex > 0) {
+                registersSwiper.slideTo(targetIndex, 0); // 0 = instant, no animation
+            }
+        }
+        
         // Set initial active card color
         const activeCard = document.querySelector('.register-card.active');
         if (activeCard) {
