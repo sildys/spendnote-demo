@@ -1183,6 +1183,12 @@
                     link.setAttribute('href', currentHref + '?cashBoxColor=' + color);
                 }
             });
+            
+            // Update Dashboard links to include cashbox parameter for carousel navigation
+            const cashBoxNameParam = color; // Use color as cashbox identifier (green, orange, blue, etc.)
+            document.querySelectorAll('a[href="dashboard.html"]').forEach(link => {
+                link.setAttribute('href', `dashboard.html?cashbox=${cashBoxNameParam}`);
+            });
 
             // Bulk actions functionality
             const bulkActionsPanel = document.getElementById('bulkActions');
