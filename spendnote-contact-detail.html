@@ -602,12 +602,8 @@
             document.getElementById('statsCard').style.display = 'none';
             document.getElementById('transactionsCard').style.display = 'none';
             
-            // Add header actions
-            document.getElementById('headerActions').innerHTML = `
-                <button class="btn btn-secondary" onclick="window.location.href='spendnote-contact-list.html'">
-                    <i class="fas fa-arrow-left"></i> Back to List
-                </button>
-            `;
+            // No header actions in new mode - only Save/Cancel in form
+            document.getElementById('headerActions').innerHTML = '';
             
             // Enable all form fields
             document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(field => {
