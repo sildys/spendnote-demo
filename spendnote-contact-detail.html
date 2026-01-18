@@ -681,19 +681,8 @@
             document.getElementById('formActions').style.display = 'flex';
             document.getElementById('formActions').style.gap = '12px';
             
-            document.getElementById('headerActions').innerHTML = `
-                <button class="btn btn-danger" onclick="deleteContact()">
-                    <i class="fas fa-trash"></i> Delete
-                </button>
-            `;
-        }
-
-        // Delete contact
-        function deleteContact() {
-            if (confirm('Are you sure you want to delete this contact?')) {
-                alert('Contact deleted! (Demo only)');
-                window.location.href = 'spendnote-contact-list.html';
-            }
+            // No header actions in edit mode - only Save/Cancel in form
+            document.getElementById('headerActions').innerHTML = '';
         }
 
         // Handle form submission
