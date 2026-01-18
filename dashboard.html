@@ -4111,15 +4111,15 @@ tr:hover [data-category-tag] {
         if (returnFromCashBoxId) {
             // Find the slide index for the cashbox ID
             const slides = document.querySelectorAll('.swiper-slide .register-card');
-            let targetIndex = 0;
+            let targetIndex = -1;
             slides.forEach((card, index) => {
                 const cashBoxId = card.dataset.id;
                 if (cashBoxId && cashBoxId === returnFromCashBoxId) {
                     targetIndex = index;
                 }
             });
-            // Navigate to the slide
-            if (targetIndex > 0) {
+            // Navigate to the slide (including index 0)
+            if (targetIndex >= 0) {
                 registersSwiper.slideTo(targetIndex, 0); // 0 = instant, no animation
             }
         }
