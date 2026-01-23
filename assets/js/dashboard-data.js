@@ -167,6 +167,21 @@ async function loadDashboardData() {
             // Reinitialize Swiper after adding slides
             if (window.registersSwiper) {
                 window.registersSwiper.update();
+
+                if (typeof window.initCashBoxCards === 'function') {
+                    window.initCashBoxCards();
+                }
+
+                if (defaultActiveId) {
+                    const slides = Array.from(window.registersSwiper.slides || []);
+                    const targetIndex = slides.findIndex(slide => {
+                        const card = slide.querySelector('.register-card');
+                        return card && card.dataset.id === defaultActiveId;
+                    });
+                    if (targetIndex >= 0) {
+                        window.registersSwiper.slideTo(targetIndex, 0);
+                    }
+                }
                 
                 // Set initial active card color
                 const activeCard = document.querySelector('.register-card.active');

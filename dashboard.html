@@ -3786,9 +3786,9 @@ tr:hover [data-category-tag] {
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=10"></script>
+    <script src="assets/js/supabase-config.js?v=11"></script>
     <script src="assets/js/auth-guard.js"></script>
-    <script src="assets/js/dashboard-data.js?v=10"></script>
+    <script src="assets/js/dashboard-data.js?v=11"></script>
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -3798,6 +3798,34 @@ tr:hover [data-category-tag] {
         // ========================================
         function initCashBoxCards() {
             const cards = document.querySelectorAll('.register-card');
+
+            const activateCard = (card) => {
+                if (!card) return;
+                const color = card.dataset.color;
+                const rgb = card.dataset.rgb;
+
+                cards.forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+
+                document.documentElement.style.setProperty('--active', color);
+                document.documentElement.style.setProperty('--active-rgb', rgb);
+
+                localStorage.setItem('activeCashBoxColor', color);
+                localStorage.setItem('activeCashBoxRgb', rgb);
+                localStorage.setItem('activeCashBoxId', card.dataset.id);
+
+                updateMenuColors(color);
+                updateTableHeaderColor(rgb);
+
+                if (window.registersSwiper) {
+                    const slideEl = card.closest('.swiper-slide');
+                    const slides = Array.from(window.registersSwiper.slides || []);
+                    const idx = slideEl ? slides.indexOf(slideEl) : -1;
+                    if (idx >= 0) {
+                        window.registersSwiper.slideTo(idx);
+                    }
+                }
+            };
             
             cards.forEach(card => {
                 // Set card color CSS variables
@@ -3812,23 +3840,8 @@ tr:hover [data-category-tag] {
                     if (e.target.closest('.register-kebab') || e.target.closest('.register-menu')) {
                         return;
                     }
-                    
-                    cards.forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    
-                    // Update global active color
-                    document.documentElement.style.setProperty('--active', color);
-                    document.documentElement.style.setProperty('--active-rgb', rgb);
-                    
-                    // Save to localStorage
-                    localStorage.setItem('activeCashBoxColor', color);
-                    localStorage.setItem('activeCashBoxRgb', rgb);
-                    localStorage.setItem('activeCashBoxId', card.dataset.id);
-                    
-                    // Update menu item colors
-                    updateMenuColors(color);
-                    // Update table header color
-                    updateTableHeaderColor(rgb);
+
+                    activateCard(card);
                 });
                 
                 // Double-click to navigate to Cash Box Detail
@@ -3842,22 +3855,10 @@ tr:hover [data-category-tag] {
             });
             
             // Load saved active cash box from localStorage
-            const savedColor = localStorage.getItem('activeCashBoxColor');
-            const savedRgb = localStorage.getItem('activeCashBoxRgb');
-            
-            if (savedColor && savedRgb) {
-                // Find and activate the saved cash box
-                cards.forEach(card => {
-                    if (card.dataset.color === savedColor) {
-                        cards.forEach(c => c.classList.remove('active'));
-                        card.classList.add('active');
-                    }
-                });
-                
-                // Apply saved colors
-                document.documentElement.style.setProperty('--active', savedColor);
-                document.documentElement.style.setProperty('--active-rgb', savedRgb);
-                updateMenuColors(savedColor);
+            const savedId = localStorage.getItem('activeCashBoxId');
+            const savedCard = savedId ? Array.from(cards).find(card => card.dataset.id === savedId) : null;
+            if (savedCard) {
+                activateCard(savedCard);
             }
         }
 
@@ -3920,6 +3921,28 @@ tr:hover [data-category-tag] {
                     spaceBetween: 24,
                 },
             },
+        });
+
+        window.registersSwiper.on('slideChange', () => {
+            const slideEl = window.registersSwiper.slides?.[window.registersSwiper.activeIndex];
+            const card = slideEl ? slideEl.querySelector('.register-card') : null;
+            if (!card) return;
+
+            const color = card.dataset.color;
+            const rgb = card.dataset.rgb;
+
+            document.querySelectorAll('.register-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+
+            document.documentElement.style.setProperty('--active', color);
+            document.documentElement.style.setProperty('--active-rgb', rgb);
+
+            localStorage.setItem('activeCashBoxColor', color);
+            localStorage.setItem('activeCashBoxRgb', rgb);
+            localStorage.setItem('activeCashBoxId', card.dataset.id);
+
+            updateMenuColors(color);
+            updateTableHeaderColor(rgb);
         });
 
         // ========================================
@@ -4060,6 +4083,6 @@ tr:hover [data-category-tag] {
 
     </script>
     
-    <script src="assets/js/main.js?v=10"></script>
+    <script src="assets/js/main.js?v=11"></script>
 </body>
 </html>
