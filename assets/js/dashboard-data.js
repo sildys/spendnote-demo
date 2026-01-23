@@ -14,6 +14,9 @@ async function loadDashboardData() {
             // Get the swiper wrapper
             const swiperWrapper = document.querySelector('.registers-swiper .swiper-wrapper');
             if (!swiperWrapper) return;
+
+            const savedActiveId = localStorage.getItem('activeCashBoxId');
+            const defaultActiveId = savedActiveId || cashBoxes[cashBoxes.length - 1]?.id;
             
             // Remove loading indicator
             const loadingSlide = swiperWrapper.querySelector('.loading-slide');
@@ -80,7 +83,7 @@ async function loadDashboardData() {
                 const rgb = hexToRgb(color);
                 const iconClass = getIconClass(box.icon);
                 const colorClass = getColorClass(color);
-                const isActive = index === 0 ? 'active' : '';
+                const isActive = (defaultActiveId && box.id === defaultActiveId) ? 'active' : '';
                 const iconStyle = `background: linear-gradient(135deg, rgba(${rgb}, 0.15), rgba(${rgb}, 0.08)); color: ${color}; border: 2px solid rgba(${rgb}, 0.2);`;
                 
                 // Format currency (locale + cash box currency)
@@ -192,6 +195,9 @@ async function loadDashboardData() {
 function updateModalCashBoxDropdown(cashBoxes) {
     const modalRegisterSelect = document.getElementById('modalRegister');
     if (!modalRegisterSelect || !cashBoxes || cashBoxes.length === 0) return;
+
+    const savedActiveId = localStorage.getItem('activeCashBoxId');
+    const defaultActiveId = savedActiveId || cashBoxes[cashBoxes.length - 1]?.id;
     
     // Clear existing options
     modalRegisterSelect.innerHTML = '';
@@ -240,8 +246,8 @@ function updateModalCashBoxDropdown(cashBoxes) {
         option.setAttribute('data-rgb', hexToRgb(color));
         option.setAttribute('data-icon', getIconClass(box.icon));
         
-        // Set first option as selected
-        if (index === 0) {
+        // Set default option as selected
+        if (defaultActiveId && box.id === defaultActiveId) {
             option.selected = true;
         }
         

@@ -171,7 +171,7 @@ async function loadCashBoxList() {
 
             const savedId = localStorage.getItem('activeCashBoxId');
             const savedCard = savedId ? cashBoxCards.find(card => card.dataset.id === savedId) : null;
-            setActiveCard(savedCard || cashBoxCards[0]);
+            setActiveCard(savedCard || cashBoxCards[cashBoxCards.length - 1]);
 
             console.log('✅ Cash Box List loaded with real data:', cashBoxes.length, 'cash boxes');
         } else {
