@@ -142,11 +142,22 @@ function bindLogoutLinks() {
 // Utility functions
 const SpendNote = {
     // Format currency
-    formatCurrency: function(amount) {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD'
-        }).format(amount);
+    formatCurrency: function(amount, currency = 'USD', locale = (navigator.language || 'en-US')) {
+        const numericAmount = Number(amount);
+        const safeAmount = Number.isFinite(numericAmount) ? numericAmount : 0;
+
+        try {
+            return new Intl.NumberFormat(locale, {
+                style: 'currency',
+                currency: currency || 'USD'
+            }).format(safeAmount);
+        } catch (error) {
+            // Fallback for invalid currency/locale
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(safeAmount);
+        }
     },
     
     // Format date

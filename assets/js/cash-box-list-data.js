@@ -74,11 +74,13 @@ async function loadCashBoxList() {
                 const colorClass = getColorClass(color);
                 const iconStyle = `background: linear-gradient(135deg, rgba(${rgb}, 0.15), rgba(${rgb}, 0.08)); color: ${color}; border: 2px solid rgba(${rgb}, 0.2);`;
                 
-                // Format currency
-                const formattedBalance = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: box.currency || 'USD'
-                }).format(box.current_balance || 0);
+                // Format currency (locale + cash box currency)
+                const formattedBalance = (window.SpendNote && typeof window.SpendNote.formatCurrency === 'function')
+                    ? window.SpendNote.formatCurrency(box.current_balance || 0, box.currency || 'USD')
+                    : new Intl.NumberFormat(navigator.language || 'en-US', {
+                        style: 'currency',
+                        currency: box.currency || 'USD'
+                    }).format(box.current_balance || 0);
                 
                 // Create card HTML
                 allCardsHTML += `

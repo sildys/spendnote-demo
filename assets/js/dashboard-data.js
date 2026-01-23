@@ -83,11 +83,13 @@ async function loadDashboardData() {
                 const isActive = index === 0 ? 'active' : '';
                 const iconStyle = `background: linear-gradient(135deg, rgba(${rgb}, 0.15), rgba(${rgb}, 0.08)); color: ${color}; border: 2px solid rgba(${rgb}, 0.2);`;
                 
-                // Format currency
-                const formattedBalance = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: box.currency || 'USD'
-                }).format(box.current_balance || 0);
+                // Format currency (locale + cash box currency)
+                const formattedBalance = (window.SpendNote && typeof window.SpendNote.formatCurrency === 'function')
+                    ? window.SpendNote.formatCurrency(box.current_balance || 0, box.currency || 'USD')
+                    : new Intl.NumberFormat(navigator.language || 'en-US', {
+                        style: 'currency',
+                        currency: box.currency || 'USD'
+                    }).format(box.current_balance || 0);
                 
                 // Create slide HTML
                 allSlidesHTML += `
@@ -260,10 +262,12 @@ function loadRecentTransactionsSync(transactions) {
             
             transactions.forEach(tx => {
                 const isIncome = tx.type === 'income';
-                const formattedAmount = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: tx.cash_box?.currency || 'USD'
-                }).format(tx.amount);
+                const formattedAmount = (window.SpendNote && typeof window.SpendNote.formatCurrency === 'function')
+                    ? window.SpendNote.formatCurrency(tx.amount, tx.cash_box?.currency || 'USD')
+                    : new Intl.NumberFormat(navigator.language || 'en-US', {
+                        style: 'currency',
+                        currency: tx.cash_box?.currency || 'USD'
+                    }).format(tx.amount);
                 
                 const date = new Date(tx.transaction_date);
                 const formattedDate = date.toLocaleDateString('en-US', { 
