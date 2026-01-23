@@ -66,6 +66,7 @@ async function loadCashBoxData(id) {
         const currencySelect = document.getElementById('currencySelect');
         if (currencySelect && cashBox.currency) {
             currencySelect.value = cashBox.currency;
+            currencySelect.dataset.originalCurrency = cashBox.currency;
         }
 
         // Populate color selection
@@ -149,11 +150,35 @@ async function handleSave(e) {
         
         // Prepare data (match actual table columns)
         const currencySelect = document.getElementById('currencySelect');
+        const normalizeCurrency = (value) => (value || '')
+            .toString()
+            .trim()
+            .toUpperCase()
+            .replace(/[^A-Z]/g, '')
+            .slice(0, 3);
+
+        const currency = normalizeCurrency(currencySelect ? currencySelect.value : 'USD');
+        if (!currency || currency.length !== 3) {
+            alert('Currency must be a 3-letter ISO code (e.g., USD, EUR, HUF).');
+            return;
+        }
+
+        // Validate currency with Intl (rejects non-ISO like "FAK")
+        try {
+            new Intl.NumberFormat('en', { style: 'currency', currency }).format(0);
+        } catch (err) {
+            alert('Invalid currency code. Please use a valid ISO 4217 code (e.g., USD, EUR, HUF).');
+            return;
+        }
+
+        if (currencySelect) {
+            currencySelect.value = currency;
+        }
         const selectedColor = document.querySelector('.color-option.selected')?.dataset.color;
         const selectedIcon = document.querySelector('.icon-option.selected')?.dataset.icon;
         const formData = {
             name: name,
-            currency: currencySelect ? currencySelect.value : 'USD',
+            currency: currency,
             color: selectedColor || '#059669',
             icon: selectedIcon || 'building',
             current_balance: 0,

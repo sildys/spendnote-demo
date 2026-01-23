@@ -1070,10 +1070,11 @@
                             class="form-input"
                             id="currencySelect"
                             value="USD"
+                            maxlength="3"
                             autocapitalize="characters"
                             autocomplete="off"
                             spellcheck="false"
-                            inputmode="text"
+                            inputmode="latin"
                         >
                         <p class="form-hint">Transaction currency</p>
                     </div>
@@ -1518,7 +1519,12 @@
                 currencySelect.dataset.originalCurrency = currencySelect.value;
             }
 
-            const normalizeCurrency = (value) => (value || '').toString().trim().toUpperCase();
+            const normalizeCurrency = (value) => (value || '')
+                .toString()
+                .trim()
+                .toUpperCase()
+                .replace(/[^A-Z]/g, '')
+                .slice(0, 3);
 
             const updateCurrencyWarning = () => {
                 const current = normalizeCurrency(currencySelect.value);
