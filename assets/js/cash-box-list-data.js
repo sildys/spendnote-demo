@@ -35,7 +35,18 @@ async function loadCashBoxList() {
                     'piggy-bank': 'fa-piggy-bank',
                     'chart-line': 'fa-chart-line',
                     'coins': 'fa-coins',
-                    'exclamation-triangle': 'fa-exclamation-triangle'
+                    'exclamation-triangle': 'fa-exclamation-triangle',
+                    'dollar': 'fa-dollar-sign',
+                    'home': 'fa-home',
+                    'briefcase': 'fa-briefcase',
+                    'chart': 'fa-chart-line',
+                    'star': 'fa-star',
+                    'flag': 'fa-flag',
+                    'heart': 'fa-heart',
+                    'bolt': 'fa-bolt',
+                    'gift': 'fa-gift',
+                    'tag': 'fa-tag',
+                    'bell': 'fa-bell'
                 };
                 return iconMap[iconName] || 'fa-building';
             }
@@ -57,9 +68,11 @@ async function loadCashBoxList() {
             // Generate HTML for all cash boxes
             let allCardsHTML = '';
             cashBoxes.forEach((box, index) => {
-                const rgb = hexToRgb(box.color);
+                const color = box.color || '#059669';
+                const rgb = hexToRgb(color);
                 const iconClass = getIconClass(box.icon);
-                const colorClass = getColorClass(box.color);
+                const colorClass = getColorClass(color);
+                const iconStyle = `background: linear-gradient(135deg, rgba(${rgb}, 0.15), rgba(${rgb}, 0.08)); color: ${color}; border: 2px solid rgba(${rgb}, 0.2);`;
                 
                 // Format currency
                 const formattedBalance = new Intl.NumberFormat('en-US', {
@@ -72,11 +85,11 @@ async function loadCashBoxList() {
                     <div class="register-card" 
                          data-id="${box.id}" 
                          data-name="${box.name}" 
-                         data-color="${box.color}" 
+                         data-color="${color}" 
                          data-rgb="${rgb}"
-                         style="--card-color: ${box.color}; --card-rgb: ${rgb};">
+                         style="--card-color: ${color}; --card-rgb: ${rgb};">
                         <div class="register-header">
-                            <div class="register-icon ${colorClass}">
+                            <div class="register-icon ${colorClass}" style="${iconStyle}">
                                 <i class="fas ${iconClass}"></i>
                             </div>
                             <div class="register-info">

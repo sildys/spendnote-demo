@@ -43,7 +43,18 @@ async function loadDashboardData() {
                     'store': 'fa-store',
                     'piggy-bank': 'fa-piggy-bank',
                     'chart-line': 'fa-chart-line',
-                    'coins': 'fa-coins'
+                    'coins': 'fa-coins',
+                    'dollar': 'fa-dollar-sign',
+                    'home': 'fa-home',
+                    'briefcase': 'fa-briefcase',
+                    'chart': 'fa-chart-line',
+                    'star': 'fa-star',
+                    'flag': 'fa-flag',
+                    'heart': 'fa-heart',
+                    'bolt': 'fa-bolt',
+                    'gift': 'fa-gift',
+                    'tag': 'fa-tag',
+                    'bell': 'fa-bell'
                 };
                 return iconMap[iconName] || 'fa-building';
             }
@@ -65,10 +76,12 @@ async function loadDashboardData() {
             // Generate HTML for all cash boxes
             let allSlidesHTML = '';
             cashBoxes.forEach((box, index) => {
-                const rgb = hexToRgb(box.color);
+                const color = box.color || '#059669';
+                const rgb = hexToRgb(color);
                 const iconClass = getIconClass(box.icon);
-                const colorClass = getColorClass(box.color);
+                const colorClass = getColorClass(color);
                 const isActive = index === 0 ? 'active' : '';
+                const iconStyle = `background: linear-gradient(135deg, rgba(${rgb}, 0.15), rgba(${rgb}, 0.08)); color: ${color}; border: 2px solid rgba(${rgb}, 0.2);`;
                 
                 // Format currency
                 const formattedBalance = new Intl.NumberFormat('en-US', {
@@ -82,13 +95,13 @@ async function loadDashboardData() {
                         <div class="register-card ${isActive}" 
                              data-id="${box.id}" 
                              data-name="${box.name}" 
-                             data-color="${box.color}" 
+                             data-color="${color}" 
                              data-rgb="${rgb}"
                              role="button" 
                              tabindex="0">
                             <div class="register-top">
                                 <div class="register-header-left">
-                                    <div class="register-icon ${colorClass}">
+                                    <div class="register-icon ${colorClass}" style="${iconStyle}">
                                         <i class="fas ${iconClass}"></i>
                                     </div>
                                     <div class="register-info">
@@ -191,7 +204,18 @@ function updateModalCashBoxDropdown(cashBoxes) {
             'store': 'fa-store',
             'piggy-bank': 'fa-piggy-bank',
             'chart-line': 'fa-chart-line',
-            'coins': 'fa-coins'
+            'coins': 'fa-coins',
+            'dollar': 'fa-dollar-sign',
+            'home': 'fa-home',
+            'briefcase': 'fa-briefcase',
+            'chart': 'fa-chart-line',
+            'star': 'fa-star',
+            'flag': 'fa-flag',
+            'heart': 'fa-heart',
+            'bolt': 'fa-bolt',
+            'gift': 'fa-gift',
+            'tag': 'fa-tag',
+            'bell': 'fa-bell'
         };
         return iconMap[iconName] || 'fa-building';
     }
@@ -206,11 +230,12 @@ function updateModalCashBoxDropdown(cashBoxes) {
     
     // Add options for each cash box
     cashBoxes.forEach((box, index) => {
+        const color = box.color || '#059669';
         const option = document.createElement('option');
         option.value = box.id;
         option.textContent = box.name;
-        option.setAttribute('data-color', box.color);
-        option.setAttribute('data-rgb', hexToRgb(box.color));
+        option.setAttribute('data-color', color);
+        option.setAttribute('data-rgb', hexToRgb(color));
         option.setAttribute('data-icon', getIconClass(box.icon));
         
         // Set first option as selected
