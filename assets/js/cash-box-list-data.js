@@ -207,10 +207,30 @@ async function loadCashBoxList() {
                     card.setAttribute('draggable', 'true');
                 });
 
+                let transparentDragImage = null;
+                const getTransparentDragImage = () => {
+                    if (transparentDragImage) return transparentDragImage;
+                    const img = document.createElement('img');
+                    img.alt = '';
+                    img.width = 1;
+                    img.height = 1;
+                    img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+                    img.style.position = 'fixed';
+                    img.style.top = '-1000px';
+                    img.style.left = '-1000px';
+                    img.style.pointerEvents = 'none';
+                    document.body.appendChild(img);
+                    transparentDragImage = img;
+                    return img;
+                };
+
                 grid.addEventListener('dragstart', (event) => {
-                    const card = event.target.closest('.register-card');
+                    const targetEl = (event.target instanceof Element)
+                        ? event.target
+                        : (event.target && event.target.parentElement ? event.target.parentElement : null);
+                    const card = targetEl ? targetEl.closest('.register-card') : null;
                     if (!card || card.classList.contains('add-cash-box-card')) return;
-                    if (event.target.closest('.action-btn')) {
+                    if (targetEl && targetEl.closest('.action-btn')) {
                         event.preventDefault();
                         return;
                     }
@@ -218,6 +238,12 @@ async function loadCashBoxList() {
                     draggedCard.classList.add('dragging');
                     if (event.dataTransfer) {
                         event.dataTransfer.effectAllowed = 'move';
+                        // Hide the browser's default drag ghost (looks like a huge translucent selection)
+                        try {
+                            event.dataTransfer.setDragImage(getTransparentDragImage(), 0, 0);
+                        } catch (e) {
+                            // ignore
+                        }
                         try {
                             event.dataTransfer.setData('text/plain', card.dataset.id || '');
                         } catch (e) {
