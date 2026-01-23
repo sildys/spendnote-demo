@@ -758,44 +758,12 @@
             }
         }
 
-        // Cashbox ID to color mapping
-        const cashboxColorMap = {
-            'CR-001': { hex: '#059669', rgb: '5, 150, 105' },
-            'CR-002': { hex: '#f59e0b', rgb: '245, 158, 11' },
-            'CR-003': { hex: '#3b82f6', rgb: '59, 130, 246' },
-            'CR-004': { hex: '#8b5cf6', rgb: '139, 92, 246' },
-            'CR-005': { hex: '#ef4444', rgb: '239, 68, 68' }
-        };
-
-        // Update menu colors based on cashbox
-        function updateMenuColors(color) {
-            document.querySelectorAll('.nav-cash-item').forEach(item => {
-                item.style.color = color;
-            });
-            document.querySelectorAll('.nav-links a:not(.nav-cash-item):not(.nav-new-transaction-btn)').forEach(item => {
-                item.style.color = color;
-            });
-            const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
-            if (newTransactionBtn) {
-                newTransactionBtn.style.background = color;
-                newTransactionBtn.style.borderColor = color;
-                newTransactionBtn.style.color = 'white';
-            }
-        }
-
         // Initialize Add Cash Box card state on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Set cashbox color from URL or localStorage
-            const urlParams = new URLSearchParams(window.location.search);
-            const cashboxId = urlParams.get('cashbox') || localStorage.getItem('activeCashBoxId') || 'CR-001';
-            const colorData = cashboxColorMap[cashboxId] || cashboxColorMap['CR-001'];
-            
-            document.documentElement.style.setProperty('--active', colorData.hex);
-            document.documentElement.style.setProperty('--active-rgb', colorData.rgb);
-            updateMenuColors(colorData.hex);
             const card = document.querySelector('.add-cash-box-card');
+            if (!card) return;
             const plan = card.getAttribute('data-plan');
-            const boxCount = parseInt(card.getAttribute('data-box-count'));
+            const boxCount = parseInt(card.getAttribute('data-box-count'), 10);
             
             const planLimits = {
                 'free': 1,
@@ -824,83 +792,14 @@
                 card.classList.remove('disabled');
                 upgradeMessages.forEach(msg => msg.style.display = 'none');
             }
-
-            // ========================================
-            // CASH BOX COLOR SELECTION & MENU SYNC
-            // ========================================
-            
-            // Update menu item colors based on selected cash box
-            function updateMenuColors(color) {
-                // Update all nav-cash-item links (Dashboard, Cash Boxes, Transactions)
-                const navCashItems = document.querySelectorAll('.nav-cash-item');
-                navCashItems.forEach(item => {
-                    item.style.color = color;
-                });
-                
-                // Update other menu items (Contacts) - not buttons
-                const otherNavItems = document.querySelectorAll('.nav-links a:not(.nav-cash-item):not(.btn):not(.nav-new-transaction-btn)');
-                otherNavItems.forEach(item => {
-                    item.style.color = color;
-                });
-                
-                // Update New Transaction button background color
-                const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
-                if (newTransactionBtn) {
-                    newTransactionBtn.style.background = color;
-                    newTransactionBtn.style.borderColor = color;
-                }
-            }
-
-            // Initialize cash box cards with click handlers
-            const cashBoxCards = document.querySelectorAll('.register-card:not(.add-cash-box-card)');
-            
-            cashBoxCards.forEach(card => {
-                // Get color from data attributes
-                const color = card.dataset.color;
-                const rgb = card.dataset.rgb;
-                
-                // Click to select cash box
-                card.addEventListener('click', (e) => {
-                    // Don't trigger if clicking action buttons
-                    if (e.target.closest('.action-btn')) {
-                        return;
-                    }
-                    
-                    // Update active state
-                    cashBoxCards.forEach(c => c.classList.remove('active'));
-                    card.classList.add('active');
-                    
-                    // Update global CSS variables
-                    document.documentElement.style.setProperty('--active', color);
-                    document.documentElement.style.setProperty('--active-rgb', rgb);
-                    
-                    // Save to localStorage
-                    localStorage.setItem('activeCashBoxColor', color);
-                    localStorage.setItem('activeCashBoxRgb', rgb);
-                    
-                    // Update menu colors
-                    updateMenuColors(color);
-                });
-            });
-
-            // Load saved active cash box from localStorage on page load
-            const savedColor = localStorage.getItem('activeCashBoxColor');
-            const savedRgb = localStorage.getItem('activeCashBoxRgb');
-            
-            if (savedColor && savedRgb) {
-                // Apply saved colors
-                document.documentElement.style.setProperty('--active', savedColor);
-                document.documentElement.style.setProperty('--active-rgb', savedRgb);
-                updateMenuColors(savedColor);
-            }
         });
     </script>
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js"></script>
+    <script src="assets/js/supabase-config.js?v=13"></script>
     <script src="assets/js/auth-guard.js"></script>
-    <script src="assets/js/cash-box-list-data.js"></script>
+    <script src="assets/js/cash-box-list-data.js?v=13"></script>
     
     <script src="assets/js/main.js"></script>
 </body>
