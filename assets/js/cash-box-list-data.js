@@ -58,7 +58,8 @@ async function loadCashBoxList() {
                 return colorMap[color] || 'green';
             }
             
-            // Generate cards for each cash box
+            // Generate HTML for all cash boxes
+            let allCardsHTML = '';
             cashBoxes.forEach((box, index) => {
                 const rgb = hexToRgb(box.color);
                 const iconClass = getIconClass(box.icon);
@@ -71,7 +72,7 @@ async function loadCashBoxList() {
                 }).format(box.current_balance || 0);
                 
                 // Create card HTML
-                const cardHTML = `
+                allCardsHTML += `
                     <div class="register-card" 
                          data-id="${box.id}" 
                          data-name="${box.name}" 
@@ -113,14 +114,14 @@ async function loadCashBoxList() {
                         </div>
                     </div>
                 `;
-                
-                // Insert before the "Add Cash Box" card
-                if (addCashBoxCard) {
-                    addCashBoxCard.insertAdjacentHTML('beforebegin', cardHTML);
-                } else {
-                    grid.insertAdjacentHTML('beforeend', cardHTML);
-                }
             });
+            
+            // Insert all cash boxes before the "Add Cash Box" card
+            if (addCashBoxCard) {
+                addCashBoxCard.insertAdjacentHTML('beforebegin', allCardsHTML);
+            } else {
+                grid.insertAdjacentHTML('beforeend', allCardsHTML);
+            }
             
             console.log('✅ Cash Box List loaded with real data:', cashBoxes.length, 'cash boxes');
         } else {
