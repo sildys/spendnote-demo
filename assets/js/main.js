@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             event.preventDefault();
-            window.location.href = buildCreateTransactionUrl();
+            window.location.href = 'dashboard.html#new-transaction';
         });
     }
 });
