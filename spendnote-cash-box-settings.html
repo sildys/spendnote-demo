@@ -1065,16 +1065,28 @@
 
                     <div class="form-group">
                         <label class="form-label">Currency</label>
-                        <select class="form-select" id="currencySelect">
-                            <option value="USD" selected>USD ($)</option>
-                            <option value="EUR">EUR (€)</option>
-                            <option value="GBP">GBP (£)</option>
-                            <option value="HUF">HUF (Ft)</option>
-                            <option value="JPY">JPY (¥)</option>
-                            <option value="CAD">CAD ($)</option>
-                            <option value="AUD">AUD ($)</option>
-                            <option value="CHF">CHF</option>
-                        </select>
+                        <input
+                            type="text"
+                            class="form-select"
+                            id="currencySelect"
+                            list="currencyList"
+                            value="USD"
+                            maxlength="3"
+                            autocapitalize="characters"
+                            autocomplete="off"
+                            spellcheck="false"
+                            inputmode="latin"
+                        >
+                        <datalist id="currencyList">
+                            <option value="USD"></option>
+                            <option value="EUR"></option>
+                            <option value="GBP"></option>
+                            <option value="HUF"></option>
+                            <option value="JPY"></option>
+                            <option value="CAD"></option>
+                            <option value="AUD"></option>
+                            <option value="CHF"></option>
+                        </datalist>
                         <p class="form-hint">Transaction currency</p>
                     </div>
 
@@ -1512,15 +1524,31 @@
         // Currency warning
         const currencySelect = document.getElementById('currencySelect');
         const currencyWarning = document.getElementById('currencyWarning');
-        const originalCurrency = currencySelect.value;
 
-        currencySelect.addEventListener('change', function() {
-            if (this.value !== originalCurrency) {
-                currencyWarning.classList.remove('hidden');
-            } else {
-                currencyWarning.classList.add('hidden');
+        if (currencySelect) {
+            if (!currencySelect.dataset.originalCurrency) {
+                currencySelect.dataset.originalCurrency = currencySelect.value;
             }
-        });
+
+            const normalizeCurrency = (value) => (value || '').toString().trim().toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3);
+
+            const updateCurrencyWarning = () => {
+                const current = normalizeCurrency(currencySelect.value);
+                const original = normalizeCurrency(currencySelect.dataset.originalCurrency);
+                currencySelect.value = current;
+
+                if (currencyWarning) {
+                    if (current && original && current !== original) {
+                        currencyWarning.classList.remove('hidden');
+                    } else {
+                        currencyWarning.classList.add('hidden');
+                    }
+                }
+            };
+
+            currencySelect.addEventListener('input', updateCurrencyWarning);
+            currencySelect.addEventListener('change', updateCurrencyWarning);
+        }
 
         // Color picker
         document.querySelectorAll('.color-option').forEach(option => {
