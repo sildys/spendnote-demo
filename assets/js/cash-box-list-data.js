@@ -207,23 +207,6 @@ async function loadCashBoxList() {
                     card.setAttribute('draggable', 'true');
                 });
 
-                let transparentDragImage = null;
-                const getTransparentDragImage = () => {
-                    if (transparentDragImage) return transparentDragImage;
-                    const img = document.createElement('img');
-                    img.alt = '';
-                    img.width = 1;
-                    img.height = 1;
-                    img.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
-                    img.style.position = 'fixed';
-                    img.style.top = '-1000px';
-                    img.style.left = '-1000px';
-                    img.style.pointerEvents = 'none';
-                    document.body.appendChild(img);
-                    transparentDragImage = img;
-                    return img;
-                };
-
                 grid.addEventListener('dragstart', (event) => {
                     const targetEl = (event.target instanceof Element)
                         ? event.target
@@ -238,14 +221,15 @@ async function loadCashBoxList() {
                     draggedCard.classList.add('dragging');
                     if (event.dataTransfer) {
                         event.dataTransfer.effectAllowed = 'move';
-                        // Hide the browser's default drag ghost (looks like a huge translucent selection)
+                        // Use a clean drag image (just the card)
                         try {
-                            event.dataTransfer.setDragImage(getTransparentDragImage(), 0, 0);
+                            event.dataTransfer.setDragImage(card, 24, 24);
                         } catch (e) {
                             // ignore
                         }
                         try {
-                            event.dataTransfer.setData('text/plain', card.dataset.id || '');
+                            // Some browsers require non-empty data for drag to start reliably
+                            event.dataTransfer.setData('text/plain', card.dataset.id || 'drag');
                         } catch (e) {
                             // ignore
                         }
