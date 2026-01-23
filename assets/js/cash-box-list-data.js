@@ -67,12 +67,25 @@ async function loadCashBoxList() {
             
             // Generate HTML for all cash boxes
             let allCardsHTML = '';
+            const cashBoxesForNumbering = [...cashBoxes].sort((a, b) => {
+                const aTime = a?.created_at ? new Date(a.created_at).getTime() : 0;
+                const bTime = b?.created_at ? new Date(b.created_at).getTime() : 0;
+                if (aTime !== bTime) return aTime - bTime;
+                return String(a?.id || '').localeCompare(String(b?.id || ''));
+            });
+
+            const sequenceById = new Map(
+                cashBoxesForNumbering.map((box, idx) => [box.id, idx + 1])
+            );
+
             cashBoxes.forEach((box, index) => {
                 const color = box.color || '#059669';
                 const rgb = hexToRgb(color);
                 const iconClass = getIconClass(box.icon);
                 const colorClass = getColorClass(color);
                 const iconStyle = `background: linear-gradient(135deg, rgba(${rgb}, 0.15), rgba(${rgb}, 0.08)); color: ${color}; border: 2px solid rgba(${rgb}, 0.2);`;
+
+                const sequenceNumber = sequenceById.get(box.id) ?? (index + 1);
                 
                 // Format currency (locale + cash box currency)
                 const formattedBalance = (window.SpendNote && typeof window.SpendNote.formatCurrency === 'function')
@@ -96,7 +109,7 @@ async function loadCashBoxList() {
                             </div>
                             <div class="register-info">
                                 <div class="register-name">${box.name}</div>
-                                <div class="register-id">${box.id_prefix || 'CB'}-${String(index + 1).padStart(3, '0')}</div>
+                                <div class="register-id">${box.id_prefix || 'CB'}-${String(sequenceNumber).padStart(3, '0')}</div>
                             </div>
                         </div>
                         
