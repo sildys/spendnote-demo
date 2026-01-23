@@ -12,6 +12,7 @@ async function loadDashboardData() {
             // Save the add cash box slide before clearing
             const allSlides = Array.from(swiperWrapper.querySelectorAll('.swiper-slide'));
             const addCashBoxSlide = allSlides.find(slide => slide.querySelector('.add-cash-box-card'));
+            console.log('🔍 Add Cash Box slide found:', addCashBoxSlide ? 'Yes' : 'No');
             
             // Clear all existing slides
             swiperWrapper.innerHTML = '';
@@ -114,15 +115,17 @@ async function loadDashboardData() {
                 swiperWrapper.insertAdjacentHTML('beforeend', slideHTML);
             });
             
+            // Re-add the add cash box slide at the end if it existed
+            if (addCashBoxSlide) {
+                swiperWrapper.appendChild(addCashBoxSlide);
+                console.log('✅ Add Cash Box slide restored');
+            } else {
+                console.log('⚠️ Add Cash Box slide not found, skipping restore');
+            }
+            
             // Reinitialize Swiper after adding slides
             if (window.registersSwiper) {
                 window.registersSwiper.update();
-                
-                // Re-add the add cash box slide at the end if it existed
-                if (addCashBoxSlide) {
-                    swiperWrapper.appendChild(addCashBoxSlide);
-                    window.registersSwiper.update();
-                }
                 
                 // Set initial active card color
                 const activeCard = document.querySelector('.register-card.active');
@@ -130,6 +133,8 @@ async function loadDashboardData() {
                     document.documentElement.style.setProperty('--active', activeCard.dataset.color);
                     document.documentElement.style.setProperty('--active-rgb', activeCard.dataset.rgb);
                 }
+            } else {
+                console.log('⚠️ Swiper not initialized yet');
             }
             
             console.log('✅ Dashboard loaded with real cash boxes:', cashBoxes.length);
