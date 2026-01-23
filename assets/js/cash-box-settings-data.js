@@ -85,6 +85,12 @@ async function handleSave(e) {
             return;
         }
         
+        // Get current user
+        const { data: { user } } = await auth.getUser();
+        if (!user) {
+            throw new Error('You must be logged in to create a cash box');
+        }
+        
         // Prepare data
         const formData = {
             name: name,
@@ -93,7 +99,8 @@ async function handleSave(e) {
             current_balance: 0,
             currency: 'USD',
             color: '#059669',
-            icon: 'building'
+            icon: 'building',
+            user_id: user.id
         };
         
         // Show loading state
