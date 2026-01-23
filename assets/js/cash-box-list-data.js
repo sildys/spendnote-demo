@@ -218,6 +218,11 @@ async function loadCashBoxList() {
                     draggedCard.classList.add('dragging');
                     if (event.dataTransfer) {
                         event.dataTransfer.effectAllowed = 'move';
+                        try {
+                            event.dataTransfer.setData('text/plain', card.dataset.id || '');
+                        } catch (e) {
+                            // ignore
+                        }
                     }
                 });
 
@@ -232,7 +237,8 @@ async function loadCashBoxList() {
                     if (!draggedCard) return;
                     event.preventDefault();
 
-                    const overCard = event.target.closest('.register-card');
+                    const hit = document.elementFromPoint(event.clientX, event.clientY);
+                    const overCard = hit ? hit.closest('.register-card') : null;
                     if (!overCard || overCard === draggedCard || overCard.classList.contains('add-cash-box-card')) {
                         return;
                     }
