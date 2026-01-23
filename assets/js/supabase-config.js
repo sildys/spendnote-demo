@@ -124,20 +124,27 @@ var db = {
         },
 
         async create(cashBox) {
-            console.log('🔍 Attempting to insert cash box:', cashBox);
-            const result = await supabaseClient
-                .from('cash_boxes')
-                .insert([cashBox]);
+            console.log('🔍 Attempting to create cash box via RPC:', cashBox);
             
-            console.log('📦 Insert result:', result);
-            console.log('❌ Insert error:', result.error);
-            console.log('✅ Insert data:', result.data);
+            // Use RPC function to bypass schema cache issue
+            const { data, error } = await supabaseClient.rpc('create_cash_box', {
+                p_name: cashBox.name,
+                p_user_id: cashBox.user_id,
+                p_currency: cashBox.currency || 'USD',
+                p_color: cashBox.color || '#059669',
+                p_icon: cashBox.icon || 'building',
+                p_current_balance: cashBox.current_balance || 0
+            });
             
-            if (result.error) {
-                console.error('Error creating cash box:', result.error);
-                return { success: false, error: result.error.message };
+            console.log('📦 RPC result:', { data, error });
+            
+            if (error) {
+                console.error('Error creating cash box:', error);
+                return { success: false, error: error.message };
             }
-            return { success: true, data: cashBox };
+            
+            console.log('✅ Cash box created with ID:', data);
+            return { success: true, data: { ...cashBox, id: data } };
         },
 
         async update(id, updates) {
