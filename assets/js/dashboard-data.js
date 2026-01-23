@@ -9,8 +9,11 @@
             const swiperWrapper = document.querySelector('.registers-swiper .swiper-wrapper');
             if (!swiperWrapper) return;
             
-            // Clear existing demo slides (keep only the add cash box slide if it exists)
-            const addCashBoxSlide = swiperWrapper.querySelector('.add-cash-box-card')?.closest('.swiper-slide');
+            // Save the add cash box slide before clearing
+            const allSlides = Array.from(swiperWrapper.querySelectorAll('.swiper-slide'));
+            const addCashBoxSlide = allSlides.find(slide => slide.querySelector('.add-cash-box-card'));
+            
+            // Clear all existing slides
             swiperWrapper.innerHTML = '';
             
             // Helper function to convert hex color to RGB
