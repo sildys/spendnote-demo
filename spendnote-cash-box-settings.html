@@ -1069,24 +1069,12 @@
                             type="text"
                             class="form-input"
                             id="currencySelect"
-                            list="currencyList"
                             value="USD"
-                            maxlength="3"
                             autocapitalize="characters"
                             autocomplete="off"
                             spellcheck="false"
-                            inputmode="latin"
+                            inputmode="text"
                         >
-                        <datalist id="currencyList">
-                            <option value="USD"></option>
-                            <option value="EUR"></option>
-                            <option value="GBP"></option>
-                            <option value="HUF"></option>
-                            <option value="JPY"></option>
-                            <option value="CAD"></option>
-                            <option value="AUD"></option>
-                            <option value="CHF"></option>
-                        </datalist>
                         <p class="form-hint">Transaction currency</p>
                     </div>
 
@@ -1530,7 +1518,7 @@
                 currencySelect.dataset.originalCurrency = currencySelect.value;
             }
 
-            const normalizeCurrency = (value) => (value || '').toString().trim().toUpperCase().replace(/[^A-Z]/g, '').slice(0, 3);
+            const normalizeCurrency = (value) => (value || '').toString().trim().toUpperCase();
 
             const updateCurrencyWarning = () => {
                 const current = normalizeCurrency(currencySelect.value);

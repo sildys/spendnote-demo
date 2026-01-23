@@ -146,17 +146,22 @@ const SpendNote = {
         const numericAmount = Number(amount);
         const safeAmount = Number.isFinite(numericAmount) ? numericAmount : 0;
 
+        const currencyText = (currency || 'USD').toString().trim();
+        const isIsoCode = /^[A-Z]{3}$/.test(currencyText);
+
+        if (!isIsoCode) {
+            const formatted = new Intl.NumberFormat(locale).format(safeAmount);
+            return currencyText ? `${formatted} ${currencyText}` : formatted;
+        }
+
         try {
             return new Intl.NumberFormat(locale, {
                 style: 'currency',
-                currency: currency || 'USD'
+                currency: currencyText
             }).format(safeAmount);
         } catch (error) {
-            // Fallback for invalid currency/locale
-            return new Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD'
-            }).format(safeAmount);
+            const formatted = new Intl.NumberFormat(locale).format(safeAmount);
+            return currencyText ? `${formatted} ${currencyText}` : formatted;
         }
     },
     
