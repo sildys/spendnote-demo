@@ -1,19 +1,6 @@
 // Cash Box List Data Loader - Load real data from Supabase
 async function loadCashBoxList() {
     try {
-        // Show loading state
-        const grid = document.querySelector('.registers-grid');
-        if (!grid) return;
-        
-        // Add loading indicator
-        const loadingHTML = `
-            <div class="loading-indicator" style="grid-column: 1 / -1; text-align: center; padding: 40px;">
-                <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: var(--primary);"></i>
-                <p style="margin-top: 16px; color: var(--text-muted);">Loading cash boxes...</p>
-            </div>
-        `;
-        grid.insertAdjacentHTML('afterbegin', loadingHTML);
-        
         // Load cash boxes from database
         const cashBoxes = await db.cashBoxes.getAll();
         
@@ -24,10 +11,6 @@ async function loadCashBoxList() {
             
             // Find the "Add Cash Box" card
             const addCashBoxCard = grid.querySelector('.add-cash-box-card');
-            
-            // Remove loading indicator
-            const loadingIndicator = grid.querySelector('.loading-indicator');
-            if (loadingIndicator) loadingIndicator.remove();
             
             // Remove all register-card elements (demo cards)
             const registerCards = grid.querySelectorAll('.register-card');

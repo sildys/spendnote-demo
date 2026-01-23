@@ -1,26 +1,14 @@
 // Dashboard Data Loader - Load real data from Supabase
 async function loadDashboardData() {
     try {
-        // Show loading state
         const swiperWrapper = document.querySelector('.registers-swiper .swiper-wrapper');
         if (!swiperWrapper) return;
         
-        // Add loading indicator
-        const loadingHTML = `
-            <div class="swiper-slide loading-slide">
-                <div style="text-align: center; padding: 60px 20px;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: var(--primary);"></i>
-                    <p style="margin-top: 16px; color: var(--text-muted);">Loading cash boxes...</p>
-                </div>
-            </div>
-        `;
-        const addCashBoxSlide = swiperWrapper.querySelector('.swiper-slide');
-        if (addCashBoxSlide) {
-            addCashBoxSlide.insertAdjacentHTML('beforebegin', loadingHTML);
-        }
-        
-        // Load cash boxes from database
-        const cashBoxes = await db.cashBoxes.getAll();
+        // Load cash boxes and transactions in parallel for speed
+        const [cashBoxes, transactions] = await Promise.all([
+            db.cashBoxes.getAll(),
+            db.transactions.getAll({ limit: 5 })
+        ]);
         
         if (cashBoxes && cashBoxes.length > 0) {
             // Get the swiper wrapper
@@ -175,8 +163,10 @@ async function loadDashboardData() {
             console.log('ℹ️ No cash boxes found in database');
         }
         
-        // Load recent transactions
-        await loadRecentTransactions();
+        // Load recent transactions (already loaded in parallel)
+        if (transactions && transactions.length > 0) {
+            loadRecentTransactionsSync(transactions);
+        }
         
     } catch (error) {
         console.error('❌ Error loading dashboard data:', error);
@@ -234,11 +224,9 @@ function updateModalCashBoxDropdown(cashBoxes) {
     console.log('✅ Modal cash box dropdown updated with', cashBoxes.length, 'cash boxes');
 }
 
-// Load recent transactions
-async function loadRecentTransactions() {
+// Load recent transactions (synchronous version - data already loaded)
+function loadRecentTransactionsSync(transactions) {
     try {
-        const transactions = await db.transactions.getAll({ limit: 5 });
-        
         if (transactions && transactions.length > 0) {
             const tbody = document.querySelector('.transactions-table tbody');
             if (!tbody) return;
