@@ -10,7 +10,8 @@ async function loadDashboardData() {
             if (!swiperWrapper) return;
             
             // Remove only register-card slides, keep the add-cash-box-card slide
-            const registerSlides = swiperWrapper.querySelectorAll('.swiper-slide:has(.register-card)');
+            const allSlides = Array.from(swiperWrapper.querySelectorAll('.swiper-slide'));
+            const registerSlides = allSlides.filter(slide => slide.querySelector('.register-card'));
             registerSlides.forEach(slide => slide.remove());
             console.log('🗑️ Removed', registerSlides.length, 'demo register slides');
             
@@ -110,7 +111,8 @@ async function loadDashboardData() {
                 `;
                 
                 // Insert before the add-cash-box-card slide if it exists
-                const addCashBoxSlide = swiperWrapper.querySelector('.swiper-slide:has(.add-cash-box-card)');
+                const allCurrentSlides = Array.from(swiperWrapper.querySelectorAll('.swiper-slide'));
+                const addCashBoxSlide = allCurrentSlides.find(slide => slide.querySelector('.add-cash-box-card'));
                 if (addCashBoxSlide) {
                     addCashBoxSlide.insertAdjacentHTML('beforebegin', slideHTML);
                 } else {
