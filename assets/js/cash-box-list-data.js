@@ -9,16 +9,12 @@ async function loadCashBoxList() {
             const grid = document.querySelector('.registers-grid');
             if (!grid) return;
             
-            // Clear existing cards (keep only the "Add Cash Box" card)
-            const allCards = Array.from(grid.querySelectorAll('.register-card'));
-            const addCashBoxCard = allCards.find(card => card.querySelector('.add-cash-box-card'));
+            // Find the "Add Cash Box" card
+            const addCashBoxCard = grid.querySelector('.add-cash-box-card');
             
-            // Remove all cards except "Add Cash Box"
-            allCards.forEach(card => {
-                if (!card.querySelector('.add-cash-box-card')) {
-                    card.remove();
-                }
-            });
+            // Remove all register-card elements (demo cards)
+            const registerCards = grid.querySelectorAll('.register-card');
+            registerCards.forEach(card => card.remove());
             
             // Helper function to convert hex color to RGB
             function hexToRgb(hex) {
