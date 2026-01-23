@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create a new transaction in SpendNote.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <title>New Transaction - SpendNote</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css?v=8">
+    <link rel="stylesheet" href="assets/css/app-layout.css?v=8">
+    <style>
+        .main-content {
+            padding-top: 20px;
+        }
+
+        .form-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text);
+            background: var(--surface);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: var(--active);
+            box-shadow: 0 0 0 4px rgba(var(--active-rgb), 0.12);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 16px;
+        }
+
+        .btn {
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--surface);
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn.primary {
+            background: var(--active);
+            border-color: var(--active);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .hint {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.22);
+            color: #b91c1c;
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin-top: 12px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="app-nav">
+        <div class="nav-container">
+            <a href="dashboard.html" class="nav-logo">
+                <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#nav-logo-gradient)"/>
+                    <path d="M32 4 L38 10 L32 10 Z" fill="rgba(0,0,0,0.12)"/>
+                    <path d="M32 4 L32 10 L38 10" stroke="rgba(0,0,0,0.2)" stroke-width="1.5" stroke-linejoin="round"/>
+                    <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                    <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                    <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="nav-logo-gradient" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#059669"/>
+                            <stop offset="100%" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>SpendNote</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html" class="nav-cash-item">Dashboard</a></li>
+                <li><a href="spendnote-cash-box-list.html" class="nav-cash-item" id="navCashBoxes">Cash Boxes</a></li>
+                <li><a href="spendnote-transaction-history.html" class="nav-cash-item active" id="navTransactions">Transactions</a></li>
+                <li><a href="spendnote-contact-list.html">Contacts</a></li>
+                <li><button class="nav-new-transaction-btn" id="addTransactionBtn"><i class="fas fa-plus"></i> New Transaction</button></li>
+                <li class="user-avatar-wrapper" id="userAvatarBtn">
+                    <div class="user-avatar">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="User">
+                    </div>
+                    <span class="user-name">John</span>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="user-dropdown-menu">
+                            <a href="spendnote-user-settings.html" class="user-dropdown-item">
+                                <i class="fas fa-cog"></i>
+                                Settings
+                            </a>
+                            <div class="user-dropdown-divider"></div>
+                            <a href="index.html" class="user-dropdown-item">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Log out
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <main class="main-content">
+            <div class="page-header" style="max-width: 860px; margin: 0 auto;">
+                <div class="page-title-group">
+                    <h1>New Transaction</h1>
+                    <p class="page-subtitle">Create a new income or expense</p>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <form id="createTransactionForm">
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label class="form-label" for="cashBoxSelect">Cash Box</label>
+                            <select class="form-select" id="cashBoxSelect" required></select>
+                        </div>
+
+                        <div class="form-row">
+                            <label class="form-label" for="typeSelect">Type</label>
+                            <select class="form-select" id="typeSelect" required>
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label class="form-label" for="amountInput">Amount</label>
+                            <input class="form-input" id="amountInput" type="number" step="0.01" min="0.01" required />
+                        </div>
+
+                        <div class="form-row">
+                            <label class="form-label" for="dateInput">Transaction Date</label>
+                            <input class="form-input" id="dateInput" type="date" required />
+                        </div>
+
+                        <div class="form-row" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="descriptionInput">Description</label>
+                            <input class="form-input" id="descriptionInput" type="text" placeholder="Optional" />
+                        </div>
+
+                        <div class="form-row">
+                            <label class="form-label" for="contactNameInput">Contact Name</label>
+                            <input class="form-input" id="contactNameInput" type="text" required />
+                        </div>
+
+                        <div class="form-row">
+                            <label class="form-label" for="contactEmailInput">Contact Email</label>
+                            <input class="form-input" id="contactEmailInput" type="email" placeholder="Optional" />
+                        </div>
+
+                        <div class="form-row">
+                            <label class="form-label" for="contactPhoneInput">Contact Phone</label>
+                            <input class="form-input" id="contactPhoneInput" type="text" placeholder="Optional" />
+                        </div>
+
+                        <div class="form-row">
+                            <label class="form-label" for="contactAddressInput">Contact Address</label>
+                            <input class="form-input" id="contactAddressInput" type="text" placeholder="Optional" />
+                        </div>
+
+                        <div class="form-row" style="grid-column: 1 / -1;">
+                            <label class="form-label" for="notesInput">Notes</label>
+                            <textarea class="form-textarea" id="notesInput" placeholder="Optional"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="error" id="formError"></div>
+
+                    <div class="actions">
+                        <button type="button" class="btn" id="cancelBtn">Cancel</button>
+                        <button type="submit" class="btn primary" id="saveBtn"><i class="fas fa-check"></i> Save</button>
+                    </div>
+
+                    <div class="hint">Balances update automatically via database trigger.</div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-config.js?v=14"></script>
+    <script src="assets/js/auth-guard.js"></script>
+    <script src="assets/js/main.js?v=14"></script>
+
+    <script>
+        function showError(message) {
+            const el = document.getElementById('formError');
+            if (!el) return;
+            el.textContent = message;
+            el.style.display = 'block';
+        }
+
+        function clearError() {
+            const el = document.getElementById('formError');
+            if (!el) return;
+            el.textContent = '';
+            el.style.display = 'none';
+        }
+
+        async function loadCashBoxesIntoSelect() {
+            const select = document.getElementById('cashBoxSelect');
+            if (!select) return;
+
+            const cashBoxes = await window.db.cashBoxes.getAll();
+            select.innerHTML = '';
+
+            cashBoxes.forEach((box) => {
+                const opt = document.createElement('option');
+                opt.value = box.id;
+                opt.textContent = box.name;
+                opt.dataset.color = box.color || '#059669';
+                opt.dataset.rgb = (function hexToRgb(hex) {
+                    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex || '');
+                    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '5, 150, 105';
+                })(box.color || '#059669');
+                select.appendChild(opt);
+            });
+
+            const savedActiveId = localStorage.getItem('activeCashBoxId');
+            const fallbackId = cashBoxes[cashBoxes.length - 1]?.id;
+            const desired = savedActiveId || fallbackId;
+            if (desired) {
+                select.value = desired;
+            }
+
+            updateActiveColorFromSelect();
+        }
+
+        function updateActiveColorFromSelect() {
+            const select = document.getElementById('cashBoxSelect');
+            if (!select) return;
+            const opt = select.options[select.selectedIndex];
+            if (!opt) return;
+
+            const color = opt.dataset.color;
+            const rgb = opt.dataset.rgb;
+            if (color && rgb) {
+                document.documentElement.style.setProperty('--active', color);
+                document.documentElement.style.setProperty('--active-rgb', rgb);
+                localStorage.setItem('activeCashBoxColor', color);
+                localStorage.setItem('activeCashBoxRgb', rgb);
+                localStorage.setItem('activeCashBoxId', opt.value);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const dateInput = document.getElementById('dateInput');
+            if (dateInput && !dateInput.value) {
+                const now = new Date();
+                const yyyy = now.getFullYear();
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+                const dd = String(now.getDate()).padStart(2, '0');
+                dateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+
+            await loadCashBoxesIntoSelect();
+
+            const select = document.getElementById('cashBoxSelect');
+            if (select) {
+                select.addEventListener('change', updateActiveColorFromSelect);
+            }
+
+            const cancelBtn = document.getElementById('cancelBtn');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    window.location.href = 'spendnote-transaction-history.html';
+                });
+            }
+
+            const form = document.getElementById('createTransactionForm');
+            if (!form) return;
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                clearError();
+
+                const saveBtn = document.getElementById('saveBtn');
+                if (saveBtn) saveBtn.disabled = true;
+
+                try {
+                    const user = await window.auth.getCurrentUser();
+                    if (!user) {
+                        showError('You are not logged in.');
+                        return;
+                    }
+
+                    let profile = null;
+                    try {
+                        profile = await window.db.profiles.getCurrent();
+                    } catch (e) {
+                        profile = null;
+                    }
+
+                    const cashBoxId = document.getElementById('cashBoxSelect').value;
+                    const type = document.getElementById('typeSelect').value;
+                    const amount = Number(document.getElementById('amountInput').value);
+                    const description = document.getElementById('descriptionInput').value.trim();
+                    const notes = document.getElementById('notesInput').value.trim();
+                    const transactionDate = document.getElementById('dateInput').value;
+
+                    const contactName = document.getElementById('contactNameInput').value.trim();
+                    const contactEmail = document.getElementById('contactEmailInput').value.trim();
+                    const contactPhone = document.getElementById('contactPhoneInput').value.trim();
+                    const contactAddress = document.getElementById('contactAddressInput').value.trim();
+
+                    if (!cashBoxId) {
+                        showError('Please select a Cash Box.');
+                        return;
+                    }
+                    if (!type) {
+                        showError('Please select a type.');
+                        return;
+                    }
+                    if (!Number.isFinite(amount) || amount <= 0) {
+                        showError('Please enter a valid amount.');
+                        return;
+                    }
+                    if (!transactionDate) {
+                        showError('Please select a date.');
+                        return;
+                    }
+                    if (!contactName) {
+                        showError('Contact Name is required.');
+                        return;
+                    }
+
+                    const payload = {
+                        user_id: user.id,
+                        cash_box_id: cashBoxId,
+                        type,
+                        amount,
+                        description: description || null,
+                        notes: notes || null,
+                        transaction_date: transactionDate,
+                        contact_name: contactName,
+                        contact_email: contactEmail || null,
+                        contact_phone: contactPhone || null,
+                        contact_address: contactAddress || null,
+                        created_by_user_id: user.id,
+                        created_by_user_name: profile?.full_name || user.user_metadata?.full_name || user.email || null
+                    };
+
+                    const result = await window.db.transactions.create(payload);
+                    if (!result || !result.success) {
+                        showError(result?.error || 'Failed to create transaction.');
+                        return;
+                    }
+
+                    window.location.href = 'spendnote-transaction-history.html';
+                } catch (error) {
+                    showError(error?.message || 'Unexpected error.');
+                } finally {
+                    const saveBtn2 = document.getElementById('saveBtn');
+                    if (saveBtn2) saveBtn2.disabled = false;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -697,7 +697,7 @@
     </div>
 
     <!-- Sticky Add Transaction Button -->
-    <button class="sticky-add-btn" onclick="window.location.href='dashboard.html#new-transaction'" aria-label="Add Transaction">
+    <button class="sticky-add-btn" onclick="window.location.href='spendnote-create-transaction.html'" aria-label="Add Transaction">
         <i class="fas fa-plus"></i>
     </button>
 
@@ -802,12 +802,12 @@
             }
         });
 
-        // New Transaction button: open the dashboard modal flow
+        // New Transaction button: open create transaction flow
         document.addEventListener('DOMContentLoaded', function() {
             const newTxBtn = document.getElementById('addTransactionBtn');
             if (!newTxBtn) return;
             newTxBtn.addEventListener('click', function() {
-                window.location.href = 'dashboard.html#new-transaction';
+                window.location.href = 'spendnote-create-transaction.html';
             });
         });
     </script>

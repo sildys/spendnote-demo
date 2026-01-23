@@ -63,6 +63,20 @@ document.addEventListener('DOMContentLoaded', function() {
         updateUserNav();
         bindLogoutLinks();
     }
+
+    // Global New Transaction button behavior:
+    // - On dashboard: modal may be wired inline (openModal function).
+    // - On other pages: navigate to the create transaction page.
+    const addTransactionBtn = document.getElementById('addTransactionBtn');
+    if (addTransactionBtn) {
+        addTransactionBtn.addEventListener('click', (event) => {
+            if (typeof window.openModal === 'function' && document.getElementById('createTransactionModal')) {
+                return;
+            }
+            event.preventDefault();
+            window.location.href = 'spendnote-create-transaction.html';
+        });
+    }
 });
 
 async function updateUserNav() {
