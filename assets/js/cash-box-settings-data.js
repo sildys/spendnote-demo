@@ -109,7 +109,13 @@ async function handleSave(e) {
             alert('Cash box updated successfully!');
         } else {
             // Create new cash box
-            const newCashBox = await db.cashBoxes.create(formData);
+            const result = await db.cashBoxes.create(formData);
+            console.log('📦 Create result:', result);
+            
+            if (result.success === false) {
+                throw new Error(result.error || 'Failed to create cash box');
+            }
+            
             console.log('✅ Cash box created:', formData.name);
             alert('Cash box created successfully!');
         }
