@@ -1,6 +1,24 @@
 // Dashboard Data Loader - Load real data from Supabase
 async function loadDashboardData() {
     try {
+        // Show loading state
+        const swiperWrapper = document.querySelector('.registers-swiper .swiper-wrapper');
+        if (!swiperWrapper) return;
+        
+        // Add loading indicator
+        const loadingHTML = `
+            <div class="swiper-slide loading-slide">
+                <div style="text-align: center; padding: 60px 20px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: var(--primary);"></i>
+                    <p style="margin-top: 16px; color: var(--text-muted);">Loading cash boxes...</p>
+                </div>
+            </div>
+        `;
+        const addCashBoxSlide = swiperWrapper.querySelector('.swiper-slide');
+        if (addCashBoxSlide) {
+            addCashBoxSlide.insertAdjacentHTML('beforebegin', loadingHTML);
+        }
+        
         // Load cash boxes from database
         const cashBoxes = await db.cashBoxes.getAll();
         
@@ -8,6 +26,10 @@ async function loadDashboardData() {
             // Get the swiper wrapper
             const swiperWrapper = document.querySelector('.registers-swiper .swiper-wrapper');
             if (!swiperWrapper) return;
+            
+            // Remove loading indicator
+            const loadingSlide = swiperWrapper.querySelector('.loading-slide');
+            if (loadingSlide) loadingSlide.remove();
             
             // Remove only register-card slides, keep the add-cash-box-card slide
             const allSlides = Array.from(swiperWrapper.querySelectorAll('.swiper-slide'));
