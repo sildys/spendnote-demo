@@ -10,6 +10,7 @@
     <script>
         (function() {
             try {
+                document.documentElement.classList.add('dashboard-loading');
                 var c = localStorage.getItem('activeCashBoxColor');
                 var r = localStorage.getItem('activeCashBoxRgb');
                 if (c && r) {
@@ -1084,6 +1085,15 @@
             padding: 8px 0 50px 0;
             overflow: visible !important;
             width: 100%;
+        }
+
+        html.dashboard-loading .registers-swiper {
+            opacity: 0;
+        }
+
+        html.dashboard-ready .registers-swiper {
+            opacity: 1;
+            transition: opacity 160ms ease;
         }
         
         .swiper-wrapper {
@@ -3294,14 +3304,18 @@ tr:hover [data-category-tag] {
         }
 
         // Open modal if hash is #new-transaction
-        console.log('Current hash:', window.location.hash);
-        if (window.location.hash === '#new-transaction') {
-            console.log('Opening modal from hash');
-            setTimeout(() => {
+        (function() {
+            if (window.location.hash !== '#new-transaction') return;
+            const openFromHash = () => {
                 openModal();
                 history.replaceState(null, null, 'dashboard.html');
-            }, 500);
-        }
+            };
+            if (window.__spendnoteDashboardDataLoaded) {
+                openFromHash();
+                return;
+            }
+            window.addEventListener('SpendNoteDashboardDataLoaded', openFromHash, { once: true });
+        })();
 
         // Close modal
         function closeModal() {
@@ -3800,7 +3814,7 @@ tr:hover [data-category-tag] {
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js?v=12"></script>
     <script src="assets/js/auth-guard.js"></script>
-    <script src="assets/js/dashboard-data.js?v=12"></script>
+    <script src="assets/js/dashboard-data.js?v=13"></script>
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

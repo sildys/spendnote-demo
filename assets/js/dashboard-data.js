@@ -213,9 +213,16 @@ async function loadDashboardData() {
         if (transactions && transactions.length > 0) {
             loadRecentTransactionsSync(transactions);
         }
+
+        window.__spendnoteDashboardDataLoaded = true;
+        document.documentElement.classList.remove('dashboard-loading');
+        document.documentElement.classList.add('dashboard-ready');
+        window.dispatchEvent(new Event('SpendNoteDashboardDataLoaded'));
         
     } catch (error) {
         console.error('❌ Error loading dashboard data:', error);
+        document.documentElement.classList.remove('dashboard-loading');
+        document.documentElement.classList.add('dashboard-ready');
     }
 }
 
