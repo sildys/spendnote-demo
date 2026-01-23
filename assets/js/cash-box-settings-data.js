@@ -87,11 +87,10 @@ async function handleSave(e) {
         
         // Get current user
         console.log('🔍 Getting current user...');
-        const { data: { user }, error: authError } = await window.auth.getUser();
+        const user = await window.auth.getCurrentUser();
         console.log('👤 User:', user);
-        console.log('❌ Auth error:', authError);
         
-        if (authError || !user) {
+        if (!user) {
             throw new Error('You must be logged in to create a cash box');
         }
         
