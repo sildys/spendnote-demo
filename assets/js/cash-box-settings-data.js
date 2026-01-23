@@ -247,11 +247,20 @@ async function handleSave(e) {
             alert('Cash box updated successfully!');
         } else {
             // Create new cash box
+            const nextSortOrder = (await db.cashBoxes.getMaxSortOrder()) + 1;
             const result = await db.cashBoxes.create(createPayload);
             console.log('📦 Create result:', result);
             
             if (result.success === false) {
                 throw new Error(result.error || 'Failed to create cash box');
+            }
+
+            const createdId = result?.data?.id;
+            if (createdId) {
+                const orderResult = await db.cashBoxes.update(createdId, { sort_order: nextSortOrder });
+                if (orderResult && orderResult.success === false) {
+                    console.warn('⚠️ Could not set sort_order for new cash box:', orderResult.error);
+                }
             }
             
             console.log('✅ Cash box created:', createPayload.name);

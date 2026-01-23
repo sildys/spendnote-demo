@@ -173,6 +173,82 @@ async function loadCashBoxList() {
                 applyMenuColors(color);
             };
 
+            let draggedCard = null;
+            let isSavingOrder = false;
+
+            const persistOrder = async () => {
+                if (isSavingOrder) return;
+                isSavingOrder = true;
+
+                try {
+                    const orderedCards = Array.from(grid.querySelectorAll('.register-card'))
+                        .filter(card => !card.classList.contains('add-cash-box-card'));
+
+                    const updates = orderedCards
+                        .map(card => card.dataset.id)
+                        .filter(Boolean)
+                        .map((id, idx) => db.cashBoxes.update(id, { sort_order: idx + 1 }));
+
+                    const results = await Promise.all(updates);
+                    const failed = results.find(r => r && r.success === false);
+                    if (failed) {
+                        throw new Error(failed.error || 'Failed to save cash box order');
+                    }
+                } catch (error) {
+                    console.error('❌ Failed to persist cash box order:', error);
+                    alert('Could not save cash box order yet. Please make sure the database has a sort_order column.');
+                } finally {
+                    isSavingOrder = false;
+                }
+            };
+
+            const enableDragAndDrop = () => {
+                cashBoxCards.forEach(card => {
+                    card.setAttribute('draggable', 'true');
+                });
+
+                grid.addEventListener('dragstart', (event) => {
+                    const card = event.target.closest('.register-card');
+                    if (!card || card.classList.contains('add-cash-box-card')) return;
+                    if (event.target.closest('.action-btn')) {
+                        event.preventDefault();
+                        return;
+                    }
+                    draggedCard = card;
+                    draggedCard.classList.add('dragging');
+                    if (event.dataTransfer) {
+                        event.dataTransfer.effectAllowed = 'move';
+                    }
+                });
+
+                grid.addEventListener('dragend', () => {
+                    if (draggedCard) {
+                        draggedCard.classList.remove('dragging');
+                    }
+                    draggedCard = null;
+                });
+
+                grid.addEventListener('dragover', (event) => {
+                    if (!draggedCard) return;
+                    event.preventDefault();
+
+                    const overCard = event.target.closest('.register-card');
+                    if (!overCard || overCard === draggedCard || overCard.classList.contains('add-cash-box-card')) {
+                        return;
+                    }
+
+                    const rect = overCard.getBoundingClientRect();
+                    const insertAfter = (event.clientY - rect.top) > rect.height / 2;
+                    grid.insertBefore(draggedCard, insertAfter ? overCard.nextSibling : overCard);
+                });
+
+                grid.addEventListener('drop', async (event) => {
+                    if (!draggedCard) return;
+                    event.preventDefault();
+                    await persistOrder();
+                });
+            };
+
             cashBoxCards.forEach(card => {
                 card.addEventListener('click', (event) => {
                     if (event.target.closest('.action-btn')) {
@@ -181,6 +257,8 @@ async function loadCashBoxList() {
                     setActiveCard(card);
                 });
             });
+
+            enableDragAndDrop();
 
             const savedId = localStorage.getItem('activeCashBoxId');
             const savedCard = savedId ? cashBoxCards.find(card => card.dataset.id === savedId) : null;

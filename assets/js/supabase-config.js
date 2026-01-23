@@ -97,17 +97,57 @@ var db = {
                 console.error('No authenticated user');
                 return [];
             }
-            
-            const { data, error } = await supabaseClient
+
+            // Prefer stable user-defined ordering (sort_order), fallback to creation order
+            const primaryQuery = await supabaseClient
+                .from('cash_boxes')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('sort_order', { ascending: true, nullsFirst: false })
+                .order('created_at', { ascending: true });
+
+            if (!primaryQuery.error) {
+                return primaryQuery.data || [];
+            }
+
+            console.warn('Cash boxes sort_order query failed, falling back to created_at order:', primaryQuery.error);
+
+            const fallbackQuery = await supabaseClient
                 .from('cash_boxes')
                 .select('*')
                 .eq('user_id', user.id)
                 .order('created_at', { ascending: true });
-            if (error) {
-                console.error('Error fetching cash boxes:', error);
+
+            if (fallbackQuery.error) {
+                console.error('Error fetching cash boxes:', fallbackQuery.error);
                 return [];
             }
-            return data;
+
+            return fallbackQuery.data || [];
+        },
+
+        async getMaxSortOrder() {
+            const user = await auth.getCurrentUser();
+            if (!user) {
+                console.error('No authenticated user');
+                return 0;
+            }
+
+            const { data, error } = await supabaseClient
+                .from('cash_boxes')
+                .select('sort_order')
+                .eq('user_id', user.id)
+                .order('sort_order', { ascending: false, nullsFirst: false })
+                .limit(1);
+
+            if (error) {
+                console.warn('Could not fetch max sort_order (column may be missing):', error);
+                return 0;
+            }
+
+            const max = data?.[0]?.sort_order;
+            const numericMax = Number(max);
+            return Number.isFinite(numericMax) ? numericMax : 0;
         },
 
         async getById(id) {
