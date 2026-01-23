@@ -86,8 +86,12 @@ async function handleSave(e) {
         }
         
         // Get current user
-        const { data: { user } } = await auth.getUser();
-        if (!user) {
+        console.log('🔍 Getting current user...');
+        const { data: { user }, error: authError } = await window.auth.getUser();
+        console.log('👤 User:', user);
+        console.log('❌ Auth error:', authError);
+        
+        if (authError || !user) {
             throw new Error('You must be logged in to create a cash box');
         }
         
@@ -102,6 +106,8 @@ async function handleSave(e) {
             icon: 'building',
             user_id: user.id
         };
+        
+        console.log('📝 Form data:', formData);
         
         // Show loading state
         const saveBtn = e.target;

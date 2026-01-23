@@ -127,13 +127,12 @@ var db = {
             const { data, error } = await supabaseClient
                 .from('cash_boxes')
                 .insert([cashBox])
-                .select()
-                .single();
+                .select();
             if (error) {
                 console.error('Error creating cash box:', error);
                 return { success: false, error: error.message };
             }
-            return { success: true, data };
+            return { success: true, data: data?.[0] };
         },
 
         async update(id, updates) {
