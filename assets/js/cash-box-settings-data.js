@@ -127,15 +127,14 @@ async function handleSave(e) {
             console.log('✅ Profile created:', profile);
         }
         
-        // Prepare data
+        // Prepare data (match actual table columns)
+        const currencySelect = document.getElementById('currencySelect');
         const formData = {
             name: name,
-            description: '',
-            initial_balance: 0,
-            current_balance: 0,
-            currency: 'USD',
+            currency: currencySelect ? currencySelect.value : 'USD',
             color: '#059669',
             icon: 'building',
+            current_balance: 0,
             user_id: user.id
         };
         
