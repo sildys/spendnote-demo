@@ -201,6 +201,47 @@
         }
         .register-card.active::before { opacity: 0.06; }
 
+        .register-quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .register-quick-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: var(--surface-elevated);
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            font-family: inherit;
+        }
+
+        .register-quick-btn.in {
+            color: #047857;
+            background: rgba(16, 185, 129, 0.10);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+
+        .register-quick-btn.out {
+            color: #b45309;
+            background: rgba(245, 158, 11, 0.10);
+            border-color: rgba(245, 158, 11, 0.25);
+        }
+
+        .register-quick-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.10);
+        }
+
+        .register-quick-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
         /* UNIFIED CARD STRUCTURE - SAME AS CASH BOX LIST */
         .register-top {
             display: flex;
@@ -2975,6 +3016,13 @@ tr:hover [data-category-tag] {
                         ></textarea>
                     </div>
 
+                    <div class="form-row" style="margin-top: 8px;">
+                        <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); font-weight: 600; cursor: pointer; user-select: none;">
+                            <input type="checkbox" id="modalAddAnother" style="width: 16px; height: 16px;">
+                            <span>Add another after saving</span>
+                        </label>
+                    </div>
+
                     <!-- ACTIONS -->
                     <div class="form-actions">
                         <button type="submit" class="btn btn-blue" name="action" value="done">
@@ -3227,7 +3275,9 @@ tr:hover [data-category-tag] {
         const closeModalBtn = document.getElementById('closeModalBtn');
         const cancelModalBtn = document.getElementById('modalCancelBtn');
 
-        function openModal() {
+        function openModal(preset) {
+            const isEventLike = preset && typeof preset === 'object' && 'preventDefault' in preset && 'target' in preset;
+            const options = isEventLike ? {} : (preset || {});
             console.log('openModal called, modal element:', modal);
             if (!modal) {
                 console.error('Modal element not found!');
@@ -3246,6 +3296,29 @@ tr:hover [data-category-tag] {
                 const mm = String(now.getMonth() + 1).padStart(2, '0');
                 const dd = String(now.getDate()).padStart(2, '0');
                 dateInput.value = `${yyyy}-${mm}-${dd}`;
+            }
+
+            const registerSelect = document.getElementById('modalRegister');
+            if (registerSelect && options.cashBoxId) {
+                registerSelect.value = options.cashBoxId;
+                if (typeof updateModalRegisterColor === 'function') {
+                    updateModalRegisterColor();
+                }
+            }
+
+            if (options.direction === 'in' || options.direction === 'out') {
+                const inEl = document.getElementById('modalDirectionIn');
+                const outEl = document.getElementById('modalDirectionOut');
+                if (inEl && outEl) {
+                    inEl.checked = options.direction === 'in';
+                    outEl.checked = options.direction === 'out';
+                }
+            }
+
+            const amountEl = document.getElementById('modalAmount');
+            if (amountEl) {
+                amountEl.focus();
+                amountEl.select?.();
             }
         }
 
@@ -3873,15 +3946,49 @@ tr:hover [data-category-tag] {
                     return;
                 }
 
-                closeModal();
+                const addAnother = Boolean(document.getElementById('modalAddAnother')?.checked);
 
                 if (typeof loadDashboardData === 'function') {
                     await loadDashboardData();
                 }
 
                 if (action === 'done-receipt') {
+                    closeModal();
                     alert('Transaction saved. Receipt generation is not implemented yet.');
+                    return;
                 }
+
+                if (addAnother) {
+                    const amountInput = document.getElementById('modalAmount');
+                    const descInput = document.getElementById('modalDescription');
+                    const txIdInput = document.getElementById('modalTransactionId');
+                    const noteInput = document.getElementById('modalNote');
+                    const lineItemsContainer = document.getElementById('modalLineItemsContainer');
+
+                    if (amountInput) amountInput.value = '';
+                    if (descInput) descInput.value = '';
+                    if (txIdInput) txIdInput.value = '';
+                    if (noteInput) noteInput.value = '';
+
+                    const txIdGroup = document.getElementById('modalTransactionIdGroup');
+                    const noteGroup = document.getElementById('modalNoteGroup');
+                    if (txIdGroup) txIdGroup.style.display = 'none';
+                    if (noteGroup) noteGroup.style.display = 'none';
+
+                    if (lineItemsContainer) {
+                        lineItemsContainer.innerHTML = '';
+                        modalLineItemCount = 0;
+                        updateModalLineItemsButton();
+                    }
+
+                    if (amountInput) {
+                        amountInput.focus();
+                        amountInput.select?.();
+                    }
+                    return;
+                }
+
+                closeModal();
             } finally {
                 submitButtons.forEach((btn) => {
                     btn.disabled = false;
@@ -3895,7 +4002,7 @@ tr:hover [data-category-tag] {
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js?v=15"></script>
     <script src="assets/js/auth-guard.js"></script>
-    <script src="assets/js/dashboard-data.js?v=18"></script>
+    <script src="assets/js/dashboard-data.js?v=20"></script>
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -3932,10 +4039,23 @@ tr:hover [data-category-tag] {
                 card.style.setProperty('--card-color', color);
                 card.style.setProperty('--card-rgb', rgb);
 
+                const quickButtons = Array.from(card.querySelectorAll('.register-quick-btn'));
+                quickButtons.forEach((btn) => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const direction = btn.getAttribute('data-quick');
+                        activateCard(card);
+                        if (typeof window.openModal === 'function') {
+                            window.openModal({ cashBoxId: card.dataset.id, direction });
+                        }
+                    });
+                });
+
                 // Click to activate
                 card.addEventListener('click', (e) => {
                     // Don't activate if clicking menu button
-                    if (e.target.closest('.register-kebab') || e.target.closest('.register-menu')) {
+                    if (e.target.closest('.register-kebab') || e.target.closest('.register-menu') || e.target.closest('.register-quick-actions')) {
                         return;
                     }
 
@@ -3944,7 +4064,7 @@ tr:hover [data-category-tag] {
                 
                 // Double-click to navigate to Cash Box Detail
                 card.addEventListener('dblclick', (e) => {
-                    if (e.target.closest('.register-kebab') || e.target.closest('.register-menu')) {
+                    if (e.target.closest('.register-kebab') || e.target.closest('.register-menu') || e.target.closest('.register-quick-actions')) {
                         return;
                     }
                     const cashboxId = card.dataset.id;

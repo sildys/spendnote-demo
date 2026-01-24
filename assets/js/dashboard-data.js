@@ -136,6 +136,11 @@ async function loadDashboardData() {
                             </div>
                             
                             <div class="register-balance">${formattedBalance}</div>
+
+                            <div class="register-quick-actions">
+                                <button type="button" class="register-quick-btn in" data-quick="in">+ Income</button>
+                                <button type="button" class="register-quick-btn out" data-quick="out">- Expense</button>
+                            </div>
                             
                             <div class="register-stats">
                                 <div class="stat-item">
