@@ -112,16 +112,18 @@ async function loadCashBoxList() {
                                 <div class="register-name">${box.name}</div>
                                 <div class="register-id">${cashBoxPrefix}-${String(sequenceNumber).padStart(3, '0')}</div>
                             </div>
+                            <div class="register-actions">
+                                <a href="spendnote-cash-box-settings.html?id=${box.id}" class="register-kebab" aria-label="Cash Box settings">
+                                    <i class="fas fa-cog"></i>
+                                </a>
+                            </div>
                         </div>
                         
                         <div class="register-balance">${formattedBalance}</div>
                         
-                        <div class="register-actions">
-                            <button type="button" class="register-quick-btn in" onclick="window.location.href='dashboard.html?cashbox=${box.id}&direction=in#new-transaction'">+ Income</button>
-                            <button type="button" class="register-quick-btn out" onclick="window.location.href='dashboard.html?cashbox=${box.id}&direction=out#new-transaction'">- Expense</button>
-                            <button type="button" class="register-action-icon" aria-label="Settings" onclick="window.location.href='spendnote-cash-box-settings.html?id=${box.id}'">
-                                <i class="fas fa-cog"></i>
-                            </button>
+                        <div class="register-quick-actions">
+                            <button type="button" class="register-quick-btn in" onclick="window.location.href='dashboard.html?cashbox=${box.id}&direction=in#new-transaction'">IN</button>
+                            <button type="button" class="register-quick-btn out" onclick="window.location.href='dashboard.html?cashbox=${box.id}&direction=out#new-transaction'">OUT</button>
                             <a class="tx-action" href="spendnote-cash-box-detail.html?id=${box.id}">View</a>
                         </div>
                     </div>
@@ -267,7 +269,7 @@ async function loadCashBoxList() {
 
             cashBoxCards.forEach(card => {
                 card.addEventListener('click', (event) => {
-                    if (event.target.closest('.action-btn') || event.target.closest('.register-quick-btn') || event.target.closest('.register-action-icon') || event.target.closest('.tx-action')) {
+                    if (event.target.closest('.action-btn') || event.target.closest('.register-quick-btn') || event.target.closest('.tx-action') || event.target.closest('.register-kebab')) {
                         return;
                     }
                     setActiveCard(card);
