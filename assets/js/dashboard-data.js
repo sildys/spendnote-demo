@@ -297,56 +297,67 @@ function updateModalCashBoxDropdown(cashBoxes) {
 function loadRecentTransactionsSync(transactions) {
     try {
         if (transactions && transactions.length > 0) {
-            const tbody = document.querySelector('.transactions-table tbody');
-            if (!tbody) return;
-            
-            tbody.innerHTML = '';
-            
+            const wrapper = document.getElementById('tableWrapper');
+            if (!wrapper) return;
+
+            const getRgbFromHex = (hex) => {
+                const cleaned = String(hex || '').trim().replace('#', '');
+                if (cleaned.length !== 6) return '5, 150, 105';
+                const r = parseInt(cleaned.slice(0, 2), 16);
+                const g = parseInt(cleaned.slice(2, 4), 16);
+                const b = parseInt(cleaned.slice(4, 6), 16);
+                if ([r, g, b].some((v) => Number.isNaN(v))) return '5, 150, 105';
+                return `${r}, ${g}, ${b}`;
+            };
+
+            // Remove demo rows (keep header)
+            const existingRows = Array.from(wrapper.querySelectorAll('.table-grid'))
+                .filter((el) => !el.classList.contains('table-header'));
+            existingRows.forEach((el) => el.remove());
+
             transactions.forEach(tx => {
                 const isIncome = tx.type === 'income';
+                const cashBoxColor = tx.cash_box?.color || '#10b981';
+                const cashBoxRgb = getRgbFromHex(cashBoxColor);
+
                 const formattedAmount = (window.SpendNote && typeof window.SpendNote.formatCurrency === 'function')
                     ? window.SpendNote.formatCurrency(tx.amount, tx.cash_box?.currency || 'USD')
                     : new Intl.NumberFormat(navigator.language || 'en-US', {
                         style: 'currency',
                         currency: tx.cash_box?.currency || 'USD'
                     }).format(tx.amount);
-                
-                const date = new Date(tx.transaction_date);
-                const formattedDate = date.toLocaleDateString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    year: 'numeric' 
+
+                const dt = new Date(tx.created_at || tx.transaction_date);
+                const formattedDate = dt.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
                 });
-                
+                const formattedTime = dt.toLocaleTimeString('en-US', {
+                    hour: 'numeric',
+                    minute: '2-digit'
+                });
+
+                const createdByName = tx.created_by_user_name || tx.created_by || '—';
                 const rowHTML = `
-                    <tr>
-                        <td class="tx-type">
-                            <span class="type-badge ${isIncome ? 'in' : 'out'}">
-                                ${isIncome ? 'IN' : 'OUT'}
-                            </span>
-                        </td>
-                        <td class="tx-datetime">
+                    <div class="table-grid" tabindex="0" style="--cashbox-rgb: ${cashBoxRgb}; --cashbox-color: ${cashBoxColor};">
+                        <div class="tx-type ${isIncome ? 'in' : 'out'}">${isIncome ? 'IN' : 'OUT'}</div>
+                        <div class="tx-datetime">
                             <span class="date">${formattedDate}</span>
-                        </td>
-                        <td class="tx-cashbox">
-                            <span class="cashbox-badge" style="--cb-color: ${tx.cash_box?.color || '#10b981'};">
-                                ${tx.cash_box?.name || 'Unknown'}
-                            </span>
-                        </td>
-                        <td class="tx-person">${tx.contact?.name || tx.contact_name || 'N/A'}</td>
-                        <td class="tx-desc">${tx.description || 'No description'}</td>
-                        <td class="tx-amount ${isIncome ? 'in' : 'out'}">
-                            ${isIncome ? '+' : '-'}${formattedAmount}
-                        </td>
-                        <td class="tx-action">
-                            <a href="spendnote-transaction-detail.html?id=${tx.id}" class="btn-view">View</a>
-                        </td>
-                    </tr>
+                            <span class="time">${formattedTime}</span>
+                        </div>
+                        <div class="tx-cashbox"><span class="cashbox-badge" style="--cb-color: ${cashBoxColor};">${tx.cash_box?.name || 'Unknown'}</span></div>
+                        <div class="tx-person">${tx.contact?.name || tx.contact_name || 'N/A'}</div>
+                        <div class="tx-desc">${tx.description || 'No description'}</div>
+                        <div class="tx-amount ${isIncome ? 'in' : 'out'}">${isIncome ? '+' : '-'}${formattedAmount}</div>
+                        <div class="tx-createdby">${createdByName}</div>
+                        <a href="spendnote-transaction-detail.html?id=${tx.id}" class="tx-action">View</a>
+                    </div>
                 `;
-                
-                tbody.insertAdjacentHTML('beforeend', rowHTML);
+
+                wrapper.insertAdjacentHTML('beforeend', rowHTML);
             });
-            
+
             console.log('✅ Loaded recent transactions:', transactions.length);
         } else {
             console.log('ℹ️ No transactions found');

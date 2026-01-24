@@ -339,7 +339,8 @@ var db = {
                     contact:contacts(id, name)
                 `)
                 .eq('user_id', user.id)
-                .order('transaction_date', { ascending: false });
+                .order('transaction_date', { ascending: false })
+                .order('created_at', { ascending: false });
 
             if (filters.cashBoxId) {
                 query = query.eq('cash_box_id', filters.cashBoxId);
