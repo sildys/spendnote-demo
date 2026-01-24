@@ -5,8 +5,8 @@ async function loadCashBoxList() {
         const cashBoxes = await db.cashBoxes.getAll();
         
         if (cashBoxes && cashBoxes.length > 0) {
-            // Get the grid container
-            const grid = document.querySelector('.registers-grid');
+            // Get the list container
+            const grid = document.querySelector('.registers-list');
             if (!grid) return;
             
             // Find the "Add Cash Box" card
