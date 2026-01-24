@@ -96,6 +96,17 @@ async function loadCashBoxList() {
                         currency: box.currency || 'USD'
                     }).format(box.current_balance || 0);
                 
+                // Get transaction count (mock for now - will be from database)
+                const txCount = box.transaction_count || Math.floor(Math.random() * 150) + 10;
+                
+                // Get users with access (mock for now - will be from database)
+                const users = box.users || [
+                    { name: 'Sramli Ildikó', initials: 'SI', color: '#059669' }
+                ];
+                const usersHTML = users.map(user => 
+                    `<div class="user-avatar" style="background: ${user.color}20; color: ${user.color}; border-color: ${user.color}40;" title="${user.name}">${user.initials}</div>`
+                ).join('');
+                
                 // Create list row HTML
                 allCardsHTML += `
                     <div class="register-row ${colorClass}" 
@@ -104,20 +115,26 @@ async function loadCashBoxList() {
                          data-color="${color}" 
                          data-rgb="${rgb}"
                          style="--card-color: ${color}; --card-rgb: ${rgb};">
+                        <div class="register-id-badge">${cashBoxPrefix.toUpperCase()}-${String(sequenceNumber).padStart(3, '0')}</div>
                         <div class="register-icon ${colorClass}" style="${iconStyle}">
                             <i class="fas ${iconClass}"></i>
                         </div>
                         <div class="register-info">
                             <div class="register-name">${box.name}</div>
-                            <div class="register-id">${cashBoxPrefix}-${String(sequenceNumber).padStart(3, '0')}</div>
+                            <div class="register-meta">
+                                <span class="register-tx-count"><i class="fas fa-receipt"></i> ${txCount} transactions</span>
+                                <span class="register-users-label">Access:</span>
+                                <div class="register-users">${usersHTML}</div>
+                            </div>
                         </div>
                         <div class="register-balance">${formattedBalance}</div>
                         <div class="register-actions">
                             <button type="button" class="register-quick-btn in" onclick="window.location.href='dashboard.html?cashbox=${box.id}&direction=in#new-transaction'">IN</button>
                             <button type="button" class="register-quick-btn out" onclick="window.location.href='dashboard.html?cashbox=${box.id}&direction=out#new-transaction'">OUT</button>
                             <a class="tx-action" href="spendnote-cash-box-detail.html?id=${box.id}">View</a>
-                            <a href="spendnote-cash-box-settings.html?id=${box.id}" class="register-settings" aria-label="Cash Box settings">
+                            <a href="spendnote-cash-box-settings.html?id=${box.id}" class="register-settings-btn" aria-label="Cash Box settings">
                                 <i class="fas fa-cog"></i>
+                                <span>Settings</span>
                             </a>
                         </div>
                     </div>
