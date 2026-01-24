@@ -96,8 +96,8 @@ async function loadCashBoxList() {
                         currency: box.currency || 'USD'
                     }).format(box.current_balance || 0);
                 
-                // Get transaction count (mock for now - will be from database)
-                const txCount = box.transaction_count || Math.floor(Math.random() * 150) + 10;
+                // Get transaction count from database
+                const txCount = box.transaction_count || 0;
                 
                 // Get users with access (mock for now - will be from database)
                 const users = box.users || [
@@ -134,7 +134,6 @@ async function loadCashBoxList() {
                             <a class="tx-action" href="spendnote-cash-box-detail.html?id=${box.id}">View</a>
                             <a href="spendnote-cash-box-settings.html?id=${box.id}" class="register-settings-btn" aria-label="Cash Box settings">
                                 <i class="fas fa-cog"></i>
-                                <span>Settings</span>
                             </a>
                         </div>
                     </div>
