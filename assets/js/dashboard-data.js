@@ -359,11 +359,16 @@ function loadRecentTransactionsSync(transactions) {
                 });
 
                 const createdByName = tx.created_by_user_name || tx.created_by || '—';
-                const seed = String(tx.created_by_user_id || tx.created_by_user_name || tx.created_by || tx.id || '')
-                    .split('')
-                    .reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-                const avatarIndex = (seed % 70) + 1;
-                const avatarUrl = `https://i.pravatar.cc/150?img=${avatarIndex}`;
+                const getInitials = (name) => {
+                    if (!name || name === '—') return 'U';
+                    const parts = String(name).trim().split(/\s+/).filter(Boolean);
+                    const initials = parts.slice(0, 2).map((part) => part[0].toUpperCase()).join('');
+                    return initials || 'U';
+                };
+
+                const initials = getInitials(createdByName);
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#10b981"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#ffffff">${initials}</text></svg>`;
+                const avatarUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`;
                 const rowHTML = `
                     <div class="table-grid" tabindex="0" style="--cashbox-rgb: ${cashBoxRgb}; --cashbox-color: ${cashBoxColor};">
                         <div class="tx-type ${isIncome ? 'in' : 'out'}">${isIncome ? 'IN' : 'OUT'}</div>
