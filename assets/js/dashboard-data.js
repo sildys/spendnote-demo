@@ -126,7 +126,7 @@ async function loadDashboardData() {
                              tabindex="0">
                             <div class="register-top">
                                 <div class="register-header-left">
-                                    <a href="spendnote-cash-box-settings.html?id=${box.id}" class="register-icon ${colorClass} register-icon-link" style="${iconStyle}" aria-label="Cash Box settings">
+                                    <a href="spendnote-cash-box-detail.html?id=${box.id}" class="register-icon ${colorClass} register-icon-link" style="${iconStyle}" aria-label="Cash Box detail">
                                         <i class="fas ${iconClass}"></i>
                                     </a>
                                     <div class="register-info">
