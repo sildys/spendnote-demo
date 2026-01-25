@@ -4248,7 +4248,27 @@ tr:hover [data-category-tag] {
         // ========================================
         // Load dashboard data after Swiper is initialized
         if (typeof loadDashboardData === 'function') {
-            loadDashboardData();
+            loadDashboardData().then(() => {
+                // Force update IN/OUT buttons with SVG icons after data loads
+                setTimeout(() => {
+                    document.querySelectorAll('.register-quick-btn.in').forEach(btn => {
+                        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg><span>IN</span>';
+                    });
+                    document.querySelectorAll('.register-quick-btn.out').forEach(btn => {
+                        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8H13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg><span>OUT</span>';
+                    });
+                }, 100);
+            }).catch(() => {
+                // If loadDashboardData doesn't return a promise, try anyway
+                setTimeout(() => {
+                    document.querySelectorAll('.register-quick-btn.in').forEach(btn => {
+                        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg><span>IN</span>';
+                    });
+                    document.querySelectorAll('.register-quick-btn.out').forEach(btn => {
+                        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8H13" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg><span>OUT</span>';
+                    });
+                }, 100);
+            });
         }
 
         // ========================================
