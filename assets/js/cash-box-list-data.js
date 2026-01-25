@@ -83,7 +83,7 @@ async function loadCashBoxList() {
                 const rgb = hexToRgb(color);
                 const iconClass = getIconClass(box.icon);
                 const colorClass = getColorClass(color);
-                const iconStyle = `background: linear-gradient(135deg, rgba(${rgb}, 0.15), rgba(${rgb}, 0.08)); color: ${color}; border: 2px solid rgba(${rgb}, 0.2);`;
+                const iconStyle = '';
 
                 const cashBoxPrefix = 'cbx';
                 const sequenceNumber = sequenceById.get(box.id) ?? (index + 1);
@@ -124,7 +124,7 @@ async function loadCashBoxList() {
                         <div class="drag-handle" title="Drag to reorder" aria-label="Reorder">
                             <i class="fas fa-grip-vertical"></i>
                         </div>
-                        <div class="register-icon ${colorClass}" style="${iconStyle}">
+                        <div class="register-icon ${colorClass}">
                             <i class="fas ${iconClass}"></i>
                         </div>
                         <div class="register-info">

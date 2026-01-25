@@ -116,44 +116,46 @@
             width: 56px;
             height: 56px;
             border-radius: 14px;
+            background: linear-gradient(
+                135deg,
+                rgba(var(--card-rgb, var(--active-rgb)), 0.08) 0%,
+                #ffffff 55%,
+                rgba(var(--card-rgb, var(--active-rgb)), 0.03) 100%
+            );
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 26px;
             flex-shrink: 0;
-            border-width: 2px;
+            border-width: 3px;
+            box-shadow: 0 6px 18px rgba(var(--card-rgb, var(--active-rgb)), 0.16);
             grid-column: 2;
             grid-row: 1 / span 2;
         }
 
         .register-icon.green {
-            background: linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(5, 150, 105, 0.08));
             color: var(--primary);
-            border: 2px solid rgba(5, 150, 105, 0.2);
+            border: 3px solid var(--primary);
         }
 
         .register-icon.orange {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.08));
             color: var(--orange);
-            border: 2px solid rgba(245, 158, 11, 0.2);
+            border: 3px solid var(--orange);
         }
 
         .register-icon.blue {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.08));
             color: var(--blue);
-            border: 2px solid rgba(59, 130, 246, 0.2);
+            border: 3px solid var(--blue);
         }
 
         .register-icon.purple {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.08));
             color: #8b5cf6;
-            border: 2px solid rgba(139, 92, 246, 0.2);
+            border: 3px solid #8b5cf6;
         }
 
         .register-icon.red {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.08));
             color: var(--error);
-            border: 2px solid rgba(239, 68, 68, 0.2);
+            border: 3px solid var(--error);
         }
 
         .register-id-badge {
@@ -277,10 +279,10 @@
         }
 
         .register-balance {
-            font-size: 32px;
+            font-size: 26px;
             font-weight: 900;
             color: var(--text);
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
             text-align: right;
             flex-shrink: 0;
             white-space: nowrap;
@@ -943,7 +945,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js?v=14"></script>
     <script src="assets/js/auth-guard.js"></script>
-    <script src="assets/js/cash-box-list-data.js?v=24"></script>
+    <script src="assets/js/cash-box-list-data.js?v=25"></script>
     
     <script src="assets/js/main.js?v=18"></script>
 </body>
