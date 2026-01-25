@@ -81,7 +81,7 @@ async function loadCashBoxList() {
                         <div class="drag-handle" title="Drag to reorder" aria-label="Reorder">
                             <i class="fas fa-grip-vertical"></i>
                         </div>
-                        <a class="register-icon ${colorClass} register-icon-link" href="spendnote-cash-box-settings.html?id=${box.id}" title="Cash Box Settings" aria-label="Cash Box Settings">
+                        <a class="register-icon ${colorClass} register-icon-link" href="spendnote-cash-box-detail.html?id=${box.id}" title="Cash Box Detail" aria-label="Cash Box Detail">
                             <i class="fas ${iconClass}"></i>
                         </a>
                         <div class="register-info">
