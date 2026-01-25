@@ -231,8 +231,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            width: auto;
-            min-width: 92px;
+            width: 104px;
         }
 
         .register-quick-btn.in {
@@ -243,7 +242,7 @@
         }
 
         .register-quick-btn.out {
-            --quick-accent: #f59e0b;
+            --quick-accent: var(--out);
             color: var(--quick-accent);
             border-color: var(--quick-accent);
             background: white;
@@ -260,7 +259,7 @@
         }
 
         .register-quick-btn.out:hover {
-            background: rgba(245, 158, 11, 0.08);
+            background: rgba(var(--out-rgb), 0.08);
             border-color: var(--quick-accent);
         }
 
@@ -516,7 +515,7 @@
             font-weight: 800;
         }
         .stat-value.in { color: #10b981; }
-        .stat-value.out { color: #f59e0b; }
+        .stat-value.out { color: var(--out); }
 
         /* CONTEXT ROW */
         .context-row {
@@ -897,7 +896,7 @@
             display: grid;
             grid-template-columns: 70px 130px 140px 160px 1fr 110px 130px 80px;
             gap: 16px;
-            padding: 12px 16px; /* ✅ Alacsonyabb (volt: 14px 20px) */
+            padding: 12px 16px; /* Alacsonyabb (volt: 14px 20px) */
             align-items: center;
             border-bottom: 1px solid var(--border);
             transition: all 0.2s;
@@ -972,16 +971,15 @@
             letter-spacing: 0.06em;
             border: 2px solid;
             background: #ffffff;
-            width: fit-content;
-            min-width: 52px;
+            width: 56px;
         }
         .tx-type.in {
             color: #059669;
             border-color: #059669;
         }
         .tx-type.out {
-            color: #d97706;
-            border-color: #d97706;
+            color: var(--out);
+            border-color: var(--out);
         }
         
         /* Cash Box badge */
@@ -1021,9 +1019,9 @@
             border: 1px solid rgba(16,185,129,0.2);
         }
         .tx-icon.out {
-            background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.08));
-            color: #f59e0b;
-            border: 1px solid rgba(245,158,11,0.2);
+            background: linear-gradient(135deg, rgba(var(--out-rgb),0.15), rgba(var(--out-rgb),0.08));
+            color: var(--out);
+            border: 1px solid rgba(var(--out-rgb),0.2);
         }
         .tx-receipt {
             font-size: 15px;
@@ -1032,13 +1030,13 @@
             font-family: monospace;
         }
         .tx-desc {
-            font-size: 13px; /* ⬇️ Kisebb (volt: 15px) */
-            font-weight: 500; /* ⬇️ Vékonyabb (volt: 700) */
-            color: var(--text-muted); /* ⬇️ Halvány (volt: text) */
+            font-size: 13px; 
+            font-weight: 500; 
+            color: var(--text-muted); 
         }
         .tx-person {
-            font-size: 14px; /* ⬆️ Nagyobb (volt: 13px) */
-            color: var(--text); /* ⬆️ Sötétebb (volt: text-muted) */
+            font-size: 14px; 
+            color: var(--text); 
             font-weight: 600;
         }
         .tx-amount {
@@ -1047,7 +1045,7 @@
             text-align: right;
         }
         .tx-amount.in { color: #10b981; }
-        .tx-amount.out { color: #f59e0b; }
+        .tx-amount.out { color: var(--out); }
         .tx-datetime {
             font-size: 12px;
             color: var(--text);
@@ -2621,21 +2619,21 @@ tr:hover [data-category-tag] {
 }
 
 .direction-btn-out {
-    background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(245,158,11,0.06));
-    color: #f59e0b;
-    border-color: rgba(245,158,11,0.15);
+    background: linear-gradient(135deg, rgba(var(--out-rgb),0.12), rgba(var(--out-rgb),0.06));
+    color: var(--out);
+    border-color: rgba(var(--out-rgb), 0.15);
 }
 
 .direction-btn-out:hover {
-    background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(245,158,11,0.10));
-    border-color: rgba(245,158,11,0.25);
+    background: linear-gradient(135deg, rgba(var(--out-rgb), 0.18), rgba(var(--out-rgb), 0.10));
+    border-color: rgba(var(--out-rgb), 0.25);
 }
 
 #modalDirectionOut:checked + .direction-btn-out {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, var(--out), var(--out));
     color: white;
-    border-color: #d97706;
-    box-shadow: 0 0 0 3px rgba(245,158,11,0.2);
+    border-color: var(--out);
+    box-shadow: 0 0 0 3px rgba(var(--out-rgb), 0.2);
     font-weight: 700;
 }
 
@@ -4100,7 +4098,7 @@ tr:hover [data-category-tag] {
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js?v=15"></script>
     <script src="assets/js/auth-guard.js"></script>
-    <script src="assets/js/dashboard-data.js?v=43&t=20260125n"></script>
+    <script src="assets/js/dashboard-data.js?v=44&t=20260125o"></script>
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
