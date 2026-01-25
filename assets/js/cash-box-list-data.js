@@ -300,12 +300,34 @@ async function loadCashBoxList() {
                 });
             };
 
+            const isDesktopPointer = (() => {
+                try {
+                    return window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+                } catch (e) {
+                    return false;
+                }
+            })();
+
             cashBoxCards.forEach(card => {
                 card.addEventListener('click', (event) => {
                     if (event.target.closest('.drag-handle') || event.target.closest('.register-actions') || event.target.closest('a') || event.target.closest('button')) {
                         return;
                     }
                     setActiveCard(card);
+
+                    if (!isDesktopPointer) {
+                        const id = card.dataset.id;
+                        if (id) {
+                            window.location.href = `spendnote-cash-box-detail.html?id=${id}`;
+                        }
+                    }
+                });
+
+                card.addEventListener('dblclick', (event) => {
+                    if (!isDesktopPointer) return;
+                    if (event.target.closest('.drag-handle') || event.target.closest('.register-actions') || event.target.closest('a') || event.target.closest('button')) {
+                        return;
+                    }
                     const id = card.dataset.id;
                     if (id) {
                         window.location.href = `spendnote-cash-box-detail.html?id=${id}`;
