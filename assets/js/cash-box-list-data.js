@@ -83,7 +83,7 @@ async function loadCashBoxList() {
                 const rgb = hexToRgb(color);
                 const iconClass = getIconClass(box.icon);
                 const colorClass = getColorClass(color);
-                const iconStyle = '';
+                
 
                 const cashBoxPrefix = 'cbx';
                 const sequenceNumber = sequenceById.get(box.id) ?? (index + 1);
@@ -124,9 +124,9 @@ async function loadCashBoxList() {
                         <div class="drag-handle" title="Drag to reorder" aria-label="Reorder">
                             <i class="fas fa-grip-vertical"></i>
                         </div>
-                        <div class="register-icon ${colorClass}">
+                        <a class="register-icon ${colorClass} register-icon-link" href="spendnote-cash-box-settings.html?id=${box.id}" title="Cash Box Settings" aria-label="Cash Box Settings">
                             <i class="fas ${iconClass}"></i>
-                        </div>
+                        </a>
                         <div class="register-info">
                             <div class="register-name">${box.name}</div>
                             <div class="register-meta">
