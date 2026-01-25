@@ -124,7 +124,7 @@ async function loadDashboardData() {
                                         <i class="fas ${iconClass}"></i>
                                     </a>
                                     <div class="register-info">
-                                        <div class="register-name" style="font-size:22px;font-weight:900;line-height:1.1;">${box.name}</div>
+                                        <div class="register-name" style="font-size:24px;font-weight:900;line-height:1.1;">${box.name}</div>
                                         <div class="register-id">${cashBoxPrefix}-${String(sequenceNumber).padStart(3, '0')}</div>
                                     </div>
                                 </div>
