@@ -9,34 +9,6 @@ async function loadCashBoxList() {
             const grid = document.querySelector('.registers-list');
             if (!grid) return;
 
-            const summaryCashBoxes = document.getElementById('summaryCashBoxes');
-            if (summaryCashBoxes) summaryCashBoxes.textContent = String(cashBoxes.length);
-
-            const balancesByCurrency = new Map();
-            cashBoxes.forEach((b) => {
-                const ccy = (b.currency || 'USD').toUpperCase();
-                const amt = Number(b.current_balance || 0);
-                balancesByCurrency.set(ccy, (balancesByCurrency.get(ccy) || 0) + (Number.isFinite(amt) ? amt : 0));
-            });
-
-            const top = Array.from(balancesByCurrency.entries())
-                .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
-                .slice(0, 3);
-
-            const summaryBalances = document.getElementById('summaryBalances');
-            if (summaryBalances) {
-                if (top.length === 0) {
-                    summaryBalances.textContent = '—';
-                } else {
-                    summaryBalances.innerHTML = top.map(([ccy, total]) => {
-                        const formatted = (window.SpendNote && typeof window.SpendNote.formatCurrency === 'function')
-                            ? window.SpendNote.formatCurrency(total || 0, ccy)
-                            : new Intl.NumberFormat('en-US', { style: 'currency', currency: ccy }).format(total || 0);
-                        return `<span class="currency-pill">${formatted}</span>`;
-                    }).join('');
-                }
-            }
-            
             // Find the "Add Cash Box" card
             const addCashBoxCard = grid.querySelector('.add-cash-box-card');
             
