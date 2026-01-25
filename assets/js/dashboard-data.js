@@ -95,7 +95,7 @@ async function loadDashboardData() {
                 const iconClass = getIconClass(box.icon);
                 const colorClass = getColorClass(color);
                 const isActive = (defaultActiveId && box.id === defaultActiveId) ? 'active' : '';
-                const iconStyle = `background: linear-gradient(135deg, rgba(${rgb}, 0.15), rgba(${rgb}, 0.08)); color: ${color}; border: 2px solid rgba(${rgb}, 0.2);`;
+                const iconStyle = '';
 
                 const sequenceNumber = sequenceById.get(box.id) ?? (index + 1);
                 const cashBoxPrefix = 'cbx';
@@ -120,18 +120,13 @@ async function loadDashboardData() {
                              tabindex="0">
                             <div class="register-top">
                                 <div class="register-header-left">
-                                    <div class="register-icon ${colorClass}" style="${iconStyle}">
+                                    <a href="spendnote-cash-box-settings.html?id=${box.id}" class="register-icon ${colorClass} register-icon-link" style="${iconStyle}" aria-label="Cash Box settings">
                                         <i class="fas ${iconClass}"></i>
-                                    </div>
+                                    </a>
                                     <div class="register-info">
                                         <div class="register-name">${box.name}</div>
                                         <div class="register-id">${cashBoxPrefix}-${String(sequenceNumber).padStart(3, '0')}</div>
                                     </div>
-                                </div>
-                                <div class="register-actions">
-                                    <a href="spendnote-cash-box-settings.html?id=${box.id}" class="register-kebab" aria-label="Cash Box settings">
-                                        <i class="fas fa-ellipsis-h"></i>
-                                    </a>
                                 </div>
                             </div>
                             
