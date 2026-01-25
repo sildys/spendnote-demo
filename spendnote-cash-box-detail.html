@@ -21,7 +21,7 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/main.css?v=8">
+    <link rel="stylesheet" href="assets/css/main.css?v=10">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=9">
     <style>
         /* ===== CASH BOX DETAIL PAGE SPECIFIC STYLES ===== */
@@ -145,8 +145,8 @@
         }
 
         .stat-icon.out {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--orange);
+            background: rgba(var(--out-rgb), 0.1);
+            color: var(--out);
         }
 
         .stat-label {
@@ -164,7 +164,7 @@
         }
 
         .stat-value.in { color: var(--primary); }
-        .stat-value.out { color: var(--orange); }
+        .stat-value.out { color: var(--out); }
 
         /* SECTION HEADER */
         .section-header {
@@ -567,8 +567,8 @@
         }
 
         .tx-direction.out {
-            background: rgba(217,119,6,0.15);
-            color: #d97706;
+            background: rgba(var(--out-rgb), 0.15);
+            color: var(--out);
         }
 
         .tx-amount {
@@ -577,7 +577,7 @@
         }
 
         .tx-amount.in { color: var(--primary); }
-        .tx-amount.out { color: #d97706; }
+        .tx-amount.out { color: var(--out); }
 
         .action-btn {
             padding: 8px 16px;

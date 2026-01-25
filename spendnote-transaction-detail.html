@@ -9,7 +9,7 @@
     <title>Transaction TRX-342 - SpendNote</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/main.css?v=8">
+    <link rel="stylesheet" href="assets/css/main.css?v=10">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=8">
     <style>
         /* ===== TRANSACTION DETAIL PAGE SPECIFIC STYLES ===== */
@@ -112,8 +112,8 @@
         }
 
         .status-badge.out {
-            background: rgba(245,158,11,0.15);
-            color: #d97706;
+            background: rgba(var(--out-rgb), 0.15);
+            color: var(--out);
         }
 
         /* CONTENT GRID */
@@ -162,9 +162,9 @@
         }
 
         .amount-card-standalone.out {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(251, 146, 60, 0.05));
-            border: 2px solid rgba(245, 158, 11, 0.2);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1);
+            background: linear-gradient(135deg, rgba(var(--out-rgb), 0.08), rgba(var(--out-rgb), 0.05));
+            border: 2px solid rgba(var(--out-rgb), 0.2);
+            box-shadow: 0 4px 12px rgba(var(--out-rgb), 0.1);
         }
 
         .amount-direction {
@@ -184,7 +184,7 @@
         }
 
         .amount-direction.out {
-            color: var(--orange);
+            color: var(--out);
         }
 
         .amount-direction i {
@@ -263,7 +263,7 @@
         }
 
         .amount-value.in { color: var(--primary); }
-        .amount-value.out { color: var(--orange); }
+        .amount-value.out { color: var(--out); }
 
         /* INFO GRID */
         .info-grid {
