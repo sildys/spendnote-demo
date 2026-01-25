@@ -960,25 +960,42 @@
         }
         .row-tooltip strong { color: #10b981; }
 
-        /* Type badge - IN/OUT */
+        /* Type badge - IN/OUT (cleaner: icon + label) */
         .tx-type {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            padding: 6px 12px;
-            border-radius: 8px;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 10px;
             font-size: 12px;
             font-weight: 800;
-            text-align: center;
-            min-width: 60px;
+            letter-spacing: 0.02em;
+            border: 2px solid;
+            background: #ffffff;
+            width: fit-content;
+            min-width: 0;
+        }
+        .tx-type-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid currentColor;
+            background: rgba(255, 255, 255, 0.6);
+            flex-shrink: 0;
+        }
+        .tx-type-label {
+            line-height: 1;
         }
         .tx-type.in {
-            background: rgba(16,185,129,0.15);
             color: #059669;
+            border-color: #059669;
         }
         .tx-type.out {
-            background: rgba(245,158,11,0.15);
             color: #d97706;
+            border-color: #d97706;
         }
         
         /* Cash Box badge */
@@ -4097,7 +4114,7 @@ tr:hover [data-category-tag] {
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js?v=15"></script>
     <script src="assets/js/auth-guard.js"></script>
-    <script src="assets/js/dashboard-data.js?v=41&t=20260125l"></script>
+    <script src="assets/js/dashboard-data.js?v=42&t=20260125m"></script>
 
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>

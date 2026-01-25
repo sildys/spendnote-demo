@@ -356,6 +356,10 @@ function loadRecentTransactionsSync(transactions) {
                 const cashBoxColor = tx.cash_box?.color || '#10b981';
                 const cashBoxRgb = getRgbFromHex(cashBoxColor);
 
+                const typeIconSvg = isIncome
+                    ? `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 3V12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4.5 8.8L8 12.3L11.5 8.8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+                    : `<svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 13V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4.5 7.2L8 3.7L11.5 7.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
                 const formattedAmount = (window.SpendNote && typeof window.SpendNote.formatCurrency === 'function')
                     ? window.SpendNote.formatCurrency(tx.amount, tx.cash_box?.currency || 'USD')
                     : new Intl.NumberFormat(navigator.language || 'en-US', {
@@ -387,7 +391,10 @@ function loadRecentTransactionsSync(transactions) {
                 const avatarUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`;
                 const rowHTML = `
                     <div class="table-grid" tabindex="0" style="--cashbox-rgb: ${cashBoxRgb}; --cashbox-color: ${cashBoxColor};">
-                        <div class="tx-type ${isIncome ? 'in' : 'out'}">${isIncome ? 'IN' : 'OUT'}</div>
+                        <div class="tx-type ${isIncome ? 'in' : 'out'}">
+                            <span class="tx-type-icon" aria-hidden="true">${typeIconSvg}</span>
+                            <span class="tx-type-label">${isIncome ? 'IN' : 'OUT'}</span>
+                        </div>
                         <div class="tx-datetime">
                             <span class="date">${formattedDate}</span>
                             <span class="time">${formattedTime}</span>
