@@ -82,6 +82,16 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
+        .register-row.drag-placeholder {
+            background: rgba(var(--active-rgb), 0.08);
+            border: 2px dashed var(--primary);
+            opacity: 0.5;
+        }
+
+        .register-row.drag-placeholder * {
+            visibility: hidden;
+        }
+
         .drag-handle {
             width: 24px;
             height: 44px;
@@ -214,12 +224,16 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            font-weight: 600;
+            font-weight: 700;
+            background: var(--surface-elevated);
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
         }
 
         .register-tx-count i {
-            font-size: 11px;
-            opacity: 0.7;
+            font-size: 12px;
+            opacity: 0.8;
         }
 
         .register-users {
@@ -290,6 +304,18 @@
             grid-column: 5;
             grid-row: 2;
             align-self: end;
+        }
+
+        @media (max-width: 767px) {
+            .register-actions .btn-small {
+                padding: 10px 12px;
+            }
+            .register-actions .btn-small i {
+                margin-right: 0;
+            }
+            .register-actions .btn-small-text {
+                display: none;
+            }
         }
 
         .action-btn {
@@ -379,14 +405,15 @@
 
         .add-cash-box-title {
             font-size: 16px;
-            font-weight: 800;
+            font-weight: 900;
             color: var(--text);
             margin-bottom: 2px;
+            letter-spacing: -0.01em;
         }
 
         .add-cash-box-subtitle {
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-muted);
             margin-bottom: 0;
         }
@@ -920,7 +947,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js?v=14"></script>
     <script src="assets/js/auth-guard.js"></script>
-    <script src="assets/js/cash-box-list-data.js?v=22"></script>
+    <script src="assets/js/cash-box-list-data.js?v=23"></script>
     
     <script src="assets/js/main.js?v=18"></script>
 </body>

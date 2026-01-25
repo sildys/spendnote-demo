@@ -137,7 +137,7 @@ async function loadCashBoxList() {
                         <div class="register-actions">
                             <a class="btn btn-secondary btn-small" href="spendnote-cash-box-settings.html?id=${box.id}" title="Cash Box Settings" aria-label="Cash Box Settings">
                                 <i class="fas fa-cog"></i>
-                                Settings
+                                <span class="btn-small-text">Settings</span>
                             </a>
                         </div>
                     </div>
@@ -273,6 +273,9 @@ async function loadCashBoxList() {
                     if (draggedCard) {
                         draggedCard.classList.remove('dragging');
                     }
+                    // Remove all placeholder classes
+                    const allCards = Array.from(grid.querySelectorAll('.register-row'));
+                    allCards.forEach(c => c.classList.remove('drag-placeholder'));
                     draggedCard = null;
                 });
 
@@ -282,12 +285,18 @@ async function loadCashBoxList() {
 
                     const hit = document.elementFromPoint(event.clientX, event.clientY);
                     const overCard = hit ? hit.closest('.register-row') : null;
-                    if (!overCard || overCard === draggedCard) {
+                    if (!overCard || overCard === draggedCard || overCard.classList.contains('add-cash-box-card')) {
                         return;
                     }
 
                     const rect = overCard.getBoundingClientRect();
                     const insertAfter = (event.clientX - rect.left) > rect.width / 2;
+                    
+                    // Show visual placeholder
+                    const allCards = Array.from(grid.querySelectorAll('.register-row'));
+                    allCards.forEach(c => c.classList.remove('drag-placeholder'));
+                    overCard.classList.add('drag-placeholder');
+                    
                     grid.insertBefore(draggedCard, insertAfter ? overCard.nextSibling : overCard);
                 });
 
