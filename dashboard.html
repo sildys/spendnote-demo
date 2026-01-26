@@ -2139,6 +2139,72 @@ tr:hover [data-category-tag] {
     position: relative;
 }
 
+ #createTransactionModalContainer {
+     --modal-dir-color: #059669;
+     --modal-dir-rgb: 5, 150, 105;
+ }
+
+ #createTransactionModalContainer[data-direction="out"] {
+     --modal-dir-color: #6b7280;
+     --modal-dir-rgb: 107, 114, 128;
+ }
+
+ #createTransactionModalContainer .modal-header {
+     overflow: hidden;
+ }
+
+ #createTransactionModalContainer .modal-header::before {
+     content: "IN";
+     position: absolute;
+     right: 24px;
+     bottom: -14px;
+     font-size: 56px;
+     font-weight: 900;
+     letter-spacing: 0.08em;
+     color: rgba(var(--modal-dir-rgb), 0.10);
+     pointer-events: none;
+     user-select: none;
+     white-space: nowrap;
+ }
+
+ #createTransactionModalContainer[data-direction="out"] .modal-header::before {
+     content: "OUT";
+ }
+
+ #createTransactionModalContainer .modal-header::after {
+     content: "";
+     position: absolute;
+     left: 0;
+     bottom: 0;
+     height: 4px;
+     width: 100%;
+     background: linear-gradient(90deg, rgba(var(--modal-dir-rgb), 0.85), rgba(var(--modal-dir-rgb), 0.22));
+     pointer-events: none;
+ }
+
+ .label-with-badge {
+     display: flex;
+     align-items: center;
+     justify-content: space-between;
+     gap: 10px;
+ }
+
+ .modal-direction-badge {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     padding: 2px 8px;
+     border-radius: 999px;
+     font-size: 10px;
+     font-weight: 900;
+     letter-spacing: 0.08em;
+     text-transform: uppercase;
+     color: var(--modal-dir-color);
+     background: rgba(var(--modal-dir-rgb), 0.12);
+     border: 1px solid rgba(var(--modal-dir-rgb), 0.35);
+     white-space: nowrap;
+ }
+
 
 .modal-title {
     font-size: 20px;
@@ -3506,7 +3572,7 @@ tr:hover [data-category-tag] {
 
     <!-- CREATE TRANSACTION MODAL -->
     <div class="modal-overlay" id="createTransactionModal">
-        <div class="modal-container">
+        <div class="modal-container" id="createTransactionModalContainer" data-direction="in">
             <div class="modal-header">
                 <div class="modal-header-left">
                     <!-- 1. DIRECTION (MOST IMPORTANT) -->
@@ -3565,7 +3631,10 @@ tr:hover [data-category-tag] {
                         <div class="modal-section-title">RECEIPT INFORMATION</div>
                         <div style="display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 10px;">
                             <div class="form-group">
-                                <label for="modalContactName">Name *</label>
+                                <label for="modalContactName" class="label-with-badge">
+                                    <span>Name *</span>
+                                    <span class="modal-direction-badge" id="modalDirectionBadge">IN</span>
+                                </label>
                                 <input 
                                     type="text" 
                                     id="modalContactName" 
@@ -3972,6 +4041,16 @@ tr:hover [data-category-tag] {
         const closeModalBtn = document.getElementById('closeModalBtn');
         const cancelModalBtn = document.getElementById('modalCancelBtn');
 
+        const modalContainerEl = document.getElementById('createTransactionModalContainer');
+        const dirBadgeEl = document.getElementById('modalDirectionBadge');
+
+        function updateModalDirectionUI(direction) {
+            if (!modalContainerEl) return;
+            const dir = direction === 'out' ? 'out' : 'in';
+            modalContainerEl.dataset.direction = dir;
+            if (dirBadgeEl) dirBadgeEl.textContent = dir.toUpperCase();
+        }
+
         function openModal(preset) {
             const isEventLike = preset && typeof preset === 'object' && 'preventDefault' in preset && 'target' in preset;
             const options = isEventLike ? {} : (preset || {});
@@ -4010,6 +4089,9 @@ tr:hover [data-category-tag] {
                     outEl.checked = preset.direction === 'out';
                 }
             }
+
+            const checkedDirEl = document.querySelector('input[name="modalDirection"]:checked');
+            updateModalDirectionUI(checkedDirEl ? checkedDirEl.value : 'in');
 
             const extraItemsDetails = document.getElementById('modalExtraItemsDetails');
             if (extraItemsDetails) extraItemsDetails.open = false;
@@ -4062,6 +4144,7 @@ tr:hover [data-category-tag] {
             document.body.style.overflow = '';
             // Reset form
             document.getElementById('modalTransactionForm').reset();
+            updateModalDirectionUI('in');
             const lineItemsContainer = document.getElementById('modalLineItemsContainer');
             if (lineItemsContainer) {
                 lineItemsContainer.innerHTML = '';
@@ -4079,6 +4162,11 @@ tr:hover [data-category-tag] {
 
         closeModalBtn.addEventListener('click', closeModal);
         cancelModalBtn.addEventListener('click', closeModal);
+
+        const dirInRadio = document.getElementById('modalDirectionIn');
+        const dirOutRadio = document.getElementById('modalDirectionOut');
+        if (dirInRadio) dirInRadio.addEventListener('change', () => updateModalDirectionUI('in'));
+        if (dirOutRadio) dirOutRadio.addEventListener('change', () => updateModalDirectionUI('out'));
 
         // Close on overlay click
         modal.addEventListener('click', (e) => {
