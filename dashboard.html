@@ -2119,31 +2119,28 @@ tr:hover [data-category-tag] {
 
 .modal-header {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     justify-content: space-between;
-    padding: 0;
+    padding: 20px 28px;
     border-bottom: 1px solid var(--border);
-    gap: 0;
+    gap: 16px;
     background: white;
 }
 
 .modal-header-left {
     display: flex;
-    align-items: stretch;
+    align-items: center;
+    gap: 16px;
     flex: 1;
 }
 
 .modal-title {
-    display: flex;
-    align-items: center;
-    padding: 24px 28px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 900;
     color: var(--text);
     margin: 0;
     letter-spacing: -0.02em;
     white-space: nowrap;
-    border-left: 1px solid var(--border);
 }
 
 .header-info-item i {
@@ -2205,20 +2202,22 @@ tr:hover [data-category-tag] {
 }
 
 .modal-close {
-    width: 60px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
-    background: white;
-    cursor: pointer;
     transition: all 0.2s;
     color: var(--text-muted);
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .modal-close:hover {
-    background: var(--surface-elevated);
+    background: rgba(0, 0, 0, 0.1);
     color: var(--text);
 }
 
@@ -2403,8 +2402,7 @@ tr:hover [data-category-tag] {
 
 .modal-direction-group {
     display: flex;
-    flex-direction: column;
-    width: 80px;
+    gap: 8px;
 }
 
 .modal-direction-group input[type="radio"] {
@@ -2413,90 +2411,69 @@ tr:hover [data-category-tag] {
 
 .modal-direction-btn {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 20px 12px;
-    font-size: 11px;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 12px;
+    font-size: 14px;
     font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
     cursor: pointer;
     transition: all 0.2s;
-    border: none;
-    border-right: 1px solid var(--border);
+    border: 2px solid var(--border);
     background: white;
-    color: var(--text-muted);
+    color: var(--text);
     user-select: none;
-    flex: 1;
 }
 
 .modal-direction-btn:hover {
-    background: var(--surface-elevated);
+    border-color: var(--active);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .modal-direction-btn .quick-icon {
-    width: 32px;
-    height: 32px;
+    width: 22px;
+    height: 22px;
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    border: 2px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
     flex-shrink: 0;
-    font-size: 14px;
-    transition: all 0.2s;
+    font-size: 12px;
 }
 
 .modal-direction-btn.in .quick-icon {
-    background: #e5e7eb;
-    color: var(--text-muted);
+    background: #059669;
 }
 
 .modal-direction-btn.out .quick-icon {
-    background: #e5e7eb;
-    color: var(--text-muted);
+    background: var(--out);
 }
 
 #modalDirectionIn:checked + .modal-direction-btn.in {
-    background: rgba(5, 150, 105, 0.08);
+    border-color: #059669;
+    background: rgba(5, 150, 105, 0.06);
     color: #059669;
 }
 
-#modalDirectionIn:checked + .modal-direction-btn.in .quick-icon {
-    background: #059669;
-    color: white;
-    border-color: #047857;
-    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
-}
-
 #modalDirectionOut:checked + .modal-direction-btn.out {
-    background: rgba(var(--out-rgb), 0.08);
+    border-color: var(--out);
+    background: rgba(var(--out-rgb), 0.06);
     color: var(--out);
 }
 
-#modalDirectionOut:checked + .modal-direction-btn.out .quick-icon {
-    background: var(--out);
-    color: white;
-    border-color: #dc2626;
-    box-shadow: 0 4px 12px rgba(var(--out-rgb), 0.3);
-}
-
 .modal-date-input {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 20px;
-    border: none;
-    border-right: 1px solid var(--border);
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
     font-size: 13px;
     font-weight: 700;
     color: var(--text);
     background: white;
-    min-width: 160px;
+    min-width: 150px;
     text-align: center;
 }
 
@@ -2504,32 +2481,33 @@ tr:hover [data-category-tag] {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 24px 28px;
-    border: none;
-    border-right: 1px solid var(--border);
+    gap: 12px;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
     background: white;
     cursor: pointer;
     transition: all 0.2s;
-    flex: 1;
+    min-width: 220px;
 }
 
 .modal-cashbox-select:hover {
-    background: var(--surface-elevated);
+    border-color: var(--active);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .modal-cashbox-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 20px;
+    font-size: 16px;
     color: white;
     transition: all 0.2s;
-    box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.2);
+    box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.2);
 }
 
 .modal-cashbox-select select {
@@ -2543,19 +2521,19 @@ tr:hover [data-category-tag] {
 .modal-cashbox-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     flex: 1;
 }
 
 .modal-cashbox-label {
-    font-size: 16px;
-    font-weight: 900;
+    font-size: 14px;
+    font-weight: 800;
     color: var(--text);
     letter-spacing: -0.01em;
 }
 
 .modal-cashbox-sublabel {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
     color: var(--text-muted);
     text-transform: uppercase;
@@ -2563,7 +2541,7 @@ tr:hover [data-category-tag] {
 }
 
 .modal-cashbox-select i.fa-chevron-down {
-    font-size: 13px;
+    font-size: 11px;
     color: var(--text-muted);
 }
 
@@ -3292,7 +3270,7 @@ tr:hover [data-category-tag] {
         <div class="modal-container">
             <div class="modal-header">
                 <div class="modal-header-left">
-                    <!-- IN/OUT Direction Buttons (Vertical) -->
+                    <!-- IN/OUT Direction Buttons -->
                     <div class="modal-direction-group">
                         <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
                         <label for="modalDirectionIn" class="modal-direction-btn in">
@@ -3310,7 +3288,7 @@ tr:hover [data-category-tag] {
                         </label>
                     </div>
                     
-                    <!-- Cash Box Selector (Large, Prominent) -->
+                    <!-- Cash Box Selector -->
                     <div class="modal-cashbox-select">
                         <div class="modal-cashbox-icon" id="modalCashboxIcon" style="background: #059669;">
                             <i class="fas fa-building"></i>
