@@ -3058,14 +3058,20 @@ tr:hover [data-category-tag] {
 
                     <!-- LINE ITEMS -->
                     <div class="form-group">
-                        <label class="form-label">Line items (optional)</label>
+                        <label class="form-label">Receipt Line Items (optional)</label>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                            Add up to 5 items for detailed receipts. Total will be calculated automatically.
+                        </p>
                         <div class="line-items-container" id="modalLineItemsContainer">
                             <!-- Line items will be added here -->
                         </div>
                         <button type="button" class="add-line-item-btn" id="modalAddLineItemBtn">
                             <i class="fas fa-plus"></i>
-                            Add line item (max 4)
+                            Add line item (max 5)
                         </button>
+                        <div id="lineItemsTotal" style="display: none; margin-top: 12px; padding: 12px; background: var(--surface-elevated); border-radius: 8px; font-weight: 700; font-size: 15px;">
+                            Receipt Total: <span id="lineItemsTotalAmount" style="color: var(--active);">$0.00</span>
+                        </div>
                     </div>
 
                     <!-- OPTIONAL BUTTONS IN ONE ROW -->
@@ -3844,7 +3850,7 @@ tr:hover [data-category-tag] {
 
         // Line items management
         let modalLineItemCount = 0;
-        const maxModalLineItems = 4;
+        const maxModalLineItems = 5;
         const modalLineItemsContainer = document.getElementById('modalLineItemsContainer');
         const modalAddLineItemBtn = document.getElementById('modalAddLineItemBtn');
 
@@ -3881,9 +3887,16 @@ tr:hover [data-category-tag] {
                 itemDiv.remove();
                 modalLineItemCount--;
                 updateModalLineItemsButton();
+                updateLineItemsTotal();
+            });
+            
+            // Add input listeners for live total calculation
+            itemDiv.querySelectorAll('.line-item-amount').forEach(input => {
+                input.addEventListener('input', updateLineItemsTotal);
             });
             
             updateModalLineItemsButton();
+            updateLineItemsTotal();
         });
 
         function updateModalLineItemsButton() {
@@ -3892,6 +3905,47 @@ tr:hover [data-category-tag] {
                 <i class="fas fa-plus"></i>
                 Add line item (${modalLineItemCount}/${maxModalLineItems})
             `;
+        }
+
+        function updateLineItemsTotal() {
+            const lineItemsTotal = document.getElementById('lineItemsTotal');
+            const lineItemsTotalAmount = document.getElementById('lineItemsTotalAmount');
+            const mainAmountField = document.getElementById('modalAmount');
+            
+            let total = 0;
+            let hasItems = false;
+            
+            document.querySelectorAll('#modalLineItemsContainer .line-item-amount').forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                if (value > 0) {
+                    total += value;
+                    hasItems = true;
+                }
+            });
+            
+            if (hasItems) {
+                lineItemsTotal.style.display = 'block';
+                lineItemsTotalAmount.textContent = new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(total);
+                
+                // Disable main amount field when using line items
+                if (mainAmountField) {
+                    mainAmountField.disabled = true;
+                    mainAmountField.style.opacity = '0.5';
+                    mainAmountField.title = 'Amount is calculated from line items';
+                }
+            } else {
+                lineItemsTotal.style.display = 'none';
+                
+                // Re-enable main amount field
+                if (mainAmountField) {
+                    mainAmountField.disabled = false;
+                    mainAmountField.style.opacity = '1';
+                    mainAmountField.title = '';
+                }
+            }
         }
 
         // Form submission
@@ -3926,8 +3980,11 @@ tr:hover [data-category-tag] {
             document.querySelectorAll('#modalLineItemsContainer .line-item').forEach(item => {
                 const desc = item.querySelector('[data-item-index]').value;
                 const amt = item.querySelector('[data-amount-index]').value;
-                if (desc || amt) {
-                    formData.lineItems.push({ description: desc, amount: amt });
+                if (desc && amt) {
+                    formData.lineItems.push({ 
+                        description: desc.trim(), 
+                        amount: parseFloat(amt) || 0 
+                    });
                 }
             });
 
@@ -4000,15 +4057,26 @@ tr:hover [data-category-tag] {
                     }
                 }
 
+                // Calculate total from line items if present, otherwise use main amount
+                let finalAmount = amountValue;
+                if (formData.lineItems.length > 0) {
+                    finalAmount = formData.lineItems.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+                    if (finalAmount <= 0) {
+                        alert('Line items total must be greater than 0.');
+                        return;
+                    }
+                }
+
                 const payload = {
                     user_id: user.id,
                     cash_box_id: formData.cashBox,
                     type: formData.direction === 'out' ? 'expense' : 'income',
-                    amount: amountValue,
+                    amount: finalAmount,
                     description: description || null,
                     notes: String(formData.note || '').trim() || null,
                     transaction_date: transactionDate,
                     receipt_number: String(formData.transactionId || '').trim() || null,
+                    line_items: formData.lineItems.length > 0 ? formData.lineItems : [],
                     contact_id: null,
                     contact_name: contactName,
                     contact_email: null,
@@ -4078,6 +4146,7 @@ tr:hover [data-category-tag] {
                         lineItemsContainer.innerHTML = '';
                         modalLineItemCount = 0;
                         updateModalLineItemsButton();
+                        updateLineItemsTotal();
                     }
 
                     if (amountInput) {

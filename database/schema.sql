@@ -160,6 +160,11 @@ CREATE TABLE IF NOT EXISTS public.transactions (
     transaction_date DATE NOT NULL DEFAULT CURRENT_DATE,
     receipt_number TEXT,
     
+    -- Line items for receipts (JSONB array, max 5 items)
+    -- Format: [{"description": "Item 1", "amount": 100.00}, ...]
+    -- Stored for receipt reprinting
+    line_items JSONB DEFAULT '[]'::jsonb,
+    
     -- Contact snapshot (for receipt regeneration)
     contact_name TEXT NOT NULL,
     contact_email TEXT,
