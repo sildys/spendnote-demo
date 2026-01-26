@@ -2135,7 +2135,14 @@ tr:hover [data-category-tag] {
 }
 
 .modal-header {
-    padding: 20px 24px;
+    padding: 16px 24px;
+    position: relative;
+}
+
+.modal-date-top-right {
+    position: absolute;
+    top: 16px;
+    right: 60px;
 }
 
 .modal-title {
@@ -2621,25 +2628,25 @@ tr:hover [data-category-tag] {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 12px 16px;
+    gap: 10px;
+    padding: 8px 12px;
     border: 2px solid var(--active);
-    border-radius: 12px;
+    border-radius: 10px;
     background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.02));
     transition: all 0.3s ease;
 }
 
 .cashbox-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 14px;
     color: white;
     background: var(--active);
-    box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.25);
+    box-shadow: 0 2px 6px rgba(var(--active-rgb), 0.2);
     flex-shrink: 0;
     transition: all 0.3s;
 }
@@ -2716,38 +2723,41 @@ tr:hover [data-category-tag] {
 }
 
 .cashbox-name {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 800;
     color: var(--text);
     letter-spacing: -0.01em;
 }
 
 .cashbox-balance {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     color: var(--text-muted);
 }
 
 .cashbox-position {
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 700;
     color: var(--text-muted);
     background: var(--surface-elevated);
-    padding: 4px 10px;
-    border-radius: 6px;
+    padding: 3px 8px;
+    border-radius: 5px;
     white-space: nowrap;
 }
 
-.modal-date-compact {
-    padding: 8px 12px;
-    border: 2px solid var(--border);
-    border-radius: 8px;
+.modal-date-info {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--text-muted);
-    background: white;
     white-space: nowrap;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.modal-date-info i {
+    font-size: 10px;
+    opacity: 0.7;
 }
 
 .contact-details-toggle summary {
@@ -3516,6 +3526,13 @@ tr:hover [data-category-tag] {
                     </div>
                     
                 </div>
+                <!-- Date in top right corner -->
+                <div class="modal-date-top-right">
+                    <div class="modal-date-info" id="modalDate">
+                        <i class="fas fa-clock"></i>
+                        <span id="modalDateText">Loading...</span>
+                    </div>
+                </div>
                 <button class="modal-close" id="closeModalBtn" type="button" aria-label="Close modal">
                     <i class="fas fa-times"></i>
                 </button>
@@ -3525,7 +3542,7 @@ tr:hover [data-category-tag] {
                     <!-- Contact Section -->
                     <div class="modal-section" style="padding: 12px;">
                         <div class="modal-section-title">RECEIPT INFORMATION</div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 120px; gap: 10px; align-items: end;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
                             <div class="form-group">
                                 <label for="modalContactName">Name *</label>
                                 <input 
@@ -3554,10 +3571,6 @@ tr:hover [data-category-tag] {
                                     class="form-control" 
                                     placeholder="Tax ID, Company ID"
                                 >
-                            </div>
-                            <div class="form-group">
-                                <label for="modalDate" style="font-size: 10px; color: var(--text-muted); margin-bottom: 4px;">Date & Time</label>
-                                <div class="modal-date-compact" id="modalDate" style="margin: 0;"></div>
                             </div>
                         </div>
                         
@@ -3945,15 +3958,15 @@ tr:hover [data-category-tag] {
             document.body.style.overflow = 'hidden';
             console.log('Modal should be visible now');
 
-            const dateEl = document.getElementById('modalDate');
-            if (dateEl) {
+            const dateTextEl = document.getElementById('modalDateText');
+            if (dateTextEl) {
                 const now = new Date();
                 const mm = String(now.getMonth() + 1).padStart(2, '0');
                 const dd = String(now.getDate()).padStart(2, '0');
                 const hh = String(now.getHours()).padStart(2, '0');
                 const min = String(now.getMinutes()).padStart(2, '0');
-                dateEl.textContent = `${mm}/${dd} ${hh}:${min}`;
-                dateEl.dataset.fullDate = now.toISOString();
+                dateTextEl.textContent = `${mm}/${dd} ${hh}:${min}`;
+                dateTextEl.dataset.fullDate = now.toISOString();
             }
             
             // Initialize cash box carousel from real Supabase data
