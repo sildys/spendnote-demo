@@ -3069,7 +3069,7 @@ tr:hover [data-category-tag] {
                             <i class="fas fa-plus"></i>
                             Add line item (max 4)
                         </button>
-                        <div id="lineItemsTotal" style="display: none; margin-top: 12px; padding: 12px; background: var(--surface-elevated); border-radius: 8px; font-weight: 700; font-size: 15px;">
+                        <div id="lineItemsTotal" style="display: block; margin-top: 12px; padding: 12px; background: var(--surface-elevated); border-radius: 8px; font-weight: 700; font-size: 15px;">
                             Receipt Total: <span id="lineItemsTotalAmount" style="color: var(--active);">$0.00</span>
                         </div>
                     </div>
@@ -3919,30 +3919,25 @@ tr:hover [data-category-tag] {
             const lineItemsTotal = document.getElementById('lineItemsTotal');
             const lineItemsTotalAmount = document.getElementById('lineItemsTotalAmount');
             const mainAmountField = document.getElementById('modalAmount');
+            if (!lineItemsTotal || !lineItemsTotalAmount) return;
             
             const baseAmount = parseModalAmount(mainAmountField?.value);
             let extrasTotal = 0;
-            let hasExtras = false;
             
             document.querySelectorAll('#modalLineItemsContainer .line-item-amount').forEach(input => {
                 const value = parseModalAmount(input.value);
                 if (value > 0) {
                     extrasTotal += value;
-                    hasExtras = true;
                 }
             });
 
             const total = baseAmount + extrasTotal;
-            
-            if (hasExtras) {
-                lineItemsTotal.style.display = 'block';
-                lineItemsTotalAmount.textContent = new Intl.NumberFormat('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                }).format(total);
-            } else {
-                lineItemsTotal.style.display = 'none';
-            }
+
+            lineItemsTotal.style.display = 'block';
+            lineItemsTotalAmount.textContent = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            }).format(total);
         }
 
         const modalAmountInputForTotal = document.getElementById('modalAmount');
@@ -4017,7 +4012,7 @@ tr:hover [data-category-tag] {
                     return;
                 }
 
-                const amountValue = Number(formData.amount);
+                const amountValue = parseModalAmount(formData.amount);
                 if (!Number.isFinite(amountValue) || amountValue <= 0) {
                     alert('Please enter a valid amount.');
                     return;
