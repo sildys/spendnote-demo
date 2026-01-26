@@ -3060,14 +3060,14 @@ tr:hover [data-category-tag] {
                     <div class="form-group">
                         <label class="form-label">Receipt Line Items (optional)</label>
                         <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
-                            Add up to 5 items for detailed receipts. Total will be calculated automatically.
+                            Add up to 4 additional items. Total will be calculated automatically.
                         </p>
                         <div class="line-items-container" id="modalLineItemsContainer">
                             <!-- Line items will be added here -->
                         </div>
                         <button type="button" class="add-line-item-btn" id="modalAddLineItemBtn">
                             <i class="fas fa-plus"></i>
-                            Add line item (max 5)
+                            Add line item (max 4)
                         </button>
                         <div id="lineItemsTotal" style="display: none; margin-top: 12px; padding: 12px; background: var(--surface-elevated); border-radius: 8px; font-weight: 700; font-size: 15px;">
                             Receipt Total: <span id="lineItemsTotalAmount" style="color: var(--active);">$0.00</span>
@@ -3850,7 +3850,7 @@ tr:hover [data-category-tag] {
 
         // Line items management
         let modalLineItemCount = 0;
-        const maxModalLineItems = 5;
+        const maxModalLineItems = 4;
         const modalLineItemsContainer = document.getElementById('modalLineItemsContainer');
         const modalAddLineItemBtn = document.getElementById('modalAddLineItemBtn');
 
@@ -3912,40 +3912,34 @@ tr:hover [data-category-tag] {
             const lineItemsTotalAmount = document.getElementById('lineItemsTotalAmount');
             const mainAmountField = document.getElementById('modalAmount');
             
-            let total = 0;
-            let hasItems = false;
+            const baseAmount = parseFloat(mainAmountField?.value) || 0;
+            let extrasTotal = 0;
+            let hasExtras = false;
             
             document.querySelectorAll('#modalLineItemsContainer .line-item-amount').forEach(input => {
                 const value = parseFloat(input.value) || 0;
                 if (value > 0) {
-                    total += value;
-                    hasItems = true;
+                    extrasTotal += value;
+                    hasExtras = true;
                 }
             });
+
+            const total = baseAmount + extrasTotal;
             
-            if (hasItems) {
+            if (hasExtras) {
                 lineItemsTotal.style.display = 'block';
                 lineItemsTotalAmount.textContent = new Intl.NumberFormat('en-US', {
                     style: 'currency',
                     currency: 'USD'
                 }).format(total);
-                
-                // Disable main amount field when using line items
-                if (mainAmountField) {
-                    mainAmountField.disabled = true;
-                    mainAmountField.style.opacity = '0.5';
-                    mainAmountField.title = 'Amount is calculated from line items';
-                }
             } else {
                 lineItemsTotal.style.display = 'none';
-                
-                // Re-enable main amount field
-                if (mainAmountField) {
-                    mainAmountField.disabled = false;
-                    mainAmountField.style.opacity = '1';
-                    mainAmountField.title = '';
-                }
             }
+        }
+
+        const modalAmountInputForTotal = document.getElementById('modalAmount');
+        if (modalAmountInputForTotal) {
+            modalAmountInputForTotal.addEventListener('input', updateLineItemsTotal);
         }
 
         // Form submission
@@ -4057,15 +4051,14 @@ tr:hover [data-category-tag] {
                     }
                 }
 
-                // Calculate total from line items if present, otherwise use main amount
-                let finalAmount = amountValue;
-                if (formData.lineItems.length > 0) {
-                    finalAmount = formData.lineItems.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
-                    if (finalAmount <= 0) {
-                        alert('Line items total must be greater than 0.');
-                        return;
-                    }
-                }
+                // Final amount shown on dashboard = main amount + extra line items
+                const extrasTotal = (formData.lineItems || []).reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+                const finalAmount = amountValue + extrasTotal;
+
+                const persistedLineItems = [
+                    { description: description, amount: amountValue },
+                    ...(formData.lineItems || [])
+                ];
 
                 const payload = {
                     user_id: user.id,
@@ -4076,7 +4069,7 @@ tr:hover [data-category-tag] {
                     notes: String(formData.note || '').trim() || null,
                     transaction_date: transactionDate,
                     receipt_number: String(formData.transactionId || '').trim() || null,
-                    line_items: formData.lineItems.length > 0 ? formData.lineItems : [],
+                    line_items: persistedLineItems,
                     contact_id: null,
                     contact_name: contactName,
                     contact_email: null,
