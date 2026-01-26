@@ -3907,17 +3907,25 @@ tr:hover [data-category-tag] {
             `;
         }
 
+        function parseModalAmount(value) {
+            const normalized = String(value || '')
+                .replace(/\s+/g, '')
+                .replace(/,/g, '.');
+            const num = parseFloat(normalized);
+            return Number.isFinite(num) ? num : 0;
+        }
+
         function updateLineItemsTotal() {
             const lineItemsTotal = document.getElementById('lineItemsTotal');
             const lineItemsTotalAmount = document.getElementById('lineItemsTotalAmount');
             const mainAmountField = document.getElementById('modalAmount');
             
-            const baseAmount = parseFloat(mainAmountField?.value) || 0;
+            const baseAmount = parseModalAmount(mainAmountField?.value);
             let extrasTotal = 0;
             let hasExtras = false;
             
             document.querySelectorAll('#modalLineItemsContainer .line-item-amount').forEach(input => {
-                const value = parseFloat(input.value) || 0;
+                const value = parseModalAmount(input.value);
                 if (value > 0) {
                     extrasTotal += value;
                     hasExtras = true;
@@ -3974,10 +3982,11 @@ tr:hover [data-category-tag] {
             document.querySelectorAll('#modalLineItemsContainer .line-item').forEach(item => {
                 const desc = item.querySelector('[data-item-index]').value;
                 const amt = item.querySelector('[data-amount-index]').value;
-                if (desc && amt) {
-                    formData.lineItems.push({ 
-                        description: desc.trim(), 
-                        amount: parseFloat(amt) || 0 
+                const parsedAmt = parseModalAmount(amt);
+                if (desc || parsedAmt > 0) {
+                    formData.lineItems.push({
+                        description: String(desc || '').trim(),
+                        amount: parsedAmt
                     });
                 }
             });
