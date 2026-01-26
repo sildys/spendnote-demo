@@ -2327,38 +2327,55 @@ tr:hover [data-category-tag] {
 .receipt-modal-layout {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
 .receipt-modal-grid {
     display: grid;
     grid-template-columns: 1fr 360px;
-    gap: 16px;
+    gap: 20px;
 }
 
 .receipt-panel {
-    background: rgba(15, 23, 42, 0.02);
-    border: 2px solid var(--border);
-    border-radius: 16px;
-    padding: 14px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease;
+}
+
+.receipt-panel:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .receipt-panel-title {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-bottom: 10px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.receipt-panel-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--active);
+    border-radius: 2px;
 }
 
 .receipt-items-header {
     display: grid;
     grid-template-columns: 1fr 200px;
     gap: 12px;
-    padding: 0 2px 8px 2px;
-    border-bottom: 1px solid var(--border);
-    font-size: 12px;
+    padding: 0 4px 12px 4px;
+    border-bottom: 2px solid var(--border);
+    font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -2382,7 +2399,8 @@ tr:hover [data-category-tag] {
 }
 
 .receipt-notes .form-textarea {
-    min-height: 88px;
+    min-height: 96px;
+    resize: vertical;
 }
 
 @media (max-width: 900px) {
@@ -3138,9 +3156,9 @@ tr:hover [data-category-tag] {
                                 <i class="fas fa-plus"></i>
                                 Add line item (max 4)
                             </button>
-                            <div id="lineItemsTotal" style="display: block; margin-top: 12px; padding: 12px; background: var(--surface-elevated); border-radius: 12px; font-weight: 800; font-size: 16px; display:flex; justify-content: space-between; align-items:center;">
-                                <span>Total handled over</span>
-                                <span id="lineItemsTotalAmount" style="color: var(--active);">$0.00</span>
+                            <div id="lineItemsTotal" style="display: flex; margin-top: 16px; padding: 16px 20px; background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.03)); border: 2px solid var(--active); border-radius: 12px; font-weight: 800; font-size: 18px; justify-content: space-between; align-items:center; box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.12);">
+                                <span style="color: var(--text);">Total handled over</span>
+                                <span id="lineItemsTotalAmount" style="color: var(--active); font-size: 22px; letter-spacing: -0.02em;">$0.00</span>
                             </div>
                         </div>
 
