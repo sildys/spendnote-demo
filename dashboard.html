@@ -2672,10 +2672,11 @@ tr:hover [data-category-tag] {
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s;
-    border: 2px solid var(--border);
-    background: white;
+    border: 2px solid transparent;
     width: 132px;
     height: 80px;
+    color: #ffffff;
+    opacity: 0.75;
 }
 
 .direction-primary-btn .quick-icon {
@@ -2686,52 +2687,57 @@ tr:hover [data-category-tag] {
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16);
     flex-shrink: 0;
     font-size: 14px;
     transition: all 0.2s;
 }
 
 .direction-primary-btn.in .quick-icon {
-    background: #059669;
+    background: rgba(255, 255, 255, 0.16);
 }
 
 .direction-primary-btn.out .quick-icon {
-    background: #6b7280;
+    background: rgba(255, 255, 255, 0.16);
 }
 
 .direction-primary-btn span {
     font-size: 11px;
     font-weight: 800;
-    color: var(--text-muted);
+    color: #ffffff;
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
 
+.direction-primary-btn.in {
+    background: linear-gradient(135deg, #059669, #047857);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.direction-primary-btn.out {
+    background: linear-gradient(135deg, #6b7280, #4b5563);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
 .direction-primary-btn:hover {
-    border-color: var(--active);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    opacity: 0.9;
     transform: translateY(-1px);
 }
 
 #modalDirectionIn:checked + .direction-primary-btn.in {
-    border-color: #059669;
-    background: rgba(5, 150, 105, 0.06);
-}
-
-#modalDirectionIn:checked + .direction-primary-btn.in span {
-    color: #059669;
+    opacity: 1;
+    box-shadow: 0 10px 26px rgba(5, 150, 105, 0.35);
+    transform: translateY(-1px);
 }
 
 #modalDirectionOut:checked + .direction-primary-btn.out {
-    border-color: #6b7280;
-    background: rgba(107, 114, 128, 0.06);
+    opacity: 1;
+    box-shadow: 0 10px 26px rgba(107, 114, 128, 0.32);
+    transform: translateY(-1px);
 }
 
-#modalDirectionOut:checked + .direction-primary-btn.out span {
-    color: #6b7280;
-}
 
 .cashbox-name {
     font-size: 13px;
@@ -3506,14 +3512,14 @@ tr:hover [data-category-tag] {
                         <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
                         <label for="modalDirectionIn" class="direction-primary-btn in">
                             <span class="quick-icon">
-                                <i class="fas fa-arrow-down"></i>
+                                <i class="fas fa-arrow-up"></i>
                             </span>
                             <span>IN</span>
                         </label>
                         <input type="radio" name="modalDirection" id="modalDirectionOut" value="out">
                         <label for="modalDirectionOut" class="direction-primary-btn out">
                             <span class="quick-icon">
-                                <i class="fas fa-arrow-up"></i>
+                                <i class="fas fa-arrow-down"></i>
                             </span>
                             <span>OUT</span>
                         </label>
