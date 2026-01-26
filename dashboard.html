@@ -2611,26 +2611,25 @@ tr:hover [data-category-tag] {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
+    gap: 14px;
+    padding: 12px 16px;
     border: 2px solid var(--active);
-    border-radius: 14px;
-    background: linear-gradient(135deg, rgba(var(--active-rgb), 0.1), rgba(var(--active-rgb), 0.03));
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.02));
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.12);
 }
 
 .cashbox-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 20px;
+    font-size: 18px;
     color: white;
     background: var(--active);
-    box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.3);
+    box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.25);
     flex-shrink: 0;
     transition: all 0.3s;
 }
@@ -2642,52 +2641,80 @@ tr:hover [data-category-tag] {
     gap: 6px;
 }
 
-.cashbox-direction-mini {
+.modal-direction-primary {
     display: flex;
-    gap: 6px;
-    align-items: center;
+    gap: 8px;
 }
 
-.cashbox-direction-mini input[type="radio"] {
+.modal-direction-primary input[type="radio"] {
     display: none;
 }
 
-.cashbox-direction-mini label {
-    padding: 3px 10px;
-    border-radius: 6px;
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+.direction-primary-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px 24px;
+    border-radius: 14px;
     cursor: pointer;
     transition: all 0.2s;
-    border: 1.5px solid var(--border);
+    border: 3px solid var(--border);
     background: white;
+    min-width: 100px;
+}
+
+.direction-primary-btn i {
+    font-size: 24px;
     color: var(--text-muted);
 }
 
-.cashbox-direction-mini input[type="radio"]:checked + label.in {
-    background: #059669;
-    color: white;
-    border-color: #059669;
+.direction-primary-btn span {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
 }
 
-.cashbox-direction-mini input[type="radio"]:checked + label.out {
-    background: var(--out);
+.direction-primary-btn:hover {
+    border-color: var(--active);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#modalDirectionIn:checked + .direction-primary-btn.in {
+    background: linear-gradient(135deg, #059669, #047857);
+    border-color: #047857;
+    box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
+}
+
+#modalDirectionIn:checked + .direction-primary-btn.in i,
+#modalDirectionIn:checked + .direction-primary-btn.in span {
     color: white;
-    border-color: var(--out);
+}
+
+#modalDirectionOut:checked + .direction-primary-btn.out {
+    background: linear-gradient(135deg, var(--out), #dc2626);
+    border-color: #dc2626;
+    box-shadow: 0 6px 20px rgba(var(--out-rgb), 0.4);
+}
+
+#modalDirectionOut:checked + .direction-primary-btn.out i,
+#modalDirectionOut:checked + .direction-primary-btn.out span {
+    color: white;
 }
 
 .cashbox-name {
-    font-size: 16px;
-    font-weight: 900;
+    font-size: 14px;
+    font-weight: 800;
     color: var(--text);
     letter-spacing: -0.01em;
 }
 
 .cashbox-balance {
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
     color: var(--text-muted);
 }
 
@@ -3430,35 +3457,42 @@ tr:hover [data-category-tag] {
         <div class="modal-container">
             <div class="modal-header">
                 <div class="modal-header-left">
-                    <!-- Cash Box Selector (Carousel) -->
+                    <!-- 1. DIRECTION (MOST IMPORTANT) -->
+                    <div class="modal-direction-primary">
+                        <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
+                        <label for="modalDirectionIn" class="direction-primary-btn in">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>IN</span>
+                        </label>
+                        <input type="radio" name="modalDirection" id="modalDirectionOut" value="out">
+                        <label for="modalDirectionOut" class="direction-primary-btn out">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>OUT</span>
+                        </label>
+                    </div>
+                    
+                    <!-- 2. CASH BOX -->
                     <div class="modal-cashbox-carousel">
                         <div class="cashbox-carousel-controls">
-                            <button type="button" class="cashbox-arrow" id="modalCashboxPrev" title="Previous cash box">
+                            <button type="button" class="cashbox-arrow" id="modalCashboxPrev" title="Previous">
                                 <i class="fas fa-chevron-left"></i>
                             </button>
                             <div class="cashbox-display" id="modalCashboxDisplay">
                                 <div class="cashbox-icon" id="modalCashboxIcon"></div>
                                 <div class="cashbox-info">
-                                    <!-- IN/OUT Direction (integrated) -->
-                                    <div class="cashbox-direction-mini">
-                                        <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
-                                        <label for="modalDirectionIn" class="in">IN</label>
-                                        <input type="radio" name="modalDirection" id="modalDirectionOut" value="out">
-                                        <label for="modalDirectionOut" class="out">OUT</label>
-                                    </div>
                                     <div class="cashbox-name" id="modalCashboxName">Loading...</div>
                                     <div class="cashbox-balance" id="modalCashboxBalance"></div>
                                 </div>
                                 <div class="cashbox-position" id="modalCashboxPosition">1/1</div>
                             </div>
-                            <button type="button" class="cashbox-arrow" id="modalCashboxNext" title="Next cash box">
+                            <button type="button" class="cashbox-arrow" id="modalCashboxNext" title="Next">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         </div>
                         <input type="hidden" id="modalCashBoxId" value="">
                     </div>
                     
-                    <!-- Date & Time -->
+                    <!-- 3. DATE -->
                     <div class="modal-date-compact" id="modalDate"></div>
                 </div>
                 <h2 class="modal-title">Create Transaction</h2>
