@@ -2411,116 +2411,226 @@ tr:hover [data-category-tag] {
     margin-bottom: 0;
 }
 
-.receipt-compact-layout {
+.modal-header-controls {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
 }
 
-.receipt-top-row {
-    display: grid;
-    grid-template-columns: 1fr 240px;
-    gap: 12px;
-    align-items: end;
-}
-
-.receipt-top-block {
+.modal-direction-group {
     display: flex;
-    flex-direction: column;
     gap: 6px;
 }
 
-.receipt-top-label {
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-}
-
-.modal-direction-pills {
-    display: flex;
-    gap: 8px;
-}
-
-.modal-direction-pills input[type="radio"] {
+.modal-direction-group input[type="radio"] {
     display: none;
 }
 
-.modal-direction-pills .tx-type {
-    width: auto;
-    padding: 10px 14px;
-    border-radius: 999px;
+.modal-direction-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
     cursor: pointer;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    background: var(--surface-elevated);
+    color: var(--text-muted);
     user-select: none;
 }
 
-#modalDirectionIn:checked + label.tx-type.in {
-    background: #059669;
-    color: #fff;
+.modal-direction-btn i {
+    font-size: 16px;
+}
+
+#modalDirectionIn:checked + .modal-direction-btn.in {
+    background: linear-gradient(135deg, #059669, #047857);
+    color: white;
     border-color: #047857;
-    box-shadow: 0 0 0 3px rgba(16,185,129,0.18);
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
 }
 
-#modalDirectionOut:checked + label.tx-type.out {
-    background: var(--out);
-    color: #fff;
+#modalDirectionOut:checked + .modal-direction-btn.out {
+    background: linear-gradient(135deg, var(--out), #dc2626);
+    color: white;
     border-color: var(--out);
-    box-shadow: 0 0 0 3px rgba(var(--out-rgb),0.18);
+    box-shadow: 0 4px 12px rgba(var(--out-rgb), 0.3);
 }
 
-.receipt-collapsible {
+.modal-date-input {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    background: white;
+    min-width: 140px;
+}
+
+.modal-cashbox-select {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 200px;
+}
+
+.modal-cashbox-select:hover {
+    border-color: var(--active);
+    box-shadow: 0 0 0 3px rgba(var(--active-rgb), 0.1);
+}
+
+.modal-cashbox-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(var(--active-rgb), 0.15);
+}
+
+.modal-cashbox-select select {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+}
+
+.modal-cashbox-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+}
+
+.modal-cashbox-select i {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.modal-section {
     background: white;
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 10px 12px;
+    padding: 16px;
 }
 
-.receipt-collapsible > summary {
+.modal-section-title {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal-section-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--active);
+    border-radius: 2px;
+}
+
+.modal-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.modal-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-collapsible {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    transition: all 0.2s;
+}
+
+.modal-collapsible[open] {
+    padding: 14px 16px;
+    background: white;
+}
+
+.modal-collapsible > summary {
     list-style: none;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    font-size: 12px;
-    font-weight: 800;
+    font-size: 13px;
+    font-weight: 700;
     color: var(--text);
+    user-select: none;
 }
 
-.receipt-collapsible > summary::-webkit-details-marker {
+.modal-collapsible > summary::-webkit-details-marker {
     display: none;
 }
 
-.receipt-collapsible > summary .summary-title {
+.modal-collapsible > summary::after {
+    content: '\f078';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-size: 11px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+}
+
+.modal-collapsible[open] > summary::after {
+    transform: rotate(180deg);
+}
+
+.modal-collapsible > summary .summary-icon {
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
-.receipt-collapsible > summary .summary-meta {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
+.modal-collapsible > summary .summary-icon i {
+    font-size: 13px;
+    color: var(--active);
 }
 
-.receipt-collapsible[open] {
-    padding: 14px 16px;
+.modal-collapsible[open] > summary {
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
 }
 
-.receipt-collapsible[open] > summary {
-    margin-bottom: 12px;
-}
-
-.receipt-collapsible-content {
+.modal-collapsible-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
 @media (max-width: 900px) {
-    .receipt-top-row {
+    .modal-two-col {
         grid-template-columns: 1fr;
+    }
+    .modal-header-controls {
+        flex-wrap: wrap;
     }
 }
 
@@ -3142,15 +3252,41 @@ tr:hover [data-category-tag] {
             <div class="modal-header">
                 <div class="modal-header-left">
                     <h2 class="modal-title">Create Transaction</h2>
-                    <div class="modal-header-info">
-                        <div class="register-selector-wrapper">
-                            <i class="register-selector-icon fas fa-building" id="registerIcon"></i>
-                            <select class="header-info-select" id="modalRegister">
-                                <option value="main" data-color="#059669" data-rgb="5, 150, 105" data-icon="fa-building">Main Office</option>
-                                <option value="event" data-color="#f59e0b" data-rgb="245, 158, 11" data-icon="fa-calendar-alt">Event Fund</option>
-                                <option value="petty" data-color="#3b82f6" data-rgb="59, 130, 246" data-icon="fa-wallet">Petty Cash</option>
-                            </select>
-                        </div>
+                </div>
+                <div class="modal-header-controls">
+                    <!-- IN/OUT Direction Buttons -->
+                    <div class="modal-direction-group">
+                        <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
+                        <label for="modalDirectionIn" class="modal-direction-btn in">
+                            <i class="fas fa-arrow-down"></i>
+                            IN
+                        </label>
+                        <input type="radio" name="modalDirection" id="modalDirectionOut" value="out">
+                        <label for="modalDirectionOut" class="modal-direction-btn out">
+                            <i class="fas fa-arrow-up"></i>
+                            OUT
+                        </label>
+                    </div>
+                    
+                    <!-- Date Input -->
+                    <input 
+                        type="text" 
+                        class="modal-date-input" 
+                        id="modalDate"
+                        readonly
+                        inputmode="none"
+                    >
+                    
+                    <!-- Cash Box Selector -->
+                    <div class="modal-cashbox-select">
+                        <div class="modal-cashbox-dot" id="modalCashboxDot" style="background: #059669;"></div>
+                        <div class="modal-cashbox-label" id="modalCashboxLabel">Main Office</div>
+                        <i class="fas fa-chevron-down"></i>
+                        <select id="modalRegister">
+                            <option value="main" data-color="#059669" data-rgb="5, 150, 105" data-icon="fa-building">Main Office</option>
+                            <option value="event" data-color="#f59e0b" data-rgb="245, 158, 11" data-icon="fa-calendar-alt">Event Fund</option>
+                            <option value="petty" data-color="#3b82f6" data-rgb="59, 130, 246" data-icon="fa-wallet">Petty Cash</option>
+                        </select>
                     </div>
                 </div>
                 <button class="modal-close" id="closeModalBtn" type="button" aria-label="Close modal">
@@ -3159,158 +3295,145 @@ tr:hover [data-category-tag] {
             </div>
             <div class="modal-body">
                 <form id="modalTransactionForm">
-                    <div class="receipt-compact-layout">
-                        <div class="receipt-top-row">
-                            <div class="receipt-top-block">
-                                <div class="receipt-top-label">Direction</div>
-                                <div class="modal-direction-pills" aria-label="Transaction direction">
-                                    <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
-                                    <label for="modalDirectionIn" class="tx-type in">IN</label>
-                                    <input type="radio" name="modalDirection" id="modalDirectionOut" value="out">
-                                    <label for="modalDirectionOut" class="tx-type out">OUT</label>
-                                </div>
-                            </div>
-                            <div class="receipt-top-block">
-                                <div class="receipt-top-label">Date</div>
-                                <input 
-                                    type="text" 
-                                    class="form-input" 
-                                    id="modalDate"
-                                    readonly
-                                    inputmode="none"
-                                >
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label class="form-label">Contact <span class="required">*</span></label>
-                            <div class="autocomplete-wrapper">
-                                <input 
-                                    type="text" 
-                                    class="form-input" 
-                                    id="modalContactName"
-                                    placeholder="Name or Contact ID"
-                                    autocomplete="off"
-                                    required
-                                >
-                                <div class="autocomplete-dropdown" id="ContactAutocomplete"></div>
-                            </div>
-                        </div>
-
-                        <div class="receipt-panel" style="padding: 12px 16px;">
-                            <div class="receipt-items-header" style="border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                                <div>Description</div>
-                                <div>Amount</div>
-                            </div>
-
-                            <div class="form-row-line-item" style="margin-top: 8px; margin-bottom: 8px;">
-                                <div class="form-group">
+                    <!-- Contact Section (2 columns) -->
+                    <div class="modal-section">
+                        <div class="modal-section-title">Contact Information</div>
+                        <div class="modal-two-col">
+                            <!-- Left Column: Name & Address -->
+                            <div class="modal-field-group">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Name <span class="required">*</span></label>
                                     <div class="autocomplete-wrapper">
                                         <input 
                                             type="text" 
                                             class="form-input" 
-                                            id="modalDescription"
-                                            placeholder="Brief description"
+                                            id="modalContactName"
+                                            placeholder="Contact name"
                                             autocomplete="off"
                                             required
                                         >
-                                        <div class="autocomplete-dropdown" id="descriptionAutocomplete"></div>
+                                        <div class="autocomplete-dropdown" id="ContactAutocomplete"></div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="input-with-prefix">
-                                        <span class="input-prefix">$</span>
-                                        <input 
-                                            type="number" 
-                                            class="form-input" 
-                                            id="modalAmount"
-                                            placeholder="0.00"
-                                            step="0.01"
-                                            min="0"
-                                            required
-                                        >
-                                    </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Address</label>
+                                    <input 
+                                        type="text" 
+                                        class="form-input" 
+                                        id="modalContactAddress"
+                                        placeholder="Street, City, State, ZIP"
+                                    >
                                 </div>
                             </div>
-
-                            <div id="lineItemsTotal" style="display: flex; margin-top: 8px; padding: 10px 12px; background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.03)); border: 1px solid rgba(var(--active-rgb), 0.35); border-radius: 10px; font-weight: 800; font-size: 15px; justify-content: space-between; align-items:center;">
-                                <span style="color: var(--text);">Total</span>
-                                <span id="lineItemsTotalAmount" style="color: var(--active); font-size: 18px; letter-spacing: -0.02em;">$0.00</span>
-                            </div>
-
-                            <details class="receipt-collapsible" id="modalExtraItemsDetails" style="margin-top: 10px;">
-                                <summary>
-                                    <span class="summary-title">
-                                        <i class="fas fa-list"></i>
-                                        Additional items
-                                    </span>
-                                    <span class="summary-meta">Optional</span>
-                                </summary>
-                                <div class="receipt-collapsible-content">
-                                    <div class="line-items-container" id="modalLineItemsContainer"></div>
-                                    <button type="button" class="add-line-item-btn" id="modalAddLineItemBtn">
-                                        <i class="fas fa-plus"></i>
-                                        Add line item (max 4)
-                                    </button>
+                            
+                            <!-- Right Column: Additional Fields -->
+                            <div class="modal-field-group">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Reference / Company ID</label>
+                                    <input 
+                                        type="text" 
+                                        class="form-input" 
+                                        id="modalContactId"
+                                        placeholder="e.g. COMP-12345"
+                                    >
                                 </div>
-                            </details>
-                        </div>
-
-                        <details class="receipt-collapsible" id="modalDetailsSection">
-                            <summary>
-                                <span class="summary-title">
-                                    <i class="fas fa-pen"></i>
-                                    Details
-                                </span>
-                                <span class="summary-meta">Optional</span>
-                            </summary>
-                            <div class="receipt-collapsible-content">
-                                <div class="receipt-meta-split">
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Address</label>
-                                        <input 
-                                            type="text" 
-                                            class="form-input" 
-                                            id="modalContactAddress"
-                                            placeholder="Street, City, State, ZIP"
-                                        >
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label class="form-label">Client / Company ID</label>
-                                        <input 
-                                            type="text" 
-                                            class="form-input" 
-                                            id="modalContactId"
-                                            placeholder="e.g. COMP-12345"
-                                        >
-                                    </div>
-                                </div>
-
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <label class="form-label">Reference ID</label>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label class="form-label">Transaction ID</label>
                                     <div class="autocomplete-wrapper">
                                         <input 
                                             type="text" 
                                             class="form-input" 
                                             id="modalTransactionId"
-                                            placeholder="e.g., TRX-2026-00342"
+                                            placeholder="e.g. TRX-2026-00342"
                                         >
                                         <div class="autocomplete-dropdown" id="transactionIdAutocomplete"></div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
 
-                                <div class="form-group" style="margin-bottom:0;">
-                                    <label class="form-label">Note</label>
-                                    <textarea 
-                                        class="form-textarea" 
-                                        id="modalNote"
-                                        placeholder="Add any additional notes or comments"
-                                        rows="2"
-                                    ></textarea>
+                    <!-- Items Section -->
+                    <div class="modal-section">
+                        <div class="modal-section-title">Items</div>
+                        
+                        <!-- First Item (always visible) -->
+                        <div class="receipt-items-header" style="border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px;">
+                            <div>Description</div>
+                            <div>Amount</div>
+                        </div>
+                        
+                        <div class="form-row-line-item" style="margin-bottom: 12px;">
+                            <div class="form-group">
+                                <div class="autocomplete-wrapper">
+                                    <input 
+                                        type="text" 
+                                        class="form-input" 
+                                        id="modalDescription"
+                                        placeholder="Item description"
+                                        autocomplete="off"
+                                        required
+                                    >
+                                    <div class="autocomplete-dropdown" id="descriptionAutocomplete"></div>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-with-prefix">
+                                    <span class="input-prefix">$</span>
+                                    <input 
+                                        type="number" 
+                                        class="form-input" 
+                                        id="modalAmount"
+                                        placeholder="0.00"
+                                        step="0.01"
+                                        min="0"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total (always visible) -->
+                        <div id="lineItemsTotal" style="display: flex; padding: 12px 16px; background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.03)); border: 2px solid rgba(var(--active-rgb), 0.4); border-radius: 10px; font-weight: 800; font-size: 16px; justify-content: space-between; align-items:center; margin-bottom: 12px;">
+                            <span style="color: var(--text);">Total</span>
+                            <span id="lineItemsTotalAmount" style="color: var(--active); font-size: 20px; letter-spacing: -0.02em;">$0.00</span>
+                        </div>
+
+                        <!-- Additional Items (collapsible) -->
+                        <details class="modal-collapsible" id="modalExtraItemsDetails">
+                            <summary>
+                                <span class="summary-icon">
+                                    <i class="fas fa-plus-circle"></i>
+                                    Add more items
+                                </span>
+                            </summary>
+                            <div class="modal-collapsible-content">
+                                <div class="line-items-container" id="modalLineItemsContainer"></div>
+                                <button type="button" class="add-line-item-btn" id="modalAddLineItemBtn">
+                                    <i class="fas fa-plus"></i>
+                                    Add line item (max 4)
+                                </button>
                             </div>
                         </details>
                     </div>
+
+                    <!-- Note Section (collapsible) -->
+                    <details class="modal-collapsible" id="modalNoteSection">
+                        <summary>
+                            <span class="summary-icon">
+                                <i class="fas fa-sticky-note"></i>
+                                Add note
+                            </span>
+                        </summary>
+                        <div class="modal-collapsible-content">
+                            <textarea 
+                                class="form-textarea" 
+                                id="modalNote"
+                                placeholder="Add any additional notes or comments"
+                                rows="3"
+                            ></textarea>
+                        </div>
+                    </details>
 
                     <div class="form-row" style="margin-top: 8px;">
                         <label style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-muted); font-weight: 600; cursor: pointer; user-select: none;">
@@ -3604,10 +3727,10 @@ tr:hover [data-category-tag] {
                 }
             }
 
-            const detailsSection = document.getElementById('modalDetailsSection');
-            if (detailsSection) detailsSection.open = false;
             const extraItemsDetails = document.getElementById('modalExtraItemsDetails');
             if (extraItemsDetails) extraItemsDetails.open = false;
+            const noteSection = document.getElementById('modalNoteSection');
+            if (noteSection) noteSection.open = false;
 
             const dirInEl = document.getElementById('modalDirectionIn');
             if (dirInEl) {
@@ -3659,10 +3782,10 @@ tr:hover [data-category-tag] {
             if (lineItemsContainer) {
                 lineItemsContainer.innerHTML = '';
             }
-            const detailsSection = document.getElementById('modalDetailsSection');
-            if (detailsSection) detailsSection.open = false;
             const extraItemsDetails = document.getElementById('modalExtraItemsDetails');
             if (extraItemsDetails) extraItemsDetails.open = false;
+            const noteSection = document.getElementById('modalNoteSection');
+            if (noteSection) noteSection.open = false;
             modalLineItemCount = 0;
             updateModalLineItemsButton();
             if (typeof updateLineItemsTotal === 'function') {
@@ -3693,7 +3816,7 @@ tr:hover [data-category-tag] {
             const selectedOption = modalRegisterSelect.options[modalRegisterSelect.selectedIndex];
             const color = selectedOption.dataset.color;
             const rgb = selectedOption.dataset.rgb;
-            const icon = selectedOption.dataset.icon;
+            const name = selectedOption.textContent;
             
             if (color && rgb) {
                 // Update CSS variables
@@ -3717,10 +3840,14 @@ tr:hover [data-category-tag] {
                 });
             }
             
-            // Update icon
-            const registerIcon = document.getElementById('registerIcon');
-            if (registerIcon && icon) {
-                registerIcon.className = 'register-selector-icon fas ' + icon;
+            // Update modal cash box selector visual (dot + label)
+            const cashboxDot = document.getElementById('modalCashboxDot');
+            const cashboxLabel = document.getElementById('modalCashboxLabel');
+            if (cashboxDot && color) {
+                cashboxDot.style.background = color;
+            }
+            if (cashboxLabel && name) {
+                cashboxLabel.textContent = name;
             }
         }
         
@@ -4282,10 +4409,10 @@ tr:hover [data-category-tag] {
                     if (txIdInput) txIdInput.value = '';
                     if (noteInput) noteInput.value = '';
 
-                    const detailsSection = document.getElementById('modalDetailsSection');
-                    if (detailsSection) detailsSection.open = false;
                     const extraItemsDetails = document.getElementById('modalExtraItemsDetails');
                     if (extraItemsDetails) extraItemsDetails.open = false;
+                    const noteSection = document.getElementById('modalNoteSection');
+                    if (noteSection) noteSection.open = false;
 
                     const txIdGroup = document.getElementById('modalTransactionIdGroup');
                     const noteGroup = document.getElementById('modalNoteGroup');
