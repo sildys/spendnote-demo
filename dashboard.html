@@ -2570,60 +2570,111 @@ tr:hover [data-category-tag] {
 
 .modal-cashbox-carousel {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 10px;
     flex: 1;
 }
 
+.cashbox-carousel-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 .cashbox-arrow {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: var(--surface-elevated);
-    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--border);
+    background: white;
+    border-radius: 10px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-muted);
-    font-size: 12px;
+    font-size: 14px;
     transition: all 0.2s;
+    flex-shrink: 0;
 }
 
 .cashbox-arrow:hover {
     background: var(--active);
     color: white;
+    border-color: var(--active);
+    transform: scale(1.05);
+}
+
+.cashbox-arrow:active {
+    transform: scale(0.95);
 }
 
 .cashbox-display {
     flex: 1;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px 16px;
+    gap: 16px;
+    padding: 14px 20px;
     border: 2px solid var(--active);
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.02));
-    transition: all 0.3s;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(var(--active-rgb), 0.1), rgba(var(--active-rgb), 0.03));
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.cashbox-display::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--active);
 }
 
 .cashbox-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 16px;
+    font-size: 20px;
     color: white;
     background: var(--active);
-    box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.3);
+    box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.3);
+    flex-shrink: 0;
+    transition: all 0.3s;
+}
+
+.cashbox-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .cashbox-name {
-    font-size: 14px;
-    font-weight: 800;
+    font-size: 16px;
+    font-weight: 900;
     color: var(--text);
+    letter-spacing: -0.01em;
+}
+
+.cashbox-balance {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.cashbox-position {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-muted);
+    background: var(--surface-elevated);
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
 }
 
 .modal-date-compact {
@@ -3373,18 +3424,24 @@ tr:hover [data-category-tag] {
                         </label>
                     </div>
                     
-                    <!-- Cash Box Selector (Single display with arrows) -->
+                    <!-- Cash Box Selector (Carousel) -->
                     <div class="modal-cashbox-carousel">
-                        <button type="button" class="cashbox-arrow cashbox-arrow-left" id="modalCashboxPrev">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <div class="cashbox-display" id="modalCashboxDisplay">
-                            <div class="cashbox-icon" id="modalCashboxIcon"></div>
-                            <span class="cashbox-name" id="modalCashboxName">Loading...</span>
+                        <div class="cashbox-carousel-controls">
+                            <button type="button" class="cashbox-arrow" id="modalCashboxPrev" title="Previous cash box">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <div class="cashbox-display" id="modalCashboxDisplay">
+                                <div class="cashbox-icon" id="modalCashboxIcon"></div>
+                                <div class="cashbox-info">
+                                    <div class="cashbox-name" id="modalCashboxName">Loading...</div>
+                                    <div class="cashbox-balance" id="modalCashboxBalance"></div>
+                                </div>
+                                <div class="cashbox-position" id="modalCashboxPosition">1/1</div>
+                            </div>
+                            <button type="button" class="cashbox-arrow" id="modalCashboxNext" title="Next cash box">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
                         </div>
-                        <button type="button" class="cashbox-arrow cashbox-arrow-right" id="modalCashboxNext">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
                         <input type="hidden" id="modalCashBoxId" value="">
                     </div>
                     
@@ -3951,6 +4008,8 @@ tr:hover [data-category-tag] {
             
             const iconEl = document.getElementById('modalCashboxIcon');
             const nameEl = document.getElementById('modalCashboxName');
+            const balanceEl = document.getElementById('modalCashboxBalance');
+            const positionEl = document.getElementById('modalCashboxPosition');
             const idInput = document.getElementById('modalCashBoxId');
             
             if (iconEl) {
@@ -3959,6 +4018,15 @@ tr:hover [data-category-tag] {
             }
             if (nameEl) {
                 nameEl.textContent = cashbox.name;
+            }
+            if (balanceEl) {
+                // Get balance from dashboard card if available
+                const dashboardCard = document.querySelector(`.register-card[data-id="${cashbox.id}"]`);
+                const balanceText = dashboardCard?.querySelector('.register-balance')?.textContent || '';
+                balanceEl.textContent = balanceText ? `Balance: ${balanceText}` : '';
+            }
+            if (positionEl) {
+                positionEl.textContent = `${modalCashBoxIndex + 1}/${modalCashBoxes.length}`;
             }
             if (idInput) {
                 idInput.value = cashbox.id;
