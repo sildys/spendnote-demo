@@ -2222,7 +2222,7 @@ tr:hover [data-category-tag] {
 }
 
 .modal-body {
-    padding: 18px 28px 20px 28px;
+    padding: 16px 24px 18px 24px;
 }
 
 .expanded-fields {
@@ -2549,16 +2549,97 @@ tr:hover [data-category-tag] {
     background: white;
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 16px;
+    padding: 12px;
+}
+
+.add-contact-btn {
+    width: 100%;
+    padding: 10px 16px;
+    border: 2px solid var(--active);
+    border-radius: 10px;
+    background: white;
+    color: var(--active);
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.add-contact-btn:hover {
+    background: var(--active);
+    color: white;
+    box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.3);
+}
+
+.add-contact-btn i {
+    font-size: 14px;
+}
+
+.modal-cashbox-cards {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+}
+
+.modal-cashbox-cards input[type="radio"] {
+    display: none;
+}
+
+.cashbox-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 10px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.cashbox-card:hover {
+    border-color: var(--card-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.cashbox-card i {
+    font-size: 20px;
+    color: var(--card-color);
+}
+
+.cashbox-card span {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text);
+    text-align: center;
+}
+
+.modal-cashbox-cards input[type="radio"]:checked + .cashbox-card {
+    border-color: var(--card-color);
+    background: linear-gradient(135deg, rgba(var(--card-color), 0.08), rgba(var(--card-color), 0.03));
+    box-shadow: 0 4px 12px rgba(var(--card-color), 0.2);
+}
+
+.modal-cashbox-cards input[type="radio"]:checked + .cashbox-card i {
+    transform: scale(1.1);
 }
 
 .modal-section-title {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--text-muted);
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .modal-two-col {
@@ -3288,21 +3369,25 @@ tr:hover [data-category-tag] {
                         </label>
                     </div>
                     
-                    <!-- Cash Box Selector -->
-                    <div class="modal-cashbox-select">
-                        <div class="modal-cashbox-icon" id="modalCashboxIcon" style="background: #059669;">
+                    <!-- Cash Box Selector (Card-based) -->
+                    <div class="modal-cashbox-cards">
+                        <input type="radio" name="modalCashBox" id="modalCashBoxMain" value="main" data-color="#059669" data-rgb="5, 150, 105" data-icon="fa-building" checked>
+                        <label for="modalCashBoxMain" class="cashbox-card" style="--card-color: #059669;">
                             <i class="fas fa-building"></i>
-                        </div>
-                        <div class="modal-cashbox-info">
-                            <div class="modal-cashbox-sublabel">Cash Box</div>
-                            <div class="modal-cashbox-label" id="modalCashboxLabel">Main Office</div>
-                        </div>
-                        <i class="fas fa-chevron-down"></i>
-                        <select id="modalRegister">
-                            <option value="main" data-color="#059669" data-rgb="5, 150, 105" data-icon="fa-building">Main Office</option>
-                            <option value="event" data-color="#f59e0b" data-rgb="245, 158, 11" data-icon="fa-calendar-alt">Event Fund</option>
-                            <option value="petty" data-color="#3b82f6" data-rgb="59, 130, 246" data-icon="fa-wallet">Petty Cash</option>
-                        </select>
+                            <span>Main Office</span>
+                        </label>
+                        
+                        <input type="radio" name="modalCashBox" id="modalCashBoxEvent" value="event" data-color="#f59e0b" data-rgb="245, 158, 11" data-icon="fa-calendar-alt">
+                        <label for="modalCashBoxEvent" class="cashbox-card" style="--card-color: #f59e0b;">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Event Fund</span>
+                        </label>
+                        
+                        <input type="radio" name="modalCashBox" id="modalCashBoxPetty" value="petty" data-color="#3b82f6" data-rgb="59, 130, 246" data-icon="fa-wallet">
+                        <label for="modalCashBoxPetty" class="cashbox-card" style="--card-color: #3b82f6;">
+                            <i class="fas fa-wallet"></i>
+                            <span>Petty Cash</span>
+                        </label>
                     </div>
                     
                     <!-- Date & Time -->
@@ -3319,77 +3404,75 @@ tr:hover [data-category-tag] {
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="modal-body" style="padding: 20px 28px;">
-                <form id="modalTransactionForm" style="display: flex; flex-direction: column; gap: 16px;">
-                    <!-- Contact Section (2 columns) -->
-                    <div class="modal-section">
+            <div class="modal-body" style="padding: 16px 24px;">
+                <form id="modalTransactionForm" style="display: flex; flex-direction: column; gap: 12px;">
+                    <!-- Contact Section (3 columns) -->
+                    <div class="modal-section" style="padding: 12px;">
                         <div class="modal-section-title">Contact Information</div>
-                        <div class="modal-two-col">
-                            <!-- Left Column: Name & Address -->
-                            <div class="modal-field-group">
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Name <span class="required">*</span></label>
-                                    <div class="autocomplete-wrapper">
-                                        <input 
-                                            type="text" 
-                                            class="form-input" 
-                                            id="modalContactName"
-                                            placeholder="Contact name"
-                                            autocomplete="off"
-                                            required
-                                        >
-                                        <div class="autocomplete-dropdown" id="ContactAutocomplete"></div>
-                                    </div>
-                                </div>
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Address</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label">Name <span class="required">*</span></label>
+                                <div class="autocomplete-wrapper">
                                     <input 
                                         type="text" 
                                         class="form-input" 
-                                        id="modalContactAddress"
-                                        placeholder="Street, City, State, ZIP"
+                                        id="modalContactName"
+                                        placeholder="Contact name"
+                                        autocomplete="off"
+                                        required
                                     >
+                                    <div class="autocomplete-dropdown" id="ContactAutocomplete"></div>
                                 </div>
                             </div>
-                            
-                            <!-- Right Column: Additional Fields -->
-                            <div class="modal-field-group">
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Reference / Company ID</label>
-                                    <input 
-                                        type="text" 
-                                        class="form-input" 
-                                        id="modalContactId"
-                                        placeholder="e.g. COMP-12345"
-                                    >
-                                </div>
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label class="form-label">Transaction ID</label>
-                                    <div class="autocomplete-wrapper">
-                                        <input 
-                                            type="text" 
-                                            class="form-input" 
-                                            id="modalTransactionId"
-                                            placeholder="e.g. TRX-2026-00342"
-                                        >
-                                        <div class="autocomplete-dropdown" id="transactionIdAutocomplete"></div>
-                                    </div>
-                                </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label">Phone</label>
+                                <input 
+                                    type="tel" 
+                                    class="form-input" 
+                                    id="modalContactPhone"
+                                    placeholder="+1 (555) 123-4567"
+                                >
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label">Email</label>
+                                <input 
+                                    type="email" 
+                                    class="form-input" 
+                                    id="modalContactEmail"
+                                    placeholder="email@example.com"
+                                >
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label">Address</label>
+                                <input 
+                                    type="text" 
+                                    class="form-input" 
+                                    id="modalContactAddress"
+                                    placeholder="Street, City, State, ZIP"
+                                >
+                            </div>
+                            <div style="display: flex; align-items: flex-end;">
+                                <button type="button" class="add-contact-btn" id="modalAddContactBtn">
+                                    <i class="fas fa-user-plus"></i>
+                                    Add to Contacts
+                                </button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Items Section -->
-                    <div class="modal-section">
+                    <div class="modal-section" style="padding: 12px;">
                         <div class="modal-section-title">Items</div>
                         
                         <!-- First Item (always visible) -->
-                        <div class="receipt-items-header" style="border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 10px;">
+                        <div class="receipt-items-header" style="border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">
                             <div>Description</div>
                             <div>Amount</div>
                         </div>
                         
-                        <div class="form-row-line-item" style="margin-bottom: 12px;">
+                        <div class="form-row-line-item" style="margin-bottom: 10px;">
                             <div class="form-group">
                                 <div class="autocomplete-wrapper">
                                     <input 
@@ -3420,13 +3503,13 @@ tr:hover [data-category-tag] {
                         </div>
 
                         <!-- Total (always visible) -->
-                        <div id="lineItemsTotal" style="display: flex; padding: 12px 16px; background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.03)); border: 2px solid rgba(var(--active-rgb), 0.4); border-radius: 10px; font-weight: 800; font-size: 16px; justify-content: space-between; align-items:center; margin-bottom: 12px;">
+                        <div id="lineItemsTotal" style="display: flex; padding: 10px 14px; background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.03)); border: 2px solid rgba(var(--active-rgb), 0.4); border-radius: 10px; font-weight: 800; font-size: 15px; justify-content: space-between; align-items:center; margin-bottom: 10px;">
                             <span style="color: var(--text);">Total</span>
-                            <span id="lineItemsTotalAmount" style="color: var(--active); font-size: 20px; letter-spacing: -0.02em;">$0.00</span>
+                            <span id="lineItemsTotalAmount" style="color: var(--active); font-size: 18px; letter-spacing: -0.02em;">$0.00</span>
                         </div>
 
                         <!-- Additional Items (collapsible) -->
-                        <details class="modal-collapsible" id="modalExtraItemsDetails">
+                        <details class="modal-collapsible" id="modalExtraItemsDetails" style="padding: 10px 12px;">
                             <summary>
                                 <span class="summary-icon">
                                     <i class="fas fa-plus-circle"></i>
@@ -3444,7 +3527,7 @@ tr:hover [data-category-tag] {
                     </div>
 
                     <!-- Note Section (collapsible) -->
-                    <details class="modal-collapsible" id="modalNoteSection">
+                    <details class="modal-collapsible" id="modalNoteSection" style="padding: 10px 12px;">
                         <summary>
                             <span class="summary-icon">
                                 <i class="fas fa-sticky-note"></i>
@@ -3456,7 +3539,7 @@ tr:hover [data-category-tag] {
                                 class="form-textarea" 
                                 id="modalNote"
                                 placeholder="Add any additional notes or comments"
-                                rows="3"
+                                rows="2"
                             ></textarea>
                         </div>
                     </details>
@@ -3738,11 +3821,13 @@ tr:hover [data-category-tag] {
                 dateInput.value = `${yyyy}-${mm}-${dd} ${hh}:${min}`;
             }
 
-            const registerSelect = document.getElementById('modalRegister');
-            if (registerSelect && preset.cashBoxId) {
-                registerSelect.value = preset.cashBoxId;
-                if (typeof updateModalRegisterColor === 'function') {
-                    updateModalRegisterColor();
+            if (preset.cashBoxId) {
+                const cashBoxCard = document.getElementById(`modalCashBox${preset.cashBoxId.charAt(0).toUpperCase() + preset.cashBoxId.slice(1)}`);
+                if (cashBoxCard) {
+                    cashBoxCard.checked = true;
+                    if (typeof updateModalCashBoxColor === 'function') {
+                        updateModalCashBoxColor();
+                    }
                 }
             }
 
@@ -3836,15 +3921,15 @@ tr:hover [data-category-tag] {
             }
         });
 
-        // Modal Cash Box change - update active color
-        const modalRegisterSelect = document.getElementById('modalRegister');
+        // Modal Cash Box cards - update active color
+        const modalCashBoxCards = document.querySelectorAll('input[name="modalCashBox"]');
         
-        function updateModalRegisterColor() {
-            if (!modalRegisterSelect) return;
-            const selectedOption = modalRegisterSelect.options[modalRegisterSelect.selectedIndex];
-            const color = selectedOption.dataset.color;
-            const rgb = selectedOption.dataset.rgb;
-            const name = selectedOption.textContent;
+        function updateModalCashBoxColor() {
+            const selectedCard = document.querySelector('input[name="modalCashBox"]:checked');
+            if (!selectedCard) return;
+            
+            const color = selectedCard.dataset.color;
+            const rgb = selectedCard.dataset.rgb;
             
             if (color && rgb) {
                 // Update CSS variables
@@ -3867,28 +3952,29 @@ tr:hover [data-category-tag] {
                     }
                 });
             }
-            
-            // Update modal cash box selector visual (icon background + label)
-            const cashboxIcon = document.getElementById('modalCashboxIcon');
-            const cashboxLabel = document.getElementById('modalCashboxLabel');
-            const icon = selectedOption.dataset.icon;
-            
-            if (cashboxIcon && color) {
-                cashboxIcon.style.background = color;
-            }
-            if (cashboxIcon && icon) {
-                const iconElement = cashboxIcon.querySelector('i');
-                if (iconElement) {
-                    iconElement.className = 'fas ' + icon;
-                }
-            }
-            if (cashboxLabel && name) {
-                cashboxLabel.textContent = name;
-            }
         }
         
-        if (modalRegisterSelect) {
-            modalRegisterSelect.addEventListener('change', updateModalRegisterColor);
+        modalCashBoxCards.forEach(card => {
+            card.addEventListener('change', updateModalCashBoxColor);
+        });
+        
+        // Add to Contacts button
+        const addContactBtn = document.getElementById('modalAddContactBtn');
+        if (addContactBtn) {
+            addContactBtn.addEventListener('click', () => {
+                const name = document.getElementById('modalContactName').value;
+                const phone = document.getElementById('modalContactPhone').value;
+                const email = document.getElementById('modalContactEmail').value;
+                const address = document.getElementById('modalContactAddress').value;
+                
+                if (!name.trim()) {
+                    alert('Please enter a contact name first.');
+                    return;
+                }
+                
+                // TODO: Add to contacts database
+                alert(`Contact "${name}" will be added to your contacts list.\n\nPhone: ${phone || 'N/A'}\nEmail: ${email || 'N/A'}\nAddress: ${address || 'N/A'}`);
+            });
         }
 
         // Contact Autocomplete
@@ -4377,7 +4463,7 @@ tr:hover [data-category-tag] {
 
                 const payload = {
                     user_id: user.id,
-                    cash_box_id: formData.cashBox,
+                    cash_box_id: document.querySelector('input[name="modalCashBox"]:checked')?.value || 'main',
                     type: formData.direction === 'out' ? 'expense' : 'income',
                     amount: finalAmount,
                     description: description || null,
