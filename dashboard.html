@@ -2149,6 +2149,71 @@ tr:hover [data-category-tag] {
      --modal-dir-rgb: 107, 114, 128;
  }
 
+ #createTransactionModalContainer {
+     --modal-mode-bg: rgba(0, 0, 0, 0.04);
+ }
+
+ .modal-mode-toggle {
+     display: inline-flex;
+     align-items: center;
+     padding: 3px;
+     border-radius: 999px;
+     background: var(--modal-mode-bg);
+     border: 1px solid rgba(0, 0, 0, 0.08);
+     gap: 2px;
+     height: 36px;
+ }
+
+ .modal-mode-toggle input {
+     position: absolute;
+     opacity: 0;
+     pointer-events: none;
+ }
+
+ .modal-mode-toggle label {
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     height: 30px;
+     padding: 0 10px;
+     border-radius: 999px;
+     font-size: 11px;
+     font-weight: 900;
+     letter-spacing: 0.06em;
+     text-transform: uppercase;
+     color: var(--text-muted);
+     cursor: pointer;
+     user-select: none;
+     transition: all 0.15s ease;
+     white-space: nowrap;
+ }
+
+ #modalModeQuick:checked + label,
+ #modalModeDetailed:checked + label {
+     background: #ffffff;
+     color: var(--text);
+     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
+ }
+
+ #createTransactionModalContainer[data-mode="quick"] .modal-detailed-only {
+     display: none !important;
+ }
+
+ #createTransactionModalContainer[data-mode="quick"] .modal-contact-grid {
+     grid-template-columns: 1fr !important;
+ }
+
+ #createTransactionModalContainer[data-mode="detailed"] .modal-collapsible > summary,
+ #createTransactionModalContainer[data-mode="detailed"] .contact-details-toggle > summary {
+     display: none;
+ }
+
+ #createTransactionModalContainer[data-mode="detailed"] .modal-collapsible {
+     border: 1px solid var(--border);
+     border-radius: 12px;
+     background: white;
+ }
+
  #createTransactionModalContainer .modal-header {
      overflow: hidden;
  }
@@ -3557,7 +3622,7 @@ tr:hover [data-category-tag] {
 
     <!-- CREATE TRANSACTION MODAL -->
     <div class="modal-overlay" id="createTransactionModal">
-        <div class="modal-container" id="createTransactionModalContainer" data-direction="in">
+        <div class="modal-container" id="createTransactionModalContainer" data-direction="in" data-mode="quick">
             <div class="modal-header">
                 <div class="modal-header-left">
                     <!-- 1. DIRECTION (MOST IMPORTANT) -->
@@ -3598,6 +3663,14 @@ tr:hover [data-category-tag] {
                         </div>
                         <input type="hidden" id="modalCashBoxId" value="">
                     </div>
+
+                    <!-- MODE -->
+                    <div class="modal-mode-toggle" id="modalModeToggle" aria-label="Transaction entry mode">
+                        <input type="radio" name="modalMode" id="modalModeQuick" value="quick" checked>
+                        <label for="modalModeQuick">Quick</label>
+                        <input type="radio" name="modalMode" id="modalModeDetailed" value="detailed">
+                        <label for="modalModeDetailed">Detailed</label>
+                    </div>
                     
                     <!-- 3. DATE -->
                     <div class="modal-date-info" id="modalDate">
@@ -3614,7 +3687,7 @@ tr:hover [data-category-tag] {
                     <!-- Contact Section -->
                     <div class="modal-section" style="padding: 12px;">
                         <div class="modal-section-title">RECEIPT INFORMATION</div>
-                        <div style="display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 10px;">
+                        <div class="modal-contact-grid" style="display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 10px;">
                             <div class="form-group">
                                 <label for="modalContactName">Name *</label>
                                 <input 
@@ -3626,7 +3699,7 @@ tr:hover [data-category-tag] {
                                 >
                                 <div id="ContactAutocomplete" class="autocomplete-dropdown"></div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group modal-detailed-only">
                                 <label for="modalContactAddress">Address</label>
                                 <input 
                                     type="text" 
@@ -3635,7 +3708,7 @@ tr:hover [data-category-tag] {
                                     placeholder="Street, City, State"
                                 >
                             </div>
-                            <div class="form-group">
+                            <div class="form-group modal-detailed-only">
                                 <label for="modalContactCompanyId">Other ID / Company ID</label>
                                 <input 
                                     type="text" 
@@ -3647,7 +3720,7 @@ tr:hover [data-category-tag] {
                         </div>
                         
                         <!-- Additional Contact Details (Collapsible) -->
-                        <details class="contact-details-toggle" style="margin-top: 12px;">
+                        <details class="contact-details-toggle modal-detailed-only" id="modalContactDetails" style="margin-top: 12px;">
                             <summary style="cursor: pointer; font-size: 11px; font-weight: 700; color: var(--active); user-select: none;">
                                 <i class="fas fa-plus-circle" style="margin-right: 6px;"></i>
                                 Add Phone/Email & Save to Contacts
@@ -3729,7 +3802,7 @@ tr:hover [data-category-tag] {
                         </div>
 
                         <!-- Additional Items (collapsible) -->
-                        <details class="modal-collapsible" id="modalExtraItemsDetails" style="padding: 10px 12px;">
+                        <details class="modal-collapsible modal-detailed-only" id="modalExtraItemsDetails" style="padding: 10px 12px;">
                             <summary>
                                 <span class="summary-icon">
                                     <i class="fas fa-plus-circle"></i>
@@ -3747,7 +3820,7 @@ tr:hover [data-category-tag] {
                     </div>
 
                     <!-- Note Section (collapsible) -->
-                    <details class="modal-collapsible" id="modalNoteSection" style="padding: 10px 12px;">
+                    <details class="modal-collapsible modal-detailed-only" id="modalNoteSection" style="padding: 10px 12px;">
                         <summary>
                             <span class="summary-icon">
                                 <i class="fas fa-sticky-note"></i>
@@ -4024,11 +4097,64 @@ tr:hover [data-category-tag] {
         const cancelModalBtn = document.getElementById('modalCancelBtn');
 
         const modalContainerEl = document.getElementById('createTransactionModalContainer');
+        const modeQuickEl = document.getElementById('modalModeQuick');
+        const modeDetailedEl = document.getElementById('modalModeDetailed');
+        const contactDetailsEl = document.getElementById('modalContactDetails');
+        const extraItemsDetailsEl = document.getElementById('modalExtraItemsDetails');
+        const noteDetailsEl = document.getElementById('modalNoteSection');
 
         function updateModalDirectionUI(direction) {
             if (!modalContainerEl) return;
             const dir = direction === 'out' ? 'out' : 'in';
             modalContainerEl.dataset.direction = dir;
+        }
+
+        function getStoredModalMode() {
+            try {
+                const v = localStorage.getItem('spendnote.modalMode');
+                return v === 'detailed' ? 'detailed' : 'quick';
+            } catch {
+                return 'quick';
+            }
+        }
+
+        function storeModalMode(mode) {
+            try {
+                localStorage.setItem('spendnote.modalMode', mode);
+            } catch {
+                // ignore
+            }
+        }
+
+        function ensureExtraLineItems(targetCount) {
+            const btn = document.getElementById('modalAddLineItemBtn');
+            if (!btn) return;
+            if (typeof modalLineItemCount !== 'number') return;
+            while (!btn.disabled && modalLineItemCount < targetCount) {
+                btn.click();
+            }
+        }
+
+        function updateModalModeUI(mode, { persist = true } = {}) {
+            if (!modalContainerEl) return;
+            const m = mode === 'detailed' ? 'detailed' : 'quick';
+            modalContainerEl.dataset.mode = m;
+
+            if (modeQuickEl && modeDetailedEl) {
+                modeQuickEl.checked = m === 'quick';
+                modeDetailedEl.checked = m === 'detailed';
+            }
+
+            if (m === 'detailed') {
+                if (contactDetailsEl) contactDetailsEl.open = true;
+                if (extraItemsDetailsEl) extraItemsDetailsEl.open = true;
+                if (noteDetailsEl) noteDetailsEl.open = true;
+                // 5 item rows total = main row + 4 extras
+                ensureExtraLineItems(4);
+            }
+
+            if (persist) storeModalMode(m);
+            if (typeof updateLineItemsTotal === 'function') updateLineItemsTotal();
         }
 
         function openModal(preset) {
@@ -4073,10 +4199,17 @@ tr:hover [data-category-tag] {
             const checkedDirEl = document.querySelector('input[name="modalDirection"]:checked');
             updateModalDirectionUI(checkedDirEl ? checkedDirEl.value : 'in');
 
-            const extraItemsDetails = document.getElementById('modalExtraItemsDetails');
-            if (extraItemsDetails) extraItemsDetails.open = false;
-            const noteSection = document.getElementById('modalNoteSection');
-            if (noteSection) noteSection.open = false;
+            const initialMode = (options.mode === 'detailed' || options.mode === 'quick')
+                ? options.mode
+                : getStoredModalMode();
+            updateModalModeUI(initialMode, { persist: false });
+
+            if (initialMode !== 'detailed') {
+                const extraItemsDetails = document.getElementById('modalExtraItemsDetails');
+                if (extraItemsDetails) extraItemsDetails.open = false;
+                const noteSection = document.getElementById('modalNoteSection');
+                if (noteSection) noteSection.open = false;
+            }
 
             const dirInEl = document.getElementById('modalDirectionIn');
             if (dirInEl) {
@@ -4108,7 +4241,7 @@ tr:hover [data-category-tag] {
             };
             const openFromHash = () => {
                 const preset = getPresetFromUrl();
-                openModal(preset);
+                setTimeout(() => openModal(preset), 0);
                 history.replaceState(null, null, 'dashboard.html');
             };
             if (window.__spendnoteDashboardDataLoaded) {
@@ -4125,6 +4258,7 @@ tr:hover [data-category-tag] {
             // Reset form
             document.getElementById('modalTransactionForm').reset();
             updateModalDirectionUI('in');
+            updateModalModeUI(getStoredModalMode(), { persist: false });
             const lineItemsContainer = document.getElementById('modalLineItemsContainer');
             if (lineItemsContainer) {
                 lineItemsContainer.innerHTML = '';
@@ -4147,6 +4281,9 @@ tr:hover [data-category-tag] {
         const dirOutRadio = document.getElementById('modalDirectionOut');
         if (dirInRadio) dirInRadio.addEventListener('change', () => updateModalDirectionUI('in'));
         if (dirOutRadio) dirOutRadio.addEventListener('change', () => updateModalDirectionUI('out'));
+
+        if (modeQuickEl) modeQuickEl.addEventListener('change', () => updateModalModeUI('quick'));
+        if (modeDetailedEl) modeDetailedEl.addEventListener('change', () => updateModalModeUI('detailed'));
 
         // Close on overlay click
         modal.addEventListener('click', (e) => {
@@ -4611,16 +4748,20 @@ tr:hover [data-category-tag] {
             const lineItemsTotalAmount = document.getElementById('lineItemsTotalAmount');
             const mainAmountField = document.getElementById('modalAmount');
             if (!lineItemsTotal || !lineItemsTotalAmount) return;
+
+            const isDetailed = document.getElementById('createTransactionModalContainer')?.dataset?.mode === 'detailed';
             
             const baseAmount = parseModalAmount(mainAmountField?.value);
             let extrasTotal = 0;
-            
-            document.querySelectorAll('#modalLineItemsContainer .line-item-amount').forEach(input => {
-                const value = parseModalAmount(input.value);
-                if (value > 0) {
-                    extrasTotal += value;
-                }
-            });
+
+            if (isDetailed) {
+                document.querySelectorAll('#modalLineItemsContainer .line-item-amount').forEach(input => {
+                    const value = parseModalAmount(input.value);
+                    if (value > 0) {
+                        extrasTotal += value;
+                    }
+                });
+            }
 
             const total = baseAmount + extrasTotal;
 
@@ -4643,9 +4784,11 @@ tr:hover [data-category-tag] {
             const actionBtn = e.submitter;
             const action = actionBtn ? actionBtn.value : 'done';
 
+            const mode = document.getElementById('createTransactionModalContainer')?.dataset?.mode === 'detailed' ? 'detailed' : 'quick';
+
             const modalDateEl = document.getElementById('modalDate');
             
-            const cashBoxEl = document.getElementById('modalRegister');
+            const cashBoxEl = document.getElementById('modalCashBoxId');
             const contactNameEl = document.getElementById('modalContactName');
             const amountEl = document.getElementById('modalAmount');
             const directionEl = document.querySelector('input[name="modalDirection"]:checked');
@@ -4654,28 +4797,30 @@ tr:hover [data-category-tag] {
                 cashBox: cashBoxEl ? cashBoxEl.value : '',
                 loggedBy: document.querySelector('.user-name')?.textContent || 'John',
                 ContactName: contactNameEl ? contactNameEl.value : '',
-                ContactAddress: document.getElementById('modalContactAddress')?.value || '',
+                ContactAddress: mode === 'detailed' ? (document.getElementById('modalContactAddress')?.value || '') : '',
                 ContactId: document.getElementById('modalContactId')?.value || '',
                 direction: directionEl ? directionEl.value : 'in',
                 amount: amountEl ? amountEl.value : '',
                 date: modalDateEl ? modalDateEl.value : new Date().toISOString().slice(0, 10),
                 transactionId: document.getElementById('modalTransactionId')?.value || '',
-                note: document.getElementById('modalNote')?.value || '',
+                note: mode === 'detailed' ? (document.getElementById('modalNote')?.value || '') : '',
                 lineItems: []
             };
 
             // Collect line items
-            document.querySelectorAll('#modalLineItemsContainer .line-item').forEach(item => {
-                const desc = item.querySelector('[data-item-index]').value;
-                const amt = item.querySelector('[data-amount-index]').value;
-                const parsedAmt = parseModalAmount(amt);
-                if (desc || parsedAmt > 0) {
-                    formData.lineItems.push({
-                        description: String(desc || '').trim(),
-                        amount: parsedAmt
-                    });
-                }
-            });
+            if (mode === 'detailed') {
+                document.querySelectorAll('#modalLineItemsContainer .line-item').forEach(item => {
+                    const desc = item.querySelector('[data-item-index]').value;
+                    const amt = item.querySelector('[data-amount-index]').value;
+                    const parsedAmt = parseModalAmount(amt);
+                    if (desc || parsedAmt > 0) {
+                        formData.lineItems.push({
+                            description: String(desc || '').trim(),
+                            amount: parsedAmt
+                        });
+                    }
+                });
+            }
 
             console.log('Transaction data:', formData);
             console.log('Action:', action);
