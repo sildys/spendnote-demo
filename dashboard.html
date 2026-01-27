@@ -2238,23 +2238,16 @@ tr:hover [data-category-tag] {
     color: white;
 }
 
-/* Cashbox selector - elegant carousel with tiny up/down arrows */
-.modal-cashbox-selector {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
+/* Cashbox selector - elegant carousel with arrows inside card */
 .cashbox-display {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 14px;
+    padding: 8px 12px;
     background: white;
     border: 2px solid var(--border);
     border-radius: 10px;
-    min-width: 180px;
-    max-width: 240px;
+    min-width: 200px;
 }
 
 .cashbox-display .cashbox-icon {
@@ -2288,18 +2281,19 @@ tr:hover [data-category-tag] {
     color: var(--text-muted);
 }
 
-.cashbox-arrows {
+.cashbox-display .cashbox-arrows {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    margin-left: auto;
 }
 
-.cashbox-arrow {
-    width: 20px;
-    height: 16px;
+.cashbox-display .cashbox-arrow {
+    width: 18px;
+    height: 14px;
     border: none;
     background: var(--surface-elevated);
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -2310,9 +2304,9 @@ tr:hover [data-category-tag] {
     padding: 0;
 }
 
-.cashbox-arrow:hover {
-    background: var(--border);
-    color: var(--text);
+.cashbox-display .cashbox-arrow:hover {
+    background: var(--active);
+    color: white;
 }
 
 /* Mode toggle - positioned in form area */
@@ -3857,14 +3851,12 @@ tr:hover [data-category-tag] {
                         </label>
                     </div>
                     
-                    <!-- Cashbox selector (carousel with tiny arrows) -->
-                    <div class="modal-cashbox-selector" id="modalCashboxSelector">
-                        <div class="cashbox-display" id="modalCashboxDisplay">
-                            <div class="cashbox-icon" id="modalCashboxIcon"></div>
-                            <div class="cashbox-info">
-                                <div class="cashbox-name" id="modalCashboxName">Loading...</div>
-                                <div class="cashbox-balance" id="modalCashboxBalance"></div>
-                            </div>
+                    <!-- Cashbox selector (arrows inside card) -->
+                    <div class="cashbox-display" id="modalCashboxDisplay">
+                        <div class="cashbox-icon" id="modalCashboxIcon"></div>
+                        <div class="cashbox-info">
+                            <div class="cashbox-name" id="modalCashboxName">Loading...</div>
+                            <div class="cashbox-balance" id="modalCashboxBalance"></div>
                         </div>
                         <div class="cashbox-arrows">
                             <button type="button" class="cashbox-arrow" id="modalCashboxPrev" title="Previous">
