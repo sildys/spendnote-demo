@@ -2238,12 +2238,14 @@ tr:hover [data-category-tag] {
     color: white;
 }
 
-/* Cashbox selector - elegant dropdown style */
+/* Cashbox selector - elegant carousel with tiny up/down arrows */
 .modal-cashbox-selector {
-    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.cashbox-selected {
+.cashbox-display {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -2251,17 +2253,11 @@ tr:hover [data-category-tag] {
     background: white;
     border: 2px solid var(--border);
     border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.15s;
     min-width: 180px;
+    max-width: 240px;
 }
 
-.cashbox-selected:hover {
-    border-color: var(--active);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.cashbox-selected .cashbox-icon {
+.cashbox-display .cashbox-icon {
     width: 28px;
     height: 28px;
     border-radius: 8px;
@@ -2273,12 +2269,12 @@ tr:hover [data-category-tag] {
     flex-shrink: 0;
 }
 
-.cashbox-selected .cashbox-info {
+.cashbox-display .cashbox-info {
     flex: 1;
     min-width: 0;
 }
 
-.cashbox-selected .cashbox-name {
+.cashbox-display .cashbox-name {
     font-size: 13px;
     font-weight: 700;
     color: var(--text);
@@ -2287,79 +2283,36 @@ tr:hover [data-category-tag] {
     text-overflow: ellipsis;
 }
 
-.cashbox-selected .cashbox-balance {
+.cashbox-display .cashbox-balance {
     font-size: 11px;
     color: var(--text-muted);
 }
 
-.cashbox-selected .cashbox-chevron {
-    color: var(--text-muted);
-    font-size: 12px;
-    transition: transform 0.2s;
-}
-
-.modal-cashbox-selector.open .cashbox-chevron {
-    transform: rotate(180deg);
-}
-
-.cashbox-dropdown {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    z-index: 100;
-    display: none;
-    max-height: 240px;
-    overflow-y: auto;
-}
-
-.modal-cashbox-selector.open .cashbox-dropdown {
-    display: block;
-}
-
-.cashbox-option {
+.cashbox-arrows {
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
-    transition: background 0.1s;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.cashbox-option:hover {
+.cashbox-arrow {
+    width: 20px;
+    height: 16px;
+    border: none;
     background: var(--surface-elevated);
-}
-
-.cashbox-option.selected {
-    background: rgba(var(--active-rgb), 0.08);
-}
-
-.cashbox-option .cashbox-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
+    border-radius: 4px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
-    color: white;
-    flex-shrink: 0;
-}
-
-.cashbox-option .cashbox-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-}
-
-.cashbox-option .cashbox-balance {
-    font-size: 11px;
     color: var(--text-muted);
-    margin-left: auto;
+    font-size: 8px;
+    transition: all 0.15s;
+    padding: 0;
+}
+
+.cashbox-arrow:hover {
+    background: var(--border);
+    color: var(--text);
 }
 
 /* Mode toggle - positioned in form area */
@@ -3904,18 +3857,22 @@ tr:hover [data-category-tag] {
                         </label>
                     </div>
                     
-                    <!-- Cashbox selector (dropdown) -->
+                    <!-- Cashbox selector (carousel with tiny arrows) -->
                     <div class="modal-cashbox-selector" id="modalCashboxSelector">
-                        <div class="cashbox-selected" id="modalCashboxSelected">
+                        <div class="cashbox-display" id="modalCashboxDisplay">
                             <div class="cashbox-icon" id="modalCashboxIcon"></div>
                             <div class="cashbox-info">
-                                <div class="cashbox-name" id="modalCashboxName">Select cash box...</div>
+                                <div class="cashbox-name" id="modalCashboxName">Loading...</div>
                                 <div class="cashbox-balance" id="modalCashboxBalance"></div>
                             </div>
-                            <i class="fas fa-chevron-down cashbox-chevron"></i>
                         </div>
-                        <div class="cashbox-dropdown" id="modalCashboxDropdown">
-                            <!-- Options populated by JS -->
+                        <div class="cashbox-arrows">
+                            <button type="button" class="cashbox-arrow" id="modalCashboxPrev" title="Previous">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                            <button type="button" class="cashbox-arrow" id="modalCashboxNext" title="Next">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
                         </div>
                         <input type="hidden" id="modalCashBoxId" value="">
                     </div>
@@ -4621,54 +4578,27 @@ tr:hover [data-category-tag] {
             }
         }
         
-        // Cash box dropdown selector
-        const cashboxSelector = document.getElementById('modalCashboxSelector');
-        const cashboxSelected = document.getElementById('modalCashboxSelected');
-        const cashboxDropdown = document.getElementById('modalCashboxDropdown');
+        // Cash box carousel navigation (tiny up/down arrows)
+        const cashboxPrevBtn = document.getElementById('modalCashboxPrev');
+        const cashboxNextBtn = document.getElementById('modalCashboxNext');
         
-        if (cashboxSelected) {
-            cashboxSelected.addEventListener('click', (e) => {
-                e.stopPropagation();
-                cashboxSelector.classList.toggle('open');
-                if (cashboxSelector.classList.contains('open')) {
-                    renderCashboxDropdown();
+        if (cashboxPrevBtn) {
+            cashboxPrevBtn.addEventListener('click', () => {
+                if (modalCashBoxes.length > 1) {
+                    modalCashBoxIndex = (modalCashBoxIndex - 1 + modalCashBoxes.length) % modalCashBoxes.length;
+                    updateModalCashboxDisplay();
                 }
             });
         }
         
-        function renderCashboxDropdown() {
-            if (!cashboxDropdown) return;
-            cashboxDropdown.innerHTML = modalCashBoxes.map((cb, idx) => `
-                <div class="cashbox-option ${idx === modalCashBoxIndex ? 'selected' : ''}" data-index="${idx}">
-                    <div class="cashbox-icon" style="background: ${cb.color}">
-                        <i class="fas ${cb.icon}"></i>
-                    </div>
-                    <span class="cashbox-name">${cb.name}</span>
-                    <span class="cashbox-balance">${getBalanceForCashbox(cb.id)}</span>
-                </div>
-            `).join('');
-            
-            // Add click handlers
-            cashboxDropdown.querySelectorAll('.cashbox-option').forEach(opt => {
-                opt.addEventListener('click', () => {
-                    modalCashBoxIndex = parseInt(opt.dataset.index);
+        if (cashboxNextBtn) {
+            cashboxNextBtn.addEventListener('click', () => {
+                if (modalCashBoxes.length > 1) {
+                    modalCashBoxIndex = (modalCashBoxIndex + 1) % modalCashBoxes.length;
                     updateModalCashboxDisplay();
-                    cashboxSelector.classList.remove('open');
-                });
+                }
             });
         }
-        
-        function getBalanceForCashbox(id) {
-            const card = document.querySelector(`.register-card[data-id="${id}"]`);
-            return card?.querySelector('.register-balance')?.textContent || '';
-        }
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (cashboxSelector && !cashboxSelector.contains(e.target)) {
-                cashboxSelector.classList.remove('open');
-            }
-        });
         
         // Add to Contacts button
         const addContactBtn = document.getElementById('modalAddContactBtn');
