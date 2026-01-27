@@ -2153,7 +2153,7 @@ tr:hover [data-category-tag] {
 .modal-header::after {
     content: "IN";
     position: absolute;
-    right: 60px;
+    right: 120px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 64px;
@@ -2193,6 +2193,7 @@ tr:hover [data-category-tag] {
     letter-spacing: 0.05em;
     color: var(--text-muted);
     transition: all 0.15s ease;
+    height: 48px;
 }
 
 .direction-primary-btn .quick-icon {
@@ -2243,11 +2244,12 @@ tr:hover [data-category-tag] {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 12px;
+    padding: 10px 12px;
     background: white;
     border: 2px solid var(--border);
     border-radius: 10px;
     min-width: 200px;
+    height: 48px;
 }
 
 .cashbox-display .cashbox-icon {
@@ -3886,14 +3888,13 @@ tr:hover [data-category-tag] {
                                 <input type="radio" name="modalMode" id="modalModeDetailed" value="detailed">
                                 <label for="modalModeDetailed">Detailed</label>
                             </div>
+                            <div class="form-group" style="margin: 0; min-width: 160px;">
+                                <input type="text" id="modalDateField" class="form-control" readonly style="background: rgba(255,255,255,0.7); cursor: default; color: var(--text-muted); text-align: center;">
+                            </div>
                         </div>
                         
-                        <!-- Date + Name + Address row -->
-                        <div class="modal-contact-grid" style="display: grid; grid-template-columns: 1fr 2fr 2fr 1fr; gap: 10px;">
-                            <div class="form-group">
-                                <label>Date</label>
-                                <input type="text" id="modalDateField" class="form-control" readonly style="background: var(--surface-elevated); cursor: default;">
-                            </div>
+                        <!-- Name + Address row -->
+                        <div class="modal-contact-grid" style="display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 10px;">
                             <div class="form-group">
                                 <label for="modalContactName">Name <span class="required">*</span></label>
                                 <input 
