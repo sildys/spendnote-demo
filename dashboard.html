@@ -4408,6 +4408,21 @@ tr:hover [data-category-tag] {
         const modalExpandItemsBtn = document.getElementById('modalExpandItemsBtn');
         let modalItemsExpanded = false;
 
+        function updateExpandItemsBtnUI() {
+            if (!modalExpandItemsBtn) return;
+            if (modalItemsExpanded) {
+                modalExpandItemsBtn.innerHTML = `
+                    <i class="fas fa-minus-circle"></i>
+                    Hide extra items
+                `;
+            } else {
+                modalExpandItemsBtn.innerHTML = `
+                    <i class="fas fa-plus-circle"></i>
+                    Add more items
+                `;
+            }
+        }
+
         function setModalSubmittingState(isSubmitting) {
             isModalSubmitting = Boolean(isSubmitting);
 
@@ -4537,9 +4552,7 @@ tr:hover [data-category-tag] {
                     modalLineItemCount = 0;
                 }
             }
-            if (modalExpandItemsBtn) {
-                modalExpandItemsBtn.style.display = modalItemsExpanded ? 'none' : '';
-            }
+            updateExpandItemsBtnUI();
             if (typeof updateLineItemsTotal === 'function') updateLineItemsTotal();
         }
 
@@ -4551,22 +4564,31 @@ tr:hover [data-category-tag] {
             for (let i = 1; i <= count; i++) {
                 modalLineItemCount++;
                 const itemDiv = document.createElement('div');
-                itemDiv.className = 'line-item';
+                itemDiv.className = 'form-row-line-item';
+                itemDiv.style.marginBottom = '10px';
                 itemDiv.innerHTML = `
-                    <input 
-                        type="text" 
-                        class="line-item-input" 
-                        placeholder="Item description"
-                        data-item-index="${modalLineItemCount}"
-                    >
-                    <input 
-                        type="number" 
-                        class="line-item-input line-item-amount" 
-                        placeholder="$0.00"
-                        step="0.01"
-                        min="0"
-                        data-amount-index="${modalLineItemCount}"
-                    >
+                    <div class="form-group">
+                        <input 
+                            type="text" 
+                            class="form-input line-item-input" 
+                            placeholder="Item description"
+                            autocomplete="off"
+                            data-item-index="${modalLineItemCount}"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">$</span>
+                            <input 
+                                type="number" 
+                                class="form-input line-item-input line-item-amount" 
+                                placeholder="0.00"
+                                step="0.01"
+                                min="0"
+                                data-amount-index="${modalLineItemCount}"
+                            >
+                        </div>
+                    </div>
                 `;
 
                 modalLineItemsContainer.appendChild(itemDiv);
@@ -4591,6 +4613,7 @@ tr:hover [data-category-tag] {
             } else {
                 if (modalExpandItemsBtn) modalExpandItemsBtn.style.display = '';
                 if (modalLineItemsContainer && !modalItemsExpanded) modalLineItemsContainer.style.display = 'none';
+                updateExpandItemsBtnUI();
             }
 
             const itemsTitleEl = document.getElementById('modalItemsSectionTitle');
@@ -5189,6 +5212,10 @@ tr:hover [data-category-tag] {
 
         if (modalExpandItemsBtn) {
             modalExpandItemsBtn.addEventListener('click', () => {
+                if (modalItemsExpanded) {
+                    setDetailedItemsExpanded(false);
+                    return;
+                }
                 renderDetailedExtraItems(maxModalLineItems);
                 setDetailedItemsExpanded(true);
             });
