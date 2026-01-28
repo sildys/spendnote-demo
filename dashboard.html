@@ -4224,8 +4224,8 @@ tr:hover [data-category-tag] {
                             Done
                         </button>
                         <button type="submit" class="btn btn-primary" name="action" value="done-receipt">
-                            <i class="fas fa-file-pdf"></i>
-                            Done & Receipt
+                            <i class="fas fa-print"></i>
+                            Done & Print
                         </button>
                         <button type="button" class="btn btn-tertiary" id="modalCancelBtn">
                             <i class="fas fa-times"></i>
@@ -5528,9 +5528,9 @@ tr:hover [data-category-tag] {
                     await loadDashboardData();
                 }
 
-                if (action === 'done-receipt') {
+                if (action === 'done-receipt') { 
                     closeModal();
-                    alert('Transaction saved. Receipt generation is not implemented yet.');
+                    alert('Transaction saved. Printing is not implemented yet.');
                     return;
                 }
 
