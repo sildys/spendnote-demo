@@ -2162,23 +2162,22 @@ tr:hover [data-category-tag] {
     position: relative;
 }
 
-/* Watermark - to the left of cashbox selector */
-.modal-header-right::before {
-    content: "IN";
-    position: absolute;
-    right: 340px;
-    top: 50%;
-    transform: translateY(-50%);
+/* Watermark - to the right of cashbox selector */
+.modal-watermark {
     font-size: 64px;
     font-weight: 900;
     letter-spacing: 0.08em;
     color: rgba(var(--active-rgb), 0.15);
     pointer-events: none;
     user-select: none;
-    z-index: 0;
+    line-height: 1;
 }
 
-#createTransactionModalContainer[data-direction="out"] .modal-header-right::before {
+.modal-watermark::after {
+    content: "IN";
+}
+
+#createTransactionModalContainer[data-direction="out"] .modal-watermark::after {
     content: "OUT";
 }
 
@@ -3884,7 +3883,7 @@ tr:hover [data-category-tag] {
                 </div>
 
                 <div class="modal-header-right">
-                    <!-- Cashbox selector (arrows inside card) -->
+                    <!-- Cashbox selector -->
                     <div class="cashbox-display" id="modalCashboxDisplay">
                         <div class="cashbox-icon" id="modalCashboxIcon"></div>
                         <div class="cashbox-info">
@@ -3901,6 +3900,9 @@ tr:hover [data-category-tag] {
                         </div>
                         <input type="hidden" id="modalCashBoxId" value="">
                     </div>
+
+                    <!-- Watermark placeholder for spacing -->
+                    <div class="modal-watermark" aria-hidden="true"></div>
 
                     <button class="modal-close" id="closeModalBtn" type="button" aria-label="Close modal">
                         <i class="fas fa-times"></i>
