@@ -5376,11 +5376,13 @@ tr:hover [data-category-tag] {
 
             // Collect line items
             if (mode === 'detailed') {
-                document.querySelectorAll('#modalLineItemsContainer .line-item').forEach(item => {
-                    const desc = item.querySelector('[data-item-index]').value;
-                    const amt = item.querySelector('[data-amount-index]').value;
+                document.querySelectorAll('#modalLineItemsContainer .form-row-line-item').forEach((row) => {
+                    const descEl = row.querySelector('[data-item-index]');
+                    const amtEl = row.querySelector('.line-item-amount') || row.querySelector('[data-amount-index]');
+                    const desc = descEl ? descEl.value : '';
+                    const amt = amtEl ? amtEl.value : '';
                     const parsedAmt = parseModalAmount(amt);
-                    if (desc || parsedAmt > 0) {
+                    if (String(desc || '').trim() || parsedAmt > 0) {
                         formData.lineItems.push({
                             description: String(desc || '').trim(),
                             amount: parsedAmt
