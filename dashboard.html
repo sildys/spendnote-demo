@@ -2099,11 +2099,15 @@ tr:hover [data-category-tag] {
     justify-content: center;
     padding: 20px;
     overflow-y: auto;
-}
+ }
 
-.modal-overlay.active {
-    display: flex;
-}
+ body.modal-open {
+     overflow: hidden;
+ }
+
+ .modal-overlay.active {
+     display: flex;
+ }
 
 .modal-container {
     background: white;
@@ -2150,11 +2154,19 @@ tr:hover [data-category-tag] {
     z-index: 1;
 }
 
-/* Watermark - uses cashbox color */
-.modal-header::after {
+.modal-header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 1;
+    position: relative;
+}
+
+/* Watermark - grouped with cashbox selector */
+.modal-header-right::after {
     content: "IN";
     position: absolute;
-    right: 120px;
+    right: 54px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 64px;
@@ -2165,7 +2177,7 @@ tr:hover [data-category-tag] {
     user-select: none;
 }
 
-#createTransactionModalContainer[data-direction="out"] .modal-header::after {
+#createTransactionModalContainer[data-direction="out"] .modal-header-right::after {
     content: "OUT";
 }
 
@@ -3012,6 +3024,13 @@ tr:hover [data-category-tag] {
     color: var(--text-muted);
 }
 
+.direction-primary-btn:focus,
+.direction-primary-btn:focus-visible {
+    outline: none;
+    border-color: rgba(var(--dir-rgb), 0.75);
+    box-shadow: 0 0 0 4px rgba(var(--dir-rgb), 0.22);
+}
+
 .direction-primary-btn .quick-icon {
     width: 34px;
     height: 34px;
@@ -3843,25 +3862,27 @@ tr:hover [data-category-tag] {
         </main>
     </div>
 
-    <!-- CREATE TRANSACTION MODAL -->
-    <div class="modal-overlay" id="createTransactionModal">
-        <div class="modal-container" id="createTransactionModalContainer" data-direction="in" data-mode="quick">
+    <!-- CREATE TRANSACTION MODAL v20260128a - cashbox right + icon fix -->
+    <div class="modal-overlay" id="createTransactionModal" aria-hidden="true">
+        <div class="modal-container" id="createTransactionModalContainer" data-direction="in" data-mode="quick" role="dialog" aria-modal="true" aria-label="Create transaction" tabindex="-1">
             <div class="modal-header">
                 <div class="modal-header-left">
                     <!-- Direction buttons -->
                     <div class="modal-direction-primary">
                         <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
-                        <label for="modalDirectionIn" class="direction-primary-btn in">
+                        <label for="modalDirectionIn" class="direction-primary-btn in" tabindex="0">
                             <span class="quick-icon"><i class="fas fa-arrow-down"></i></span>
                             <span>IN</span>
                         </label>
                         <input type="radio" name="modalDirection" id="modalDirectionOut" value="out">
-                        <label for="modalDirectionOut" class="direction-primary-btn out">
+                        <label for="modalDirectionOut" class="direction-primary-btn out" tabindex="0">
                             <span class="quick-icon"><i class="fas fa-arrow-up"></i></span>
                             <span>OUT</span>
                         </label>
                     </div>
-                    
+                </div>
+
+                <div class="modal-header-right">
                     <!-- Cashbox selector (arrows inside card) -->
                     <div class="cashbox-display" id="modalCashboxDisplay">
                         <div class="cashbox-icon" id="modalCashboxIcon"></div>
@@ -3879,11 +3900,11 @@ tr:hover [data-category-tag] {
                         </div>
                         <input type="hidden" id="modalCashBoxId" value="">
                     </div>
+
+                    <button class="modal-close" id="closeModalBtn" type="button" aria-label="Close modal">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                
-                <button class="modal-close" id="closeModalBtn" type="button" aria-label="Close modal">
-                    <i class="fas fa-times"></i>
-                </button>
             </div>
             <div class="modal-body" style="padding: 16px 24px;">
                 <form id="modalTransactionForm" style="display: flex; flex-direction: column; gap: 12px;">
@@ -4316,6 +4337,111 @@ tr:hover [data-category-tag] {
         const extraItemsDetailsEl = document.getElementById('modalExtraItemsDetails');
         const noteDetailsEl = document.getElementById('modalNoteSection');
 
+        let lastModalFocusEl = null;
+        let isModalSubmitting = false;
+
+        let modalLineItemCount = 0;
+        const maxModalLineItems = 4;
+        const modalLineItemsContainer = document.getElementById('modalLineItemsContainer');
+        const modalAddLineItemBtn = document.getElementById('modalAddLineItemBtn');
+
+        function setModalSubmittingState(isSubmitting) {
+            isModalSubmitting = Boolean(isSubmitting);
+
+            if (closeModalBtn) closeModalBtn.disabled = isModalSubmitting;
+            if (cancelModalBtn) cancelModalBtn.disabled = isModalSubmitting;
+        }
+
+        function getModalFocusableEls() {
+            if (!modalContainerEl) return [];
+            return Array.from(
+                modalContainerEl.querySelectorAll(
+                    'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                )
+            ).filter((el) => {
+                if (!el) return false;
+                if (el.getAttribute('aria-hidden') === 'true') return false;
+                return el.offsetParent !== null;
+            });
+        }
+
+        function handleModalKeydown(e) {
+            if (!modal || !modal.classList.contains('active')) return;
+
+            if (e.key === 'Escape') {
+                if (isModalSubmitting) {
+                    e.preventDefault();
+                    return;
+                }
+                e.preventDefault();
+                closeModal();
+                return;
+            }
+
+            if (e.key === 'Tab') {
+                const focusables = getModalFocusableEls();
+                if (focusables.length === 0) {
+                    e.preventDefault();
+                    modalContainerEl?.focus();
+                    return;
+                }
+
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                const active = document.activeElement;
+
+                if (e.shiftKey) {
+                    if (active === first || !modalContainerEl.contains(active)) {
+                        e.preventDefault();
+                        last.focus();
+                    }
+                    return;
+                }
+
+                if (!modalContainerEl.contains(active)) {
+                    e.preventDefault();
+                    first.focus();
+                    return;
+                }
+
+                if (active === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        }
+
+        function handleModalFocusIn(e) {
+            if (!modal || !modal.classList.contains('active')) return;
+            if (!modalContainerEl) return;
+
+            const target = e.target;
+            if (target && modalContainerEl.contains(target)) return;
+
+            const focusables = getModalFocusableEls();
+            const first = focusables[0];
+            if (first && typeof first.focus === 'function') {
+                first.focus();
+                return;
+            }
+
+            modalContainerEl.focus();
+        }
+
+        function setModalBackgroundInert(isInert) {
+            const bodyChildren = Array.from(document.body.children || []);
+            bodyChildren.forEach((el) => {
+                if (!el || el.id === 'createTransactionModal') return;
+                if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE') return;
+
+                if (isInert) {
+                    el.setAttribute('inert', '');
+                } else {
+                    el.removeAttribute('inert');
+                }
+            });
+        }
+
         function updateModalDirectionUI(direction) {
             if (!modalContainerEl) return;
             const dir = direction === 'out' ? 'out' : 'in';
@@ -4373,8 +4499,15 @@ tr:hover [data-category-tag] {
         function openModal(preset) {
             const isEventLike = preset && typeof preset === 'object' && 'preventDefault' in preset && 'target' in preset;
             const options = isEventLike ? {} : (preset || {});
+
+            lastModalFocusEl = document.activeElement;
+
             modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            setModalBackgroundInert(true);
+            document.addEventListener('keydown', handleModalKeydown, true);
+            document.addEventListener('focusin', handleModalFocusIn, true);
             console.log('Modal should be visible now');
 
             const dateFieldEl = document.getElementById('modalDateField');
@@ -4392,21 +4525,21 @@ tr:hover [data-category-tag] {
             // Initialize cash box carousel from real Supabase data
             initModalCashboxCarousel();
 
-            if (preset.cashBoxId) {
+            if (options.cashBoxId) {
                 // Find the cash box index by ID and set it
-                const idx = modalCashBoxes.findIndex(cb => cb.id === preset.cashBoxId);
+                const idx = modalCashBoxes.findIndex(cb => cb.id === options.cashBoxId);
                 if (idx >= 0) {
                     modalCashBoxIndex = idx;
                     updateModalCashboxDisplay();
                 }
             }
 
-            if (preset.direction === 'in' || preset.direction === 'out') {
+            if (options.direction === 'in' || options.direction === 'out') {
                 const inEl = document.getElementById('modalDirectionIn');
                 const outEl = document.getElementById('modalDirectionOut');
                 if (inEl && outEl) {
-                    inEl.checked = preset.direction === 'in';
-                    outEl.checked = preset.direction === 'out';
+                    inEl.checked = options.direction === 'in';
+                    outEl.checked = options.direction === 'out';
                 }
             }
 
@@ -4425,10 +4558,22 @@ tr:hover [data-category-tag] {
                 if (noteSection) noteSection.open = false;
             }
 
-            const dirInEl = document.getElementById('modalDirectionIn');
-            if (dirInEl) {
-                dirInEl.focus();
-            }
+            const focusPrimary = () => {
+                const checkedDirElForFocus = document.querySelector('input[name="modalDirection"]:checked');
+                const focusId = checkedDirElForFocus ? checkedDirElForFocus.id : 'modalDirectionIn';
+                const focusLabelEl = modalContainerEl?.querySelector(`label[for="${focusId}"]`);
+                if (focusLabelEl && typeof focusLabelEl.focus === 'function') {
+                    focusLabelEl.focus();
+                    return;
+                }
+                if (checkedDirElForFocus && typeof checkedDirElForFocus.focus === 'function') {
+                    checkedDirElForFocus.focus();
+                    return;
+                }
+                modalContainerEl?.focus();
+            };
+
+            requestAnimationFrame(() => requestAnimationFrame(focusPrimary));
         }
 
         // Make openModal available globally for testing
@@ -4468,7 +4613,11 @@ tr:hover [data-category-tag] {
         // Close modal
         function closeModal() {
             modal.classList.remove('active');
-            document.body.style.overflow = '';
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+            setModalBackgroundInert(false);
+            document.removeEventListener('keydown', handleModalKeydown, true);
+            document.removeEventListener('focusin', handleModalFocusIn, true);
             // Reset form
             document.getElementById('modalTransactionForm').reset();
             updateModalDirectionUI('in');
@@ -4477,6 +4626,7 @@ tr:hover [data-category-tag] {
             if (lineItemsContainer) {
                 lineItemsContainer.innerHTML = '';
             }
+            if (contactDetailsEl) contactDetailsEl.open = false;
             const extraItemsDetails = document.getElementById('modalExtraItemsDetails');
             if (extraItemsDetails) extraItemsDetails.open = false;
             const noteSection = document.getElementById('modalNoteSection');
@@ -4486,30 +4636,54 @@ tr:hover [data-category-tag] {
             if (typeof updateLineItemsTotal === 'function') {
                 updateLineItemsTotal();
             }
+
+            if (lastModalFocusEl && typeof lastModalFocusEl.focus === 'function') {
+                try {
+                    lastModalFocusEl.focus();
+                } catch {
+                    // ignore
+                }
+            }
+            lastModalFocusEl = null;
         }
 
-        closeModalBtn.addEventListener('click', closeModal);
-        cancelModalBtn.addEventListener('click', closeModal);
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+        if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
 
         const dirInRadio = document.getElementById('modalDirectionIn');
         const dirOutRadio = document.getElementById('modalDirectionOut');
         if (dirInRadio) dirInRadio.addEventListener('change', () => updateModalDirectionUI('in'));
         if (dirOutRadio) dirOutRadio.addEventListener('change', () => updateModalDirectionUI('out'));
 
+        const dirInLabel = document.querySelector('label[for="modalDirectionIn"]');
+        const dirOutLabel = document.querySelector('label[for="modalDirectionOut"]');
+        if (dirInLabel) {
+            dirInLabel.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    dirInLabel.click();
+                }
+            });
+        }
+        if (dirOutLabel) {
+            dirOutLabel.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    dirOutLabel.click();
+                }
+            });
+        }
+
         if (modeQuickEl) modeQuickEl.addEventListener('change', () => updateModalModeUI('quick'));
         if (modeDetailedEl) modeDetailedEl.addEventListener('change', () => updateModalModeUI('detailed'));
 
         // Close on overlay click
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closeModal();
-            }
-        });
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (isModalSubmitting) return;
+                if (e.target === modal) closeModal();
+            });
+        }
 
         // Modal Cash Box Carousel - uses real Supabase cash boxes
         let modalCashBoxes = [];
@@ -4522,12 +4696,17 @@ tr:hover [data-category-tag] {
             
             dashboardCards.forEach(card => {
                 if (card.dataset.id) {
+                    const renderedIconEl = card.querySelector('.register-icon i');
+                    const renderedIconClass = renderedIconEl
+                        ? Array.from(renderedIconEl.classList).find((cls) => cls.startsWith('fa-') && cls !== 'fa-fw')
+                        : null;
+
                     modalCashBoxes.push({
                         id: card.dataset.id,
                         name: card.querySelector('.register-name')?.textContent || 'Cash Box',
                         color: card.dataset.color || '#059669',
                         rgb: card.dataset.rgb || '5, 150, 105',
-                        icon: card.dataset.icon || 'fa-cash-register'
+                        icon: renderedIconClass || card.dataset.icon || 'fa-cash-register'
                     });
                 }
             });
@@ -4786,6 +4965,7 @@ tr:hover [data-category-tag] {
         ];
         
         function setupSimpleAutocomplete(input, dropdown, dataArray) {
+            if (!input || !dropdown || !Array.isArray(dataArray)) return;
             let selectedIndex = -1;
             
             input.addEventListener('input', (e) => {
@@ -4867,7 +5047,9 @@ tr:hover [data-category-tag] {
             });
         }
         
-        setupSimpleAutocomplete(descriptionInput, descriptionDropdown, recentDescriptions);
+        if (descriptionInput && descriptionDropdown) {
+            setupSimpleAutocomplete(descriptionInput, descriptionDropdown, recentDescriptions);
+        }
         
         // Transaction ID Autocomplete
         const transactionIdInput = document.getElementById('modalTransactionId');
@@ -4882,17 +5064,14 @@ tr:hover [data-category-tag] {
             'INV-2025-999'
         ];
         
-        setupSimpleAutocomplete(transactionIdInput, transactionIdDropdown, recentTransactionIds);
+        if (transactionIdInput && transactionIdDropdown) {
+            setupSimpleAutocomplete(transactionIdInput, transactionIdDropdown, recentTransactionIds);
+        }
 
         // Receipt-style modal: fields are always visible (no toggle sections)
 
         // Line items management
-        let modalLineItemCount = 0;
-        const maxModalLineItems = 4;
-        const modalLineItemsContainer = document.getElementById('modalLineItemsContainer');
-        const modalAddLineItemBtn = document.getElementById('modalAddLineItemBtn');
-
-        modalAddLineItemBtn.addEventListener('click', () => {
+        if (modalAddLineItemBtn && modalLineItemsContainer) modalAddLineItemBtn.addEventListener('click', () => {
             if (modalLineItemCount >= maxModalLineItems) return;
             
             modalLineItemCount++;
@@ -4938,6 +5117,7 @@ tr:hover [data-category-tag] {
         });
 
         function updateModalLineItemsButton() {
+            if (!modalAddLineItemBtn) return;
             modalAddLineItemBtn.disabled = modalLineItemCount >= maxModalLineItems;
             modalAddLineItemBtn.innerHTML = `
                 <i class="fas fa-plus"></i>
@@ -4990,6 +5170,8 @@ tr:hover [data-category-tag] {
         // Form submission
         document.getElementById('modalTransactionForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            if (isModalSubmitting) return;
             
             const actionBtn = e.submitter;
             const action = actionBtn ? actionBtn.value : 'done';
@@ -5037,8 +5219,20 @@ tr:hover [data-category-tag] {
 
             const submitButtons = Array.from(e.currentTarget.querySelectorAll('button[type="submit"]'));
             submitButtons.forEach((btn) => {
+                if (!btn.dataset.originalHtml) {
+                    btn.dataset.originalHtml = btn.innerHTML;
+                }
                 btn.disabled = true;
             });
+
+            if (actionBtn) {
+                if (!actionBtn.dataset.originalHtml) {
+                    actionBtn.dataset.originalHtml = actionBtn.innerHTML;
+                }
+                actionBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            }
+
+            setModalSubmittingState(true);
 
             try {
                 if (!window.auth || !window.db || !window.supabaseClient) {
@@ -5197,9 +5391,13 @@ tr:hover [data-category-tag] {
                         updateLineItemsTotal();
                     }
 
-                    const dirInEl = document.getElementById('modalDirectionIn');
-                    if (dirInEl) {
-                        dirInEl.focus();
+                    const checkedDirElForFocus = document.querySelector('input[name="modalDirection"]:checked');
+                    const focusId = checkedDirElForFocus ? checkedDirElForFocus.id : 'modalDirectionIn';
+                    const focusLabelEl = modalContainerEl?.querySelector(`label[for="${focusId}"]`);
+                    if (focusLabelEl && typeof focusLabelEl.focus === 'function') {
+                        focusLabelEl.focus();
+                    } else if (checkedDirElForFocus && typeof checkedDirElForFocus.focus === 'function') {
+                        checkedDirElForFocus.focus();
                     }
                     return;
                 }
@@ -5208,7 +5406,12 @@ tr:hover [data-category-tag] {
             } finally {
                 submitButtons.forEach((btn) => {
                     btn.disabled = false;
+                    if (btn.dataset.originalHtml) {
+                        btn.innerHTML = btn.dataset.originalHtml;
+                    }
                 });
+
+                setModalSubmittingState(false);
             }
         });
 
