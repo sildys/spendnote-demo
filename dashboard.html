@@ -909,6 +909,10 @@
         .table-grid > a {
             min-width: 0;
         }
+        .table-grid > :nth-child(1) {
+            justify-self: center;
+            text-align: center;
+        }
         .table-grid > :nth-child(6) {
             justify-self: end;
             text-align: right;
@@ -918,7 +922,8 @@
             padding-left: 12px;
         }
         .table-grid > :nth-child(8) {
-            justify-self: end;
+            justify-self: center;
+            text-align: center;
         }
         /* Row hover/focus uses cashbox color */
         .table-grid:not(.table-header):hover {
