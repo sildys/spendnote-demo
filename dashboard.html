@@ -2451,6 +2451,43 @@ tr:hover [data-category-tag] {
     padding: 10px 14px;
 }
 
+#createTransactionModalContainer .modal-contact-grid {
+    display: grid;
+    gap: 12px;
+}
+
+#createTransactionModalContainer[data-mode="detailed"] .modal-contact-grid {
+    grid-template-columns: 1.1fr 2.1fr 0.9fr;
+}
+
+#createTransactionModalContainer[data-mode="detailed"] .modal-contact-name { grid-column: 1; grid-row: 1; }
+#createTransactionModalContainer[data-mode="detailed"] .modal-contact-address { grid-column: 2; grid-row: 1; }
+#createTransactionModalContainer[data-mode="detailed"] .modal-contact-company { grid-column: 3; grid-row: 1; }
+#createTransactionModalContainer[data-mode="detailed"] .modal-contact-phone { grid-column: 1; grid-row: 2; }
+#createTransactionModalContainer[data-mode="detailed"] .modal-contact-email { grid-column: 2; grid-row: 2; }
+#createTransactionModalContainer[data-mode="detailed"] .modal-contact-save { grid-column: 3; grid-row: 2; align-self: end; }
+
+#createTransactionModalContainer[data-mode="detailed"] .modal-contact-save .add-contact-btn {
+    width: 100%;
+    height: 46px;
+}
+
+#createTransactionModalContainer[data-mode="detailed"] .modal-body {
+    padding: 12px 18px !important;
+}
+
+#createTransactionModalContainer[data-mode="detailed"] form {
+    gap: 10px !important;
+}
+
+#createTransactionModalContainer[data-mode="detailed"] .modal-section {
+    padding: 12px !important;
+}
+
+#createTransactionModalContainer[data-mode="detailed"] .form-row-line-item {
+    margin-bottom: 8px !important;
+}
+
 #createTransactionModalContainer[data-mode="quick"] .modal-detailed-only {
     display: none !important;
 }
@@ -4018,9 +4055,8 @@ tr:hover [data-category-tag] {
                             </div>
                         </div>
                         
-                        <!-- Name + Address row -->
-                        <div class="modal-contact-grid" style="display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 12px;">
-                            <div class="form-group">
+                        <div class="modal-contact-grid">
+                            <div class="form-group modal-contact-name">
                                 <label for="modalContactName">Name <span class="required">*</span></label>
                                 <input 
                                     type="text" 
@@ -4031,7 +4067,7 @@ tr:hover [data-category-tag] {
                                 >
                                 <div id="ContactAutocomplete" class="autocomplete-dropdown"></div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group modal-contact-address">
                                 <label for="modalContactAddress">Address <span style="font-size: 11px; color: var(--text-muted); font-weight: 500;">(optional)</span></label>
                                 <input 
                                     type="text" 
@@ -4040,39 +4076,34 @@ tr:hover [data-category-tag] {
                                     placeholder="Street, City, State"
                                 >
                             </div>
-                        </div>
-                        
-                        <div class="modal-detailed-only" id="modalContactDetails" style="margin-top: 12px;">
-                            <div class="modal-contact-details-grid">
-                                <div class="form-group">
-                                    <label for="modalContactCompanyId">Other ID / Company ID</label>
-                                    <input 
-                                        type="text" 
-                                        id="modalContactCompanyId" 
-                                        class="form-control" 
-                                        placeholder="Company ID"
-                                    >
-                                </div>
-                                <div class="form-group">
-                                    <label for="modalContactPhone">Phone</label>
-                                    <input 
-                                        type="tel" 
-                                        id="modalContactPhone" 
-                                        class="form-control" 
-                                        placeholder="+1 (555) 123-4567"
-                                    >
-                                </div>
+                            <div class="form-group modal-detailed-only modal-contact-company" id="modalContactDetails">
+                                <label for="modalContactCompanyId">Other ID / Company ID</label>
+                                <input 
+                                    type="text" 
+                                    id="modalContactCompanyId" 
+                                    class="form-control" 
+                                    placeholder="Company ID"
+                                >
                             </div>
-                            <div class="modal-contact-details-actions" style="margin-top: 12px;">
-                                <div class="form-group" style="flex: 1; margin: 0;">
-                                    <label for="modalContactEmail">Email</label>
-                                    <input 
-                                        type="email" 
-                                        id="modalContactEmail" 
-                                        class="form-control" 
-                                        placeholder="email@example.com"
-                                    >
-                                </div>
+                            <div class="form-group modal-detailed-only modal-contact-phone">
+                                <label for="modalContactPhone">Phone</label>
+                                <input 
+                                    type="tel" 
+                                    id="modalContactPhone" 
+                                    class="form-control" 
+                                    placeholder="+1 (555) 123-4567"
+                                >
+                            </div>
+                            <div class="form-group modal-detailed-only modal-contact-email">
+                                <label for="modalContactEmail">Email</label>
+                                <input 
+                                    type="email" 
+                                    id="modalContactEmail" 
+                                    class="form-control" 
+                                    placeholder="email@example.com"
+                                >
+                            </div>
+                            <div class="modal-detailed-only modal-contact-save">
                                 <button type="button" id="modalAddContactBtn" class="add-contact-btn">
                                     <i class="fas fa-user-plus"></i>
                                     Save
