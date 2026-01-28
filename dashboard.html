@@ -2143,7 +2143,9 @@ tr:hover [data-category-tag] {
     padding: 16px 24px;
     border-bottom: 3px solid rgba(var(--modal-dir-rgb), 0.6);
     background: white;
-    position: relative;
+    position: sticky;
+    top: 0;
+    z-index: 5;
     overflow: hidden;
 }
 
@@ -2513,6 +2515,21 @@ tr:hover [data-category-tag] {
 
 #createTransactionModalContainer #modalAddAnother {
     accent-color: #059669;
+}
+
+#createTransactionModalContainer .input-with-prefix .form-input {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+#createTransactionModalContainer #modalAmount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+#createTransactionModalContainer #lineItemsTotalAmount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
 }
 
 #createTransactionModalContainer #lineItemsTotal {
@@ -5251,7 +5268,7 @@ tr:hover [data-category-tag] {
 
             const total = baseAmount + extrasTotal;
 
-            lineItemsTotal.style.display = 'block';
+            lineItemsTotal.style.display = 'flex';
             lineItemsTotalAmount.textContent = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD'
