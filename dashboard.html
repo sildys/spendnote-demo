@@ -2448,11 +2448,16 @@ tr:hover [data-category-tag] {
 
 #createTransactionModalContainer .receipt-items-header {
     border-bottom-color: rgba(var(--modal-dir-rgb), 0.2);
+    grid-template-columns: 1fr 220px;
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0;
     text-transform: none;
     color: var(--text);
+}
+
+#createTransactionModalContainer .form-row-line-item {
+    grid-template-columns: 1fr 220px;
 }
 
 #createTransactionModalContainer #lineItemsTotal {
