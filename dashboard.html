@@ -2458,6 +2458,7 @@ tr:hover [data-category-tag] {
 
 #createTransactionModalContainer[data-mode="detailed"] .modal-contact-grid {
     grid-template-columns: 1.1fr 2.1fr 0.9fr;
+    gap: 10px;
 }
 
 #createTransactionModalContainer[data-mode="detailed"] .modal-contact-name { grid-column: 1; grid-row: 1; }
@@ -2465,7 +2466,12 @@ tr:hover [data-category-tag] {
 #createTransactionModalContainer[data-mode="detailed"] .modal-contact-company { grid-column: 3; grid-row: 1; }
 #createTransactionModalContainer[data-mode="detailed"] .modal-contact-phone { grid-column: 1; grid-row: 2; }
 #createTransactionModalContainer[data-mode="detailed"] .modal-contact-email { grid-column: 2; grid-row: 2; }
-#createTransactionModalContainer[data-mode="detailed"] .modal-contact-save { grid-column: 3; grid-row: 2; align-self: end; }
+#createTransactionModalContainer[data-mode="detailed"] .modal-contact-save { grid-column: 3; grid-row: 2; }
+
+#createTransactionModalContainer[data-mode="detailed"] .modal-label-spacer {
+    height: 20px;
+    margin-bottom: 8px;
+}
 
 #createTransactionModalContainer[data-mode="detailed"] .modal-contact-save .add-contact-btn {
     width: 100%;
@@ -4104,6 +4110,7 @@ tr:hover [data-category-tag] {
                                 >
                             </div>
                             <div class="modal-detailed-only modal-contact-save">
+                                <div class="modal-label-spacer" aria-hidden="true"></div>
                                 <button type="button" id="modalAddContactBtn" class="add-contact-btn">
                                     <i class="fas fa-user-plus"></i>
                                     Save
