@@ -2334,14 +2334,14 @@ tr:hover [data-category-tag] {
     color: white;
 }
 
-/* Mode toggle - polished pill style (neutral color, not direction-based) */
+/* Mode toggle - polished pill style */
 .modal-mode-toggle {
     display: inline-flex;
     align-items: center;
     padding: 4px;
     border-radius: 10px;
     background: white;
-    border: 2px solid var(--border);
+    border: 2px solid rgba(var(--modal-dir-rgb), 0.2);
     gap: 4px;
 }
 
@@ -2370,14 +2370,14 @@ tr:hover [data-category-tag] {
 
 .modal-mode-toggle label:hover {
     color: var(--text);
-    background: rgba(100, 116, 139, 0.08);
+    background: rgba(var(--modal-dir-rgb), 0.05);
 }
 
 #modalModeQuick:checked + label,
 #modalModeDetailed:checked + label {
-    background: #64748b;
+    background: var(--modal-dir-color);
     color: white;
-    box-shadow: 0 2px 6px rgba(100, 116, 139, 0.25);
+    box-shadow: 0 2px 8px rgba(var(--modal-dir-rgb), 0.3);
 }
 
 /* Close button */
@@ -2468,13 +2468,13 @@ tr:hover [data-category-tag] {
 }
 
 #createTransactionModalContainer .btn-primary {
-    background: #64748b;
-    border-color: #64748b;
+    background: var(--modal-dir-color);
+    border-color: var(--modal-dir-color);
 }
 
 #createTransactionModalContainer .btn-primary:hover {
-    background: #475569;
-    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+    background: rgba(var(--modal-dir-rgb), 0.85);
+    box-shadow: 0 4px 12px rgba(var(--modal-dir-rgb), 0.3);
 }
 
 #createTransactionModalContainer .add-contact-btn {
