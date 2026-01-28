@@ -2494,6 +2494,14 @@ tr:hover [data-category-tag] {
     margin-bottom: 8px !important;
 }
 
+#createTransactionModalContainer .form-actions {
+    margin-top: 12px;
+}
+
+#createTransactionModalContainer #modalReceiptNote {
+    margin-top: 10px !important;
+}
+
 #createTransactionModalContainer[data-mode="quick"] .modal-detailed-only {
     display: none !important;
 }
@@ -4213,7 +4221,7 @@ tr:hover [data-category-tag] {
                     </div>
                     
                     <!-- Receipt Note -->
-                    <div class="modal-detailed-only" style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted); font-style: italic;">
+                    <div class="modal-detailed-only" id="modalReceiptNote" style="text-align: center; margin-top: 16px; font-size: 13px; color: var(--text-muted); font-style: italic;">
                         You can print a receipt now, or later from the transaction list.
                     </div>
                 </form>
