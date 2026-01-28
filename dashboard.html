@@ -2403,7 +2403,27 @@ tr:hover [data-category-tag] {
 
 /* Quick mode overrides */
 #createTransactionModalContainer[data-mode="quick"] {
-    max-width: 1000px;
+    max-width: 900px;
+}
+
+#createTransactionModalContainer[data-mode="quick"] .modal-header {
+    padding: 12px 18px !important;
+}
+
+#createTransactionModalContainer[data-mode="quick"] .modal-body {
+    padding: 12px 18px !important;
+}
+
+#createTransactionModalContainer[data-mode="quick"] form {
+    gap: 10px !important;
+}
+
+#createTransactionModalContainer[data-mode="quick"] .modal-section {
+    padding: 12px !important;
+}
+
+#createTransactionModalContainer[data-mode="quick"] .cashbox-display {
+    min-width: 180px;
 }
 
 #createTransactionModalContainer[data-mode="quick"] .modal-detailed-only {
@@ -2456,8 +2476,16 @@ tr:hover [data-category-tag] {
     color: var(--text);
 }
 
+#createTransactionModalContainer[data-mode="quick"] .receipt-items-header {
+    grid-template-columns: minmax(0, 1fr) 240px !important;
+}
+
 #createTransactionModalContainer .form-row-line-item {
     grid-template-columns: minmax(0, 1fr) 260px !important;
+}
+
+#createTransactionModalContainer[data-mode="quick"] .form-row-line-item {
+    grid-template-columns: minmax(0, 1fr) 240px !important;
 }
 
 #createTransactionModalContainer #lineItemsTotal {
