@@ -159,11 +159,36 @@ function highlightCurrentPage() {
         'contacts': ['spendnote-contact-list.html', 'spendnote-contact-detail.html']
     };
 
-    document.querySelectorAll('.nav-links a[data-page]').forEach(link => {
-        const page = link.dataset.page;
-        const isActive = pageMap[page]?.some((file) => currentFile === String(file).toLowerCase());
-        link.classList.toggle('active', isActive);
-    });
+    const links = Array.from(document.querySelectorAll('.nav-links a'));
+    links.forEach((link) => link.classList.remove('active'));
+
+    // 1) Prefer data-page mapping (high-level sections)
+    let matched = false;
+    links
+        .filter((link) => link && link.dataset && link.dataset.page)
+        .forEach((link) => {
+            const page = link.dataset.page;
+            const isActive = pageMap[page]?.some((file) => currentFile === String(file).toLowerCase());
+            if (isActive) {
+                link.classList.add('active');
+                matched = true;
+            }
+        });
+
+    // 2) Fallback: exact filename match against href (covers edge cases)
+    if (!matched) {
+        links.forEach((link) => {
+            const href = (link.getAttribute('href') || '').trim();
+            if (!href || href.startsWith('#') || href.startsWith('http')) {
+                return;
+            }
+
+            const hrefFile = href.split('?')[0].split('#')[0].split('/').filter(Boolean).pop();
+            if (hrefFile && hrefFile.toLowerCase() === currentFile) {
+                link.classList.add('active');
+            }
+        });
+    }
 }
 
 // Export
