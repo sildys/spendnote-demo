@@ -388,7 +388,8 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const urlCashBoxId = urlParams.get('cashboxId');
-        const savedCashBoxId = localStorage.getItem('activeCashBoxId');
+        // NOTE: Do NOT use localStorage.activeCashBoxId here - it would filter out all transactions
+        // that don't belong to the dashboard's active cash box. Only filter by URL param.
 
         const cashBoxById = new Map();
 
@@ -404,8 +405,8 @@
                 }
             });
 
-            const desiredCashBox = urlCashBoxId || savedCashBoxId;
-            ensureCashBoxSelectOptions(cashBoxSelect, state.cashBoxes, desiredCashBox);
+            // Only pre-select cash box if explicitly passed via URL (e.g. from cash box detail page)
+            ensureCashBoxSelectOptions(cashBoxSelect, state.cashBoxes, urlCashBoxId || null);
 
             console.log('[TxHistory] Fetching transactions...');
             const txSelect = 'id, cash_box_id, type, amount, description, notes, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name';
