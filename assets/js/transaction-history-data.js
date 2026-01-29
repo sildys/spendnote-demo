@@ -99,8 +99,12 @@
             });
 
             const cbSnSeq = cbSnMap.get(cbId) || 0;
+            // Dynamic padding: at least 3 digits, grows if needed
+            const maxSeq = txList.length;
+            const padLength = Math.max(3, String(maxSeq).length);
+
             txList.forEach((tx, idx) => {
-                const txSeq = String(idx + 1).padStart(3, '0');
+                const txSeq = String(idx + 1).padStart(padLength, '0');
                 tx._snId = `SN${cbSnSeq}-${txSeq}`;
                 tx._cbSnSeq = cbSnSeq;
                 tx._txSeqInBox = idx + 1;
