@@ -1,5 +1,5 @@
 // Dashboard Data Loader - Load real data from Supabase
-console.log('SpendNote dashboard-data.js build 20260129-1353');
+if (window.SpendNoteDebug) console.log('SpendNote dashboard-data.js build 20260129-1353');
 
 function getSpendNoteHelpers() {
     const sn = (typeof window !== 'undefined' && window.SpendNote) ? window.SpendNote : null;
@@ -219,7 +219,7 @@ async function loadDashboardData() {
                         updateTableHeaderColor(activeCard.dataset.rgb);
                     }
                 }
-            } else {
+            } else if (debug) {
                 console.log('⚠️ Swiper not initialized yet');
             }
             
@@ -227,7 +227,7 @@ async function loadDashboardData() {
             
             // Update modal cash box dropdown
             updateModalCashBoxDropdown(cashBoxes);
-        } else {
+        } else if (debug) {
             console.log('ℹ️ No cash boxes found in database');
         }
 
@@ -363,10 +363,10 @@ function loadRecentTransactionsSync(transactions) {
             if (Boolean(window.SpendNoteDebug)) {
                 console.log('✅ Loaded recent transactions:', transactions.length);
             }
-        } else {
+        } else if (Boolean(window.SpendNoteDebug)) {
             console.log('ℹ️ No transactions found');
         }
     } catch (error) {
-        console.error('❌ Error loading transactions:', error);
+        if (window.SpendNoteDebug) console.error('❌ Error loading transactions:', error);
     }
 }

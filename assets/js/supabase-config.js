@@ -2,7 +2,7 @@
 const SUPABASE_URL = 'https://zrnnharudlgxuvewqryj.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_Vg44Z7eJacwji3iLii0Dxg_mQlSfwi-';
 
-console.log('SpendNote supabase-config.js build 20260129-1339');
+if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260129-1339');
 window.__spendnoteSupabaseConfigBuild = '20260129-1339';
 
 // Initialize Supabase client

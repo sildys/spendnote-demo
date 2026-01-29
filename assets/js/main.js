@@ -160,8 +160,8 @@ function getInitials(name) {
 }
 
 function bindLogoutLinks() {
-    const logoutLinks = Array.from(document.querySelectorAll('.user-dropdown-item'))
-        .filter((link) => link.textContent.trim().toLowerCase().includes('log out'));
+    const logoutLinks = Array.from(document.querySelectorAll('[data-action="logout"], .user-dropdown-item'))
+        .filter((link) => link.dataset.action === 'logout' || link.textContent.trim().toLowerCase().includes('log out'));
 
     if (!logoutLinks.length) {
         return;
@@ -170,11 +170,23 @@ function bindLogoutLinks() {
     logoutLinks.forEach((link) => {
         link.addEventListener('click', async (event) => {
             event.preventDefault();
+            event.stopPropagation();
+            
+            // Show visual feedback
+            link.style.opacity = '0.5';
+            link.style.pointerEvents = 'none';
+            
             try {
                 await window.auth.signOut();
+                // Clear any cached data
+                localStorage.removeItem('activeCashBoxColor');
+                localStorage.removeItem('activeCashBoxRgb');
+                localStorage.removeItem('activeCashBoxId');
             } catch (error) {
                 console.error('Logout failed:', error);
             }
+            
+            // Redirect after signOut completes
             window.location.href = 'index.html';
         });
     });
