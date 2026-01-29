@@ -233,6 +233,11 @@ body {
 .site-nav .nav-links a.active {
     color: var(--active);
     position: relative;
+    text-decoration-line: underline;
+    text-decoration-color: var(--active);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 10px;
+    text-decoration-skip-ink: none;
 }
 
 .site-nav .nav-links a.active::after {
