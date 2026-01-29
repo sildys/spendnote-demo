@@ -182,6 +182,8 @@ body {
     font-weight: 600;
     font-size: var(--font-base); /* 15px */
     transition: color 0.2s ease;
+    padding: 10px 20px;
+    border-radius: 12px;
     border: none;
     background: none;
     cursor: pointer;
@@ -197,6 +199,9 @@ body {
     color: var(--active);
     font-weight: 600;
     text-decoration: none;
+    font-size: var(--font-base);
+    padding: 10px 20px;
+    border-radius: 12px;
     transition: all 0.2s ease;
 }
 

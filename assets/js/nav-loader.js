@@ -150,9 +150,10 @@ function initNavEvents() {
 }
 
 function highlightCurrentPage() {
-    const currentPath = window.location.pathname;
+    const currentPathname = window.location.pathname || '';
+    const currentFile = (currentPathname.split('/').filter(Boolean).pop() || 'dashboard.html').toLowerCase();
     const pageMap = {
-        'dashboard': ['dashboard.html', '/'],
+        'dashboard': ['dashboard.html'],
         'cash-boxes': ['spendnote-cash-box-list.html', 'spendnote-cash-box-detail.html', 'spendnote-cash-box-settings.html'],
         'transactions': ['spendnote-transaction-history.html', 'spendnote-transaction-detail.html', 'spendnote-create-transaction.html'],
         'contacts': ['spendnote-contact-list.html', 'spendnote-contact-detail.html']
@@ -160,7 +161,7 @@ function highlightCurrentPage() {
 
     document.querySelectorAll('.nav-links a[data-page]').forEach(link => {
         const page = link.dataset.page;
-        const isActive = pageMap[page]?.some(path => currentPath.includes(path));
+        const isActive = pageMap[page]?.some((file) => currentFile === String(file).toLowerCase());
         link.classList.toggle('active', isActive);
     });
 }

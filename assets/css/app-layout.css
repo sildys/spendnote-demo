@@ -81,30 +81,29 @@ body {
 }
 
 /* Navigation Links - App Style */
-.nav-links {
+.site-nav .nav-links {
     display: flex;
     gap: 1.5rem; /* match main.css */
     list-style: none;
     align-items: center;
 }
 
-.nav-links a {
+.site-nav .nav-links a {
     padding: 10px 20px;
     cursor: pointer;
     font-weight: 600;
     color: var(--text-muted);
     border-radius: 12px;
-    transition: all 0.2s ease;
-    font-size: 14px;
+    transition: color 0.2s ease;
+    font-size: var(--font-base);
     background: transparent;
     border: none;
     text-decoration: none;
     position: relative;
 }
 
-.nav-links a:hover {
+.site-nav .nav-links a:hover {
     color: var(--active);
-    background: transparent;
 }
 
 /* Active menu item indicator */
@@ -130,8 +129,8 @@ body {
     font-weight: 600;
 }
 
-.nav-links a.nav-cash-item:hover {
-    background: rgba(var(--active-rgb), 0.1);
+.site-nav .nav-links a.nav-cash-item:hover {
+    opacity: 0.8;
 }
 
 /* New Transaction button in nav */
