@@ -4500,7 +4500,12 @@ tr:hover [data-category-tag] {
         const exportBtn = document.querySelector('.export-btn');
         if (exportBtn) {
             exportBtn.addEventListener('click', () => {
-                alert('Exporting transactions to CSV...');
+                const rows = document.querySelectorAll('.transactions-table .table-grid:not(.table-header)');
+                if (!rows.length) {
+                    alert('No transactions to export.');
+                    return;
+                }
+                alert(`Export feature coming soon. ${rows.length} transactions ready.`);
             });
         }
 
@@ -4803,7 +4808,6 @@ tr:hover [data-category-tag] {
             setModalBackgroundInert(true);
             document.addEventListener('keydown', handleModalKeydown, true);
             document.addEventListener('focusin', handleModalFocusIn, true);
-            console.log('Modal should be visible now');
 
             const dateFieldEl = document.getElementById('modalDateField');
             if (dateFieldEl) {
@@ -4875,9 +4879,6 @@ tr:hover [data-category-tag] {
 
         if (openModalBtn) {
             openModalBtn.addEventListener('click', openModal);
-            console.log('Modal button listener attached');
-        } else {
-            console.warn('Modal button not found');
         }
 
         // Open modal if hash is #new-transaction
@@ -5077,7 +5078,7 @@ tr:hover [data-category-tag] {
         // Add to Contacts button
         const addContactBtn = document.getElementById('modalAddContactBtn');
         if (addContactBtn) {
-            addContactBtn.addEventListener('click', () => {
+            addContactBtn.addEventListener('click', async () => {
                 const name = document.getElementById('modalContactName').value;
                 const phone = document.getElementById('modalContactPhone').value;
                 const email = document.getElementById('modalContactEmail').value;
@@ -5088,8 +5089,36 @@ tr:hover [data-category-tag] {
                     return;
                 }
                 
-                // TODO: Add to contacts database
-                alert(`Contact "${name}" will be added to your contacts list.\n\nPhone: ${phone || 'N/A'}\nEmail: ${email || 'N/A'}\nAddress: ${address || 'N/A'}`);
+                if (!window.db || !window.db.contacts) {
+                    alert('Database not available. Please refresh the page.');
+                    return;
+                }
+
+                try {
+                    const user = await window.auth.getCurrentUser();
+                    if (!user) {
+                        alert('Please log in to add contacts.');
+                        return;
+                    }
+
+                    const result = await window.db.contacts.create({
+                        user_id: user.id,
+                        name: name.trim(),
+                        phone: phone.trim() || null,
+                        email: email.trim() || null,
+                        address: address.trim() || null
+                    });
+
+                    if (result && result.id) {
+                        alert(`Contact "${name}" added successfully.`);
+                        document.getElementById('modalContactId').value = result.id;
+                    } else {
+                        alert('Could not add contact. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Failed to add contact:', error);
+                    alert('Could not add contact. Please try again.');
+                }
             });
         }
 
@@ -5099,15 +5128,28 @@ tr:hover [data-category-tag] {
         const ContactAddressInput = document.getElementById('modalContactAddress');
         const ContactIdInput = document.getElementById('modalContactId');
         
-        // Contact database (in production, this would come from API)
-        const Contacts = [
-            { name: 'ABC Supplies', address: '123 Main St, New York, NY 10001', id: 'SUPP-001', contact: 'contact@abcsupplies.com' },
-            { name: 'John Smith', address: '456 Oak Ave, Los Angeles, CA 90001', id: '', contact: 'john.smith@email.com' },
-            { name: 'Mary Johnson', address: '789 Pine Rd, Chicago, IL 60601', id: 'CLI-MJ-2025', contact: 'mary.j@company.com' },
-            { name: 'AdCorp Media', address: '321 Market St, San Francisco, CA 94102', id: 'VEND-AC-789', contact: 'billing@adcorpmedia.com' },
-            { name: 'Sarah Williams', address: '555 Elm St, Boston, MA 02101', id: '', contact: 'sarah.w@email.com' },
-            { name: 'David Chen', address: '777 Maple Dr, Seattle, WA 98101', id: 'EMP-DC-456', contact: 'david.chen@company.com' }
-        ];
+        // Contacts loaded from Supabase
+        let Contacts = [];
+        let contactsLoaded = false;
+        
+        async function loadContactsForAutocomplete() {
+            if (contactsLoaded || !window.db || !window.db.contacts) return;
+            try {
+                const data = await window.db.contacts.getAll();
+                Contacts = (data || []).map(c => ({
+                    id: c.id,
+                    name: c.name || '',
+                    address: c.address || '',
+                    contact: c.email || ''
+                }));
+                contactsLoaded = true;
+            } catch (e) {
+                console.error('Failed to load contacts:', e);
+            }
+        }
+        
+        // Load contacts when modal opens
+        loadContactsForAutocomplete();
         
         let selectedContactIndex = -1;
         
@@ -5466,9 +5508,6 @@ tr:hover [data-category-tag] {
                 });
             }
 
-            console.log('Transaction data:', formData);
-            console.log('Action:', action);
-
             const submitButtons = Array.from(e.currentTarget.querySelectorAll('button[type="submit"]'));
             submitButtons.forEach((btn) => {
                 if (!btn.dataset.originalHtml) {
@@ -5762,27 +5801,7 @@ tr:hover [data-category-tag] {
             }
         }
 
-        // Update menu item colors based on active cash box
-        function updateMenuColors(color) {
-            // Update all nav-cash-item links (Dashboard, Cash Boxes, Transactions)
-            const navCashItems = document.querySelectorAll('.nav-cash-item');
-            navCashItems.forEach(item => {
-                item.style.color = color;
-            });
-            
-            // Update other menu items (Contacts, Settings) - not Log out button
-            const otherNavItems = document.querySelectorAll('.nav-links a:not(.nav-cash-item):not(.btn)');
-            otherNavItems.forEach(item => {
-                item.style.color = color;
-            });
-            
-            // Update New Transaction button background color (keep text white)
-            const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
-            if (newTransactionBtn) {
-                newTransactionBtn.style.background = `linear-gradient(135deg, ${color}, ${color})`;
-                newTransactionBtn.style.color = 'white';
-            }
-        }
+        // updateMenuColors is provided by main.js (window.updateMenuColors)
 
         // Update table header color dynamically
         function updateTableHeaderColor(rgb) {

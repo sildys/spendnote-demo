@@ -1150,26 +1150,7 @@
             'CR-005': { hex: '#ef4444', rgb: '239, 68, 68' }  // Emergency Fund
         };
 
-        // Update menu item colors based on Cash Box color
-        function updateMenuColors(color) {
-            // Update all nav-cash-item links (Dashboard, Cash Boxes, Transactions)
-            document.querySelectorAll('.nav-cash-item').forEach(item => {
-                item.style.color = color;
-            });
-            
-            // Update Contacts link color too
-            document.querySelectorAll('.nav-links a:not(.nav-cash-item):not(.nav-new-transaction-btn)').forEach(item => {
-                item.style.color = color;
-            });
-            
-            // Update New Transaction button background color and white text
-            const newTransactionBtn = document.querySelector('.nav-new-transaction-btn');
-            if (newTransactionBtn) {
-                newTransactionBtn.style.background = color;
-                newTransactionBtn.style.borderColor = color;
-                newTransactionBtn.style.color = 'white';
-            }
-        }
+        // updateMenuColors is provided by main.js (window.updateMenuColors)
 
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
