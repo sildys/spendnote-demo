@@ -49,6 +49,18 @@
         return dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
+    function getInitials(name) {
+        const parts = safeText(name, '')
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+
+        if (parts.length === 0) return 'SN';
+        const first = parts[0]?.[0] || '';
+        const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] || '') : (parts[0]?.[1] || '');
+        return (first + last).toUpperCase().slice(0, 2) || 'SN';
+    }
+
     function getDisplayId(tx) {
         // Use Supabase sequence numbers if available (SN{cash_box_seq}-{tx_seq})
         const cbSeq = tx?.cash_box_sequence;
@@ -250,6 +262,10 @@
             const contactId = safeText(tx.contact_id, '');
             const createdBy = safeText(tx.created_by_user_name || tx.created_by, '—');
 
+            const initials = getInitials(createdBy === '—' ? '' : createdBy);
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#10b981"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#ffffff">${initials}</text></svg>`;
+            const avatarUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
             tr.innerHTML = `
                 <td><input type="checkbox" class="row-checkbox" data-tx-id="${safeText(tx.id, '')}"></td>
                 <td>
@@ -264,7 +280,7 @@
                 <td><span class="tx-Contact">${contactName}</span></td>
                 <td><span class="tx-contact-id">${contactId}</span></td>
                 <td><span class="tx-amount ${isIncome ? 'in' : 'out'}">${formatCurrency(tx.amount, currency)}</span></td>
-                <td><span class="tx-recorder">${createdBy}</span></td>
+                <td><span class="tx-recorder"><div class="user-avatar user-avatar-small"><img src="${avatarUrl}" alt="${createdBy}"></div></span></td>
                 <td>
                     <a href="spendnote-transaction-detail.html?id=${encodeURIComponent(tx.id)}" class="tx-action btn-view">
                         <span>View</span>

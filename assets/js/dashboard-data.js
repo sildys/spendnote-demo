@@ -352,7 +352,7 @@ function loadRecentTransactionsSync(transactions) {
                         <div class="tx-person">${tx.contact?.name || tx.contact_name || 'N/A'}</div>
                         <div class="tx-desc">${tx.description || 'No description'}</div>
                         <div class="tx-amount ${isIncome ? 'in' : 'out'}">${isIncome ? '+' : '-'}${formattedAmount}</div>
-                        <div class="tx-createdby"><div class="avatar-with-name"><div class="user-avatar user-avatar-small"><img src="${avatarUrl}" alt="${createdByName}"></div><span>${createdByName}</span></div></div>
+                        <div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarUrl}" alt="${createdByName}"></div></div>
                         <a href="spendnote-transaction-detail.html?id=${tx.id}" class="tx-action btn-view">
                             <span>View</span>
                             <i class="fas fa-arrow-right"></i>
