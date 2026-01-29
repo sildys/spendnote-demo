@@ -85,17 +85,12 @@ function initNavEvents() {
         });
     }
 
-    // New Transaction button
+    // New Transaction button - only bind on non-dashboard pages
+    // Dashboard has its own modal handler in inline script
     const addTransactionBtn = document.getElementById('addTransactionBtn');
-    if (addTransactionBtn) {
+    const hasModal = document.getElementById('createTransactionModal');
+    if (addTransactionBtn && !hasModal) {
         addTransactionBtn.addEventListener('click', (event) => {
-            // On dashboard with modal
-            if (typeof window.openModal === 'function' && document.getElementById('createTransactionModal')) {
-                event.preventDefault();
-                window.openModal();
-                return;
-            }
-            // On other pages - navigate to dashboard
             event.preventDefault();
             window.location.href = 'dashboard.html#new-transaction';
         });
