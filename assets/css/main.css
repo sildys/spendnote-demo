@@ -79,6 +79,8 @@
     --max-width-page: 1400px;
     --max-width-form: 1000px;
     --page-gutter: 3rem;
+
+    --logo-optical-offset: -8px;
 }
 
 /* ========================================
@@ -155,6 +157,7 @@ body {
     width: 36px;
     height: 36px;
     flex-shrink: 0;
+    margin-left: var(--logo-optical-offset);
 }
 
 .site-nav .logo span {
@@ -423,6 +426,7 @@ label {
     width: 32px;
     height: 32px;
     opacity: 0.95;
+    margin-left: var(--logo-optical-offset);
 }
 
 .app-footer-brand-logo span {
