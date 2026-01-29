@@ -34,8 +34,8 @@ const NAV_HTML = `
                     <span class="btn-text">New Transaction</span>
                 </button>
             </li>
-            <li class="nav-user-menu">
-                <div class="user-avatar" id="userAvatarBtn">
+            <li class="user-avatar-wrapper" id="userAvatarBtn">
+                <div class="user-avatar">
                     <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="User">
                 </div>
                 <span class="user-name"></span>
@@ -63,6 +63,58 @@ function loadNav(containerId = 'nav-container') {
     if (container) {
         container.innerHTML = NAV_HTML;
         highlightCurrentPage();
+        initNavEvents();
+    }
+}
+
+function initNavEvents() {
+    // User avatar dropdown
+    const userAvatarBtn = document.getElementById('userAvatarBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    if (userAvatarBtn && userDropdown) {
+        userAvatarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!userAvatarBtn.contains(e.target) && !userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('show');
+            }
+        });
+    }
+
+    // New Transaction button
+    const addTransactionBtn = document.getElementById('addTransactionBtn');
+    if (addTransactionBtn) {
+        addTransactionBtn.addEventListener('click', (event) => {
+            // On dashboard with modal
+            if (typeof window.openModal === 'function' && document.getElementById('createTransactionModal')) {
+                event.preventDefault();
+                window.openModal();
+                return;
+            }
+            // On other pages - navigate to dashboard
+            event.preventDefault();
+            window.location.href = 'dashboard.html#new-transaction';
+        });
+    }
+
+    // Logout links
+    document.querySelectorAll('[data-action="logout"]').forEach(link => {
+        link.addEventListener('click', async (e) => {
+            e.preventDefault();
+            if (window.auth && typeof window.auth.logout === 'function') {
+                await window.auth.logout();
+            }
+            window.location.href = 'spendnote-login.html';
+        });
+    });
+
+    // Update user info if available
+    if (window.auth && typeof window.updateUserNav === 'function') {
+        window.updateUserNav();
     }
 }
 
