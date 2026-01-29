@@ -1356,8 +1356,12 @@
                     logoPreview.style.display = 'block';
                     removeLogoBtn.style.display = 'inline-block';
                     
-                    // TODO: Save logo data to localStorage or send to backend
-                    console.log('Logo uploaded:', file.name);
+                    // Save logo to localStorage (backend integration pending)
+                    try {
+                        localStorage.setItem('spendnote.transactionLogo', currentLogoData);
+                    } catch (e) {
+                        console.warn('Could not save logo to localStorage');
+                    }
                 };
                 reader.readAsDataURL(file);
             });
@@ -1372,8 +1376,12 @@
                 removeLogoBtn.style.display = 'none';
                 logoInput.value = '';
                 
-                // TODO: Remove logo data from localStorage or backend
-                console.log('Logo removed');
+                // Remove logo from localStorage
+                try {
+                    localStorage.removeItem('spendnote.transactionLogo');
+                } catch (e) {
+                    console.warn('Could not remove logo from localStorage');
+                }
             });
         }
     </script>

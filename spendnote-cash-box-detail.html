@@ -1252,8 +1252,19 @@
                         : `Are you sure you want to delete ${count} transactions?`;
                     
                     if (confirm(confirmMessage)) {
-                        // TODO: Implement actual delete functionality
-                        alert('Delete functionality will be implemented here');
+                        // Delete selected transactions via Supabase
+                        const selectedIds = Array.from(rowCheckboxes)
+                            .filter(cb => cb.checked)
+                            .map(cb => cb.closest('.table-grid')?.dataset?.id)
+                            .filter(id => id);
+                        
+                        if (selectedIds.length && window.db?.transactions?.delete) {
+                            Promise.all(selectedIds.map(id => window.db.transactions.delete(id)))
+                                .then(() => { alert('Transactions deleted.'); location.reload(); })
+                                .catch(err => { console.error(err); alert('Delete failed.'); });
+                        } else {
+                            alert('No transactions selected or delete not available.');
+                        }
                     }
                 });
             }

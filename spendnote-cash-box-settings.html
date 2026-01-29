@@ -1794,8 +1794,12 @@
                     logoPreview.style.display = 'block';
                     removeLogoBtn.style.display = 'inline-block';
                     
-                    // TODO: Save logo data to localStorage or send to backend
-                    console.log('Logo uploaded:', file.name);
+                    // Save logo to localStorage (backend integration pending)
+                    try {
+                        localStorage.setItem('spendnote.cashBoxLogo', currentLogoData);
+                    } catch (e) {
+                        console.warn('Could not save logo to localStorage');
+                    }
                 };
                 reader.readAsDataURL(file);
             });
@@ -1810,8 +1814,12 @@
                 removeLogoBtn.style.display = 'none';
                 logoInput.value = '';
                 
-                // TODO: Remove logo data from localStorage or backend
-                console.log('Logo removed');
+                // Remove logo from localStorage
+                try {
+                    localStorage.removeItem('spendnote.cashBoxLogo');
+                } catch (e) {
+                    console.warn('Could not remove logo from localStorage');
+                }
             });
         }
 
@@ -1819,8 +1827,18 @@
         window.addEventListener('DOMContentLoaded', function() {
             reloadIframe();
             
-            // TODO: Load saved logo from localStorage or backend
-            // If logo exists, show preview and remove button
+            // Load saved logo from localStorage
+            try {
+                const savedLogo = localStorage.getItem('spendnote.cashBoxLogo');
+                if (savedLogo) {
+                    currentLogoData = savedLogo;
+                    logoPreviewImg.src = savedLogo;
+                    logoPreview.style.display = 'block';
+                    removeLogoBtn.style.display = 'inline-block';
+                }
+            } catch (e) {
+                console.warn('Could not load logo from localStorage');
+            }
         });
 
         // Zoom functionality
