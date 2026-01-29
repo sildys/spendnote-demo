@@ -572,17 +572,13 @@
             const cashBoxGroup = qs('#filterGroupCashBox');
 
             if (cashBoxQueryInput && cashBoxGroup) {
-                // If only one cash box exists, prefill + hide the filter
+                // If only one cash box exists, prefill the filter
                 if (state.cashBoxes.length === 1) {
                     const only = state.cashBoxes[0];
                     cashBoxQueryInput.value = safeText(only.name, only.id);
-                    cashBoxGroup.style.display = 'none';
                 } else if (urlCashBoxId) {
                     const pre = state.cashBoxes.find((b) => String(b?.id) === String(urlCashBoxId));
                     cashBoxQueryInput.value = pre ? safeText(pre.name, pre.id) : urlCashBoxId;
-                    cashBoxGroup.style.display = '';
-                } else {
-                    cashBoxGroup.style.display = '';
                 }
             }
 
@@ -590,24 +586,14 @@
             const currencyGroup = qs('#filterGroupCurrency');
             if (currencySelect && currencyGroup) {
                 const currencyOptions = qsa('option', currencySelect).filter((o) => safeText(o.value, ''));
-                if (currencyOptions.length <= 1) {
-                    if (currencyOptions.length === 1) currencySelect.value = currencyOptions[0].value;
-                    currencyGroup.style.display = 'none';
-                } else {
-                    currencyGroup.style.display = '';
-                }
+                if (currencyOptions.length === 1) currencySelect.value = currencyOptions[0].value;
             }
 
             const createdBySelect = qs('#filterCreatedBy');
             const createdByGroup = qs('#filterGroupCreatedBy');
             if (createdBySelect && createdByGroup) {
                 const real = qsa('option', createdBySelect).filter((o) => safeText(o.value, ''));
-                if (real.length <= 1) {
-                    if (real.length === 1) createdBySelect.value = real[0].value;
-                    createdByGroup.style.display = 'none';
-                } else {
-                    createdByGroup.style.display = '';
-                }
+                if (real.length === 1) createdBySelect.value = real[0].value;
             }
         };
 
