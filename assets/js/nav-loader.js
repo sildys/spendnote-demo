@@ -24,10 +24,10 @@ const NAV_HTML = `
             <span>SpendNote</span>
         </a>
         <ul class="nav-links">
-            <li><a href="dashboard.html" class="nav-cash-item" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-            <li><a href="spendnote-cash-box-list.html" class="nav-cash-item" data-page="cash-boxes"><i class="fas fa-box-open"></i> Cash Boxes</a></li>
-            <li><a href="spendnote-transaction-history.html" id="navTransactions" class="nav-cash-item" data-page="transactions"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
-            <li><a href="spendnote-contact-list.html" class="nav-cash-item" data-page="contacts"><i class="fas fa-address-book"></i> Contacts</a></li>
+            <li><a href="dashboard.html" class="nav-cash-item" data-page="dashboard">Dashboard</a></li>
+            <li><a href="spendnote-cash-box-list.html" class="nav-cash-item" data-page="cash-boxes">Cash Boxes</a></li>
+            <li><a href="spendnote-transaction-history.html" id="navTransactions" class="nav-cash-item" data-page="transactions">Transactions</a></li>
+            <li><a href="spendnote-contact-list.html" class="nav-cash-item" data-page="contacts">Contacts</a></li>
             <li>
                 <button class="btn btn-primary nav-new-transaction-btn" id="addTransactionBtn">
                     <i class="fas fa-plus"></i>
@@ -38,7 +38,6 @@ const NAV_HTML = `
                 <div class="user-avatar">
                     <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="User">
                 </div>
-                <span class="user-name"></span>
                 <div class="user-dropdown" id="userDropdown">
                     <div class="user-dropdown-menu">
                         <a href="spendnote-user-settings.html" class="user-dropdown-item">

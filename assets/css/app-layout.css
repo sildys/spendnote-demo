@@ -33,7 +33,7 @@ body {
 .nav-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 3rem; /* 48px horizontal - SAME as main.css */
+    padding: 0 var(--page-gutter); /* same gutter as main.css */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -44,7 +44,7 @@ body {
 .site-nav .logo {
     display: flex;
     align-items: center;
-    gap: 10px; /* Space between SVG and text */
+    gap: 4px; /* Space between SVG and text */
     text-decoration: none;
     transition: transform 0.2s ease;
 }
@@ -163,7 +163,7 @@ body {
 
 /* APP CONTAINER OVERRIDE (if needed) */
 .app-container {
-    padding: 16px 3rem; /* Further reduced for more compact layout */
+    padding: 16px var(--page-gutter); /* match nav gutter */
     max-width: 1400px;
     margin: 0 auto;
     flex: 1;
@@ -240,8 +240,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--surface-elevated);
-    border: 2px solid var(--border);
+    background: rgba(var(--active-rgb), 0.10);
+    border: 2px solid rgba(var(--active-rgb), 0.35);
     flex-shrink: 0;
 }
 
@@ -260,8 +260,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--surface-elevated);
-    border: 2px solid var(--border);
+    background: rgba(var(--active-rgb), 0.10);
+    border: 2px solid rgba(var(--active-rgb), 0.35);
     flex-shrink: 0;
 }
 
@@ -280,8 +280,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--surface-elevated);
-    border: 2px solid var(--border);
+    background: rgba(var(--active-rgb), 0.10);
+    border: 2px solid rgba(var(--active-rgb), 0.35);
     flex-shrink: 0;
 }
 

@@ -78,6 +78,7 @@
     --nav-height: 72px;
     --max-width-page: 1400px;
     --max-width-form: 1000px;
+    --page-gutter: 3rem;
 }
 
 /* ========================================
@@ -109,11 +110,6 @@ body {
     overflow-x: clip;
 }
 
-*:focus {
-    outline: 3px solid var(--active);
-    outline-offset: 2px;
-}
-
 /* ========================================
    3. NAVIGATION (UNIFIED)
    ======================================== */
@@ -135,7 +131,7 @@ body {
 .nav-container {
     max-width: var(--max-width-page);
     margin: 0 auto;
-    padding: 0 3rem; /* 48px horizontal */
+    padding: 0 var(--page-gutter); /* 48px horizontal */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -146,7 +142,7 @@ body {
 .site-nav .logo {
     display: flex;
     align-items: center;
-    gap: 0;
+    gap: 4px;
     text-decoration: none;
     transition: transform 0.2s ease;
 }
@@ -166,7 +162,6 @@ body {
     font-weight: 900;
     color: var(--text);
     letter-spacing: -0.02em;
-    margin-left: 10px;
 }
 
 /* Navigation Links */
