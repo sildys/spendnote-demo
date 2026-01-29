@@ -260,7 +260,12 @@
                 <td><span class="tx-contact-id">${contactId}</span></td>
                 <td><span class="tx-amount ${isIncome ? 'in' : 'out'}">${formatCurrency(tx.amount, currency)}</span></td>
                 <td><span class="tx-recorder">${createdBy}</span></td>
-                <td><a href="spendnote-transaction-detail.html?id=${encodeURIComponent(tx.id)}" class="action-btn">View</a></td>
+                <td>
+                    <a href="spendnote-transaction-detail.html?id=${encodeURIComponent(tx.id)}" class="tx-action btn-view">
+                        <span>View</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </td>
             `;
 
             tbody.appendChild(tr);

@@ -447,6 +447,34 @@
             justify-content: flex-end;
         }
 
+        .tx-action {
+            padding: 6px 12px;
+            background: white;
+            color: var(--primary);
+            border: 1px solid rgba(5, 150, 105, 0.25);
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tx-action:hover {
+            background: rgba(5, 150, 105, 0.08);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+        }
+
+        .tx-action i {
+            font-size: 11px;
+        }
+
         .action-btn {
             padding: 8px 16px;
             background: rgba(var(--active-rgb), 0.1);
@@ -1229,6 +1257,6 @@ Showing 0-0 of 0
     <script src="assets/js/nav-loader.js?v=7"></script>
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=20"></script>
-    <script src="assets/js/transaction-history-data.js?v=17"></script>
+    <script src="assets/js/transaction-history-data.js?v=18"></script>
 </body>
 </html>
