@@ -363,6 +363,11 @@
             cursor: pointer;
         }
 
+        #transactionsTable input[type="checkbox"],
+        .row-checkbox {
+            accent-color: var(--primary);
+        }
+
         tbody tr {
             border-bottom: 1px solid var(--border);
             transition: all 0.2s;
@@ -615,6 +620,14 @@
             display: flex;
             align-items: center;
             font-weight: 500;
+            gap: 10px;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+
+        #paginationText {
+            display: inline-block;
+            white-space: nowrap;
         }
 
         .pagination-info select:focus {
@@ -888,12 +901,12 @@
             <!-- PAGINATION -->
             <div class="pagination">
                 <div class="pagination-info">
-Showing 0-0 of 0
-                    <select id="perPageSelect" style="margin-left: 8px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
+                    <select id="perPageSelect" style="padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
                         <option value="10">10 per page</option>
                         <option value="25">25 per page</option>
                         <option value="50">50 per page</option>
                     </select>
+                    <span id="paginationText">Showing 0-0 of 0</span>
                 </div>
                 <div class="pagination-controls">
                     <button class="pagination-btn" disabled>
@@ -1348,6 +1361,6 @@ Showing 0-0 of 0
     <script src="assets/js/nav-loader.js?v=7"></script>
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=20"></script>
-    <script src="assets/js/transaction-history-data.js?v=30"></script>
+    <script src="assets/js/transaction-history-data.js?v=31"></script>
 </body>
 </html>

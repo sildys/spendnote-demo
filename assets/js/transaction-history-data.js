@@ -452,9 +452,14 @@
             const to = Math.min(totalCount, state.page * state.perPage);
             const text = `Showing ${from}-${to} of ${totalCount}`;
 
-            const select = qs('#perPageSelect', infoEl);
-            infoEl.textContent = text;
-            if (select) infoEl.appendChild(select);
+            const labelEl = qs('#paginationText', infoEl);
+            if (labelEl) {
+                labelEl.textContent = text;
+            } else {
+                infoEl.textContent = text;
+                const select = qs('#perPageSelect');
+                if (select) infoEl.insertAdjacentElement('afterbegin', select);
+            }
         }
 
         if (!container) return;
@@ -465,7 +470,13 @@
         const mkBtn = (label, page, opts) => {
             const btn = document.createElement('button');
             btn.className = 'pagination-btn';
-            btn.textContent = label;
+            if (label === '<') {
+                btn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            } else if (label === '>') {
+                btn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            } else {
+                btn.textContent = label;
+            }
             if (opts?.active) btn.classList.add('active');
             if (opts?.disabled) btn.disabled = true;
             btn.addEventListener('click', () => {
@@ -784,13 +795,8 @@
 
             renderTableRows(tbody, slice);
 
-            const paginationState = {
-                perPage: state.pagination.perPage,
-                page: state.pagination.page,
-                onChange: render
-            };
-            renderPagination(pagination, paginationInfo, paginationState, totalCount);
-            state.pagination.page = paginationState.page;
+            state.pagination.onChange = render;
+            renderPagination(pagination, paginationInfo, state.pagination, totalCount);
 
             if (selectAllHeader) selectAllHeader.checked = false;
             updateBulk();
