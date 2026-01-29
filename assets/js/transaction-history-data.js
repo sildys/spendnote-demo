@@ -485,17 +485,35 @@
             });
         });
 
-        const filterInputs = qsa('.filter-select, .filter-input');
-        filterInputs.forEach((el) => {
-            el.addEventListener('change', () => {
+        // Apply Filters button - filters only apply when clicked
+        const applyFiltersBtn = qs('#applyFilters');
+        if (applyFiltersBtn) {
+            applyFiltersBtn.addEventListener('click', () => {
                 state.pagination.page = 1;
                 render();
             });
-            el.addEventListener('input', () => {
+        }
+
+        // Clear Filters button - reset all filter inputs and re-render
+        const clearFiltersBtn = qs('#clearFilters');
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', () => {
+                // Reset all filter inputs
+                qsa('.filter-input', qs('#filterPanel')).forEach((el) => {
+                    el.value = '';
+                });
+                qsa('.filter-select', qs('#filterPanel')).forEach((el) => {
+                    el.selectedIndex = 0;
+                });
+                // Reset direction tabs to "All"
+                tabs.forEach((t) => t.classList.remove('active'));
+                const allTab = tabs.find((t) => t.dataset.filter === 'all');
+                if (allTab) allTab.classList.add('active');
+                state.direction = 'all';
                 state.pagination.page = 1;
                 render();
             });
-        });
+        }
 
         if (perPageSelect) {
             perPageSelect.addEventListener('change', () => {
