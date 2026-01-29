@@ -29,16 +29,26 @@ var auth = {
         }
 
         auth.__userCache.promise = (async () => {
-            const { data: { user }, error } = await supabaseClient.auth.getUser();
-            if (error) {
-                console.error('Error getting user:', error);
+            try {
+                const { data: { user }, error } = await supabaseClient.auth.getUser();
+                if (error) {
+                    // Don't log "session missing" as error - it's expected when not logged in
+                    if (!error.message?.includes('session') && window.SpendNoteDebug) {
+                        console.error('Error getting user:', error);
+                    }
+                    auth.__userCache.user = null;
+                    auth.__userCache.ts = now;
+                    return null;
+                }
+                auth.__userCache.user = user || null;
+                auth.__userCache.ts = now;
+                return auth.__userCache.user;
+            } catch (e) {
+                // Catch any unexpected errors silently
                 auth.__userCache.user = null;
                 auth.__userCache.ts = now;
                 return null;
             }
-            auth.__userCache.user = user || null;
-            auth.__userCache.ts = now;
-            return auth.__userCache.user;
         })();
 
         try {
