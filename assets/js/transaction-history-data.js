@@ -367,32 +367,31 @@
         const urlCashBoxId = urlParams.get('cashboxId');
         const savedCashBoxId = localStorage.getItem('activeCashBoxId');
 
+        const cashBoxById = new Map();
+
         try {
             const cashBoxes = await window.db.cashBoxes.getAll({ select: 'id, name, color, currency' });
             state.cashBoxes = Array.isArray(cashBoxes) ? cashBoxes : [];
 
+            state.cashBoxes.forEach((cb) => {
+                if (cb && cb.id) {
+                    cashBoxById.set(String(cb.id), cb);
+                }
+            });
+
             const desiredCashBox = urlCashBoxId || savedCashBoxId;
             ensureCashBoxSelectOptions(cashBoxSelect, state.cashBoxes, desiredCashBox);
 
-            const txSelect = `
-                id,
-                cash_box_id,
-                type,
-                amount,
-                description,
-                notes,
-                receipt_number,
-                transaction_date,
-                created_at,
-                contact_id,
-                contact_name,
-                created_by_user_id,
-                created_by_user_name,
-                cash_box:cash_boxes(id, name, color, currency),
-                contact:contacts(id, name)
-            `;
-
+            const txSelect = 'id, cash_box_id, type, amount, description, notes, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name';
             state.allTx = await window.db.transactions.getAll({ select: txSelect });
+
+            // Attach cash box object from local lookup (no join required)
+            state.allTx = (Array.isArray(state.allTx) ? state.allTx : []).map((tx) => {
+                if (tx && !tx.cash_box && tx.cash_box_id) {
+                    tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
+                }
+                return tx;
+            });
         } catch (e) {
             if (tbody) tbody.innerHTML = '';
             updateStatsFromList([]);

@@ -107,6 +107,17 @@
             return;
         }
 
+        try {
+            if (!tx.cash_box && tx.cash_box_id && window.db?.cashBoxes?.getById) {
+                tx.cash_box = await window.db.cashBoxes.getById(tx.cash_box_id);
+            }
+            if (!tx.contact && tx.contact_id && window.db?.contacts?.getById) {
+                tx.contact = await window.db.contacts.getById(tx.contact_id);
+            }
+        } catch (_) {
+            // ignore enrich failures
+        }
+
         const cashBoxName = safeText(tx.cash_box?.name, 'Unknown');
         const cashBoxCode = safeText(tx.cash_box?.id, '');
         const cashBoxColor = normalizeHexColor(tx.cash_box?.color || '#059669');

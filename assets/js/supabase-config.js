@@ -477,7 +477,7 @@ var db = {
         },
 
         async getById(id) {
-            const { data, error } = await supabaseClient
+            const attemptJoined = await supabaseClient
                 .from('transactions')
                 .select(`
                     *,
@@ -486,11 +486,52 @@ var db = {
                 `)
                 .eq('id', id)
                 .single();
-            if (error) {
-                console.error('Error fetching transaction:', error);
+
+            if (!attemptJoined.error && attemptJoined.data) {
+                return attemptJoined.data;
+            }
+
+            if (attemptJoined.error) {
+                console.warn('Joined transaction fetch failed, falling back to plain select:', attemptJoined.error);
+            }
+
+            const fallback = await supabaseClient
+                .from('transactions')
+                .select('*')
+                .eq('id', id)
+                .single();
+
+            if (fallback.error) {
+                console.error('Error fetching transaction:', fallback.error);
                 return null;
             }
-            return data;
+
+            const tx = fallback.data || null;
+            if (!tx) return null;
+
+            try {
+                if (tx.cash_box_id) {
+                    const { data: cb } = await supabaseClient
+                        .from('cash_boxes')
+                        .select('id, name, color, currency')
+                        .eq('id', tx.cash_box_id)
+                        .single();
+                    if (cb) tx.cash_box = cb;
+                }
+
+                if (tx.contact_id) {
+                    const { data: contact } = await supabaseClient
+                        .from('contacts')
+                        .select('id, name, email, phone, address')
+                        .eq('id', tx.contact_id)
+                        .single();
+                    if (contact) tx.contact = contact;
+                }
+            } catch (_) {
+                // ignore enrich failures
+            }
+
+            return tx;
         },
 
         async create(transaction) {
