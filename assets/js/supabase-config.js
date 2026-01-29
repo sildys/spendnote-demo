@@ -5,8 +5,36 @@ const SUPABASE_ANON_KEY = 'sb_publishable_Vg44Z7eJacwji3iLii0Dxg_mQlSfwi-';
 if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260129-1339');
 window.__spendnoteSupabaseConfigBuild = '20260129-1339';
 
+// If you previously used localStorage persistence, clean it up so tab-close logout works immediately.
+// Supabase stores sessions under a project-specific key like: sb-<project-ref>-auth-token
+try {
+    const legacyKeys = [
+        'sb-zrnnharudlgxuvewqryj-auth-token',
+        'supabase.auth.token'
+    ];
+
+    legacyKeys.forEach((key) => {
+        try {
+            localStorage.removeItem(key);
+        } catch (_) {
+            // ignore
+        }
+    });
+} catch (_) {
+    // ignore
+}
+
 // Initialize Supabase client
-var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+        // Use sessionStorage so closing the browser/tab will drop the session
+        // (user must log in again unless they explicitly keep the tab open)
+        storage: (typeof window !== 'undefined' && window.sessionStorage) ? window.sessionStorage : undefined,
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+    }
+});
 
 // Auth helper functions
 var auth = {
