@@ -32,7 +32,7 @@
         const safe = Number.isFinite(n) ? n : 0;
         const curr = safeText(currency, 'USD');
         try {
-            return new Intl.NumberFormat(undefined, {
+            return new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: curr,
                 minimumFractionDigits: 2,
@@ -46,7 +46,7 @@
     function formatDateShort(value) {
         const dt = value ? new Date(value) : null;
         if (!dt || Number.isNaN(dt.getTime())) return '—';
-        return dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
     function getInitials(name) {
@@ -525,12 +525,13 @@
     }
 
     async function loadTransactionsPage() {
-        console.log('[TxHistory] loadTransactionsPage called');
+        const debug = Boolean(window.SpendNoteDebug);
+        if (debug) console.log('[TxHistory] loadTransactionsPage called');
         const tbody = qs('#transactionsTable tbody');
         if (!window.db || !window.db.transactions || !window.db.cashBoxes) {
             const tries = (window.__txHistoryInitTries || 0) + 1;
             window.__txHistoryInitTries = tries;
-            console.log('[TxHistory] db not ready, retry', tries);
+            if (debug) console.log('[TxHistory] db not ready, retry', tries);
 
             if (tries < 20) {
                 setTimeout(loadTransactionsPage, 150);
@@ -542,7 +543,7 @@
             renderErrorRow(tbody, 'App database not initialized.');
             return;
         }
-        console.log('[TxHistory] db ready, fetching data...');
+        if (debug) console.log('[TxHistory] db ready, fetching data...');
 
         const cashBoxSelect = qs('#filterRegister');
         const pagination = qs('.pagination-controls');
@@ -553,8 +554,9 @@
             direction: 'all',
             sort: { key: 'date', direction: 'desc' },
             pagination: getPaginationState(),
-            allTx: [],
-            cashBoxes: []
+            cashBoxes: [],
+            cashBoxById: new Map(),
+            totalTxCount: 0
         };
 
         const filterHeader = qs('#filterHeader');
@@ -576,7 +578,7 @@
         // NOTE: Do NOT use localStorage.activeCashBoxId here - it would filter out all transactions
         // that don't belong to the dashboard's active cash box. Only filter by URL param.
 
-        const cashBoxById = new Map();
+        const cashBoxById = state.cashBoxById;
 
         const applyAutoDefaults = () => {
             const cashBoxQueryInput = qs('#filterCashBoxQuery');
@@ -609,10 +611,10 @@
         };
 
         try {
-            console.log('[TxHistory] Fetching cash boxes...');
+            if (debug) console.log('[TxHistory] Fetching cash boxes...');
             const cashBoxes = await window.db.cashBoxes.getAll({ select: 'id, name, color, currency' });
             state.cashBoxes = Array.isArray(cashBoxes) ? cashBoxes : [];
-            console.log('[TxHistory] Got', state.cashBoxes.length, 'cash boxes');
+            if (debug) console.log('[TxHistory] Got', state.cashBoxes.length, 'cash boxes');
 
             state.cashBoxes.forEach((cb) => {
                 if (cb && cb.id) {
@@ -630,29 +632,72 @@
             const currencySelect = qs('#filterCurrency');
             ensureCurrencySelectOptions(currencySelect, state.cashBoxes);
 
-            console.log('[TxHistory] Fetching transactions...');
-            const txSelect = 'id, cash_box_id, type, amount, description, notes, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name, cash_box_sequence, tx_sequence_in_box';
-            state.allTx = await window.db.transactions.getAll({ select: txSelect });
-            console.log('[TxHistory] Got', (state.allTx || []).length, 'transactions');
-
-            // Attach cash box object from local lookup (no join required)
-            state.allTx = (Array.isArray(state.allTx) ? state.allTx : []).map((tx) => {
-                if (tx && !tx.cash_box && tx.cash_box_id) {
-                    tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
+            // Contacts datalist from contacts table (better than per-page tx sampling)
+            try {
+                const contacts = await window.db.contacts.getAll();
+                const contactDatalist = qs('#contactDatalist');
+                if (contactDatalist) {
+                    contactDatalist.innerHTML = '';
+                    (Array.isArray(contacts) ? contacts : []).forEach((c) => {
+                        const opt = document.createElement('option');
+                        const name = safeText(c?.name, '');
+                        const id = safeText(c?.id, '');
+                        opt.value = name || id;
+                        opt.label = id ? `${name || id} (${id})` : (name || id);
+                        contactDatalist.appendChild(opt);
+                    });
                 }
-                return tx;
-            });
+            } catch (_) {
+                // ignore contacts datalist failures
+            }
 
-            const createdBySelect = qs('#filterCreatedBy');
-            const createdByGroup = qs('#filterGroupCreatedBy');
-            const createdByUsers = ensureCreatedBySelectOptions(createdBySelect, state.allTx);
+            // Created by select: current user + team members
+            try {
+                const user = await window.auth.getCurrentUser();
+                const team = await window.db.teamMembers.getAll();
+                const createdBySelect = qs('#filterCreatedBy');
+                if (createdBySelect && user) {
+                    const current = safeText(createdBySelect.value, '');
+                    createdBySelect.innerHTML = '';
 
-            const contactDatalist = qs('#contactDatalist');
-            ensureContactDatalist(contactDatalist, state.allTx);
+                    const optAll = document.createElement('option');
+                    optAll.value = '';
+                    optAll.textContent = 'All team members';
+                    createdBySelect.appendChild(optAll);
+
+                    const me = document.createElement('option');
+                    me.value = user.id;
+                    me.textContent = safeText(user.user_metadata?.full_name || user.email, 'Me');
+                    createdBySelect.appendChild(me);
+
+                    (Array.isArray(team) ? team : []).forEach((tm) => {
+                        const member = tm?.member;
+                        const id = safeText(member?.id || tm?.member_id, '');
+                        if (!id || id === user.id) return;
+                        const label = safeText(member?.full_name || member?.email || tm?.invited_email, id);
+                        const opt = document.createElement('option');
+                        opt.value = id;
+                        opt.textContent = label;
+                        createdBySelect.appendChild(opt);
+                    });
+
+                    if (current) createdBySelect.value = current;
+                }
+            } catch (_) {
+                // ignore created-by select failures
+            }
+
+            // Total count once (for Total Transactions card)
+            try {
+                const stats = await window.db.transactions.getStats({});
+                state.totalTxCount = Number(stats?.count) || 0;
+            } catch (_) {
+                state.totalTxCount = 0;
+            }
 
             applyAutoDefaults();
 
-            console.log('[TxHistory] Data loaded, using Supabase sequence numbers');
+            if (debug) console.log('[TxHistory] Data loaded (server-side mode)');
         } catch (e) {
             console.error('[TxHistory] Failed to load:', e);
             updateStatsFromList([], null, [], []);
@@ -660,7 +705,7 @@
             return;
         }
 
-        console.log('[TxHistory] Setting up event listeners...');
+        if (debug) console.log('[TxHistory] Setting up event listeners...');
         const tabs = qsa('.filter-tab');
         tabs.forEach((tab) => {
             tab.addEventListener('click', (e) => {
@@ -775,28 +820,147 @@
             });
         });
 
-        console.log('[TxHistory] All setup done, calling render()');
+        if (debug) console.log('[TxHistory] All setup done, calling render()');
 
-        function render() {
-            console.log('[TxHistory] render() called, allTx count:', state.allTx.length);
+        const buildServerQuery = () => {
             const filters = getFiltersFromUi(state);
-            console.log('[TxHistory] filters:', JSON.stringify(filters));
-            let visible = applyFilters(state.allTx, filters);
-            console.log('[TxHistory] after filter:', visible.length);
-            visible = sortTransactions(visible, state.sort);
 
-            // Pass selected currency for stats (null if "All Currencies" - no monetary totals)
-            // Total counts always show all in system, monetary stats show filtered
-            updateStatsFromList(visible, filters.currency, state.allTx, state.cashBoxes);
+            // Resolve currency into cash box ids
+            let currencyCashBoxIds = null;
+            if (filters.currency) {
+                currencyCashBoxIds = state.cashBoxes
+                    .filter((cb) => safeText(cb?.currency, '') === filters.currency)
+                    .map((cb) => cb.id);
+            }
 
-            const totalCount = visible.length;
-            const startIdx = (state.pagination.page - 1) * state.pagination.perPage;
-            const slice = visible.slice(startIdx, startIdx + state.pagination.perPage);
+            let cashBoxIds = null;
+            if (filters.cashBoxId) {
+                cashBoxIds = [filters.cashBoxId];
+            } else if (filters.cashBoxQuery) {
+                const q = filters.cashBoxQuery;
+                const matches = state.cashBoxes
+                    .filter((cb) => {
+                        const name = safeText(cb?.name, '').toLowerCase();
+                        const id = safeText(cb?.id, '').toLowerCase();
+                        return name.includes(q) || id.includes(q);
+                    })
+                    .map((cb) => cb.id);
+                if (matches.length) cashBoxIds = matches;
+            }
 
-            renderTableRows(tbody, slice);
+            if (currencyCashBoxIds && cashBoxIds) {
+                const set = new Set(currencyCashBoxIds);
+                cashBoxIds = cashBoxIds.filter((id) => set.has(id));
+            } else if (currencyCashBoxIds) {
+                cashBoxIds = currencyCashBoxIds;
+            }
+
+            const type = filters.direction === 'in'
+                ? 'income'
+                : (filters.direction === 'out' ? 'expense' : null);
+
+            return {
+                filters,
+                cashBoxIds,
+                type
+            };
+        };
+
+        const updateStats = async (serverCtx) => {
+            const currency = serverCtx.filters.currency;
+
+            const elTotal = qs('#statTotalTransactions');
+            const elBoxes = qs('#statCashBoxes');
+            if (elTotal) elTotal.textContent = String(state.totalTxCount || 0);
+            if (elBoxes) elBoxes.textContent = String(state.cashBoxes.length || 0);
+
+            const elIn = qs('#statTotalIn');
+            const elOut = qs('#statTotalOut');
+            const elNet = qs('#statNetBalance');
+
+            if (!currency) {
+                if (elIn) elIn.textContent = '—';
+                if (elOut) elOut.textContent = '—';
+                if (elNet) elNet.textContent = '—';
+                return;
+            }
+
+            const stats = await window.db.transactions.getStats({
+                cashBoxIds: serverCtx.cashBoxIds || null,
+                type: serverCtx.type || null,
+                createdByUserId: serverCtx.filters.createdById || null,
+                startDate: serverCtx.filters.dateFrom || null,
+                endDate: serverCtx.filters.dateTo || null,
+                amountMin: serverCtx.filters.amountMin,
+                amountMax: serverCtx.filters.amountMax,
+                txIdQuery: serverCtx.filters.txIdQuery || null,
+                contactQuery: serverCtx.filters.contactQuery || null
+            });
+
+            const totalIn = Number(stats?.totalIn);
+            const totalOut = Number(stats?.totalOut);
+            if (elIn) elIn.textContent = formatCurrency(Number.isFinite(totalIn) ? totalIn : 0, currency);
+            if (elOut) elOut.textContent = formatCurrency(Number.isFinite(totalOut) ? totalOut : 0, currency);
+            if (elNet) elNet.textContent = formatCurrency((Number.isFinite(totalIn) ? totalIn : 0) - (Number.isFinite(totalOut) ? totalOut : 0), currency);
+        };
+
+        const mapSortKey = (key) => {
+            if (key === 'amount') return 'amount';
+            if (key === 'type') return 'type';
+            if (key === 'id') return 'id';
+            if (key === 'cashbox') return 'cash_box';
+            if (key === 'contact') return 'contact';
+            if (key === 'contact_id') return 'contact_id';
+            if (key === 'created_by') return 'created_by';
+            return 'date';
+        };
+
+        async function render() {
+            const serverCtx = buildServerQuery();
+
+            // Short-circuit empty intersection (currency + cashbox query)
+            if (Array.isArray(serverCtx.cashBoxIds) && serverCtx.cashBoxIds.length === 0) {
+                await updateStats(serverCtx);
+                renderTableRows(tbody, []);
+                state.pagination.onChange = render;
+                renderPagination(pagination, paginationInfo, state.pagination, 0);
+                if (selectAllHeader) selectAllHeader.checked = false;
+                updateBulk();
+                return;
+            }
+
+            const select = 'id, cash_box_id, type, amount, description, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name, cash_box_sequence, tx_sequence_in_box';
+            const pageRes = await window.db.transactions.getPage({
+                select,
+                page: state.pagination.page,
+                perPage: state.pagination.perPage,
+                cashBoxIds: serverCtx.cashBoxIds || null,
+                currency: serverCtx.filters.currency || null,
+                type: serverCtx.type || null,
+                createdByUserId: serverCtx.filters.createdById || null,
+                startDate: serverCtx.filters.dateFrom || null,
+                endDate: serverCtx.filters.dateTo || null,
+                amountMin: serverCtx.filters.amountMin,
+                amountMax: serverCtx.filters.amountMax,
+                txIdQuery: serverCtx.filters.txIdQuery || null,
+                contactQuery: serverCtx.filters.contactQuery || null,
+                sortKey: mapSortKey(state.sort.key),
+                sortDir: state.sort.direction
+            });
+
+            const rows = (Array.isArray(pageRes?.data) ? pageRes.data : []).map((tx) => {
+                if (tx && !tx.cash_box && tx.cash_box_id) {
+                    tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
+                }
+                return tx;
+            });
+
+            await updateStats(serverCtx);
+
+            renderTableRows(tbody, rows);
 
             state.pagination.onChange = render;
-            renderPagination(pagination, paginationInfo, state.pagination, totalCount);
+            renderPagination(pagination, paginationInfo, state.pagination, Number(pageRes?.count) || 0);
 
             if (selectAllHeader) selectAllHeader.checked = false;
             updateBulk();

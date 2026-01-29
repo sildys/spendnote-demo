@@ -36,6 +36,57 @@ var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KE
     }
 });
 
+function isUuid(value) {
+    const v = String(value || '').trim();
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
+}
+
+function parseSnDisplayId(value) {
+    const v = String(value || '').trim();
+    const full = /^sn(\d+)-(\d+)$/i.exec(v);
+    if (full) {
+        return { cashBoxSequence: Number(full[1]), txSequenceInBox: Number(full[2]), partialCashBoxSequence: null };
+    }
+
+    const cbOnly = /^sn(\d+)(?:-|$)/i.exec(v);
+    if (cbOnly && v.includes('-')) {
+        return { cashBoxSequence: null, txSequenceInBox: null, partialCashBoxSequence: Number(cbOnly[1]) };
+    }
+
+    return null;
+}
+
+function applyTxIdQueryToTransactionsQuery(query, txIdQuery) {
+    const q = String(txIdQuery || '').trim();
+    if (!q) return query;
+
+    const sn = parseSnDisplayId(q);
+    if (sn && Number.isFinite(sn.cashBoxSequence) && Number.isFinite(sn.txSequenceInBox)) {
+        return query
+            .eq('cash_box_sequence', sn.cashBoxSequence)
+            .eq('tx_sequence_in_box', sn.txSequenceInBox);
+    }
+
+    if (sn && Number.isFinite(sn.partialCashBoxSequence)) {
+        return query.eq('cash_box_sequence', sn.partialCashBoxSequence);
+    }
+
+    if (isUuid(q)) {
+        return query.eq('id', q);
+    }
+
+    return query.ilike('receipt_number', `%${q}%`);
+}
+
+function applyContactQueryToTransactionsQuery(query, contactQuery) {
+    const q = String(contactQuery || '').trim();
+    if (!q) return query;
+    if (isUuid(q)) {
+        return query.eq('contact_id', q);
+    }
+    return query.ilike('contact_name', `%${q}%`);
+}
+
 // Auth helper functions
 var auth = {
     // Get current user
@@ -474,6 +525,164 @@ var db = {
             }
 
             return result.data || [];
+        },
+
+        async getPage(options = {}) {
+            const user = await auth.getCurrentUser();
+            if (!user) {
+                console.error('No authenticated user');
+                return { data: [], count: 0 };
+            }
+
+            const select = (options && typeof options.select === 'string' && options.select.trim())
+                ? options.select
+                : '*';
+
+            const page = Number(options.page) || 1;
+            const perPage = Number(options.perPage) || 10;
+            const from = Math.max(0, (page - 1) * perPage);
+            const to = Math.max(from, from + perPage - 1);
+
+            let query = supabaseClient
+                .from('transactions')
+                .select(select, { count: 'exact' })
+                .eq('user_id', user.id);
+
+            if (options.cashBoxId) query = query.eq('cash_box_id', options.cashBoxId);
+            if (options.cashBoxIds && Array.isArray(options.cashBoxIds) && options.cashBoxIds.length) {
+                query = query.in('cash_box_id', options.cashBoxIds);
+            }
+            if (options.type) query = query.eq('type', options.type);
+            if (options.createdByUserId) query = query.eq('created_by_user_id', options.createdByUserId);
+
+            if (options.startDate) query = query.gte('transaction_date', options.startDate);
+            if (options.endDate) query = query.lte('transaction_date', options.endDate);
+
+            if (options.amountMin !== undefined && options.amountMin !== null && options.amountMin !== '') {
+                query = query.gte('amount', options.amountMin);
+            }
+            if (options.amountMax !== undefined && options.amountMax !== null && options.amountMax !== '') {
+                query = query.lte('amount', options.amountMax);
+            }
+
+            query = applyTxIdQueryToTransactionsQuery(query, options.txIdQuery);
+            query = applyContactQueryToTransactionsQuery(query, options.contactQuery);
+
+            const sortKey = String(options.sortKey || 'date');
+            const sortDir = String(options.sortDir || 'desc').toLowerCase() === 'asc' ? 'asc' : 'desc';
+            const asc = sortDir === 'asc';
+
+            if (sortKey === 'amount') {
+                query = query.order('amount', { ascending: asc, nullsFirst: false });
+                query = query.order('transaction_date', { ascending: false });
+            } else if (sortKey === 'type') {
+                query = query.order('type', { ascending: asc, nullsFirst: false });
+                query = query.order('transaction_date', { ascending: false });
+            } else if (sortKey === 'id') {
+                query = query.order('cash_box_sequence', { ascending: asc, nullsFirst: false });
+                query = query.order('tx_sequence_in_box', { ascending: asc, nullsFirst: false });
+                query = query.order('transaction_date', { ascending: false });
+            } else if (sortKey === 'cash_box') {
+                query = query.order('cash_box_id', { ascending: asc, nullsFirst: false });
+                query = query.order('transaction_date', { ascending: false });
+            } else if (sortKey === 'contact') {
+                query = query.order('contact_name', { ascending: asc, nullsFirst: false });
+                query = query.order('transaction_date', { ascending: false });
+            } else if (sortKey === 'contact_id') {
+                query = query.order('contact_id', { ascending: asc, nullsFirst: false });
+                query = query.order('transaction_date', { ascending: false });
+            } else if (sortKey === 'created_by') {
+                query = query.order('created_by_user_name', { ascending: asc, nullsFirst: false });
+                query = query.order('transaction_date', { ascending: false });
+            } else {
+                query = query.order('transaction_date', { ascending: asc, nullsFirst: false });
+                query = query.order('created_at', { ascending: asc, nullsFirst: false });
+            }
+
+            const { data, error, count } = await query.range(from, to);
+            if (error) {
+                console.error('Error fetching transactions page:', error);
+                return { data: [], count: 0, error: error.message };
+            }
+
+            return { data: data || [], count: Number(count) || 0 };
+        },
+
+        async getStats(options = {}) {
+            const user = await auth.getCurrentUser();
+            if (!user) {
+                console.error('No authenticated user');
+                return { count: 0, totalIn: null, totalOut: null };
+            }
+
+            try {
+                const { data: rpcData, error: rpcError } = await supabaseClient.rpc('spendnote_transactions_stats', {
+                    p_user_id: user.id,
+                    p_cash_box_ids: (options.cashBoxIds && Array.isArray(options.cashBoxIds) && options.cashBoxIds.length) ? options.cashBoxIds : null,
+                    p_type: options.type || null,
+                    p_created_by_user_id: options.createdByUserId || null,
+                    p_start_date: options.startDate || null,
+                    p_end_date: options.endDate || null,
+                    p_amount_min: (options.amountMin !== undefined && options.amountMin !== null && options.amountMin !== '') ? options.amountMin : null,
+                    p_amount_max: (options.amountMax !== undefined && options.amountMax !== null && options.amountMax !== '') ? options.amountMax : null,
+                    p_tx_id_query: options.txIdQuery || null,
+                    p_contact_query: options.contactQuery || null
+                });
+
+                if (!rpcError && rpcData) {
+                    const row = Array.isArray(rpcData) ? rpcData[0] : rpcData;
+                    return {
+                        count: Number(row?.count) || 0,
+                        totalIn: Number(row?.total_in ?? row?.totalIn) || 0,
+                        totalOut: Number(row?.total_out ?? row?.totalOut) || 0
+                    };
+                }
+            } catch (_) {
+                // ignore rpc failures
+            }
+
+            let query = supabaseClient
+                .from('transactions')
+                .select('id,type,amount', { count: 'exact' })
+                .eq('user_id', user.id);
+
+            if (options.cashBoxId) query = query.eq('cash_box_id', options.cashBoxId);
+            if (options.cashBoxIds && Array.isArray(options.cashBoxIds) && options.cashBoxIds.length) {
+                query = query.in('cash_box_id', options.cashBoxIds);
+            }
+            if (options.type) query = query.eq('type', options.type);
+            if (options.createdByUserId) query = query.eq('created_by_user_id', options.createdByUserId);
+
+            if (options.startDate) query = query.gte('transaction_date', options.startDate);
+            if (options.endDate) query = query.lte('transaction_date', options.endDate);
+
+            if (options.amountMin !== undefined && options.amountMin !== null && options.amountMin !== '') {
+                query = query.gte('amount', options.amountMin);
+            }
+            if (options.amountMax !== undefined && options.amountMax !== null && options.amountMax !== '') {
+                query = query.lte('amount', options.amountMax);
+            }
+
+            query = applyTxIdQueryToTransactionsQuery(query, options.txIdQuery);
+            query = applyContactQueryToTransactionsQuery(query, options.contactQuery);
+
+            const { data, error, count } = await query.limit(5000);
+            if (error) {
+                console.error('Error fetching transaction stats:', error);
+                return { count: 0, totalIn: null, totalOut: null, error: error.message };
+            }
+
+            let totalIn = 0;
+            let totalOut = 0;
+            (data || []).forEach((tx) => {
+                const amt = Number(tx?.amount);
+                const type = String(tx?.type || '').toLowerCase();
+                if (!Number.isFinite(amt)) return;
+                if (type === 'income') totalIn += amt;
+                if (type === 'expense') totalOut += amt;
+            });
+
+            return { count: Number(count) || 0, totalIn, totalOut };
         },
 
         async getById(id) {
