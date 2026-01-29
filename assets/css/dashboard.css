@@ -980,33 +980,35 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 6px 10px;
-            border-radius: 12px;
-            border: 2px solid;
-            background: white;
-            font-weight: 800;
-            font-size: 12px;
-            letter-spacing: 0.05em;
-            width: 84px;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            border: 1px solid;
+            background: transparent;
+            font-weight: 900;
+            font-size: 11px;
+            letter-spacing: 0.04em;
+            width: 74px;
             box-sizing: border-box;
         }
 
         .tx-type-pill.in {
             --quick-accent: #059669;
             color: var(--quick-accent);
-            border-color: var(--quick-accent);
+            border-color: rgba(5, 150, 105, 0.35);
+            background: rgba(5, 150, 105, 0.06);
         }
 
         .tx-type-pill.out {
             --quick-accent: var(--out);
             color: var(--quick-accent);
-            border-color: var(--quick-accent);
+            border-color: rgba(var(--out-rgb), 0.35);
+            background: rgba(var(--out-rgb), 0.06);
         }
 
         .tx-type-pill .quick-icon {
-            width: 18px;
-            height: 18px;
+            width: 14px;
+            height: 14px;
             border-radius: 999px;
             display: inline-flex;
             align-items: center;
@@ -1014,12 +1016,12 @@
             background: var(--quick-accent);
             color: #ffffff;
             border: 1px solid rgba(0, 0, 0, 0.06);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+            box-shadow: none;
             flex-shrink: 0;
         }
 
         .tx-type-pill .quick-icon i {
-            font-size: 10px;
+            font-size: 8px;
         }
 
         .tx-type-pill .quick-label {
