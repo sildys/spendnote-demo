@@ -340,20 +340,24 @@
     }
 
     async function loadTransactionsPage() {
+        console.log('[TxHistory] loadTransactionsPage called');
         const tbody = qs('#transactionsTable tbody');
         if (!window.db || !window.db.transactions || !window.db.cashBoxes) {
             const tries = (window.__txHistoryInitTries || 0) + 1;
             window.__txHistoryInitTries = tries;
+            console.log('[TxHistory] db not ready, retry', tries);
 
             if (tries < 20) {
                 setTimeout(loadTransactionsPage, 150);
                 return;
             }
 
+            console.error('[TxHistory] db never initialized');
             updateStatsFromList([]);
             renderErrorRow(tbody, 'App database not initialized.');
             return;
         }
+        console.log('[TxHistory] db ready, fetching data...');
 
         const cashBoxSelect = qs('#filterRegister');
         const pagination = qs('.pagination-controls');
@@ -389,8 +393,10 @@
         const cashBoxById = new Map();
 
         try {
+            console.log('[TxHistory] Fetching cash boxes...');
             const cashBoxes = await window.db.cashBoxes.getAll({ select: 'id, name, color, currency' });
             state.cashBoxes = Array.isArray(cashBoxes) ? cashBoxes : [];
+            console.log('[TxHistory] Got', state.cashBoxes.length, 'cash boxes');
 
             state.cashBoxes.forEach((cb) => {
                 if (cb && cb.id) {
@@ -401,8 +407,10 @@
             const desiredCashBox = urlCashBoxId || savedCashBoxId;
             ensureCashBoxSelectOptions(cashBoxSelect, state.cashBoxes, desiredCashBox);
 
+            console.log('[TxHistory] Fetching transactions...');
             const txSelect = 'id, cash_box_id, type, amount, description, notes, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name';
             state.allTx = await window.db.transactions.getAll({ select: txSelect });
+            console.log('[TxHistory] Got', (state.allTx || []).length, 'transactions');
 
             // Attach cash box object from local lookup (no join required)
             state.allTx = (Array.isArray(state.allTx) ? state.allTx : []).map((tx) => {
@@ -412,7 +420,7 @@
                 return tx;
             });
         } catch (e) {
-            if (window.SpendNoteDebug) console.error('Failed to load transaction history:', e);
+            console.error('[TxHistory] Failed to load:', e);
             updateStatsFromList([]);
             renderErrorRow(tbody, `Failed to load transactions: ${e && e.message ? e.message : e}`);
             return;
@@ -535,7 +543,16 @@
         render();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    // Expose for explicit invocation (like dashboard pattern)
+    window.loadTransactionsPage = loadTransactionsPage;
+
+    // Also try on DOMContentLoaded as fallback
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTransactionsPage();
+        });
+    } else {
+        // DOM already ready, call directly
         loadTransactionsPage();
-    });
+    }
 })();
