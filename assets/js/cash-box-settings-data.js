@@ -1,4 +1,5 @@
 // Cash Box Settings Data Handler - Create/Update cash boxes
+const DEBUG = window.SpendNoteDebug || false;
 let isEditMode = false;
 let currentCashBoxId = null;
 
@@ -26,18 +27,18 @@ async function initCashBoxSettings() {
             if (pageTitle) pageTitle.textContent = 'Create Cash Box';
         }
         
-        console.log('✅ Cash Box Settings initialized', isEditMode ? '(Edit mode)' : '(Create mode)');
+        if (DEBUG) console.log('Cash Box Settings initialized', isEditMode ? '(Edit mode)' : '(Create mode)');
         
         // Setup Save Changes button handler (with small delay to ensure DOM is ready)
         setTimeout(() => {
             const saveBtns = document.querySelectorAll('.btn-primary');
-            console.log('🔍 Found', saveBtns.length, 'primary buttons');
+            if (DEBUG) console.log('Found', saveBtns.length, 'primary buttons');
             
             saveBtns.forEach(btn => {
-                console.log('🔍 Button text:', btn.textContent);
+                if (DEBUG) console.log('Button text:', btn.textContent);
                 if (btn.textContent.includes('Save')) {
                     btn.addEventListener('click', handleSave);
-                    console.log('✅ Save button handler attached');
+                    if (DEBUG) console.log('Save button handler attached');
                 }
             });
         }, 100);
@@ -83,7 +84,7 @@ async function loadCashBoxData(id) {
             });
         }
         
-        console.log('✅ Cash box data loaded:', cashBox.name);
+        if (DEBUG) console.log('Cash box data loaded:', cashBox.name);
         
     } catch (error) {
         console.error('❌ Error loading cash box data:', error);
@@ -107,9 +108,7 @@ async function handleSave(e) {
         }
         
         // Get current user
-        console.log('🔍 Getting current user...');
         const user = await window.auth.getCurrentUser();
-        console.log('👤 User:', user);
         
         if (!user) {
             throw new Error('You must be logged in to create a cash box');
@@ -122,12 +121,11 @@ async function handleSave(e) {
             .eq('id', user.id)
             .single();
         
-        console.log('👤 Profile:', profile);
-        console.log('❌ Profile error:', profileError);
+        if (DEBUG) console.log('Profile:', profile, 'Error:', profileError);
         
         // If profile doesn't exist, create it automatically
         if (profileError || !profile) {
-            console.log('📝 Creating profile automatically...');
+            if (DEBUG) console.log('Creating profile automatically...');
             const { data: newProfile, error: createError } = await window.supabaseClient
                 .from('profiles')
                 .insert([{
@@ -145,7 +143,7 @@ async function handleSave(e) {
             }
             
             profile = newProfile;
-            console.log('✅ Profile created:', profile);
+            if (DEBUG) console.log('Profile created:', profile);
         }
         
         // Prepare data
@@ -217,7 +215,7 @@ async function handleSave(e) {
             user_id: user.id
         };
         
-        console.log('📝 Form data:', isEditMode ? updatePayload : createPayload);
+        if (DEBUG) console.log('Form data:', isEditMode ? updatePayload : createPayload);
         
         // Show loading state
         const saveBtn = e.target;
@@ -228,7 +226,7 @@ async function handleSave(e) {
         if (isEditMode) {
             // Update existing cash box
             const updateResult = await db.cashBoxes.update(currentCashBoxId, updatePayload);
-            console.log('📦 Update result:', updateResult);
+            if (DEBUG) console.log('Update result:', updateResult);
             if (updateResult && updateResult.success === false) {
                 throw new Error(updateResult.error || 'Failed to update cash box');
             }
@@ -243,7 +241,7 @@ async function handleSave(e) {
                 localStorage.setItem('activeCashBoxRgb', rgb);
             }
 
-            console.log('✅ Cash box updated:', updatePayload.name);
+            if (DEBUG) console.log('Cash box updated:', updatePayload.name);
             alert('Cash box updated successfully!');
         } else {
             // Create new cash box
@@ -252,7 +250,7 @@ async function handleSave(e) {
                 db.cashBoxes.create(createPayload)
             ]);
             const nextSortOrder = Number(maxSortOrder || 0) + 1;
-            console.log('📦 Create result:', result);
+            if (DEBUG) console.log('Create result:', result);
             
             if (result.success === false) {
                 throw new Error(result.error || 'Failed to create cash box');
@@ -266,7 +264,7 @@ async function handleSave(e) {
                 }
             }
             
-            console.log('✅ Cash box created:', createPayload.name);
+            if (DEBUG) console.log('Cash box created:', createPayload.name);
             alert('Cash box created successfully!');
         }
         

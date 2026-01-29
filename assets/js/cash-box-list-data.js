@@ -1,4 +1,5 @@
 // Cash Box List Data Loader - Load real data from Supabase
+const DEBUG = window.SpendNoteDebug || false;
 
 function getSpendNoteHelpers() {
     const sn = (typeof window !== 'undefined' && window.SpendNote) ? window.SpendNote : null;
@@ -346,9 +347,9 @@ async function loadCashBoxList() {
             const savedCard = savedId ? cashBoxCards.find(card => card.dataset.id === savedId) : null;
             setActiveCard(savedCard || cashBoxCards[cashBoxCards.length - 1]);
 
-            console.log('✅ Cash Box List loaded with real data:', cashBoxes.length, 'cash boxes');
+            if (DEBUG) console.log('Cash Box List loaded:', cashBoxes.length, 'cash boxes');
         } else {
-            console.log('ℹ️ No cash boxes found in database');
+            if (DEBUG) console.log('No cash boxes found in database');
         }
         
     } catch (error) {
