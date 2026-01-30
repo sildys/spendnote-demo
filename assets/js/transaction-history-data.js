@@ -1131,7 +1131,7 @@
             });
         }
 
-        // bulkDeleteBtn intentionally disabled until admin-only void/storno workflow is implemented
+        // bulkDeleteBtn intentionally disabled until admin-only void workflow is implemented
 
         render();
     }
