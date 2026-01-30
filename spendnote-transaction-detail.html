@@ -28,8 +28,8 @@
             justify-content: space-between;
             gap: 24px;
             padding: 20px 24px;
-            background: var(--surface);
-            border: 1px solid var(--border);
+            background: rgba(var(--active-rgb), 0.10);
+            border: 1px solid rgba(var(--active-rgb), 0.18);
             border-radius: 16px;
             flex-wrap: wrap;
         }
@@ -38,6 +38,76 @@
             display: flex;
             align-items: center;
             gap: 16px;
+        }
+
+        .tx-id-block {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(0,0,0,0.06);
+            overflow: hidden;
+            min-width: 260px;
+        }
+
+        .tx-id-watermark {
+            position: absolute;
+            right: 10px;
+            top: -6px;
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            opacity: 0.16;
+            pointer-events: none;
+            user-select: none;
+            color: var(--active);
+        }
+
+        .tx-id-watermark.out {
+            color: var(--out);
+        }
+
+        .tx-id-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tx-type-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: rgba(var(--active-rgb), 0.18);
+            color: var(--active);
+        }
+
+        .tx-type-pill.out {
+            background: rgba(var(--out-rgb), 0.18);
+            color: var(--out);
+        }
+
+        .tx-id-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .tx-id-value {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            margin: 0;
+            line-height: 1.1;
         }
 
         .tx-icon {
@@ -92,8 +162,8 @@
             gap: 8px;
             padding: 4px 10px;
             border-radius: 999px;
-            background: rgba(var(--active-rgb), 0.10);
-            border: 1px solid rgba(var(--active-rgb), 0.20);
+            background: rgba(var(--active-rgb), 0.14);
+            border: 1px solid rgba(var(--active-rgb), 0.24);
             color: var(--text);
             font-weight: 600;
         }
@@ -144,6 +214,18 @@
             gap: 8px;
             align-items: center;
             position: relative;
+        }
+
+        .header-actions .btn {
+            height: 42px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .header-actions .btn.btn-icon {
+            width: 42px;
+            padding: 0;
         }
 
         .header-menu {
@@ -826,11 +908,13 @@
         <!-- COMPACT HEADER -->
         <div class="compact-header">
             <div class="header-left">
-                <div class="tx-icon" id="txIcon">
-                    <i class="fas fa-receipt"></i>
-                </div>
-                <div class="header-info">
-                    <h1 id="txTitle">Transaction —</h1>
+                <div class="tx-id-block">
+                    <div class="tx-id-watermark" id="txTypeWatermark">IN</div>
+                    <div class="tx-id-top">
+                        <span class="tx-type-pill" id="txTypePill">IN</span>
+                        <span class="tx-id-label">Transaction ID</span>
+                    </div>
+                    <h1 class="tx-id-value" id="txTitle">—</h1>
                     <div class="header-meta">
                         <span id="txMetaDate"><i class="fas fa-calendar"></i> —</span>
                         <span>•</span>
@@ -847,16 +931,11 @@
                 <div class="header-amount-value in" id="txAmountValue">—</div>
             </div>
             <div class="header-actions">
-                <span class="type-badge in" id="txTypeBadge">IN</span>
-                <button class="btn btn-primary btn-small" onclick="alert('Email Receipt')">
-                    <i class="fas fa-envelope"></i> Email
-                </button>
-                <button class="btn btn-secondary btn-small btn-icon" id="txMoreBtn" type="button" title="More">
-                    <i class="fas fa-ellipsis-h"></i>
-                </button>
+                <button class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                <button class="btn btn-secondary" onclick="alert('Download PDF')"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                <button class="btn btn-primary" onclick="alert('Email Receipt')"><i class="fas fa-envelope"></i> Email</button>
+                <button class="btn btn-secondary btn-icon" id="txMoreBtn" type="button" title="More"><i class="fas fa-ellipsis-h"></i></button>
                 <div class="header-menu" id="txMoreMenu" role="menu" aria-label="More actions">
-                    <button type="button" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
-                    <button type="button" onclick="alert('Download PDF')"><i class="fas fa-file-pdf"></i> Download PDF</button>
                     <button type="button" class="danger" onclick="if(confirm('Delete this transaction?')) alert('Deleted')"><i class="fas fa-trash"></i> Delete</button>
                 </div>
             </div>
@@ -1274,6 +1353,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=ead362b-1"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260130-3"></script>
 </body>
 </html>

@@ -173,20 +173,20 @@
         const contactName = safeText(tx.contact?.name || tx.contact_name, '—');
         const contactId = safeText(tx.contact_id, '—');
 
-        setText(qs('#txTitle'), `Transaction ${displayId}`);
+        setText(qs('#txTitle'), displayId);
         setInnerHtml(qs('#txMetaDate'), `<i class="fas fa-calendar"></i> ${formatDateShort(txDate)}`);
         setText(qs('#txMetaCashBoxText'), `${cashBoxName}${cashBoxCode ? ` (${cashBoxCode})` : ''}`);
 
-        const txIcon = qs('#txIcon');
-        if (txIcon) {
-            txIcon.classList.toggle('out', !isIncome);
+        const typePill = qs('#txTypePill');
+        if (typePill) {
+            typePill.textContent = isIncome ? 'IN' : 'OUT';
+            typePill.classList.toggle('out', !isIncome);
         }
 
-        const typeBadge = qs('#txTypeBadge');
-        if (typeBadge) {
-            typeBadge.textContent = isIncome ? 'IN' : 'OUT';
-            typeBadge.classList.toggle('in', isIncome);
-            typeBadge.classList.toggle('out', !isIncome);
+        const typeWatermark = qs('#txTypeWatermark');
+        if (typeWatermark) {
+            typeWatermark.textContent = isIncome ? 'IN' : 'OUT';
+            typeWatermark.classList.toggle('out', !isIncome);
         }
 
         setText(qs('#txCashBoxName'), cashBoxName);
