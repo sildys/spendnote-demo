@@ -253,6 +253,107 @@
             justify-content: flex-end;
         }
 
+        .tx-action {
+            padding: 6px 12px;
+            background: white;
+            color: var(--primary);
+            border: 1px solid rgba(5, 150, 105, 0.25);
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tx-action:hover {
+            background: rgba(5, 150, 105, 0.08);
+            border-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
+        }
+
+        .tx-action i {
+            font-size: 11px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            gap: 10px;
+            flex-wrap: nowrap;
+            white-space: nowrap;
+        }
+
+        #perPageSelect {
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        #paginationText {
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .pagination-info select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .pagination-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .pagination-btn.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         .action-btn {
             padding: 8px 16px;
             background: rgba(5, 150, 105, 0.1);
@@ -587,7 +688,7 @@
                         <th style="width: 90px; text-align: center;" title="Cash Boxes">Boxes <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-column="transactions" style="width: 50px; text-align: center;" title="Number of Transactions"># <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-column="date" style="width: 110px;">Last Tx <i class="fas fa-sort"></i></th>
-                        <th style="width: 90px;">Actions</th>
+                        <th style="width: 90px; text-align: center;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="ContactsTableBody">
@@ -616,7 +717,7 @@
                         </td>
                         <td>
                             <div class="Contact-actions">
-                                <a href="spendnote-contact-detail.html?id=CONT-001" class="action-btn">View</a>
+                                <a href="spendnote-contact-detail.html?id=CONT-001" class="tx-action btn-view"><span>View</span><i class="fas fa-arrow-right"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -644,7 +745,7 @@
                         </td>
                         <td>
                             <div class="Contact-actions">
-                                <a href="spendnote-contact-detail.html?id=CONT-001" class="action-btn">View</a>
+                                <a href="spendnote-contact-detail.html?id=CONT-002" class="tx-action btn-view"><span>View</span><i class="fas fa-arrow-right"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -673,7 +774,7 @@
                         </td>
                         <td>
                             <div class="Contact-actions">
-                                <a href="spendnote-contact-detail.html?id=CONT-001" class="action-btn">View</a>
+                                <a href="spendnote-contact-detail.html?id=CONT-003" class="tx-action btn-view"><span>View</span><i class="fas fa-arrow-right"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -703,7 +804,7 @@
                         </td>
                         <td>
                             <div class="Contact-actions">
-                                <a href="spendnote-contact-detail.html?id=CONT-001" class="action-btn">View</a>
+                                <a href="spendnote-contact-detail.html?id=CONT-004" class="tx-action btn-view"><span>View</span><i class="fas fa-arrow-right"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -731,7 +832,7 @@
                         </td>
                         <td>
                             <div class="Contact-actions">
-                                <a href="spendnote-contact-detail.html?id=CONT-001" class="action-btn">View</a>
+                                <a href="spendnote-contact-detail.html?id=CONT-005" class="tx-action btn-view"><span>View</span><i class="fas fa-arrow-right"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -760,7 +861,7 @@
                         </td>
                         <td>
                             <div class="Contact-actions">
-                                <a href="spendnote-contact-detail.html?id=CONT-001" class="action-btn">View</a>
+                                <a href="spendnote-contact-detail.html?id=CONT-006" class="tx-action btn-view"><span>View</span><i class="fas fa-arrow-right"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -768,20 +869,16 @@
             </table>
         </div>
 
-        <!-- Pagination Controls -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 0 32px 20px;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <span style="font-size: 14px; color: var(--text-muted);">Show:</span>
-                <select id="perPageSelect" style="padding: 8px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 14px; font-weight: 600; background: var(--surface); cursor: pointer;">
-                    <option value="10" selected>10</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
+        <div class="pagination">
+            <div class="pagination-info">
+                <select id="perPageSelect">
+                    <option value="10">10 per page</option>
+                    <option value="25">25 per page</option>
+                    <option value="50">50 per page</option>
                 </select>
-                <span style="font-size: 14px; color: var(--text-muted);">per page</span>
+                <span id="paginationText">Showing 0-0 of 0</span>
             </div>
-            <div style="font-size: 14px; color: var(--text-muted);">
-                Showing <span id="showingFrom">1</span>-<span id="showingTo">6</span> of <span id="totalContacts">6</span>
-            </div>
+            <div class="pagination-controls"></div>
         </div>
     </div>
     </main>
@@ -945,10 +1042,8 @@
                         <td>
                             <div class="Contact-contact">—</div>
                         </td>
-                        <td>
-                            <div class="Contact-actions">
-                                <a href="${href}" class="action-btn">View</a>
-                            </div>
+                        <td style="text-align: center;">
+                            <a href="${href}" class="tx-action btn-view"><span>View</span><i class="fas fa-arrow-right"></i></a>
                         </td>
                 `;
                 tableBody.appendChild(tr);
@@ -1056,14 +1151,16 @@
 
         function updatePagination() {
             const totalRows = filteredRows.length;
-            const totalPages = Math.ceil(totalRows / perPage);
+            const totalPages = Math.max(1, Math.ceil(totalRows / perPage));
+            currentPage = Math.min(Math.max(1, currentPage), totalPages);
             const start = (currentPage - 1) * perPage;
             const end = Math.min(start + perPage, totalRows);
             
             // Update display
-            document.getElementById('showingFrom').textContent = totalRows > 0 ? start + 1 : 0;
-            document.getElementById('showingTo').textContent = end;
-            document.getElementById('totalContacts').textContent = totalRows;
+            const paginationText = document.getElementById('paginationText');
+            if (paginationText) {
+                paginationText.textContent = `Showing ${totalRows > 0 ? (start + 1) : 0}-${end} of ${totalRows}`;
+            }
             
             // Hide all rows first
             allRows.forEach(row => row.style.display = 'none');
@@ -1074,6 +1171,69 @@
                     row.style.display = '';
                 }
             });
+
+            const controls = document.querySelector('.pagination-controls');
+            if (!controls) return;
+            controls.innerHTML = '';
+
+            const mkBtn = (label, page, opts) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'pagination-btn';
+                if (label === '<') {
+                    btn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                } else if (label === '>') {
+                    btn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                } else {
+                    btn.textContent = label;
+                }
+                if (opts?.active) btn.classList.add('active');
+                if (opts?.disabled) btn.disabled = true;
+                btn.addEventListener('click', () => {
+                    if (btn.disabled) return;
+                    currentPage = page;
+                    updatePagination();
+                });
+                return btn;
+            };
+
+            controls.appendChild(mkBtn('<', Math.max(1, currentPage - 1), { disabled: currentPage <= 1 }));
+
+            const windowSize = 5;
+            const half = Math.floor(windowSize / 2);
+            let startPage = Math.max(1, currentPage - half);
+            let endPage = Math.min(totalPages, startPage + windowSize - 1);
+            startPage = Math.max(1, endPage - windowSize + 1);
+
+            if (startPage > 1) {
+                controls.appendChild(mkBtn('1', 1, { active: currentPage === 1 }));
+                if (startPage > 2) {
+                    const dots = document.createElement('button');
+                    dots.type = 'button';
+                    dots.className = 'pagination-btn';
+                    dots.textContent = '...';
+                    dots.disabled = true;
+                    controls.appendChild(dots);
+                }
+            }
+
+            for (let p = startPage; p <= endPage; p += 1) {
+                controls.appendChild(mkBtn(String(p), p, { active: currentPage === p }));
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const dots = document.createElement('button');
+                    dots.type = 'button';
+                    dots.className = 'pagination-btn';
+                    dots.textContent = '...';
+                    dots.disabled = true;
+                    controls.appendChild(dots);
+                }
+                controls.appendChild(mkBtn(String(totalPages), totalPages, { active: currentPage === totalPages }));
+            }
+
+            controls.appendChild(mkBtn('>', Math.min(totalPages, currentPage + 1), { disabled: currentPage >= totalPages }));
         }
 
         window.addEventListener('load', () => {
