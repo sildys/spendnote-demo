@@ -65,6 +65,18 @@
             align-items: center;
             padding: 10px 16px;
             border-bottom: 1px solid var(--border);
+            cursor: pointer;
+        }
+
+        .filter-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .filter-toggle-icon {
+            transition: transform 0.3s;
+            color: var(--text-muted);
         }
 
         .filter-title {
@@ -103,6 +115,7 @@
 
         .filter-panel {
             padding: 24px;
+            display: none;
         }
 
         .filter-grid {
@@ -199,6 +212,10 @@
             justify-content: flex-end;
         }
 
+        .filter-actions-spacer {
+            flex: 1;
+        }
+
         .filter-btn {
             padding: 10px 20px;
             border-radius: 10px;
@@ -275,16 +292,25 @@
             padding: 6px 12px;
             border-radius: 8px;
             border: none;
-            background: transparent;
+            background: white;
             color: var(--text);
             font-weight: 600;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
-            font-family: inherit;
             display: flex;
             align-items: center;
             gap: 6px;
+        }
+
+        .bulk-action-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .bulk-action-btn:disabled:hover {
+            background: white;
+            color: var(--text);
         }
 
         .bulk-action-btn:hover {
@@ -411,7 +437,7 @@
             font-size: 13px;
         }
 
-        .tx-Contact {
+        .tx-contact {
             font-weight: 600;
             color: var(--text);
         }
@@ -523,6 +549,21 @@
         th.col-action,
         #transactionsTable tbody td:last-child {
             text-align: center;
+        }
+
+        th.col-action {
+            width: 90px;
+        }
+
+        th.col-checkbox {
+            width: 40px;
+        }
+
+        #perPageSelect {
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--surface);
         }
 
         .tx-amount.in {
@@ -789,10 +830,10 @@
 
         <!-- FILTER SECTION -->
         <div class="filter-section">
-            <div class="filter-header" id="filterHeader" style="cursor: pointer;">
-                <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="filter-header" id="filterHeader">
+                <div class="filter-header-left">
                     <div class="filter-title">Filters</div>
-                    <i class="fas fa-chevron-down" id="filterToggleIcon" style="transition: transform 0.3s; color: var(--text-muted);"></i>
+                    <i class="fas fa-chevron-down filter-toggle-icon" id="filterToggleIcon"></i>
                 </div>
                 <div class="filter-tabs">
                     <button class="filter-tab active" data-filter="all">All</button>
@@ -800,7 +841,7 @@
                     <button class="filter-tab" data-filter="out">OUT</button>
                 </div>
             </div>
-            <div class="filter-panel" id="filterPanel" style="display: none;">
+            <div class="filter-panel" id="filterPanel">
                 <div class="filter-grid">
                     <div class="filter-group" id="filterGroupTxId">
                         <label class="filter-label"><i class="fas fa-hashtag"></i> Transaction</label>
@@ -849,7 +890,7 @@
                 <div class="filter-actions">
                     <button class="filter-btn clear" id="exportCSV"><i class="fas fa-file-csv"></i> Export CSV</button>
                     <button class="filter-btn clear" id="exportPDF"><i class="fas fa-file-pdf"></i> Export PDF</button>
-                    <div style="flex: 1;"></div>
+                    <div class="filter-actions-spacer"></div>
                     <button class="filter-btn clear" id="clearFilters"><i class="fas fa-times"></i> Clear All</button>
                     <button class="filter-btn primary" id="applyFilters"><i class="fas fa-check"></i> Apply Filters</button>
                 </div>
@@ -860,15 +901,15 @@
         <div class="bulk-actions" id="bulkActions">
             <span class="bulk-actions-text"><strong><span id="selectedCount">0</span> selected</strong></span>
             <div class="bulk-actions-buttons">
-                <button class="bulk-action-btn">
+                <button class="bulk-action-btn" id="bulkPrint" disabled title="Coming soon">
                     <i class="fas fa-print"></i>
                     Print
                 </button>
-                <button class="bulk-action-btn">
+                <button class="bulk-action-btn" id="bulkEmail" disabled title="Coming soon">
                     <i class="fas fa-envelope"></i>
                     Email
                 </button>
-                <button class="bulk-action-btn delete">
+                <button class="bulk-action-btn delete" id="bulkDelete">
                     <i class="fas fa-trash"></i>
                     Delete
                 </button>
@@ -881,7 +922,7 @@
                 <table id="transactionsTable">
                     <thead>
                         <tr>
-                            <th style="width: 40px;"><input type="checkbox" id="selectAllHeader"></th>
+                            <th class="col-checkbox"><input type="checkbox" id="selectAllHeader"></th>
                             <th class="sortable">Type</th>
                             <th class="sortable">ID</th>
                             <th class="sortable">Date</th>
@@ -890,7 +931,7 @@
                             <th class="sortable">Contact ID</th>
                             <th class="sortable col-amount">Amount</th>
                             <th class="sortable">Created by</th>
-                            <th class="col-action" style="width: 90px;">Action</th>
+                            <th class="col-action">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -901,26 +942,14 @@
             <!-- PAGINATION -->
             <div class="pagination">
                 <div class="pagination-info">
-                    <select id="perPageSelect" style="padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border);">
+                    <select id="perPageSelect">
                         <option value="10">10 per page</option>
                         <option value="25">25 per page</option>
                         <option value="50">50 per page</option>
                     </select>
                     <span id="paginationText">Showing 0-0 of 0</span>
                 </div>
-                <div class="pagination-controls">
-                    <button class="pagination-btn" disabled>
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="pagination-btn active">1</button>
-                    <button class="pagination-btn">2</button>
-                    <button class="pagination-btn">3</button>
-                    <button class="pagination-btn">...</button>
-                    <button class="pagination-btn">35</button>
-                    <button class="pagination-btn">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
+                <div class="pagination-controls"></div>
             </div>
         </div>
         </main>
@@ -1002,6 +1031,6 @@
     <script src="assets/js/nav-loader.js?v=7"></script>
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=20"></script>
-    <script src="assets/js/transaction-history-data.js?v=32"></script>
+    <script src="assets/js/transaction-history-data.js?v=33"></script>
 </body>
 </html>

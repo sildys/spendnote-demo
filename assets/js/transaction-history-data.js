@@ -337,13 +337,21 @@
         });
     }
 
+    function renderLoadingRow(tbody) {
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        const tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="10" style="padding: 24px 10px; text-align: center; color: var(--text-muted); font-weight: 700;">Loading…</td>';
+        tbody.appendChild(tr);
+    }
+
     function renderTableRows(tbody, txs) {
         if (!tbody) return;
         tbody.innerHTML = '';
 
         if (!txs || txs.length === 0) {
             const tr = document.createElement('tr');
-            tr.innerHTML = '<td colspan="10" style="padding: 24px 10px; text-align: center; color: var(--text-muted); font-weight: 600;">No transactions yet.</td>';
+            tr.innerHTML = '<td colspan="10" style="padding: 24px 10px; text-align: center; color: var(--text-muted); font-weight: 700;">No transactions found.</td>';
             tbody.appendChild(tr);
             return;
         }
@@ -380,7 +388,7 @@
                 <td><span class="tx-id">${displayId}</span></td>
                 <td><span class="tx-date">${formatDateShort(tx.transaction_date || tx.created_at)}</span></td>
                 <td><span class="cashbox-badge" style="--cb-color: ${cashBoxColor};">${safeText(tx.cash_box?.name, 'Unknown')}</span></td>
-                <td><span class="tx-Contact">${contactName}</span></td>
+                <td><span class="tx-contact">${contactName}</span></td>
                 <td><span class="tx-contact-id">${contactId}</span></td>
                 <td><span class="tx-amount ${isIncome ? 'in' : 'out'}">${formatCurrency(tx.amount, currency)}</span></td>
                 <td><div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarUrl}" alt="${createdBy}"></div></div></td>
@@ -558,6 +566,8 @@
             cashBoxById: new Map(),
             totalTxCount: 0
         };
+
+        const txSelect = 'id, cash_box_id, type, amount, description, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name, cash_box_sequence, tx_sequence_in_box';
 
         const filterHeader = qs('#filterHeader');
         const filterPanel = qs('#filterPanel');
@@ -801,6 +811,25 @@
             8: 'created_by'
         };
 
+        function escapeCsv(value) {
+            const s = value === undefined || value === null ? '' : String(value);
+            const needs = /[\n\r\t",]/.test(s);
+            const escaped = s.replace(/"/g, '""');
+            return needs ? `"${escaped}"` : escaped;
+        }
+
+        function downloadTextFile(content, filename, mime) {
+            const blob = new Blob([content], { type: mime || 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 500);
+        }
+
         qsa('#transactionsTable thead th.sortable').forEach((th, idx) => {
             th.addEventListener('click', () => {
                 const key = sortMap[idx + 1];
@@ -819,6 +848,16 @@
                 render();
             });
         });
+
+        const exportCsvBtn = qs('#exportCSV');
+        const exportPdfBtn = qs('#exportPDF');
+        const bulkDeleteBtn = qs('#bulkDelete');
+
+        if (exportPdfBtn) {
+            exportPdfBtn.addEventListener('click', () => {
+                window.print();
+            });
+        }
 
         if (debug) console.log('[TxHistory] All setup done, calling render()');
 
@@ -929,9 +968,9 @@
                 return;
             }
 
-            const select = 'id, cash_box_id, type, amount, description, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name, cash_box_sequence, tx_sequence_in_box';
+            renderLoadingRow(tbody);
             const pageRes = await window.db.transactions.getPage({
-                select,
+                select: txSelect,
                 page: state.pagination.page,
                 perPage: state.pagination.perPage,
                 cashBoxIds: serverCtx.cashBoxIds || null,
@@ -964,6 +1003,158 @@
 
             if (selectAllHeader) selectAllHeader.checked = false;
             updateBulk();
+        }
+
+        async function exportFilteredCsv() {
+            if (!window.db || !window.db.transactions) return;
+            const serverCtx = buildServerQuery();
+            if (Array.isArray(serverCtx.cashBoxIds) && serverCtx.cashBoxIds.length === 0) {
+                downloadTextFile('Transaction ID,Type,Date,Cash Box,Cash Box ID,Currency,Contact,Contact ID,Amount,Created by,Description,Receipt Number,Transaction UUID\n', 'transactions.csv', 'text/csv;charset=utf-8');
+                return;
+            }
+
+            const btn = exportCsvBtn;
+            const prevText = btn ? btn.textContent : '';
+            if (btn) btn.disabled = true;
+            if (btn) btn.textContent = 'Exporting…';
+
+            try {
+                const exportPerPage = 1000;
+                const first = await window.db.transactions.getPage({
+                    select: txSelect,
+                    page: 1,
+                    perPage: exportPerPage,
+                    cashBoxIds: serverCtx.cashBoxIds || null,
+                    type: serverCtx.type || null,
+                    createdByUserId: serverCtx.filters.createdById || null,
+                    startDate: serverCtx.filters.dateFrom || null,
+                    endDate: serverCtx.filters.dateTo || null,
+                    amountMin: serverCtx.filters.amountMin,
+                    amountMax: serverCtx.filters.amountMax,
+                    txIdQuery: serverCtx.filters.txIdQuery || null,
+                    contactQuery: serverCtx.filters.contactQuery || null,
+                    sortKey: mapSortKey(state.sort.key),
+                    sortDir: state.sort.direction
+                });
+
+                const total = Number(first?.count) || 0;
+                const maxRows = 10000;
+                let allowedTotal = total;
+
+                if (total > maxRows) {
+                    const proceed = confirm(`This export matches ${total} transactions. Exporting more than ${maxRows} rows may be slow.\n\nClick OK to export the first ${maxRows} rows, or Cancel to adjust filters.`);
+                    if (!proceed) return;
+                    allowedTotal = maxRows;
+                }
+
+                const all = [];
+                const firstRows = Array.isArray(first?.data) ? first.data : [];
+                all.push(...firstRows);
+
+                const pages = Math.ceil(allowedTotal / exportPerPage);
+                for (let p = 2; p <= pages; p += 1) {
+                    const res = await window.db.transactions.getPage({
+                        select: txSelect,
+                        page: p,
+                        perPage: exportPerPage,
+                        cashBoxIds: serverCtx.cashBoxIds || null,
+                        type: serverCtx.type || null,
+                        createdByUserId: serverCtx.filters.createdById || null,
+                        startDate: serverCtx.filters.dateFrom || null,
+                        endDate: serverCtx.filters.dateTo || null,
+                        amountMin: serverCtx.filters.amountMin,
+                        amountMax: serverCtx.filters.amountMax,
+                        txIdQuery: serverCtx.filters.txIdQuery || null,
+                        contactQuery: serverCtx.filters.contactQuery || null,
+                        sortKey: mapSortKey(state.sort.key),
+                        sortDir: state.sort.direction
+                    });
+                    const rows = Array.isArray(res?.data) ? res.data : [];
+                    all.push(...rows);
+                    if (all.length >= allowedTotal) break;
+                }
+
+                const cashBoxByIdLocal = cashBoxById;
+                const header = [
+                    'Transaction ID',
+                    'Type',
+                    'Date',
+                    'Cash Box',
+                    'Cash Box ID',
+                    'Currency',
+                    'Contact',
+                    'Contact ID',
+                    'Amount',
+                    'Created by',
+                    'Description',
+                    'Receipt Number',
+                    'Transaction UUID'
+                ].join(',');
+
+                const lines = [header];
+                all.slice(0, allowedTotal).forEach((tx) => {
+                    const cb = cashBoxByIdLocal.get(String(tx?.cash_box_id)) || null;
+                    const currency = safeText(cb?.currency, '');
+                    const type = safeText(tx?.type, '');
+                    const date = formatDateShort(tx?.transaction_date || tx?.created_at);
+                    lines.push([
+                        escapeCsv(getDisplayId(tx)),
+                        escapeCsv(type),
+                        escapeCsv(date),
+                        escapeCsv(safeText(cb?.name, '')),
+                        escapeCsv(safeText(tx?.cash_box_id, '')),
+                        escapeCsv(currency),
+                        escapeCsv(safeText(tx?.contact_name, '')),
+                        escapeCsv(safeText(tx?.contact_id, '')),
+                        escapeCsv(String(tx?.amount ?? '')),
+                        escapeCsv(safeText(tx?.created_by_user_name, '')),
+                        escapeCsv(safeText(tx?.description, '')),
+                        escapeCsv(safeText(tx?.receipt_number, '')),
+                        escapeCsv(safeText(tx?.id, ''))
+                    ].join(','));
+                });
+
+                const csv = lines.join('\n');
+                downloadTextFile(csv, 'transactions.csv', 'text/csv;charset=utf-8');
+            } finally {
+                if (btn) btn.disabled = false;
+                if (btn) btn.textContent = prevText;
+            }
+        }
+
+        if (exportCsvBtn) {
+            exportCsvBtn.addEventListener('click', () => {
+                exportFilteredCsv();
+            });
+        }
+
+        if (bulkDeleteBtn) {
+            bulkDeleteBtn.addEventListener('click', async () => {
+                const ids = qsa('.row-checkbox:checked', tbody)
+                    .map((cb) => safeText(cb?.dataset?.txId, ''))
+                    .filter(Boolean);
+
+                if (ids.length === 0) return;
+                const ok = confirm(`Delete ${ids.length} transaction(s)? This cannot be undone.`);
+                if (!ok) return;
+
+                bulkDeleteBtn.disabled = true;
+                try {
+                    await Promise.all(ids.map((id) => window.db.transactions.delete(id)));
+
+                    try {
+                        const stats = await window.db.transactions.getStats({});
+                        state.totalTxCount = Number(stats?.count) || 0;
+                    } catch (_) {
+                        // ignore count refresh failures
+                    }
+
+                    if (selectAllHeader) selectAllHeader.checked = false;
+                    render();
+                } finally {
+                    bulkDeleteBtn.disabled = false;
+                }
+            });
         }
 
         render();
