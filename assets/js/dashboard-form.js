@@ -22,7 +22,7 @@ function initTransactionForm() {
             cashBox: document.getElementById('modalCashBoxId')?.value || '',
             loggedBy: document.querySelector('.user-name')?.textContent || 'John',
             ContactName: document.getElementById('modalContactName')?.value || '',
-            ContactAddress: mode === 'detailed' ? (document.getElementById('modalContactAddress')?.value || '') : '',
+            ContactAddress: document.getElementById('modalContactAddress')?.value || '',
             ContactId: document.getElementById('modalContactId')?.value || '',
             direction: document.querySelector('input[name="modalDirection"]:checked')?.value || 'in',
             amount: document.getElementById('modalAmount')?.value || '',
@@ -102,8 +102,13 @@ function initTransactionForm() {
                 return;
             }
 
-            const now = new Date();
-            const transactionDate = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+            const contactEmail = String(document.getElementById('modalContactEmail')?.value || '').trim() || null;
+            const contactPhone = String(document.getElementById('modalContactPhone')?.value || '').trim() || null;
+
+            const dateCandidate = String(formData.date || '').trim();
+            const transactionDate = /^\d{4}-\d{2}-\d{2}$/.test(dateCandidate)
+                ? dateCandidate
+                : new Date().toISOString().slice(0, 10);
 
             // Get or create profile
             let profile = null;
@@ -145,8 +150,8 @@ function initTransactionForm() {
                 line_items: persistedLineItems,
                 contact_id: null,
                 contact_name: contactName,
-                contact_email: null,
-                contact_phone: null,
+                contact_email: contactEmail,
+                contact_phone: contactPhone,
                 contact_address: String(formData.ContactAddress || '').trim() || null,
                 created_by_user_id: user.id,
                 created_by_user_name: profile?.full_name || user.user_metadata?.full_name || user.email || null
@@ -175,27 +180,46 @@ function initTransactionForm() {
             if (!payload.contact_id && shouldSaveContact && window.db?.contacts?.getOrCreate && typeof window.db.contacts.getOrCreate === 'function') {
                 ensuredContact = await window.db.contacts.getOrCreate({
                     name: contactName,
+                    email: contactEmail,
+                    phone: contactPhone,
                     address: payload.contact_address
                 });
             } else if (!payload.contact_id && shouldSaveContact && window.db?.contacts?.create && typeof window.db.contacts.create === 'function') {
                 ensuredContact = await window.db.contacts.create({
                     user_id: user.id,
                     name: contactName,
-                    email: null,
-                    phone: null,
+                    email: contactEmail,
+                    phone: contactPhone,
                     address: payload.contact_address,
                     notes: null
                 });
             }
 
+            if (shouldSaveContact && ensuredContact && ensuredContact.success === false) {
+                alert(ensuredContact?.error || 'Could not save contact. Please try again.');
+                return;
+            }
+
             if (ensuredContact && ensuredContact.success && ensuredContact.data && ensuredContact.data.id) {
                 payload.contact_id = ensuredContact.data.id;
+                const contactIdEl = document.getElementById('modalContactId');
+                if (contactIdEl) contactIdEl.value = ensuredContact.data.id;
             }
 
             // Create transaction
             const result = await window.db.transactions.create(payload);
             if (!result || !result.success) {
-                alert(result?.error || 'Failed to create transaction.');
+                const raw = String(result?.error || '').trim();
+                const lower = raw.toLowerCase();
+                let msg = raw || 'Failed to create transaction.';
+                if (lower.includes('permission denied') || lower.includes('row level security') || lower.includes('rls')) {
+                    msg = 'Permission denied (RLS). Please log out and log in again. If the problem persists, your profile row may be missing.';
+                } else if (lower.includes('foreign key') && (lower.includes('profiles') || lower.includes('user_id'))) {
+                    msg = 'Could not save: profile not found for this user. Please log out and log in again.';
+                } else if (lower.includes('jwt') || lower.includes('session')) {
+                    msg = 'Your session expired. Please log in again.';
+                }
+                alert(msg);
                 return;
             }
 
@@ -300,11 +324,11 @@ function initTransactionForm() {
                     address: address.trim() || null
                 });
 
-                if (result && result.id) {
+                if (result && result.success && result.data && result.data.id) {
                     alert('Contact "' + name + '" added successfully.');
-                    document.getElementById('modalContactId').value = result.id;
+                    document.getElementById('modalContactId').value = result.data.id;
                 } else {
-                    alert('Could not add contact. Please try again.');
+                    alert(result?.error || 'Could not add contact. Please try again.');
                 }
             } catch (error) {
                 console.error('Failed to add contact:', error);

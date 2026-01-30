@@ -6,6 +6,7 @@
 // ========================================
 let lastModalFocusEl = null;
 let isModalSubmitting = false;
+window.isModalSubmitting = false;
 let modalLineItemCount = 0;
 const maxModalLineItems = 4;
 let modalItemsExpanded = false;
@@ -18,6 +19,10 @@ function formatContactDisplayId(sequenceNumber) {
     const n = Number(sequenceNumber);
     if (!Number.isFinite(n) || n <= 0) return '';
     return `CONT-${String(n).padStart(3, '0')}`;
+}
+
+function isUuid(value) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || ''));
 }
 
 // ========================================
@@ -40,6 +45,7 @@ function updateExpandItemsBtnUI() {
 
 function setModalSubmittingState(submitting) {
     isModalSubmitting = Boolean(submitting);
+    window.isModalSubmitting = isModalSubmitting;
     const closeBtn = getEl('closeModalBtn');
     const cancelBtn = getEl('modalCancelBtn');
     if (closeBtn) closeBtn.disabled = isModalSubmitting;
@@ -230,8 +236,13 @@ function updateModalCashboxDisplay() {
     if (cashbox.color && cashbox.rgb) {
         document.documentElement.style.setProperty('--active', cashbox.color);
         document.documentElement.style.setProperty('--active-rgb', cashbox.rgb);
-        localStorage.setItem('activeCashBoxColor', cashbox.color);
-        localStorage.setItem('activeCashBoxRgb', cashbox.rgb);
+        try {
+            localStorage.setItem('activeCashBoxColor', cashbox.color);
+            localStorage.setItem('activeCashBoxRgb', cashbox.rgb);
+            if (isUuid(cashbox.id)) {
+                localStorage.setItem('activeCashBoxId', cashbox.id);
+            }
+        } catch (e) {}
         if (typeof window.updateMenuColors === 'function') window.updateMenuColors(cashbox.color);
     }
 }
