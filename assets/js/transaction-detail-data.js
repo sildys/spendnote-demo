@@ -59,6 +59,30 @@
         return `${date} - ${time}`;
     }
 
+    function getDisplayId(tx) {
+        const cbSeq = tx?.cash_box_sequence;
+        const txSeq = tx?.tx_sequence_in_box;
+        if (cbSeq && txSeq) {
+            const txSeqStr = String(txSeq).padStart(3, '0');
+            return `SN${cbSeq}-${txSeqStr}`;
+        }
+
+        const receipt = safeText(tx?.receipt_number, '');
+        if (receipt) return receipt;
+
+        const id = safeText(tx?.id, '');
+        if (!id) return '—';
+        return id.length > 10 ? `${id.slice(0, 8)}…` : id;
+    }
+
+    function getCashBoxCode(tx) {
+        const cbSeq = Number(tx?.cash_box_sequence || tx?.cash_box?.sequence_number);
+        if (Number.isFinite(cbSeq) && cbSeq > 0) {
+            return `CR-${String(cbSeq).padStart(3, '0')}`;
+        }
+        return '';
+    }
+
     function setText(el, text) {
         if (!el) return;
         el.textContent = text;
@@ -119,7 +143,7 @@
         }
 
         const cashBoxName = safeText(tx.cash_box?.name, 'Unknown');
-        const cashBoxCode = safeText(tx.cash_box?.id, '');
+        const cashBoxCode = getCashBoxCode(tx);
         const cashBoxColor = normalizeHexColor(tx.cash_box?.color || '#059669');
         const cashBoxRgb = hexToRgb(cashBoxColor);
         const currency = safeText(tx.cash_box?.currency, 'USD');
@@ -138,7 +162,7 @@
             window.updateMenuColors(cashBoxColor);
         }
 
-        const displayId = safeText(tx.receipt_number, safeText(tx.id, '—'));
+        const displayId = getDisplayId(tx);
         const tType = safeText(tx.type, '').toLowerCase();
         const isIncome = tType === 'income';
 
@@ -162,6 +186,11 @@
 
         setText(qs('#txCashBoxName'), cashBoxName);
         setText(qs('#txCashBoxCode'), cashBoxCode ? cashBoxCode : '');
+
+        const settingsLabel = cashBoxName && cashBoxName !== 'Unknown'
+            ? `${cashBoxName}${cashBoxCode ? ` (${cashBoxCode})` : ''}`
+            : '—';
+        setText(qs('#txCashBoxSettingsLabel'), settingsLabel);
 
         setHtml(qs('#txIdCode'), `<code>${displayId}</code>`);
         setText(qs('#txDateLong'), formatDateLong(txDate));
