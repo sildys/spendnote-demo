@@ -536,6 +536,10 @@
         const debug = Boolean(window.SpendNoteDebug);
         if (debug) console.log('[TxHistory] loadTransactionsPage called');
         const tbody = qs('#transactionsTable tbody');
+        if (tbody && !window.__txHistoryInitialLoadingRendered) {
+            window.__txHistoryInitialLoadingRendered = true;
+            renderLoadingRow(tbody);
+        }
         if (!window.db || !window.db.transactions || !window.db.cashBoxes) {
             const tries = (window.__txHistoryInitTries || 0) + 1;
             window.__txHistoryInitTries = tries;
@@ -552,6 +556,8 @@
             return;
         }
         if (debug) console.log('[TxHistory] db ready, fetching data...');
+
+        renderLoadingRow(tbody);
 
         const cashBoxSelect = qs('#filterRegister');
         const pagination = qs('.pagination-controls');
@@ -620,30 +626,8 @@
             }
         };
 
-        try {
-            if (debug) console.log('[TxHistory] Fetching cash boxes...');
-            const cashBoxes = await window.db.cashBoxes.getAll({ select: 'id, name, color, currency' });
-            state.cashBoxes = Array.isArray(cashBoxes) ? cashBoxes : [];
-            if (debug) console.log('[TxHistory] Got', state.cashBoxes.length, 'cash boxes');
-
-            state.cashBoxes.forEach((cb) => {
-                if (cb && cb.id) {
-                    cashBoxById.set(String(cb.id), cb);
-                }
-            });
-
-            // Only pre-select cash box if explicitly passed via URL (e.g. from cash box detail page)
-            ensureCashBoxSelectOptions(cashBoxSelect, state.cashBoxes, urlCashBoxId || null);
-
-            const cashBoxDatalist = qs('#cashBoxDatalist');
-            ensureCashBoxDatalist(cashBoxDatalist, state.cashBoxes);
-
-            // Populate currency filter dropdown
-            const currencySelect = qs('#filterCurrency');
-            ensureCurrencySelectOptions(currencySelect, state.cashBoxes);
-
-            // Contacts datalist from contacts table (better than per-page tx sampling)
-            try {
+        Promise.resolve()
+            .then(async () => {
                 const contacts = await window.db.contacts.getAll();
                 const contactDatalist = qs('#contactDatalist');
                 if (contactDatalist) {
@@ -657,12 +641,13 @@
                         contactDatalist.appendChild(opt);
                     });
                 }
-            } catch (_) {
+            })
+            .catch(() => {
                 // ignore contacts datalist failures
-            }
+            });
 
-            // Created by select: current user + team members
-            try {
+        Promise.resolve()
+            .then(async () => {
                 const user = await window.auth.getCurrentUser();
                 const team = await window.db.teamMembers.getAll();
                 const createdBySelect = qs('#filterCreatedBy');
@@ -693,17 +678,43 @@
 
                     if (current) createdBySelect.value = current;
                 }
-            } catch (_) {
+            })
+            .catch(() => {
                 // ignore created-by select failures
-            }
+            });
 
-            // Total count once (for Total Transactions card)
-            try {
+        Promise.resolve()
+            .then(async () => {
                 const stats = await window.db.transactions.getStats({});
                 state.totalTxCount = Number(stats?.count) || 0;
-            } catch (_) {
+                const elTotal = qs('#statTotalTransactions');
+                if (elTotal) elTotal.textContent = String(state.totalTxCount || 0);
+            })
+            .catch(() => {
                 state.totalTxCount = 0;
-            }
+            });
+
+        try {
+            if (debug) console.log('[TxHistory] Fetching cash boxes...');
+            const cashBoxes = await window.db.cashBoxes.getAll({ select: 'id, name, color, currency' });
+            state.cashBoxes = Array.isArray(cashBoxes) ? cashBoxes : [];
+            if (debug) console.log('[TxHistory] Got', state.cashBoxes.length, 'cash boxes');
+
+            state.cashBoxes.forEach((cb) => {
+                if (cb && cb.id) {
+                    cashBoxById.set(String(cb.id), cb);
+                }
+            });
+
+            // Only pre-select cash box if explicitly passed via URL (e.g. from cash box detail page)
+            ensureCashBoxSelectOptions(cashBoxSelect, state.cashBoxes, urlCashBoxId || null);
+
+            const cashBoxDatalist = qs('#cashBoxDatalist');
+            ensureCashBoxDatalist(cashBoxDatalist, state.cashBoxes);
+
+            // Populate currency filter dropdown
+            const currencySelect = qs('#filterCurrency');
+            ensureCurrencySelectOptions(currencySelect, state.cashBoxes);
 
             applyAutoDefaults();
 
