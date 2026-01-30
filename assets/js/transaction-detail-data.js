@@ -177,12 +177,6 @@
         setInnerHtml(qs('#txMetaDate'), `<i class="fas fa-calendar"></i> ${formatDateShort(txDate)}`);
         setText(qs('#txMetaCashBoxText'), `${cashBoxName}${cashBoxCode ? ` (${cashBoxCode})` : ''}`);
 
-        const typePill = qs('#txTypePill');
-        if (typePill) {
-            typePill.textContent = isIncome ? 'IN' : 'OUT';
-            typePill.classList.toggle('out', !isIncome);
-        }
-
         const typeWatermark = qs('#txTypeWatermark');
         if (typeWatermark) {
             typeWatermark.textContent = isIncome ? 'IN' : 'OUT';

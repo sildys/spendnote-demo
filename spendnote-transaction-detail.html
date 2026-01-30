@@ -37,7 +37,7 @@
         .tx-topbar.out {
             --dir: var(--out);
             --dir-rgb: var(--out-rgb);
-            background: rgba(var(--out-rgb), 0.10);
+            background: rgba(var(--out-rgb), 0.06);
         }
 
         .tx-topbar-inner {
@@ -55,11 +55,12 @@
 
         .tx-topbar-card {
             background: rgba(255,255,255,0.92);
-            border: 1px solid rgba(0,0,0,0.10);
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 14px;
             padding: 10px 12px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
         }
 
         .tx-info-card {
@@ -71,7 +72,7 @@
         .tx-info-watermark {
             position: absolute;
             right: 14px;
-            top: -10px;
+            top: 50%;
             font-size: 72px;
             font-weight: 900;
             letter-spacing: -0.06em;
@@ -80,6 +81,7 @@
             user-select: none;
             color: var(--dir, var(--primary));
             line-height: 1;
+            transform: translateY(-50%);
         }
 
         .tx-id-top {
@@ -215,7 +217,7 @@
 
         .tx-actions-card {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             align-items: center;
         }
@@ -926,6 +928,7 @@
             <div class="kebab-container">
                 <button class="btn btn-secondary" id="txMoreBtn" type="button" title="More"><i class="fas fa-ellipsis-v"></i></button>
                 <div class="header-menu" id="txMoreMenu" role="menu" aria-label="More actions">
+                    <button type="button" onclick="alert('Email Receipt')"><i class="fas fa-envelope"></i> Email</button>
                     <button type="button" class="danger" onclick="if(confirm('Delete this transaction?')) alert('Deleted')"><i class="fas fa-trash"></i> Delete</button>
                 </div>
             </div>
@@ -935,7 +938,6 @@
                 <div class="tx-topbar-card tx-info-card" id="txInfoCard">
                     <div class="tx-info-watermark" id="txTypeWatermark">IN</div>
                     <div class="tx-id-top">
-                        <span class="tx-type-pill" id="txTypePill">IN</span>
                         <span class="tx-id-label">Transaction ID</span>
                     </div>
                     <h1 class="tx-id-value" id="txTitle">—</h1>
@@ -958,9 +960,8 @@
 
                 <!-- Card 3: Actions -->
                 <div class="tx-topbar-card tx-actions-card" id="txActionsCard">
-                    <button class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                    <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
                     <button class="btn btn-secondary" onclick="alert('Download PDF')"><i class="fas fa-file-pdf"></i> Download PDF</button>
-                    <button class="btn btn-secondary" onclick="alert('Email Receipt')"><i class="fas fa-envelope"></i> Email</button>
                 </div>
             </div>
         </div>
@@ -1377,6 +1378,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260130-6"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260130-8"></script>
 </body>
 </html>
