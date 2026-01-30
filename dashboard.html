@@ -193,6 +193,10 @@
                                     autocomplete="off"
                                 >
                                 <div id="ContactAutocomplete" class="autocomplete-dropdown"></div>
+                                <label for="modalSaveContact" style="display: inline-flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--text-muted);">
+                                    <input type="checkbox" id="modalSaveContact" style="width: 14px; height: 14px;" />
+                                    Save to Contacts
+                                </label>
                             </div>
                             <div class="form-group modal-contact-address">
                                 <label for="modalContactAddress">Address <span style="font-size: 11px; color: var(--text-muted); font-weight: 500;">(optional)</span></label>
@@ -202,16 +206,6 @@
                                     class="form-control" 
                                     placeholder="Street, City, State"
                                 >
-                            </div>
-                            <div class="form-group modal-contact-save" style="grid-column: 1 / -1; margin-top: -4px;">
-                                <label style="font-size: 12px; color: var(--text-muted); font-weight: 700;">Contact</label>
-                                <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--text);">
-                                    <input type="checkbox" id="modalSaveContact" />
-                                    Save to Contacts
-                                </label>
-                                <div style="font-size: 11px; color: var(--text-muted); font-weight: 500; margin-top: 2px;">
-                                    If unchecked, the name is stored on the transaction only.
-                                </div>
                             </div>
                             <div class="form-group modal-detailed-only modal-contact-company" id="modalContactDetails">
                                 <label for="modalContactCompanyId">Other ID / Company ID</label>
