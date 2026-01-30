@@ -858,35 +858,100 @@
         
         searchInput.addEventListener('input', applyFilters);
         cashBoxFilter.addEventListener('change', applyFilters);
+
+        if (cashBoxFilter) {
+            cashBoxFilter.disabled = true;
+        }
         
         function applyFilters() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const cashBox = cashBoxFilter.value;
-            const rows = tableBody.getElementsByTagName('tr');
-            
-            Array.from(rows).forEach(row => {
-                const text = row.textContent.toLowerCase();
-                let show = true;
-                
-                // Search filter
-                if (searchTerm && !text.includes(searchTerm)) {
-                    show = false;
-                }
-                
-                // Cash Box filter (demo: filter based on contact ID for demonstration)
-                if (cashBox && show) {
-                    const contactId = row.cells[1]?.textContent.trim();
-                    // Demo logic: Main Office = CONT-001, CONT-003; Event Fund = CONT-002, CONT-004; Petty Cash = CONT-005, CONT-006
-                    if (cashBox === 'main' && !['CONT-001', 'CONT-003'].includes(contactId)) {
-                        show = false;
-                    } else if (cashBox === 'event' && !['CONT-002', 'CONT-004'].includes(contactId)) {
-                        show = false;
-                    } else if (cashBox === 'petty' && !['CONT-005', 'CONT-006'].includes(contactId)) {
-                        show = false;
+            const searchTerm = String(searchInput.value || '').trim().toLowerCase();
+
+            filteredRows = allRows.filter((row) => {
+                if (!row) return false;
+
+                if (currentLetter && currentLetter !== 'all') {
+                    const name = String(row.cells[2]?.textContent || '').trim().toUpperCase();
+                    if (!name.startsWith(String(currentLetter).toUpperCase())) {
+                        return false;
                     }
                 }
-                
-                row.style.display = show ? '' : 'none';
+
+                if (!searchTerm) return true;
+                return row.textContent.toLowerCase().includes(searchTerm);
+            });
+
+            currentPage = 1;
+            updatePagination();
+            updateBulkActions();
+        }
+
+        function formatContactDisplayId(sequenceNumber) {
+            const n = Number(sequenceNumber);
+            if (!Number.isFinite(n) || n <= 0) return '—';
+            return `CONT-${String(n).padStart(3, '0')}`;
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        async function loadContactsAndRender() {
+            if (!window.db || !window.db.contacts) {
+                return;
+            }
+
+            const contacts = await window.db.contacts.getAll();
+            tableBody.innerHTML = '';
+
+            (Array.isArray(contacts) ? contacts : []).forEach((c) => {
+                const displayId = formatContactDisplayId(c?.sequence_number);
+                const name = String(c?.name || '').trim() || '—';
+                const email = String(c?.email || '').trim();
+                const phone = String(c?.phone || '').trim();
+                const contactText = email || phone || '—';
+                const contactTextHtml = contactText === '—'
+                    ? '<div class="Contact-contact" style="color: var(--text-muted); font-style: italic;">—</div>'
+                    : `<div class="Contact-contact">${escapeHtml(contactText)}</div>`;
+
+                const href = c?.id
+                    ? `spendnote-contact-detail.html?id=${encodeURIComponent(String(c.id))}`
+                    : 'spendnote-contact-list.html';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                        <td><input type="checkbox" class="row-checkbox"></td>
+                        <td>
+                            <div class="Contact-contact" style="font-weight: 600; color: var(--text-muted);">${escapeHtml(displayId)}</div>
+                        </td>
+                        <td>
+                            <div class="Contact-name">${escapeHtml(name)}</div>
+                        </td>
+                        <td>
+                            ${contactTextHtml}
+                        </td>
+                        <td style="text-align: center;">
+                            <div style="display: flex; gap: 4px; justify-content: center;">
+                                <span class="cashbox-dot" style="background: #94a3b8;" title="—"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="Contact-contact" style="font-weight: 700; color: var(--text);">—</div>
+                        </td>
+                        <td>
+                            <div class="Contact-contact">—</div>
+                        </td>
+                        <td>
+                            <div class="Contact-actions">
+                                <a href="${href}" class="action-btn">View</a>
+                            </div>
+                        </td>
+                `;
+                tableBody.appendChild(tr);
             });
         }
 
@@ -902,10 +967,13 @@
             updateBulkActions();
         });
 
-        // Row checkboxes
-        document.querySelectorAll('.row-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', updateBulkActions);
-        });
+        function bindRowCheckboxHandlers() {
+            document.querySelectorAll('.row-checkbox').forEach(checkbox => {
+                if (checkbox.dataset.bound === '1') return;
+                checkbox.dataset.bound = '1';
+                checkbox.addEventListener('change', updateBulkActions);
+            });
+        }
 
         function updateBulkActions() {
             const checked = document.querySelectorAll('.row-checkbox:checked').length;
@@ -978,12 +1046,12 @@
                 filteredRows = [...allRows];
             } else {
                 filteredRows = allRows.filter(row => {
-                    const name = row.cells[1].textContent.trim().toUpperCase();
+                    const name = row.cells[2].textContent.trim().toUpperCase();
                     return name.startsWith(letter);
                 });
             }
             currentPage = 1;
-            updatePagination();
+            applyFilters();
         }
 
         function updatePagination() {
@@ -1008,70 +1076,76 @@
             });
         }
 
-        // Initialize - sort by name alphabetically
-        allRows = Array.from(tableBody.querySelectorAll('tr'));
-        allRows = sortRows(allRows, 'name', 'asc');
-        allRows.forEach(row => tableBody.appendChild(row));
-        filteredRows = [...allRows];
-        
-        // Set initial sort indicator
-        const nameHeader = document.querySelector('[data-column="name"]');
-        nameHeader.classList.add('asc');
-        
-        updatePagination();
+        window.addEventListener('load', () => {
+            loadContactsAndRender().then(() => {
+                bindRowCheckboxHandlers();
 
-        // Alphabet navigation
-        document.querySelectorAll('.alphabet-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const letter = this.dataset.letter;
-                currentLetter = letter;
-                
-                // Update active state
-                document.querySelectorAll('.alphabet-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Filter by letter
-                filterByLetter(letter);
-            });
-        });
-
-        // Sortable headers
-        document.querySelectorAll('.sortable').forEach(header => {
-            header.addEventListener('click', () => {
-                const column = header.dataset.column;
-                
-                // Toggle sort direction
-                if (currentSort.column === column) {
-                    currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-                } else {
-                    currentSort.column = column;
-                    currentSort.direction = 'asc';
-                }
-                
-                // Remove sort classes from all headers
-                document.querySelectorAll('.sortable').forEach(h => {
-                    h.classList.remove('asc', 'desc');
-                });
-                
-                // Add sort class to current header
-                header.classList.add(currentSort.direction);
-                
-                // Sort rows
-                allRows = sortRows(allRows, column, currentSort.direction);
+                // Initialize - sort by name alphabetically
+                allRows = Array.from(tableBody.querySelectorAll('tr'));
+                allRows = sortRows(allRows, 'name', 'asc');
                 allRows.forEach(row => tableBody.appendChild(row));
+                filteredRows = [...allRows];
                 
-                // Reset to first page and update
-                currentPage = 1;
+                // Set initial sort indicator
+                const nameHeader = document.querySelector('[data-column="name"]');
+                nameHeader.classList.add('asc');
+                
                 updatePagination();
-            });
-        });
 
-        // Per page selector
-        document.getElementById('perPageSelect').addEventListener('change', function() {
-            perPage = parseInt(this.value);
-            currentPage = 1;
-            updatePagination();
-        });
+                // Alphabet navigation
+                document.querySelectorAll('.alphabet-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const letter = this.dataset.letter;
+                        currentLetter = letter;
+                        
+                        // Update active state
+                        document.querySelectorAll('.alphabet-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // Filter by letter
+                        filterByLetter(letter);
+                    });
+                });
+
+                // Sortable headers
+                document.querySelectorAll('.sortable').forEach(header => {
+                    header.addEventListener('click', () => {
+                        const column = header.dataset.column;
+                        
+                        // Toggle sort direction
+                        if (currentSort.column === column) {
+                            currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            currentSort.column = column;
+                            currentSort.direction = 'asc';
+                        }
+                        
+                        // Remove sort classes from all headers
+                        document.querySelectorAll('.sortable').forEach(h => {
+                            h.classList.remove('asc', 'desc');
+                        });
+                        
+                        // Add sort class to current header
+                        header.classList.add(currentSort.direction);
+                        
+                        // Sort rows
+                        allRows = sortRows(allRows, column, currentSort.direction);
+                        allRows.forEach(row => tableBody.appendChild(row));
+                        
+                        // Reset to first page and update
+                        currentPage = 1;
+                        updatePagination();
+                    });
+                });
+
+                // Per page selector
+                document.getElementById('perPageSelect').addEventListener('change', function() {
+                    perPage = parseInt(this.value);
+                    currentPage = 1;
+                    updatePagination();
+                });
+            });
+        }, { once: true });
     </script>
 
     <!-- Sticky Add Transaction Button -->

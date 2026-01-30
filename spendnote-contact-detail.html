@@ -542,50 +542,38 @@
         };
 
         // Initialize page
-        if (mode === 'new') {
-            // New contact mode - generate new Contact ID
-            const newContactId = 'CONT-' + String(Math.floor(Math.random() * 900) + 100).padStart(3, '0');
-            document.getElementById('contactIdBadge').textContent = newContactId;
-            document.getElementById('contactIdBadge').style.opacity = '0.5';
-            document.getElementById('pageTitle').textContent = 'Add New Contact';
-            document.getElementById('contactMeta').innerHTML = `
-                <span style="color: var(--text-muted); font-style: italic;">New contact - ID will be assigned on save</span>
-            `;
-            document.getElementById('formActions').style.display = 'flex';
-            document.getElementById('formActions').style.gap = '12px';
-            document.getElementById('statsCard').style.display = 'none';
-            document.getElementById('transactionsCard').style.display = 'none';
-            
-            // No header actions in new mode - only Save/Cancel in form
-            document.getElementById('headerActions').innerHTML = '';
-            
-            // Enable all form fields
-            document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(field => {
-                field.disabled = false;
-            });
-        } else {
-            // Edit mode - form is always editable
-            const contact = contactData[contactId] || contactData['CONT-001'];
-            
-            document.getElementById('contactIdBadge').textContent = contactId;
-            document.getElementById('pageTitle').textContent = contact.name;
-            document.getElementById('contactMeta').innerHTML = `
-                <span><i class="fas fa-calendar"></i> Created: ${contact.created}</span>
-            `;
-            
-            // Fill form with data
-            document.getElementById('contactName').value = contact.name;
-            document.getElementById('contactEmail').value = contact.email || '';
-            document.getElementById('contactPhone').value = contact.phone || '';
-            document.getElementById('contactAddress').value = contact.address || '';
-            document.getElementById('contactNotes').value = contact.notes || '';
-            
-            // Enable all form fields
-            document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(field => {
-                field.disabled = false;
-            });
-            
-            // Add header actions - Save and Cancel buttons
+        function formatContactDisplayId(sequenceNumber) {
+            const n = Number(sequenceNumber);
+            if (!Number.isFinite(n) || n <= 0) return '—';
+            return `CONT-${String(n).padStart(3, '0')}`;
+        }
+
+        function parseContactDisplayId(value) {
+            const v = String(value || '').trim();
+            const m = /^cont-(\d+)$/i.exec(v);
+            if (!m) return null;
+            const n = Number(m[1]);
+            return Number.isFinite(n) ? n : null;
+        }
+
+        function isUuid(value) {
+            return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || ''));
+        }
+
+        async function resolveContactBySequence(seq) {
+            const user = await window.auth.getCurrentUser();
+            if (!user) return null;
+            const { data, error } = await window.supabaseClient
+                .from('contacts')
+                .select('*')
+                .eq('user_id', user.id)
+                .eq('sequence_number', seq)
+                .single();
+            if (error) return null;
+            return data;
+        }
+
+        function setHeaderActions() {
             document.getElementById('headerActions').innerHTML = `
                 <button type="submit" form="contactForm" class="btn btn-primary">
                     <i class="fas fa-save"></i> Save
@@ -594,57 +582,125 @@
                     <i class="fas fa-times"></i> Cancel
                 </button>
             `;
-            
-            // Hide form actions (we use header actions instead)
             document.getElementById('formActions').style.display = 'none';
-            
-            // Fill stats
-            document.getElementById('statTransactions').textContent = contact.transactions;
-            document.getElementById('statLastActivity').textContent = contact.lastActivity;
-            
-            // Fill recent transactions with links
-            const transactionsList = document.getElementById('transactionsList');
-            if (contact.recentTransactions && contact.recentTransactions.length > 0) {
-                transactionsList.innerHTML = contact.recentTransactions.map(tx => `
-                    <a href="spendnote-transaction-detail.html?id=${tx.id}" class="transaction-item">
-                        <div class="transaction-left">
-                            <div class="transaction-icon ${tx.type.toLowerCase()}">
-                                <i class="fas fa-arrow-${tx.type === 'IN' ? 'down' : 'up'}"></i>
-                            </div>
-                            <div class="transaction-info">
-                                <div class="transaction-id">${tx.id}</div>
-                                <div class="transaction-date">${tx.date}</div>
-                            </div>
-                        </div>
-                        <div class="transaction-amount ${tx.type.toLowerCase()}">${tx.amount}</div>
-                    </a>
-                `).join('');
-            } else {
-                transactionsList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon"><i class="fas fa-receipt"></i></div>
-                        <div class="empty-state-text">No transactions yet</div>
-                    </div>
-                `;
-            }
         }
 
-        // Handle form submission
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const formData = {
-                name: document.getElementById('contactName').value,
-                email: document.getElementById('contactEmail').value,
-                phone: document.getElementById('contactPhone').value,
-                address: document.getElementById('contactAddress').value,
-                notes: document.getElementById('contactNotes').value
-            };
-            
-            console.log('Contact saved:', formData);
-            alert('Contact saved successfully! (Demo only)');
-            window.location.href = 'spendnote-contact-list.html';
-        });
+        async function init() {
+            if (!window.db || !window.db.contacts || !window.auth) {
+                return;
+            }
+
+            const badge = document.getElementById('contactIdBadge');
+
+            if (mode === 'new') {
+                if (badge) {
+                    badge.textContent = '—';
+                    badge.style.opacity = '0.5';
+                }
+                document.getElementById('pageTitle').textContent = 'Add New Contact';
+                document.getElementById('contactMeta').innerHTML = `
+                    <span style="color: var(--text-muted); font-style: italic;">New contact - ID will be assigned on save</span>
+                `;
+                document.getElementById('statsCard').style.display = 'none';
+                document.getElementById('transactionsCard').style.display = 'none';
+                document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(field => {
+                    field.disabled = false;
+                });
+                setHeaderActions();
+                return;
+            }
+
+            let resolved = null;
+            if (isUuid(contactId)) {
+                resolved = await window.db.contacts.getById(contactId);
+            } else {
+                const seq = parseContactDisplayId(contactId);
+                if (Number.isFinite(seq)) {
+                    resolved = await resolveContactBySequence(seq);
+                }
+            }
+
+            if (!resolved) {
+                alert('Contact not found.');
+                window.location.href = 'spendnote-contact-list.html';
+                return;
+            }
+
+            const displayId = formatContactDisplayId(resolved.sequence_number);
+            if (badge) {
+                badge.textContent = displayId;
+                badge.style.opacity = '1';
+            }
+            document.getElementById('pageTitle').textContent = resolved.name || 'Contact';
+
+            document.getElementById('contactName').value = resolved.name || '';
+            document.getElementById('contactEmail').value = resolved.email || '';
+            document.getElementById('contactPhone').value = resolved.phone || '';
+            document.getElementById('contactAddress').value = resolved.address || '';
+            document.getElementById('contactNotes').value = resolved.notes || '';
+
+            document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(field => {
+                field.disabled = false;
+            });
+
+            setHeaderActions();
+        }
+
+        window.addEventListener('load', () => {
+            init();
+
+            document.getElementById('contactForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const user = await window.auth.getCurrentUser();
+                if (!user) {
+                    alert('You are not logged in.');
+                    return;
+                }
+
+                const payload = {
+                    user_id: user.id,
+                    name: document.getElementById('contactName').value.trim(),
+                    email: document.getElementById('contactEmail').value.trim() || null,
+                    phone: document.getElementById('contactPhone').value.trim() || null,
+                    address: document.getElementById('contactAddress').value.trim() || null,
+                    notes: document.getElementById('contactNotes').value.trim() || null
+                };
+
+                if (!payload.name) {
+                    alert('Name is required.');
+                    return;
+                }
+
+                try {
+                    if (mode === 'new') {
+                        const res = await window.db.contacts.create(payload);
+                        if (!res || !res.success || !res.data) {
+                            alert(res?.error || 'Failed to create contact.');
+                            return;
+                        }
+                        window.location.href = `spendnote-contact-detail.html?id=${encodeURIComponent(String(res.data.id))}`;
+                        return;
+                    }
+
+                    const id = isUuid(contactId) ? contactId : null;
+                    if (!id) {
+                        alert('Invalid contact id.');
+                        return;
+                    }
+
+                    const res = await window.db.contacts.update(id, payload);
+                    if (!res || !res.success || !res.data) {
+                        alert(res?.error || 'Failed to update contact.');
+                        return;
+                    }
+                    window.location.reload();
+                } catch (err) {
+                    console.error('Contact save failed:', err);
+                    alert(err?.message || 'Failed to save contact.');
+                }
+            });
+        }, { once: true });
     </script>
 
     <!-- Supabase -->

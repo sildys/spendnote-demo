@@ -367,9 +367,16 @@ var db = {
     // Contacts
     contacts: {
         async getAll() {
+            const user = await auth.getCurrentUser();
+            if (!user) {
+                console.error('No authenticated user');
+                return [];
+            }
+
             const { data, error } = await supabaseClient
                 .from('contacts')
                 .select('*')
+                .eq('user_id', user.id)
                 .order('name', { ascending: true });
             if (error) {
                 console.error('Error fetching contacts:', error);
