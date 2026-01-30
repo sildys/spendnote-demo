@@ -770,10 +770,6 @@
                             <span class="info-value" id="txDateLong">—</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">Title</span>
-                            <span class="info-value" id="txDescription">—</span>
-                        </div>
-                        <div class="info-row">
                             <span class="info-label">Contact Name</span>
                             <span class="info-value" id="txContactName">—</span>
                         </div>
@@ -1120,6 +1116,8 @@
         // Track current format
         let currentFormat = 'a4';
 
+        const txId = new URLSearchParams(window.location.search).get('id');
+
         // Build URL with parameters
         function buildReceiptUrl(format) {
             const baseUrls = {
@@ -1129,6 +1127,7 @@
             };
             
             const params = new URLSearchParams();
+            if (txId) params.append('txId', txId);
             for (const [key, value] of Object.entries(displayOptions)) {
                 params.append(key, value);
             }

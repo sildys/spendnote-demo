@@ -329,7 +329,6 @@ body {
     <div class="identifiers">
       <div class="register-id">Cash Box ID: REG-000123</div>
       <div class="receipt-id-line">Receipt ID: TRX-2026-00342</div>
-      <div class="reference-id-line">Reference ID: PO-2026-0142</div>
     </div>
     <div class="logo-box">Company logo</div>
   </div>
@@ -348,7 +347,7 @@ body {
       </div>
       <div class="party right">
         <strong>TO</strong>
-        Sarah Johnson<br>
+        <span class="contact-name">—</span><br>
         <span class="contact-address">
         456 Oak Avenue<br>
         Springfield, IL 62702</span><br>
@@ -416,7 +415,6 @@ body {
     <div class="identifiers">
       <div class="register-id">Cash Box ID: REG-000123</div>
       <div class="receipt-id-line">Receipt ID: TRX-2026-00342</div>
-      <div class="reference-id-line">Reference ID: PO-2026-0142</div>
     </div>
     <div class="logo-box">Company logo</div>
   </div>
@@ -435,7 +433,7 @@ body {
       </div>
       <div class="party right">
         <strong>TO</strong>
-        Sarah Johnson<br>
+        <span class="contact-name">—</span><br>
         <span class="contact-address">
         456 Oak Avenue<br>
         Springfield, IL 62702</span><br>
@@ -587,5 +585,85 @@ body {
     <script src="assets/js/auth-guard.js"></script>
     
     <script src="assets/js/main.js"></script>
+
+    <script>
+      (async function () {
+        const txId = new URLSearchParams(window.location.search).get('txId');
+        if (!txId || !window.db?.transactions?.getById) return;
+
+        function safeText(value, fallback) {
+          const v = value === undefined || value === null ? '' : String(value);
+          return v.trim() ? v : (fallback || '');
+        }
+
+        function getDisplayId(tx) {
+          const cbSeq = tx?.cash_box_sequence;
+          const txSeq = tx?.tx_sequence_in_box;
+          if (cbSeq && txSeq) {
+            const txSeqStr = String(txSeq).padStart(3, '0');
+            return `SN${cbSeq}-${txSeqStr}`;
+          }
+          const receipt = safeText(tx?.receipt_number, '');
+          if (receipt) return receipt;
+          const id = safeText(tx?.id, '');
+          if (!id) return '';
+          return id.length > 10 ? `${id.slice(0, 8)}…` : id;
+        }
+
+        function getCashBoxCode(tx) {
+          const cbSeq = Number(tx?.cash_box_sequence || tx?.cash_box?.sequence_number);
+          if (Number.isFinite(cbSeq) && cbSeq > 0) {
+            return `CR-${String(cbSeq).padStart(3, '0')}`;
+          }
+          return '';
+        }
+
+        function formatDateShort(value) {
+          const dt = value ? new Date(value) : null;
+          if (!dt || Number.isNaN(dt.getTime())) return '';
+          return dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function setTextAll(selector, text) {
+          document.querySelectorAll(selector).forEach((el) => {
+            el.textContent = text;
+          });
+        }
+
+        function setHtmlAll(selector, html) {
+          document.querySelectorAll(selector).forEach((el) => {
+            el.innerHTML = html;
+          });
+        }
+
+        try {
+          const tx = await window.db.transactions.getById(txId);
+          if (!tx) return;
+
+          const displayId = getDisplayId(tx);
+          const cashBoxCode = getCashBoxCode(tx);
+          const createdBy = safeText(tx.created_by_user_name || tx.created_by, '');
+          const txDate = tx.transaction_date || tx.created_at;
+          const contactName = safeText(tx.contact?.name || tx.contact_name, '');
+          const contactAddress = safeText(tx.contact?.address, '');
+
+          if (cashBoxCode) setTextAll('.register-id', `Cash Box ID: ${cashBoxCode}`);
+          if (displayId) setTextAll('.receipt-id-line', `Receipt ID: ${displayId}`);
+          if (createdBy) setTextAll('.recorded-by', `Recorded by: ${createdBy}`);
+          const d = formatDateShort(txDate);
+          if (d) {
+            setHtmlAll('.meta', `<span class="recorded-by">Recorded by: ${createdBy || '—'}</span><span class="date-separator"> &nbsp; </span>Date: ${d}`);
+          }
+
+          if (contactName) setTextAll('.contact-name', contactName);
+          if (contactAddress) {
+            const html = contactAddress.split(/\r?\n/).map((l) => safeText(l, '')).filter(Boolean).join('<br>');
+            setHtmlAll('.contact-address', html);
+          }
+        } catch (_) {
+          // ignore
+        }
+      })();
+    </script>
 </body>
 </html>

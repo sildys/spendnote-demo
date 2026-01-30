@@ -172,7 +172,6 @@
         const createdBy = safeText(tx.created_by_user_name || tx.created_by, '—');
         const contactName = safeText(tx.contact?.name || tx.contact_name, '—');
         const contactId = safeText(tx.contact_id, '—');
-        const description = safeText(tx.description, '—');
 
         setText(qs('#txTitle'), `Transaction ${displayId}`);
         setInnerHtml(qs('#txMetaDate'), `<i class="fas fa-calendar"></i> ${formatDateShort(txDate)}`);
@@ -195,7 +194,6 @@
 
         setHtml(qs('#txIdCode'), `<code>${displayId}</code>`);
         setText(qs('#txDateLong'), formatDateLong(txDate));
-        setText(qs('#txDescription'), description);
         setText(qs('#txContactName'), contactName);
         setText(qs('#txAdditionalInfo'), contactId);
 

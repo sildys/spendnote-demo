@@ -452,7 +452,6 @@
             <div class="receipt-ids">
               <strong class="register-id">Cash Box ID:</strong> <span class="register-id">REG-000123</span><br>
               <strong class="receipt-id-line">Receipt ID:</strong> <span class="receipt-id-line">TRX-2026-00342</span><br>
-              <strong class="reference-id-line">Reference ID:</strong> <span class="reference-id-line">PO-2026-0142</span>
             </div>
           </div>
           
@@ -471,7 +470,7 @@
             </div>
             <div class="party">
               <div class="party-label">To</div>
-              <div class="party-name">Sarah Johnson</div>
+              <div class="party-name contact-name">Sarah Johnson</div>
               <div class="party-info contact-address to-address">
                 456 Oak Avenue<br>
                 Springfield, IL 62702
@@ -667,5 +666,95 @@ if (urlParams.get('signatures') === '0') {
     <script src="assets/js/auth-guard.js"></script>
     
     <script src="assets/js/main.js"></script>
+
+    <script>
+      (async function () {
+        const txId = new URLSearchParams(window.location.search).get('txId');
+        if (!txId) return;
+
+        function safeText(value, fallback) {
+          const v = value === undefined || value === null ? '' : String(value);
+          return v.trim() ? v : (fallback || '');
+        }
+
+        function getDisplayId(tx) {
+          const cbSeq = tx?.cash_box_sequence;
+          const txSeq = tx?.tx_sequence_in_box;
+          if (cbSeq && txSeq) {
+            const txSeqStr = String(txSeq).padStart(3, '0');
+            return `SN${cbSeq}-${txSeqStr}`;
+          }
+          const receipt = safeText(tx?.receipt_number, '');
+          if (receipt) return receipt;
+          const id = safeText(tx?.id, '');
+          if (!id) return '';
+          return id.length > 10 ? `${id.slice(0, 8)}…` : id;
+        }
+
+        function getCashBoxCode(tx) {
+          const cbSeq = Number(tx?.cash_box_sequence || tx?.cash_box?.sequence_number);
+          if (Number.isFinite(cbSeq) && cbSeq > 0) {
+            return `CR-${String(cbSeq).padStart(3, '0')}`;
+          }
+          return '';
+        }
+
+        function formatDateShort(value) {
+          const dt = value ? new Date(value) : null;
+          if (!dt || Number.isNaN(dt.getTime())) return '';
+          return dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function setTextAll(selector, text) {
+          document.querySelectorAll(selector).forEach((el) => {
+            el.textContent = text;
+          });
+        }
+
+        function setHtmlAll(selector, html) {
+          document.querySelectorAll(selector).forEach((el) => {
+            el.innerHTML = html;
+          });
+        }
+
+        const waitForDb = async () => {
+          for (let i = 0; i < 50; i++) {
+            if (window.db?.transactions?.getById) return true;
+            await new Promise((r) => setTimeout(r, 50));
+          }
+          return false;
+        };
+
+        try {
+          const ok = await waitForDb();
+          if (!ok) return;
+
+          const tx = await window.db.transactions.getById(txId);
+          if (!tx) return;
+
+          const displayId = getDisplayId(tx);
+          const cashBoxCode = getCashBoxCode(tx);
+          const createdBy = safeText(tx.created_by_user_name || tx.created_by, '—');
+          const txDate = tx.transaction_date || tx.created_at;
+          const contactName = safeText(tx.contact?.name || tx.contact_name, '—');
+          const contactAddress = safeText(tx.contact?.address, '');
+
+          if (cashBoxCode) setTextAll('span.register-id', cashBoxCode);
+          if (displayId) setTextAll('span.receipt-id-line', displayId);
+
+          setTextAll('.recorded-by', `Recorded by: ${createdBy}`);
+          const d = formatDateShort(txDate);
+          if (d) setTextAll('.receipt-date', `Date: ${d}`);
+
+          setTextAll('.contact-name', contactName);
+          if (contactAddress) {
+            const html = contactAddress.split(/\r?\n/).map((l) => safeText(l, '')).filter(Boolean).join('<br>');
+            setHtmlAll('.contact-address', html);
+          }
+        } catch (_) {
+          // ignore
+        }
+      })();
+    </script>
 </body>
 </html>
