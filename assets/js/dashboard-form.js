@@ -152,6 +152,18 @@ function initTransactionForm() {
                 created_by_user_name: profile?.full_name || user.user_metadata?.full_name || user.email || null
             };
 
+            if (payload.type === 'expense') {
+                const cb = payload.cash_box_id && window.db?.cashBoxes?.getById
+                    ? await window.db.cashBoxes.getById(payload.cash_box_id)
+                    : null;
+                const currentBalance = Number(cb?.current_balance);
+                const balance = Number.isFinite(currentBalance) ? currentBalance : 0;
+                if (finalAmount > balance) {
+                    alert('Not enough funds in this Cash Box.');
+                    return;
+                }
+            }
+
             const selectedContactId = String(document.getElementById('modalContactId')?.value || '').trim();
             if (isUuid(selectedContactId)) {
                 payload.contact_id = selectedContactId;
