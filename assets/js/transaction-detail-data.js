@@ -192,10 +192,10 @@
         setText(qs('#txCashBoxName'), cashBoxName);
         setText(qs('#txCashBoxCode'), cashBoxCode || '—');
 
-        const headerBar = qs('.compact-header');
-        if (headerBar) {
-            headerBar.classList.toggle('in', isIncome);
-            headerBar.classList.toggle('out', !isIncome);
+        const topBar = qs('#txTopbar');
+        if (topBar) {
+            topBar.classList.toggle('in', isIncome);
+            topBar.classList.toggle('out', !isIncome);
         }
 
         setHtml(qs('#txIdCode'), `<code>${displayId}</code>`);

@@ -21,54 +21,58 @@
             gap: 20px;
         }
 
-        /* COMPACT HEADER - like Cash Box Detail */
-        .compact-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 12px 16px;
-            background: rgba(255,255,255,0.92);
-            border: 1px solid rgba(0,0,0,0.10);
+        .tx-topbar {
             border-radius: 16px;
-            flex-wrap: wrap;
+            padding: 12px;
+            border: 1px solid rgba(0,0,0,0.08);
             position: relative;
         }
 
-        .compact-header.in {
+        .tx-topbar.in {
             --dir: var(--primary);
             --dir-rgb: 5, 150, 105;
+            background: rgba(5, 150, 105, 0.10);
         }
 
-        .compact-header.out {
+        .tx-topbar.out {
             --dir: var(--out);
             --dir-rgb: var(--out-rgb);
+            background: rgba(var(--out-rgb), 0.10);
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+        .tx-topbar-inner {
+            display: grid;
+            grid-template-columns: 1.4fr 0.8fr 1fr;
+            gap: 12px;
+            align-items: stretch;
         }
 
-        .tx-id-block {
+        @media (max-width: 1100px) {
+            .tx-topbar-inner {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tx-topbar-card {
+            background: rgba(255,255,255,0.92);
+            border: 1px solid rgba(0,0,0,0.10);
+            border-radius: 14px;
+            padding: 10px 12px;
             position: relative;
+            overflow: hidden;
+        }
+
+        .tx-info-card {
             display: flex;
             flex-direction: column;
             gap: 6px;
-            padding: 8px 10px;
-            border-radius: 14px;
-            background: rgba(255, 255, 255, 0.72);
-            border: 1px solid rgba(0,0,0,0.08);
-            overflow: hidden;
-            min-width: 260px;
         }
 
-        .header-watermark {
+        .tx-info-watermark {
             position: absolute;
-            right: 70px;
-            top: -8px;
-            font-size: 64px;
+            right: 14px;
+            top: -10px;
+            font-size: 72px;
             font-weight: 900;
             letter-spacing: -0.06em;
             opacity: 0.10;
@@ -184,19 +188,11 @@
             box-shadow: 0 0 0 3px rgba(var(--active-rgb), 0.18);
         }
 
-        .header-amount {
+        .tx-amount-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
             text-align: center;
-            padding: 0 20px;
-            border-left: 1px solid var(--border);
-            border-right: 1px solid var(--border);
-        }
-
-        .header-amount.in {
-            background: rgba(var(--dir-rgb, 5, 150, 105), 0.06);
-        }
-
-        .header-amount.out {
-            background: rgba(var(--out-rgb), 0.08);
         }
 
         .header-amount-label {
@@ -217,22 +213,19 @@
         .header-amount-value.in { color: var(--primary); }
         .header-amount-value.out { color: var(--out); }
 
-        .header-actions {
-            display: flex;
-            gap: 8px;
+        .tx-actions-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
             align-items: center;
         }
 
-        .header-actions .btn {
-            height: 42px;
-            padding: 10px 16px;
+        .tx-actions-card .btn {
+            height: 44px;
+            width: 100%;
+            justify-content: center;
             font-size: 14px;
             font-weight: 700;
-        }
-
-        .header-actions .btn.btn-icon {
-            width: 42px;
-            padding: 0;
         }
 
         .header-menu {
@@ -254,6 +247,15 @@
             top: 10px;
             right: 10px;
             z-index: 60;
+        }
+
+        .kebab-container .btn {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .header-menu.open {
@@ -919,11 +921,19 @@
 
 <div class="app-container">
     <main class="main-content">
-        <!-- COMPACT HEADER -->
-        <div class="compact-header">
-            <div class="header-watermark" id="txTypeWatermark">IN</div>
-            <div class="header-left">
-                <div class="tx-id-block">
+        <!-- TOP BAR (Direction colored) -->
+        <div class="tx-topbar" id="txTopbar">
+            <div class="kebab-container">
+                <button class="btn btn-secondary" id="txMoreBtn" type="button" title="More"><i class="fas fa-ellipsis-v"></i></button>
+                <div class="header-menu" id="txMoreMenu" role="menu" aria-label="More actions">
+                    <button type="button" class="danger" onclick="if(confirm('Delete this transaction?')) alert('Deleted')"><i class="fas fa-trash"></i> Delete</button>
+                </div>
+            </div>
+
+            <div class="tx-topbar-inner">
+                <!-- Card 1: ID + date + cash box + watermark -->
+                <div class="tx-topbar-card tx-info-card" id="txInfoCard">
+                    <div class="tx-info-watermark" id="txTypeWatermark">IN</div>
                     <div class="tx-id-top">
                         <span class="tx-type-pill" id="txTypePill">IN</span>
                         <span class="tx-id-label">Transaction ID</span>
@@ -939,21 +949,18 @@
                         </span>
                     </div>
                 </div>
-            </div>
-            <div class="header-amount in" id="txHeaderAmount">
-                <div class="header-amount-label" id="txDirectionLabel">Cash IN</div>
-                <div class="header-amount-value in" id="txAmountValue">—</div>
-            </div>
-            <div class="header-actions">
-                <button class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
-                <button class="btn btn-secondary" onclick="alert('Download PDF')"><i class="fas fa-file-pdf"></i> Download PDF</button>
-                <button class="btn btn-secondary" onclick="alert('Email Receipt')"><i class="fas fa-envelope"></i> Email</button>
-            </div>
 
-            <div class="kebab-container">
-                <button class="btn btn-secondary btn-icon" id="txMoreBtn" type="button" title="More"><i class="fas fa-ellipsis-v"></i></button>
-                <div class="header-menu" id="txMoreMenu" role="menu" aria-label="More actions">
-                    <button type="button" class="danger" onclick="if(confirm('Delete this transaction?')) alert('Deleted')"><i class="fas fa-trash"></i> Delete</button>
+                <!-- Card 2: Amount -->
+                <div class="tx-topbar-card tx-amount-card" id="txHeaderAmount">
+                    <div class="header-amount-label" id="txDirectionLabel">Cash IN</div>
+                    <div class="header-amount-value in" id="txAmountValue">—</div>
+                </div>
+
+                <!-- Card 3: Actions -->
+                <div class="tx-topbar-card tx-actions-card" id="txActionsCard">
+                    <button class="btn btn-secondary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                    <button class="btn btn-secondary" onclick="alert('Download PDF')"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                    <button class="btn btn-secondary" onclick="alert('Email Receipt')"><i class="fas fa-envelope"></i> Email</button>
                 </div>
             </div>
         </div>
@@ -1370,6 +1377,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260130-5"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260130-6"></script>
 </body>
 </html>
