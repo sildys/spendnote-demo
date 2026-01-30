@@ -156,12 +156,13 @@ function initTransactionForm() {
 
             // Ensure contact exists
             let ensuredContact = null;
-            if (!payload.contact_id && window.db?.contacts?.getOrCreate && typeof window.db.contacts.getOrCreate === 'function') {
+            const shouldSaveContact = Boolean(document.getElementById('modalSaveContact')?.checked);
+            if (!payload.contact_id && shouldSaveContact && window.db?.contacts?.getOrCreate && typeof window.db.contacts.getOrCreate === 'function') {
                 ensuredContact = await window.db.contacts.getOrCreate({
                     name: contactName,
                     address: payload.contact_address
                 });
-            } else if (!payload.contact_id && window.db?.contacts?.create && typeof window.db.contacts.create === 'function') {
+            } else if (!payload.contact_id && shouldSaveContact && window.db?.contacts?.create && typeof window.db.contacts.create === 'function') {
                 ensuredContact = await window.db.contacts.create({
                     user_id: user.id,
                     name: contactName,
