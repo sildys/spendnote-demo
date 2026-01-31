@@ -183,17 +183,12 @@
             typeWatermark.classList.toggle('out', !isIncome);
         }
 
-        setText(qs('#txCashBoxName'), cashBoxName);
-        setText(qs('#txCashBoxCode'), cashBoxCode || '—');
-
         const topBar = qs('#txTopbar');
         if (topBar) {
             topBar.classList.toggle('in', isIncome);
             topBar.classList.toggle('out', !isIncome);
         }
 
-        setHtml(qs('#txIdCode'), `<code>${displayId}</code>`);
-        setText(qs('#txDateLong'), formatDateLong(txDate));
         setText(qs('#txContactName'), contactName);
         setText(qs('#txContactId'), contactId);
         setText(qs('#txContactAddress'), safeText(tx.contact?.address, '—'));
