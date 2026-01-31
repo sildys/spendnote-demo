@@ -115,6 +115,16 @@
             .filter((it) => it.description || Number.isFinite(it.amount));
     }
 
+    function resolveCashBoxIconClass(iconValue) {
+        const raw = safeText(iconValue, '').trim();
+        const sn = (typeof window !== 'undefined' && window.SpendNote) ? window.SpendNote : null;
+        const mapped = (sn && typeof sn.getIconClass === 'function') ? sn.getIconClass(raw) : '';
+
+        if (mapped && /^fa-/.test(mapped)) return mapped;
+        if (/^fa-/.test(raw)) return raw;
+        return 'fa-building';
+    }
+
     async function loadTransactionDetail() {
         if (!window.db?.transactions?.getById) {
             return;
@@ -180,13 +190,10 @@
         // Set cash box icon and color
         const cashBoxIcon = qs('#txCashBoxIcon');
         if (cashBoxIcon) {
-            // Set icon class
-            if (tx.cash_box?.icon) {
-                const iconClass = tx.cash_box.icon.startsWith('fa-') ? tx.cash_box.icon : 'fa-building';
-                const iconEl = cashBoxIcon.querySelector('i');
-                if (iconEl) {
-                    iconEl.className = `fas ${iconClass}`;
-                }
+            const iconEl = cashBoxIcon.querySelector('i');
+            const iconClass = resolveCashBoxIconClass(tx.cash_box?.icon);
+            if (iconEl) {
+                iconEl.className = `fas ${iconClass}`;
             }
             
             // Set icon background color to cash box color
