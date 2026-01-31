@@ -198,9 +198,19 @@
             createdByValue.textContent = createdBy;
         }
 
-        const directionLabel = qs('#txDirectionLabel');
-        if (directionLabel) {
-            directionLabel.textContent = isIncome ? 'Cash IN' : 'Cash OUT';
+        const createdByAvatar = qs('#txCreatedByAvatar');
+        if (createdByAvatar) {
+            const avatarUrl = safeText(
+                tx.created_by_user_avatar_url || tx.created_by_avatar_url || tx.created_by_avatar,
+                ''
+            );
+            if (avatarUrl) {
+                createdByAvatar.src = avatarUrl;
+                createdByAvatar.style.display = 'block';
+            } else {
+                createdByAvatar.removeAttribute('src');
+                createdByAvatar.style.display = 'none';
+            }
         }
 
         const headerAmount = qs('#txHeaderAmount');
