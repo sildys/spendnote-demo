@@ -229,19 +229,25 @@
         const lineItems = normalizeLineItems(tx.line_items);
         const lineItemsBody = qs('#txLineItemsBody');
         if (lineItemsBody) {
-            const items = lineItems.length ? lineItems : [{ description: safeText(tx.description, '—'), amount: Number(tx.amount) }];
-            const rows = items
+            const baseItems = lineItems.length ? lineItems : [{ description: safeText(tx.description, '—'), amount: Number(tx.amount) }];
+            const maxRows = 5;
+
+            const rows = baseItems
+                .slice(0, maxRows)
                 .map((it) => {
                     const desc = safeText(it.description, '—');
                     const amt = formatCurrency(it.amount, currency);
                     return `<tr><td>${desc}</td><td>${amt}</td></tr>`;
-                })
-                .join('');
+                });
+
+            while (rows.length < maxRows) {
+                rows.push('<tr><td>&nbsp;</td><td>&nbsp;</td></tr>');
+            }
 
             const total = lineItems.length ? computeLineItemsTotal(lineItems) : Number(tx.amount) || 0;
             const totalRow = `<tr class="table-total"><td><strong>Total</strong></td><td><strong>${formatCurrency(total, currency)}</strong></td></tr>`;
 
-            lineItemsBody.innerHTML = `${rows}${totalRow}`;
+            lineItemsBody.innerHTML = `${rows.join('')}${totalRow}`;
         }
 
         const noteText = safeText(tx.notes, '');

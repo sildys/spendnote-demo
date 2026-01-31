@@ -42,7 +42,7 @@
 
         .tx-topbar-inner {
             display: grid;
-            grid-template-columns: 1.6fr 0.9fr;
+            grid-template-columns: 1fr;
             gap: 12px;
             align-items: stretch;
         }
@@ -70,6 +70,7 @@
             position: relative;
             padding-right: 170px;
             padding-bottom: 18px;
+            min-height: 126px;
         }
 
         .tx-summary-left {
@@ -91,6 +92,36 @@
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
+        }
+
+        .tx-date-row {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tx-header-actions {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 70;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tx-header-actions .btn {
+            height: 40px;
+            padding: 0 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .tx-header-actions .btn i {
+            margin-right: 8px;
         }
 
         .tx-created-by-row .sep {
@@ -370,10 +401,8 @@
         }
 
         .kebab-container {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 60;
+            position: relative;
+            z-index: 80;
         }
 
         .kebab-container .btn {
@@ -1049,6 +1078,13 @@
                 padding-bottom: 64px;
             }
 
+            .tx-header-actions {
+                position: static;
+                padding-top: 6px;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
             .tx-amount-corner {
                 left: 12px;
                 right: auto;
@@ -1091,15 +1127,20 @@
     <main class="main-content">
         <!-- TOP BAR (Direction colored) -->
         <div class="tx-topbar" id="txTopbar">
-            <div class="kebab-container">
-                <button class="btn btn-secondary" id="txMoreBtn" type="button" title="More"><i class="fas fa-ellipsis-v"></i></button>
-                <div class="header-menu" id="txMoreMenu" role="menu" aria-label="More actions">
-                    <button type="button" class="danger" onclick="if(confirm('Delete this transaction?')) alert('Deleted')"><i class="fas fa-trash"></i> Delete</button>
+            <div class="tx-header-actions" aria-label="Receipt actions">
+                <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                <button class="btn btn-secondary" onclick="alert('Download PDF')"><i class="fas fa-file-pdf"></i> PDF</button>
+                <button class="btn btn-secondary" onclick="alert('Email Receipt')"><i class="fas fa-envelope"></i> Email</button>
+
+                <div class="kebab-container">
+                    <button class="btn btn-secondary" id="txMoreBtn" type="button" title="More"><i class="fas fa-ellipsis-v"></i></button>
+                    <div class="header-menu" id="txMoreMenu" role="menu" aria-label="More actions">
+                        <button type="button" class="danger" onclick="if(confirm('Delete this transaction?')) alert('Deleted')"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
                 </div>
             </div>
 
             <div class="tx-topbar-inner">
-                <!-- Card 1: Compact summary (amount + direction + date + cash box + tx id) -->
                 <div class="tx-topbar-card tx-info-card" id="txInfoCard">
                     <div class="tx-info-watermark" id="txTypeWatermark">IN</div>
 
@@ -1117,26 +1158,17 @@
                             </span>
                         </div>
 
-                        <div class="tx-created-by-row">
-                            <span id="txMetaDate"><i class="fas fa-calendar"></i> —</span>
-                            <span class="sep">•</span>
-                            <span class="tx-created-by">
-                                <img id="txCreatedByAvatar" class="tx-created-by-avatar" alt="" />
-                                <span class="tx-created-by-name" id="txCreatedBy">—</span>
-                            </span>
+                        <div class="tx-date-row" id="txMetaDate"><i class="fas fa-calendar"></i> —</div>
+
+                        <div class="tx-created-by">
+                            <img id="txCreatedByAvatar" class="tx-created-by-avatar" alt="" />
+                            <span class="tx-created-by-name" id="txCreatedBy">—</span>
                         </div>
                     </div>
 
                     <div class="tx-amount-corner" id="txHeaderAmount">
                         <div class="value" id="txAmountValue">—</div>
                     </div>
-                </div>
-
-                <!-- Card 2: Receipt actions -->
-                <div class="tx-topbar-card tx-actions-card" id="txActionsCard">
-                    <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
-                    <button class="btn btn-secondary" onclick="alert('Download PDF')"><i class="fas fa-file-pdf"></i> PDF</button>
-                    <button class="btn btn-secondary" onclick="alert('Email Receipt')"><i class="fas fa-envelope"></i> Email</button>
                 </div>
             </div>
         </div>
@@ -1514,6 +1546,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260131-6"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260131-7"></script>
 </body>
 </html>
