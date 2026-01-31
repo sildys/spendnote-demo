@@ -1653,7 +1653,15 @@
         const iframe = document.getElementById('receiptFrame');
         const zoomLevel = document.getElementById('zoomLevel');
         if (iframe) {
+            iframe.style.zoom = '1';
             iframe.style.transform = `scale(${currentZoom})`;
+            const container = iframe.parentElement;
+            if (container) {
+                const cw = container.clientWidth;
+                const ch = container.clientHeight;
+                iframe.style.width = `${cw / currentZoom}px`;
+                iframe.style.height = `${ch / currentZoom}px`;
+            }
         }
         if (zoomLevel) zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
     }
@@ -1810,6 +1818,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260131-31"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260131-33"></script>
 </body>
 </html>
