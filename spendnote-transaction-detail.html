@@ -64,6 +64,11 @@
             transition: box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
         }
 
+        .tx-topbar .info-card,
+        .tx-topbar .line-items-card {
+            border-color: rgba(var(--dir-rgb, 0,0,0), 0.35);
+        }
+
         .tx-topbar-card:hover {
             border-color: rgba(var(--dir-rgb, 0,0,0), 0.55);
             box-shadow: 0 6px 18px rgba(0,0,0,0.10);
@@ -265,7 +270,7 @@
             pointer-events: none;
             user-select: none;
             line-height: 1;
-            color: rgba(var(--dir-rgb, 5, 150, 105), 0.14);
+            color: rgba(var(--dir-rgb, 5, 150, 105), 0.18);
         }
 
         .tx-id-top {
@@ -1494,6 +1499,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260131-12"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260131-13"></script>
 </body>
 </html>
