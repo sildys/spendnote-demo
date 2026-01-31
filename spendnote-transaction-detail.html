@@ -19,6 +19,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            position: relative;
         }
 
         .tx-topbar {
@@ -26,6 +27,16 @@
             padding: 12px;
             border: 1px solid var(--border);
             position: relative;
+        }
+
+        .tx-topbar.tx-topbar-bg {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 170px;
+            z-index: 0;
+            padding: 0;
         }
 
         .tx-topbar.in {
@@ -70,7 +81,7 @@
             position: relative;
             padding-right: 170px;
             padding-bottom: 18px;
-            min-height: 126px;
+            min-height: 140px;
         }
 
         .tx-summary-left {
@@ -103,13 +114,10 @@
         }
 
         .tx-header-actions {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            z-index: 70;
             display: flex;
             align-items: center;
             gap: 8px;
+            justify-content: flex-end;
         }
 
         .tx-header-actions .btn {
@@ -210,8 +218,28 @@
             align-items: start;
         }
 
+        .tx-columns {
+            display: grid;
+            grid-template-columns: 0.95fr 1.35fr;
+            gap: 20px;
+            align-items: start;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tx-col {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 0;
+        }
+
         @media (max-width: 1100px) {
             .tx-main-row {
+                grid-template-columns: 1fr;
+            }
+
+            .tx-columns {
                 grid-template-columns: 1fr;
             }
         }
@@ -1079,7 +1107,6 @@
             }
 
             .tx-header-actions {
-                position: static;
                 padding-top: 6px;
                 justify-content: flex-start;
                 flex-wrap: wrap;
@@ -1125,22 +1152,10 @@
 
 <div class="app-container">
     <main class="main-content">
-        <!-- TOP BAR (Direction colored) -->
-        <div class="tx-topbar" id="txTopbar">
-            <div class="tx-header-actions" aria-label="Receipt actions">
-                <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
-                <button class="btn btn-secondary" onclick="alert('Download PDF')"><i class="fas fa-file-pdf"></i> PDF</button>
-                <button class="btn btn-secondary" onclick="alert('Email Receipt')"><i class="fas fa-envelope"></i> Email</button>
+        <div class="tx-topbar tx-topbar-bg" id="txTopbar" aria-hidden="true"></div>
 
-                <div class="kebab-container">
-                    <button class="btn btn-secondary" id="txMoreBtn" type="button" title="More"><i class="fas fa-ellipsis-v"></i></button>
-                    <div class="header-menu" id="txMoreMenu" role="menu" aria-label="More actions">
-                        <button type="button" class="danger" onclick="if(confirm('Delete this transaction?')) alert('Deleted')"><i class="fas fa-trash"></i> Delete</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tx-topbar-inner">
+        <div class="tx-columns">
+            <div class="tx-col">
                 <div class="tx-topbar-card tx-info-card" id="txInfoCard">
                     <div class="tx-info-watermark" id="txTypeWatermark">IN</div>
 
@@ -1170,48 +1185,59 @@
                         <div class="value" id="txAmountValue">—</div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="tx-main-row">
-            <!-- Contact Info -->
-            <div class="info-card">
-                <div class="info-card-title"><i class="fas fa-user"></i> Contact</div>
-                <div class="info-grid">
-                    <div class="info-row">
-                        <span class="info-label">Name</span>
-                        <span class="info-value" id="txContactName">—</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Contact ID</span>
-                        <span class="info-value" id="txContactId">—</span>
-                    </div>
-                    <div class="info-row full">
-                        <span class="info-label">Address</span>
-                        <span class="info-value" id="txContactAddress">—</span>
+                <div class="info-card">
+                    <div class="info-card-title"><i class="fas fa-user"></i> Contact</div>
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <span class="info-label">Name</span>
+                            <span class="info-value" id="txContactName">—</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Contact ID</span>
+                            <span class="info-value" id="txContactId">—</span>
+                        </div>
+                        <div class="info-row full">
+                            <span class="info-label">Address</span>
+                            <span class="info-value" id="txContactAddress">—</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- LINE ITEMS -->
-            <div class="line-items-card">
-                <div class="line-items-header">
-                    <div class="line-items-title"><i class="fas fa-list"></i> Line Items</div>
+            <div class="tx-col">
+                <div class="tx-header-actions" aria-label="Receipt actions">
+                    <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Print</button>
+                    <button class="btn btn-secondary" onclick="alert('Download PDF')"><i class="fas fa-file-pdf"></i> PDF</button>
+                    <button class="btn btn-secondary" onclick="alert('Email Receipt')"><i class="fas fa-envelope"></i> Email</button>
+
+                    <div class="kebab-container">
+                        <button class="btn btn-secondary" id="txMoreBtn" type="button" title="More"><i class="fas fa-ellipsis-v"></i></button>
+                        <div class="header-menu" id="txMoreMenu" role="menu" aria-label="More actions">
+                            <button type="button" class="danger" onclick="if(confirm('Delete this transaction?')) alert('Deleted')"><i class="fas fa-trash"></i> Delete</button>
+                        </div>
+                    </div>
                 </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody id="txLineItemsBody">
-                        <tr><td>—</td><td>—</td></tr>
-                    </tbody>
-                </table>
-                <div class="note-section" id="txNoteSection" style="display: none;">
-                    <div class="note-label">Note</div>
-                    <div class="note-text" id="txNote"></div>
+
+                <div class="line-items-card">
+                    <div class="line-items-header">
+                        <div class="line-items-title"><i class="fas fa-list"></i> Line Items</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="txLineItemsBody">
+                            <tr><td>—</td><td>—</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="note-section" id="txNoteSection" style="display: none;">
+                        <div class="note-label">Note</div>
+                        <div class="note-text" id="txNote"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1546,6 +1572,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260131-7"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260131-8"></script>
 </body>
 </html>
