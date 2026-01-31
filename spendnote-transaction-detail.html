@@ -1698,10 +1698,6 @@ html, body { height: auto !important; overflow: auto !important; }
     function resetZoom() { currentZoom = 0.6; scheduleZoomUpdate(); }
 
     document.addEventListener('DOMContentLoaded', function() {
-        // #region agent log
-        console.log('[DEBUG-1699] DOMContentLoaded - checking iframe layout', {hypothesisId:'A,B,C,D'});
-        // #endregion
-
         const deleteToggle = document.getElementById('txDeleteToggle');
         const voidPanel = document.getElementById('txVoidPanel');
         const voidBtn = document.getElementById('txVoidBtn');
@@ -1711,45 +1707,11 @@ html, body { height: auto !important; overflow: auto !important; }
         if (receiptFrame) {
             receiptFrame.addEventListener('load', () => {
                 scheduleZoomUpdate();
-                
-                // #region agent log
-                const receiptSection = document.getElementById('receiptSection');
-                const receiptLayout = receiptSection ? receiptSection.querySelector('.receipt-layout') : null;
-                const receiptPreview = document.querySelector('.receipt-preview');
-                const previewContainer = document.getElementById('receiptPreviewContainer');
-                const collapsibleSection = document.querySelector('.settings-grid .collapsible-section');
-                
-                console.log('[DEBUG-1710] POST-FIX: Iframe loaded - measuring heights', {
-                    runId:'post-fix',
-                    hypothesisId:'A,C',
-                    receiptSectionHeight:receiptSection?receiptSection.offsetHeight:null,
-                    receiptLayoutHeight:receiptLayout?receiptLayout.offsetHeight:null,
-                    receiptPreviewHeight:receiptPreview?receiptPreview.offsetHeight:null,
-                    previewContainerHeight:previewContainer?previewContainer.offsetHeight:null,
-                    iframeHeight:receiptFrame?receiptFrame.offsetHeight:null,
-                    collapsibleSectionHeight:collapsibleSection?collapsibleSection.offsetHeight:null
-                });
-                // #endregion
             });
         }
 
         window.addEventListener('resize', () => {
             scheduleZoomUpdate();
-            
-            // #region agent log
-            const receiptSection = document.getElementById('receiptSection');
-            const receiptLayout = receiptSection ? receiptSection.querySelector('.receipt-layout') : null;
-            const receiptPreview = document.querySelector('.receipt-preview');
-            const previewContainer = document.getElementById('receiptPreviewContainer');
-            
-            console.log('[DEBUG-1715] Window resized - remeasuring', {
-                hypothesisId:'A,B',
-                receiptSectionHeight:receiptSection?receiptSection.offsetHeight:null,
-                receiptLayoutHeight:receiptLayout?receiptLayout.offsetHeight:null,
-                receiptPreviewHeight:receiptPreview?receiptPreview.offsetHeight:null,
-                previewContainerHeight:previewContainer?previewContainer.offsetHeight:null
-            });
-            // #endregion
         });
 
         if (deleteToggle && voidPanel) {
@@ -1885,36 +1847,6 @@ html, body { height: auto !important; overflow: auto !important; }
         applyReceiptMode(receiptMode);
         reloadIframe();
         scheduleZoomUpdate();
-        
-        // #region agent log
-        setTimeout(() => {
-            const receiptSection = document.getElementById('receiptSection');
-            const receiptLayout = receiptSection ? receiptSection.querySelector('.receipt-layout') : null;
-            const receiptPreview = document.querySelector('.receipt-preview');
-            const previewContainer = document.getElementById('receiptPreviewContainer');
-            const collapsibleContent = document.querySelector('.settings-grid .collapsible-content');
-            const settingsGrid = document.querySelector('.settings-grid');
-            
-            const receiptPreviewComputedStyle = receiptPreview ? window.getComputedStyle(receiptPreview) : null;
-            const receiptLayoutComputedStyle = receiptLayout ? window.getComputedStyle(receiptLayout) : null;
-            
-            const previewContainerComputedStyle = previewContainer ? window.getComputedStyle(previewContainer) : null;
-            
-            console.log('[DEBUG-1848] POST-FIX: After init - final measurements', {
-                runId:'post-fix',
-                hypothesisId:'A,C',
-                receiptSectionHeight:receiptSection?receiptSection.offsetHeight:null,
-                receiptLayoutHeight:receiptLayout?receiptLayout.offsetHeight:null,
-                receiptPreviewHeight:receiptPreview?receiptPreview.offsetHeight:null,
-                previewContainerHeight:previewContainer?previewContainer.offsetHeight:null,
-                collapsibleContentHeight:collapsibleContent?collapsibleContent.offsetHeight:null,
-                settingsGridHeight:settingsGrid?settingsGrid.offsetHeight:null,
-                previewContainerFlex:previewContainerComputedStyle?previewContainerComputedStyle.flex:null,
-                previewContainerHeight_computed:previewContainerComputedStyle?previewContainerComputedStyle.height:null,
-                previewContainerMinHeight:previewContainerComputedStyle?previewContainerComputedStyle.minHeight:null
-            });
-        }, 500);
-        // #endregion
     });
 </script>
 
