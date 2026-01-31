@@ -1478,7 +1478,7 @@
                             </div>
                         </div>
                         <div class="preview-frame-container">
-                            <iframe id="receiptFrame" class="preview-frame" src="spendnote-receipt-a4-two-copies.html"></iframe>
+                            <iframe id="receiptFrame" class="preview-frame" scrolling="yes" src="spendnote-receipt-a4-two-copies.html"></iframe>
                         </div>
                     </div>
                 </div>
@@ -1648,20 +1648,35 @@
         reloadIframe();
     }
 
-    function updateZoom() {
+    function applyPreviewZoom() {
         const iframe = document.getElementById('receiptFrame');
-        const zoomLevel = document.getElementById('zoomLevel');
-        if (iframe) {
-            const container = iframe.parentElement;
-            if (container) {
-                const cw = container.clientWidth;
-                const ch = container.clientHeight;
-                iframe.style.width = `${cw}px`;
-                iframe.style.height = `${ch}px`;
-                iframe.style.transform = `scale(${currentZoom})`;
-                iframe.style.transformOrigin = '0 0';
+        if (!iframe) return;
+
+        iframe.style.transform = 'none';
+        iframe.style.zoom = '1';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+
+        try {
+            const doc = iframe.contentDocument;
+            if (!doc) return;
+
+            let style = doc.getElementById('txReceiptPreviewOverride');
+            if (!style) {
+                style = doc.createElement('style');
+                style.id = 'txReceiptPreviewOverride';
+                style.textContent = `html, body { overflow: auto !important; }`;
+                doc.head && doc.head.appendChild(style);
             }
-        }
+
+            doc.documentElement.style.zoom = String(currentZoom);
+            if (doc.body) doc.body.style.zoom = String(currentZoom);
+        } catch (_) {}
+    }
+
+    function updateZoom() {
+        const zoomLevel = document.getElementById('zoomLevel');
+        applyPreviewZoom();
         if (zoomLevel) zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
     }
 
@@ -1674,6 +1689,13 @@
         const voidPanel = document.getElementById('txVoidPanel');
         const voidBtn = document.getElementById('txVoidBtn');
         const voidNote = document.getElementById('txVoidNote');
+
+        const receiptFrame = document.getElementById('receiptFrame');
+        if (receiptFrame) {
+            receiptFrame.addEventListener('load', () => {
+                applyPreviewZoom();
+            });
+        }
 
         if (deleteToggle && voidPanel) {
             deleteToggle.addEventListener('click', () => {
@@ -1817,6 +1839,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260131-39"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260131-40"></script>
 </body>
 </html>
