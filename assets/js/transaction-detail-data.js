@@ -218,12 +218,6 @@
             directionLabel.textContent = isIncome ? 'Cash IN' : 'Cash OUT';
         }
 
-        const directionPill = qs('#txDirectionPill');
-        if (directionPill) {
-            directionPill.textContent = isIncome ? 'IN' : 'OUT';
-            directionPill.classList.toggle('out', !isIncome);
-        }
-
         const headerAmount = qs('#txHeaderAmount');
         if (headerAmount) {
             headerAmount.classList.toggle('in', isIncome);

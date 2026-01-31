@@ -81,6 +81,8 @@
             flex-direction: column;
             gap: 6px;
             min-width: 0;
+            position: relative;
+            padding-right: 88px;
         }
 
         .tx-created-by {
@@ -148,31 +150,24 @@
             margin-bottom: 2px;
         }
 
-        .tx-direction-pill {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 4px 8px;
-            border-radius: 999px;
-            font-size: 11px;
-            font-weight: 800;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            background: rgba(var(--dir-rgb, 5, 150, 105), 0.14);
-            color: var(--dir, var(--primary));
-            border: 1px solid rgba(0,0,0,0.06);
+        .tx-main-row {
+            display: grid;
+            grid-template-columns: 0.95fr 1.35fr;
+            gap: 20px;
+            align-items: start;
         }
 
-        .tx-direction-pill.out {
-            background: rgba(var(--out-rgb), 0.14);
-            color: var(--out);
+        @media (max-width: 1100px) {
+            .tx-main-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         .tx-info-watermark {
             position: absolute;
-            right: 14px;
+            right: 10px;
             top: 50%;
-            font-size: 72px;
+            font-size: 64px;
             font-weight: 900;
             letter-spacing: -0.06em;
             opacity: 0.10;
@@ -1072,9 +1067,9 @@
             <div class="tx-topbar-inner">
                 <!-- Card 1: Compact summary (amount + direction + date + cash box + tx id) -->
                 <div class="tx-topbar-card tx-info-card" id="txInfoCard">
-                    <div class="tx-info-watermark" id="txTypeWatermark">IN</div>
                     <div class="tx-summary-row">
                         <div class="tx-summary-left">
+                            <div class="tx-info-watermark" id="txTypeWatermark">IN</div>
                             <div class="tx-id-top">
                                 <span class="tx-id-label">Transaction ID</span>
                             </div>
@@ -1101,7 +1096,6 @@
                         <div class="tx-summary-amount in" id="txHeaderAmount">
                             <div class="tx-direction-row">
                                 <div class="header-amount-label" id="txDirectionLabel">Cash IN</div>
-                                <div class="tx-direction-pill" id="txDirectionPill">IN</div>
                             </div>
                             <div class="header-amount-value in" id="txAmountValue">—</div>
                         </div>
@@ -1117,19 +1111,7 @@
             </div>
         </div>
 
-        <!-- INFO CARDS ROW -->
-        <div class="info-cards-row">
-            <!-- Transaction Info -->
-            <div class="info-card">
-                <div class="info-card-title"><i class="fas fa-info-circle"></i> Transaction Details</div>
-                <div class="info-grid">
-                    <div class="info-row full">
-                        <span class="info-label">Created By</span>
-                        <span class="info-value" id="txCreatedBy">—</span>
-                    </div>
-                </div>
-            </div>
-
+        <div class="tx-main-row">
             <!-- Contact Info -->
             <div class="info-card">
                 <div class="info-card-title"><i class="fas fa-user"></i> Contact</div>
@@ -1148,27 +1130,27 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- LINE ITEMS -->
-        <div class="line-items-card">
-            <div class="line-items-header">
-                <div class="line-items-title"><i class="fas fa-list"></i> Line Items</div>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Description</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody id="txLineItemsBody">
-                    <tr><td>—</td><td>—</td></tr>
-                </tbody>
-            </table>
-            <div class="note-section" id="txNoteSection" style="display: none;">
-                <div class="note-label">Note</div>
-                <div class="note-text" id="txNote"></div>
+            <!-- LINE ITEMS -->
+            <div class="line-items-card">
+                <div class="line-items-header">
+                    <div class="line-items-title"><i class="fas fa-list"></i> Line Items</div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="txLineItemsBody">
+                        <tr><td>—</td><td>—</td></tr>
+                    </tbody>
+                </table>
+                <div class="note-section" id="txNoteSection" style="display: none;">
+                    <div class="note-label">Note</div>
+                    <div class="note-text" id="txNote"></div>
+                </div>
             </div>
         </div>
 
@@ -1502,6 +1484,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260131-2"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260131-3"></script>
 </body>
 </html>
