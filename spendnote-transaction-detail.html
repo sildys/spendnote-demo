@@ -1087,7 +1087,8 @@
         .preview-frame-container {
             overflow: hidden;
             background: white;
-            height: 520px;
+            flex: 1;
+            min-height: 520px;
         }
 
         .preview-frame {
@@ -1718,8 +1719,9 @@ html, body { height: auto !important; overflow: auto !important; }
                 const previewContainer = document.getElementById('receiptPreviewContainer');
                 const collapsibleSection = document.querySelector('.settings-grid .collapsible-section');
                 
-                console.log('[DEBUG-1710] Iframe loaded - measuring heights', {
-                    hypothesisId:'A,B,C,D',
+                console.log('[DEBUG-1710] POST-FIX: Iframe loaded - measuring heights', {
+                    runId:'post-fix',
+                    hypothesisId:'A,C',
                     receiptSectionHeight:receiptSection?receiptSection.offsetHeight:null,
                     receiptLayoutHeight:receiptLayout?receiptLayout.offsetHeight:null,
                     receiptPreviewHeight:receiptPreview?receiptPreview.offsetHeight:null,
@@ -1896,18 +1898,20 @@ html, body { height: auto !important; overflow: auto !important; }
             const receiptPreviewComputedStyle = receiptPreview ? window.getComputedStyle(receiptPreview) : null;
             const receiptLayoutComputedStyle = receiptLayout ? window.getComputedStyle(receiptLayout) : null;
             
-            console.log('[DEBUG-1848] After init - final measurements with computed styles', {
-                hypothesisId:'A,B,C,D',
+            const previewContainerComputedStyle = previewContainer ? window.getComputedStyle(previewContainer) : null;
+            
+            console.log('[DEBUG-1848] POST-FIX: After init - final measurements', {
+                runId:'post-fix',
+                hypothesisId:'A,C',
                 receiptSectionHeight:receiptSection?receiptSection.offsetHeight:null,
                 receiptLayoutHeight:receiptLayout?receiptLayout.offsetHeight:null,
                 receiptPreviewHeight:receiptPreview?receiptPreview.offsetHeight:null,
                 previewContainerHeight:previewContainer?previewContainer.offsetHeight:null,
                 collapsibleContentHeight:collapsibleContent?collapsibleContent.offsetHeight:null,
                 settingsGridHeight:settingsGrid?settingsGrid.offsetHeight:null,
-                receiptPreviewFlexGrow:receiptPreviewComputedStyle?receiptPreviewComputedStyle.flexGrow:null,
-                receiptPreviewHeight_computed:receiptPreviewComputedStyle?receiptPreviewComputedStyle.height:null,
-                receiptLayoutFlex:receiptLayoutComputedStyle?receiptLayoutComputedStyle.flex:null,
-                receiptLayoutHeight_computed:receiptLayoutComputedStyle?receiptLayoutComputedStyle.height:null
+                previewContainerFlex:previewContainerComputedStyle?previewContainerComputedStyle.flex:null,
+                previewContainerHeight_computed:previewContainerComputedStyle?previewContainerComputedStyle.height:null,
+                previewContainerMinHeight:previewContainerComputedStyle?previewContainerComputedStyle.minHeight:null
             });
         }, 500);
         // #endregion
