@@ -55,12 +55,18 @@
 
         .tx-topbar-card {
             background: var(--surface);
-            border: 2px solid var(--border);
+            border: 1px solid rgba(var(--dir-rgb, 0,0,0), 0.35);
             border-radius: 12px;
             padding: 14px 16px;
             position: relative;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+
+        .tx-topbar-card:hover {
+            border-color: rgba(var(--dir-rgb, 0,0,0), 0.55);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.10);
         }
 
         .tx-info-card {
@@ -71,6 +77,17 @@
             padding-right: 170px;
             padding-bottom: 18px;
             min-height: 140px;
+        }
+
+        .tx-topbar .info-card,
+        .tx-topbar .tx-info-card {
+            transition: box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+        }
+
+        .tx-topbar .info-card:hover,
+        .tx-topbar .tx-info-card:hover {
+            border-color: rgba(var(--active-rgb, 5, 150, 105), 0.55);
+            box-shadow: 0 10px 26px rgba(var(--active-rgb, 5, 150, 105), 0.16);
         }
 
         .tx-summary-left {
@@ -582,6 +599,10 @@
 
         tbody tr {
             border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:not(.table-total):hover {
+            background: rgba(var(--active-rgb, 5, 150, 105), 0.08);
         }
 
         tbody tr:last-child {
@@ -1475,6 +1496,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260131-10"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260131-11"></script>
 </body>
 </html>
