@@ -1086,7 +1086,7 @@
         }
 
         .preview-frame-container {
-            overflow: auto;
+            overflow: hidden;
             background: white;
             flex: 1;
             min-height: 0;
@@ -1656,7 +1656,7 @@
         if (iframe) {
             iframe.style.zoom = '1';
             iframe.style.transform = `scale(${currentZoom})`;
-            iframe.style.width = `${100 / currentZoom}%`;
+            iframe.style.width = '100%';
             iframe.style.height = '520px';
         }
         if (zoomLevel) zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
@@ -1814,6 +1814,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260131-25"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260131-26"></script>
 </body>
 </html>
