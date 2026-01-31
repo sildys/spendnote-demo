@@ -204,7 +204,7 @@
                 tx.created_by_user_avatar_url || tx.created_by_avatar_url || tx.created_by_avatar,
                 ''
             );
-            if (avatarUrl) {
+            if (avatarUrl && /^https?:\/\//i.test(avatarUrl)) {
                 createdByAvatar.src = avatarUrl;
                 createdByAvatar.style.display = 'block';
             } else {
