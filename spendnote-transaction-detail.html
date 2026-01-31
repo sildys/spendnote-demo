@@ -1667,6 +1667,17 @@
         }
     }
 
+    function getPreviewBaseSize(format, iframe) {
+        const f = String(format || '').toLowerCase();
+        if (f === 'a4') {
+            // A4 at 96dpi (210x297mm)
+            return { w: 794, h: 1123 };
+        }
+        const m = measureReceiptContent(iframe);
+        if (m && m.w && m.h) return m;
+        return { w: 900, h: 1200 };
+    }
+
     function updateZoom() {
         const iframe = document.getElementById('receiptFrame');
         const scaler = document.getElementById('receiptPreviewScaler');
@@ -1676,9 +1687,9 @@
             return;
         }
 
-        const m = measureReceiptContent(iframe);
-        const baseW = m?.w || 900;
-        const baseH = m?.h || 1200;
+        const base = getPreviewBaseSize(currentFormat, iframe);
+        const baseW = base.w;
+        const baseH = base.h;
 
         iframe.style.width = `${baseW}px`;
         iframe.style.height = `${baseH}px`;
@@ -1698,9 +1709,9 @@
         });
     }
 
-    function zoomIn() { currentZoom = Math.min(currentZoom + 0.1, 1.2); updateZoom(); }
-    function zoomOut() { currentZoom = Math.max(currentZoom - 0.1, 0.4); updateZoom(); }
-    function resetZoom() { currentZoom = 0.6; updateZoom(); }
+    function zoomIn() { currentZoom = Math.min(currentZoom + 0.1, 1.2); scheduleZoomUpdate(); }
+    function zoomOut() { currentZoom = Math.max(currentZoom - 0.1, 0.4); scheduleZoomUpdate(); }
+    function resetZoom() { currentZoom = 0.6; scheduleZoomUpdate(); }
 
     document.addEventListener('DOMContentLoaded', function() {
         const deleteToggle = document.getElementById('txDeleteToggle');
@@ -1861,6 +1872,6 @@
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/transaction-detail-data.js?v=header-20260131-44"></script>
+<script src="assets/js/transaction-detail-data.js?v=header-20260131-45"></script>
 </body>
 </html>
