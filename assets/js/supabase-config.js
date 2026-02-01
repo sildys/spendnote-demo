@@ -624,8 +624,9 @@ var db = {
 
             const { data, error, count } = await query.range(from, to);
             if (error) {
+                const detail = typeof error === 'object' ? JSON.stringify(error) : String(error);
                 console.error('Error fetching transactions page:', error);
-                return { data: [], count: 0, error: error.message };
+                return { data: [], count: 0, error: error.message ? `${error.message} (${detail})` : detail };
             }
 
             return { data: data || [], count: Number(count) || 0 };

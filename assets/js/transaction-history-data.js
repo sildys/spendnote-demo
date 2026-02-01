@@ -1035,6 +1035,16 @@
                 sortDir: state.sort.direction
             });
 
+            if (pageRes && pageRes.error) {
+                console.error('[TxHistory] getPage error:', pageRes.error);
+                renderErrorRow(tbody, String(pageRes.error || 'Failed to load transactions.'));
+                state.pagination.onChange = render;
+                renderPagination(pagination, paginationInfo, state.pagination, 0);
+                if (selectAllHeader) selectAllHeader.checked = false;
+                updateBulk();
+                return;
+            }
+
             const rows = (Array.isArray(pageRes?.data) ? pageRes.data : []).map((tx) => {
                 if (tx && !tx.cash_box && tx.cash_box_id) {
                     tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
