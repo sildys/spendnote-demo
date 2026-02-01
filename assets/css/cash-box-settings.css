@@ -106,28 +106,6 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
-.summary-btn.in {
-    background: #059669;
-    border-color: #059669;
-    color: white;
-}
-
-.summary-btn.in:hover {
-    background: #047857;
-    border-color: #047857;
-}
-
-.summary-btn.out {
-    background: #dc2626;
-    border-color: #dc2626;
-    color: white;
-}
-
-.summary-btn.out:hover {
-    background: #b91c1c;
-    border-color: #b91c1c;
-}
-
 .summary-btn.history {
     background: var(--surface);
     border-color: var(--border);
