@@ -8,6 +8,13 @@
 }
 
 /* ===== SUMMARY HEADER CARD ===== */
+.summary-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    align-items: stretch;
+}
+
 .summary-card {
     display: flex;
     align-items: center;
@@ -79,48 +86,39 @@
     letter-spacing: -0.02em;
 }
 
-.summary-right {
+
+.summary-actions {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 16px;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 10px;
 }
 
-.summary-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+.summary-actions .btn {
+    white-space: nowrap;
+}
+
+.summary-actions .btn-secondary {
+    padding: 10px 16px;
+}
+
+.summary-actions .btn-primary {
     padding: 10px 18px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    text-decoration: none;
-}
-
-.summary-btn:hover {
-    border-color: rgba(0,0,0,0.2);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.summary-btn.history {
-    background: var(--surface);
-    border-color: var(--border);
-    color: var(--text);
-}
-
-.summary-btn.history:hover {
-    background: var(--background);
 }
 
 @media (max-width: 900px) {
+    .summary-row {
+        grid-template-columns: 1fr;
+    }
     .summary-card {
         flex-direction: column;
         align-items: stretch;
-        gap: 16px;
+        gap: 12px;
         padding: 16px;
     }
     .summary-left {
@@ -129,7 +127,7 @@
     .summary-center {
         text-align: center;
     }
-    .summary-right {
+    .summary-actions {
         justify-content: center;
         flex-wrap: wrap;
     }

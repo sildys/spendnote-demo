@@ -137,8 +137,8 @@ async function initCashBoxSettings() {
             const pageTitle = document.querySelector('.page-title');
             if (pageTitle) pageTitle.textContent = 'Create Cash Box';
 
-            const summaryCard = document.querySelector('.summary-card');
-            if (summaryCard) summaryCard.style.display = 'none';
+            const summaryRow = document.querySelector('.summary-row');
+            if (summaryRow) summaryRow.style.display = 'none';
         }
         
         if (DEBUG) console.log('Cash Box Settings initialized', isEditMode ? '(Edit mode)' : '(Create mode)');

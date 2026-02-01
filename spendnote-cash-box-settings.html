@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=13">
-    <link rel="stylesheet" href="assets/css/cash-box-settings.css?v=2">
+    <link rel="stylesheet" href="assets/css/cash-box-settings.css?v=3">
 </head>
 <body>
 <div id="nav-container"></div>
@@ -36,23 +36,28 @@
             <p class="page-subtitle" id="cashBoxSettingsSubtitle">Configure —</p>
         </div>
 
-        <!-- SUMMARY HEADER CARD -->
-        <div class="summary-card">
-            <div class="summary-left">
-                <div class="summary-icon" id="summaryIcon">
-                    <i class="fas fa-building"></i>
+        <!-- SUMMARY HEADER ROW -->
+        <div class="summary-row">
+            <div class="summary-card">
+                <div class="summary-left">
+                    <div class="summary-icon" id="summaryIcon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div class="summary-info">
+                        <div class="summary-id" id="summaryId">SN-007</div>
+                        <div class="summary-name" id="summaryName">Main Office</div>
+                    </div>
                 </div>
-                <div class="summary-info">
-                    <div class="summary-id" id="summaryId">SN-007</div>
-                    <div class="summary-name" id="summaryName">Main Office</div>
+                <div class="summary-center">
+                    <div class="summary-balance-label">CURRENT BALANCE</div>
+                    <div class="summary-balance" id="summaryBalance">$18,500</div>
                 </div>
             </div>
-            <div class="summary-center">
-                <div class="summary-balance-label">CURRENT BALANCE</div>
-                <div class="summary-balance" id="summaryBalance">$18,500</div>
-            </div>
-            <div class="summary-right">
-                <a href="spendnote-cash-box-detail.html" class="summary-btn history" id="summaryHistoryBtn"><i class="fas fa-history"></i> Cash Box History</a>
+
+            <div class="summary-actions" aria-label="Cash box actions">
+                <a href="spendnote-cash-box-detail.html" class="btn btn-secondary" id="summaryHistoryBtn"><i class="fas fa-history"></i> Cash Box History</a>
+                <button type="button" class="btn btn-secondary">Cancel</button>
+                <button type="button" class="btn btn-primary">Save Changes</button>
             </div>
         </div>
 
@@ -369,14 +374,6 @@
         </div>
 
     </main>
-</div>
-
-<!-- SAVE ACTIONS -->
-<div class="save-actions">
-    <div class="save-actions-inner">
-        <button class="btn btn-secondary">Cancel</button>
-        <button class="btn btn-primary">Save Changes</button>
-    </div>
 </div>
 
 <footer class="app-footer">
@@ -711,7 +708,7 @@ window.addEventListener('DOMContentLoaded', function() {
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=20"></script>
-<script src="assets/js/cash-box-settings-data.js?v=12"></script>
+<script src="assets/js/cash-box-settings-data.js?v=13"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof initCashBoxSettings === 'function') {
