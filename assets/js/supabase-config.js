@@ -498,7 +498,7 @@ var db = {
                     .order('transaction_date', { ascending: false });
 
                 if (!filters.includeSystem) {
-                    query = query.eq('is_system', false);
+                    query = query.or('is_system.is.null,is_system.eq.false');
                 }
 
                 if (filters.status) {
@@ -564,7 +564,7 @@ var db = {
                 .eq('user_id', user.id);
 
             if (!options.includeSystem) {
-                query = query.eq('is_system', false);
+                query = query.or('is_system.is.null,is_system.eq.false');
             }
 
             if (options.status) {
