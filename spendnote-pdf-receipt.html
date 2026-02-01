@@ -31,6 +31,24 @@
       padding: 48px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.1);
       border-radius: 8px;
+      position: relative;
+    }
+
+    /* VOID WATERMARK */
+    .void-watermark {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(-18deg);
+      font-size: 120px;
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: rgba(120, 120, 120, 0.12);
+      text-transform: uppercase;
+      pointer-events: none;
+      user-select: none;
+      z-index: 3;
+      display: none;
     }
     
     /* HEADER */
@@ -292,6 +310,7 @@
   </style></head>
 <body>
   <div class="receipt">
+    <div class="void-watermark" aria-hidden="true">VOID</div>
     
     <!-- HEADER -->
     <div class="header">

@@ -33,6 +33,24 @@ body {
   clear: both;              /* <<< CRITICAL FIX */
   --logo-w: 34mm;
   --logo-gap: 4mm;
+  position: relative;
+}
+
+/* VOID WATERMARK */
+.void-watermark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(-18deg);
+  font-size: 74pt;
+  font-weight: 900;
+  letter-spacing: 2pt;
+  color: rgba(120, 120, 120, 0.16);
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+  display: none;
 }
 
 /* TOP BAR (Title + Meta left, Logo right) */
@@ -320,6 +338,7 @@ body {
 
   <!-- RECEIPT A -->
   <div class="receipt">
+    <div class="void-watermark" aria-hidden="true">VOID</div>
     <div class="topbar">
   <div>
     <div class="title">Cash Receipt</div>
@@ -401,6 +420,7 @@ body {
 
   <!-- RECEIPT B -->
   <div class="receipt">
+    <div class="void-watermark" aria-hidden="true">VOID</div>
     <!-- identical copy -->
     <div class="topbar">
   <div>

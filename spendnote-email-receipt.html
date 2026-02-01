@@ -120,6 +120,24 @@
       border-radius: 8px;
       padding: 24px;
       margin-bottom: 32px;
+      position: relative;
+    }
+
+    /* VOID WATERMARK */
+    .void-watermark {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(-18deg);
+      font-size: 86px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      color: rgba(120, 120, 120, 0.12);
+      text-transform: uppercase;
+      pointer-events: none;
+      user-select: none;
+      z-index: 3;
+      display: none;
     }
     
     .receipt-header {
@@ -439,6 +457,7 @@
       <div class="content">
         <!-- RECEIPT CARD -->
         <div class="receipt-card">
+          <div class="void-watermark" aria-hidden="true">VOID</div>
           
           <!-- HEADER -->
           <div class="receipt-header">
