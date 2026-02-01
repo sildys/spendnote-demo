@@ -12,7 +12,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Avoid long explanations, hedging, or repetitive confirmations.
 - Be professional and forward-looking (anticipate edge cases, choose robust solutions).
 
-## Current state (last updated: 2026-02-01 14:47)
+## Current state (last updated: 2026-02-01 19:43)
 - **Dashboard**
   - Transaction modal works again (fixed duplicate modal JS load + ensured submit handler binds).
   - **Save to Contacts** toggle exists (no auto-save by default).
@@ -23,7 +23,14 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Contacts list + detail are wired to Supabase.
   - UI shows **Contact ID as `CONT-###`** using `sequence_number`.
   - Contacts list **View column + bottom pagination** aligned with Transaction History UI.
-- **Transaction History**
+- **Transaction History** ✅
+  - Loads from Supabase (server-side pagination + filters).
+  - Does **not** auto-filter by the previously selected Cash Box (dashboard active cash box).
+  - Hides system/reversal transactions (`is_system=true`) and treats legacy `is_system=NULL` as non-system.
+  - Voided transactions:
+    - show a distinct **VOID** badge
+    - amount is dimmed + struck-through
+    - reversal/writeback is not visible as a separate transaction
   - Contact ID column is intentionally minimal: **shows `—`** when there is no saved contact sequence.
 - **Transaction Detail + Receipt Preview** ✅
   - Receipt preview iframe now loads real Supabase data (transaction + cash box + profile).
@@ -38,6 +45,10 @@ If a chat thread freezes / context is lost: in the new thread say:
     - **Receipt ID: `SN{cash_box_sequence}-{tx_sequence_in_box}`**
     - **Other ID: from `contact_custom_field_1`** (not cash box code)
   - **Print/A4 receipt**: date displays correctly, "Recorded by" line removed.
+  - Void feedback:
+    - amount is dimmed + struck-through
+    - shows **Voided by + date**
+    - receipt previews include a diagonal grey **VOID** watermark (A4/PDF/Email)
   - Pro badge styling unified across the app (consistent orange badge with crown icon).
 - **Cash Box pages**
   - Cash Box Detail: loads from Supabase (UUID id param), displays `SN-###` code.
@@ -61,6 +72,11 @@ If a chat thread freezes / context is lost: in the new thread say:
 - `f53ec9c` Transaction Detail: bind receipt controls and previews to Supabase data
 - `4ce4d87` Unified Pro badge styling across the app
 - `b407890` Add session notes (2026-01-30)
+- `a960cf9` Fix Transaction History crash (void fields)
+- `bcf4bc7` Fix Transaction History query for legacy is_system null
+- `e727ef3` Fallback when void columns missing in transactions select
+- `ba3ebf6` UX: History nav unfiltered; Transaction Detail void metadata + styling
+- `f1b2b74` Receipts: show VOID watermark in templates
 
 ## Next focus (pick one)
 - **A)** Implement end-to-end transaction create flow + robust error handling (Supabase insert + balance update)

@@ -15,6 +15,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - Scope: **cash handoff documentation** (petty cash / internal movements), not invoicing and not a tax/accounting tool
 - Maintain **Contacts** and optionally attach a transaction to a saved contact
 - Browse/search/filter **Transaction History**
+  - Voided transactions remain visible with a **VOID** indicator (hidden writeback is system-only)
 
 ## How the app works
 
@@ -148,6 +149,8 @@ The storage part is in place (transactions persist receipt-relevant snapshot fie
 - PDF: `spendnote-pdf-receipt.html`
 - Email: `spendnote-email-receipt.html`
 
+Receipts for voided transactions show a diagonal grey **VOID** watermark in the templates.
+
 #### Data sources (receipt data flow)
 
 When generating a receipt for a transaction:
@@ -198,7 +201,6 @@ This enables localization and per-cash-box personalization.
 
 - **Done & Print flow**: the dashboard modal "Done & Print" button saves the transaction but does not yet open the receipt for printing.
 - Dashboard "Latest Transactions" is loaded from Supabase.
-- Transaction History is loaded from Supabase.
 - Contacts cash box filtering / cash box ID handling is not finished yet.
 - Team features (members/roles/cash box access) are not finished yet.
 
