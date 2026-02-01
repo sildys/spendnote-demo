@@ -755,12 +755,21 @@ if (isDemo) {
     })
     .filter((it) => it.description || Number.isFinite(it.amount));
 
-  const rows = (items.length ? items : [{ description: 'Service fee', amount: 79.99 }])
-    .slice(0, isItemsSingle ? 1 : 5)
-    .map((it) => {
-      const amount = Number.isFinite(it.amount) ? formatMoney(it.amount, demoCurrency) : '';
-      return `<tr><td>${safeText(it.description, '&nbsp;')}</td><td class="amount">${amount}</td></tr>`;
-    });
+  const totalValue = Number.isFinite(demoAmount)
+    ? demoAmount
+    : items.reduce((sum, it) => sum + (Number.isFinite(it.amount) ? it.amount : 0), 0);
+
+  const rowsSource = (() => {
+    const fallback = items.length ? items : [{ description: '—', amount: totalValue }];
+    if (!isItemsSingle) return fallback.slice(0, 5);
+    const firstDesc = safeText(fallback[0]?.description, '—');
+    return [{ description: firstDesc, amount: totalValue }];
+  })();
+
+  const rows = rowsSource.map((it) => {
+    const amount = Number.isFinite(Number(it.amount)) ? formatMoney(Number(it.amount), demoCurrency) : '';
+    return `<tr><td>${safeText(it.description, '&nbsp;')}</td><td class="amount">${amount}</td></tr>`;
+  });
 
   while (rows.length < 5) {
     rows.push('<tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>');
@@ -769,9 +778,6 @@ if (isDemo) {
   const tbody = document.querySelector('.items-section tbody');
   if (tbody) tbody.innerHTML = rows.join('');
 
-  const totalValue = Number.isFinite(demoAmount)
-    ? demoAmount
-    : items.reduce((sum, it) => sum + (Number.isFinite(it.amount) ? it.amount : 0), 0);
   const totalEl = document.querySelector('.total-amount');
   if (totalEl) totalEl.textContent = formatMoney(totalValue, demoCurrency);
 
@@ -938,7 +944,10 @@ if (urlParams.get('signatures') === '0') {
 
           const fallbackDesc = safeText(tx?.description, '—');
           const fallbackAmt = Number(tx?.amount);
-          const effective = items.length ? items : [{ description: fallbackDesc, amount: fallbackAmt }];
+
+          const effective = isItemsSingle
+            ? [{ description: fallbackDesc, amount: fallbackAmt }]
+            : (items.length ? items : [{ description: fallbackDesc, amount: fallbackAmt }]);
 
           const fillRows = isItemsSingle ? 1 : 5;
           const maxRows = 5;
