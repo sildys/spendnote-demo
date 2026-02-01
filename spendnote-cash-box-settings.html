@@ -36,7 +36,29 @@
             <p class="page-subtitle" id="cashBoxSettingsSubtitle">Configure —</p>
         </div>
 
-        <!-- TOP SECTION: General + Appearance -->
+        <!-- SUMMARY HEADER CARD -->
+        <div class="summary-card">
+            <div class="summary-left">
+                <div class="summary-icon" id="summaryIcon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="summary-info">
+                    <div class="summary-id" id="summaryId">SN-007</div>
+                    <div class="summary-name" id="summaryName">Main Office</div>
+                </div>
+            </div>
+            <div class="summary-center">
+                <div class="summary-balance-label">CURRENT BALANCE</div>
+                <div class="summary-balance" id="summaryBalance">$18,500</div>
+            </div>
+            <div class="summary-right">
+                <button class="summary-btn in" id="summaryInBtn"><i class="fas fa-arrow-down"></i> IN</button>
+                <button class="summary-btn out" id="summaryOutBtn"><i class="fas fa-arrow-up"></i> OUT</button>
+                <a href="spendnote-cash-box-detail.html" class="summary-btn history" id="summaryHistoryBtn"><i class="fas fa-history"></i> Cash Box History</a>
+            </div>
+        </div>
+
+        <!-- SETTINGS CARDS: General + Appearance + Team -->
         <div class="settings-topbar">
             <div class="settings-top-grid">
                 <!-- GENERAL CARD -->
@@ -45,12 +67,12 @@
                     <div class="general-fields">
                         <div class="field-row-3">
                             <div class="field-group">
-                                <label class="field-label">Cash Box Name</label>
+                                <label class="field-label"><i class="fas fa-tag"></i> Cash Box Name</label>
                                 <input type="text" class="field-input" id="cashBoxNameInput" placeholder="e.g., Main Office">
                                 <span class="field-hint">Appears on receipts</span>
                             </div>
                             <div class="field-group">
-                                <label class="field-label">Currency</label>
+                                <label class="field-label"><i class="fas fa-coins"></i> Currency</label>
                                 <input type="text" class="field-input" id="currencySelect" list="currencyList" value="USD" autocapitalize="characters" autocomplete="off" spellcheck="false">
                                 <datalist id="currencyList">
                                     <option value="USD" label="US Dollar ($)"></option>
@@ -62,9 +84,10 @@
                                     <option value="CAD" label="Canadian Dollar (CA$)"></option>
                                     <option value="AUD" label="Australian Dollar (A$)"></option>
                                 </datalist>
+                                <span class="field-warning"><i class="fas fa-exclamation-triangle"></i> Changing currency won't convert existing amounts</span>
                             </div>
                             <div class="field-group">
-                                <label class="field-label">ID Prefix <span class="pro-badge" style="font-size: 9px; padding: 2px 5px;"><i class="fas fa-crown"></i> Pro</span></label>
+                                <label class="field-label"><i class="fas fa-hashtag"></i> ID Prefix <span class="pro-badge" style="font-size: 9px; padding: 2px 5px;"><i class="fas fa-crown"></i> Pro</span></label>
                                 <input type="text" class="field-input" id="idPrefixInput" value="SN" placeholder="SN" maxlength="10">
                                 <span class="field-hint">Receipt ID format</span>
                             </div>
@@ -124,18 +147,43 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- TEAM ACCESS BAR -->
-        <div class="team-bar">
-            <div class="team-bar-left">
-                <div class="team-bar-icon"><i class="fas fa-users"></i></div>
-                <div class="team-bar-info">
-                    <div class="team-bar-title">Team Access <span class="pro-badge" style="font-size: 9px; padding: 2px 5px;"><i class="fas fa-crown"></i> Pro</span></div>
-                    <div class="team-bar-count">3 members have access</div>
+            <!-- TEAM ACCESS CARD -->
+            <div class="settings-card team-card">
+                <div class="team-header" onclick="toggleTeamAccess()" style="cursor: pointer;">
+                    <div class="settings-card-title" style="margin-bottom: 0;"><i class="fas fa-users"></i> Team Access <span class="pro-badge" style="font-size: 9px; padding: 2px 5px;"><i class="fas fa-crown"></i> Pro</span></div>
+                    <div class="team-header-right">
+                        <span class="team-count">3 members</span>
+                        <i class="fas fa-chevron-down" id="teamToggleIcon" style="transition: transform 0.3s; color: var(--text-muted); font-size: 12px;"></i>
+                    </div>
+                </div>
+                <div class="team-content" id="teamContent" style="display: none;">
+                    <div class="team-members-list">
+                        <div class="team-member-row">
+                            <img src="https://i.pravatar.cc/150?img=12" alt="John Doe" class="team-avatar">
+                            <div class="team-member-info">
+                                <div class="team-member-name">John Doe</div>
+                                <div class="team-member-role">Owner</div>
+                            </div>
+                        </div>
+                        <div class="team-member-row">
+                            <img src="https://i.pravatar.cc/150?img=5" alt="Jane Smith" class="team-avatar">
+                            <div class="team-member-info">
+                                <div class="team-member-name">Jane Smith</div>
+                                <div class="team-member-role">Admin</div>
+                            </div>
+                        </div>
+                        <div class="team-member-row">
+                            <img src="https://i.pravatar.cc/150?img=8" alt="Mike Johnson" class="team-avatar">
+                            <div class="team-member-info">
+                                <div class="team-member-name">Mike Johnson</div>
+                                <div class="team-member-role">Viewer</div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="spendnote-user-settings.html?tab=team" class="team-manage-link"><i class="fas fa-cog"></i> Manage in Settings</a>
                 </div>
             </div>
-            <a href="spendnote-user-settings.html?tab=team" class="team-bar-link"><i class="fas fa-cog"></i> Manage</a>
         </div>
 
         <!-- RECEIPT & PRO OPTIONS GRID -->
@@ -629,6 +677,17 @@ document.getElementById('deleteButton')?.addEventListener('click', function() {
         alert('Cash Box deleted (demo only)');
     }
 });
+
+// ===== TEAM ACCESS TOGGLE =====
+function toggleTeamAccess() {
+    const content = document.getElementById('teamContent');
+    const icon = document.getElementById('teamToggleIcon');
+    if (content && icon) {
+        const isHidden = content.style.display === 'none';
+        content.style.display = isHidden ? 'block' : 'none';
+        icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+}
 
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded', function() {
