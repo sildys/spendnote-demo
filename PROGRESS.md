@@ -5,6 +5,13 @@ This is the **single canonical “where we are”** file.
 If a chat thread freezes / context is lost: in the new thread say:
 - **“Read `PROGRESS.md` and continue from there.”**
 
+## AI assistant guidance
+
+- Keep responses minimal and task-focused.
+- Prefer implementing fixes over explaining them.
+- Avoid long explanations, hedging, or repetitive confirmations.
+- Be professional and forward-looking (anticipate edge cases, choose robust solutions).
+
 ## Current state (last updated: 2026-02-01 14:47)
 - **Dashboard**
   - Transaction modal works again (fixed duplicate modal JS load + ensured submit handler binds).

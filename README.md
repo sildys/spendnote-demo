@@ -428,6 +428,14 @@ If a chat thread resets/freezes, start the new chat with:
 
 - "Read `PROGRESS.md` and `README.md`, then continue from there."
 
+## AI assistant guidance (for new chat threads)
+
+- Keep responses minimal and task-focused.
+- Prefer implementing the fix over explaining it.
+- Avoid long explanations, hedging, or repetitive confirmations.
+- Be professional and forward-looking: choose robust solutions and prevent likely edge cases.
+- Ask only the necessary clarifying questions when requirements are ambiguous.
+
 ## Progress tracking
 
 - Canonical status: `PROGRESS.md`
