@@ -698,7 +698,7 @@ var db = {
                 .select(`
                     *,
                     cash_box:cash_boxes(id, name, color, currency, icon, sequence_number),
-                    contact:contacts(id, name, email, phone, address)
+                    contact:contacts(id, name, email, phone, address, sequence_number)
                 `)
                 .eq('id', id)
                 .single();

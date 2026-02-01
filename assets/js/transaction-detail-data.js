@@ -102,6 +102,14 @@
         return '';
     }
 
+    function getContactDisplayId(tx) {
+        const seq = Number(tx?.contact?.sequence_number);
+        if (Number.isFinite(seq) && seq > 0) {
+            return `CONT-${String(seq).padStart(3, '0')}`;
+        }
+        return '—';
+    }
+
     function setText(el, text) {
         if (!el) return;
         el.textContent = text;
@@ -161,15 +169,24 @@
         }
 
         try {
-            if (tx.cash_box_id && window.db?.cashBoxes?.getById) {
-                const latestCashBox = await window.db.cashBoxes.getById(tx.cash_box_id);
-                if (latestCashBox) {
-                    tx.cash_box = latestCashBox;
-                }
-            }
-            if (!tx.contact && tx.contact_id && window.db?.contacts?.getById) {
-                tx.contact = await window.db.contacts.getById(tx.contact_id);
-            }
+            const wantsCashBox = Boolean(tx.cash_box_id && window.db?.cashBoxes?.getById);
+            const wantsContact = Boolean(tx.contact_id && window.db?.contacts?.getById);
+
+            const shouldRefreshContact = wantsContact && (
+                !tx.contact ||
+                !tx.contact.id ||
+                String(tx.contact.id) !== String(tx.contact_id) ||
+                tx.contact.sequence_number === undefined ||
+                tx.contact.sequence_number === null
+            );
+
+            const [latestCashBox, latestContact] = await Promise.all([
+                wantsCashBox ? window.db.cashBoxes.getById(tx.cash_box_id) : Promise.resolve(null),
+                shouldRefreshContact ? window.db.contacts.getById(tx.contact_id) : Promise.resolve(null)
+            ]);
+
+            if (latestCashBox) tx.cash_box = latestCashBox;
+            if (latestContact) tx.contact = latestContact;
         } catch (_) {
             // ignore enrich failures
         }
@@ -202,8 +219,8 @@
         const createdAt = tx.created_at || tx.transaction_date;
 
         const createdBy = safeText(tx.created_by_user_name || tx.created_by, '—');
-        const contactName = safeText(tx.contact_name || tx.contact?.name, '—');
-        const contactId = safeText(tx.contact_id, '—');
+        const contactName = safeText(tx.contact?.name || tx.contact_name, '—');
+        const contactId = getContactDisplayId(tx);
 
         // Set Cash Box Header
         setText(qs('#txCashBoxName'), cashBoxName);
@@ -241,7 +258,7 @@
         setText(qs('#txContactName'), contactName);
         setText(qs('#txContactId'), contactId);
         setText(qs('#txContactOtherId'), safeText(tx.contact_custom_field_1, '—'));
-        setText(qs('#txContactAddress'), safeText(tx.contact_address || tx.contact?.address, '—'));
+        setText(qs('#txContactAddress'), safeText(tx.contact?.address || tx.contact_address, '—'));
 
         const createdByValue = qs('#txCreatedBy');
         if (createdByValue) {
