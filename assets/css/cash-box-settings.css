@@ -7,12 +7,25 @@
     gap: 20px;
 }
 
-/* ===== SUMMARY HEADER CARD ===== */
-.summary-row {
+/* ===== TOP GRID (Transaction Detail-like) ===== */
+.cb-topbar {
+    border-radius: 16px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    background: transparent;
+}
+
+.cb-top-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
     gap: 12px;
     align-items: stretch;
+}
+
+.cb-top-grid .cb-appearance-card {
+    grid-column: 2;
+    grid-row: 1 / span 2;
 }
 
 .summary-card {
@@ -86,41 +99,14 @@
     letter-spacing: -0.02em;
 }
 
-
-.summary-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.summary-actions .btn {
-    white-space: nowrap;
-}
-
-
-.team-inline {
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-}
-
-.team-inline-title {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.team-inline-title i {
-    color: var(--active);
-}
-
 @media (max-width: 900px) {
-    .summary-row {
+    .cb-top-grid {
         grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+    .cb-top-grid .cb-appearance-card {
+        grid-column: auto;
+        grid-row: auto;
     }
     .summary-card {
         flex-direction: column;
@@ -134,31 +120,10 @@
     .summary-center {
         text-align: center;
     }
-    .summary-actions {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
 }
 
 /* TOP SECTION - Settings Cards Container */
-.settings-topbar {
-    border-radius: 16px;
-    padding: 12px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-}
-
-.settings-top-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-}
-
-@media (max-width: 900px) {
-    .settings-top-grid {
-        grid-template-columns: 1fr;
-    }
-}
+/* removed old settings-topbar/settings-top-grid layout */
 
 /* Info Card Base */
 .settings-card {
@@ -460,45 +425,6 @@
     margin-top: 16px;
     padding-top: 16px;
     border-top: 1px solid var(--border);
-}
-
-.cb-delete-wrap {
-    margin-top: 12px;
-    background: var(--surface);
-    border: 1px solid rgba(239, 68, 68, 0.25);
-    border-radius: 14px;
-    overflow: hidden;
-}
-
-.cb-delete-trigger {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 14px 18px;
-    background: rgba(239, 68, 68, 0.04);
-    border: 0;
-    cursor: pointer;
-    color: var(--error);
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.cb-delete-trigger span {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.cb-delete-panel {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    padding: 16px 18px;
-    background: var(--surface);
-    flex-wrap: wrap;
 }
 
 .cb-delete-copy {
@@ -970,13 +896,70 @@
 }
 
 /* DANGER ZONE */
-.cb-delete-panel {
+/* Cash Box Actions Row (Transaction Detail-like) */
+.cb-actions-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 14px;
-    padding: 16px 18px;
+    gap: 8px;
+    padding: 0 12px;
+    flex-wrap: wrap;
+    max-width: 100%;
+}
+
+.cb-actions-row .left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.cb-actions-row .right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    min-width: 0;
+}
+
+.cb-actions-row .btn {
+    height: 44px;
+    padding: 0 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 14px;
+    min-width: 132px;
+    white-space: nowrap;
+}
+
+.cb-delete-trigger {
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 13px;
+    border: 1px solid var(--border);
     background: var(--surface);
+    color: var(--text);
+}
+
+.cb-delete-trigger:hover {
+    border-color: rgba(var(--active-rgb, 5, 150, 105), 0.40);
+    background: rgba(var(--active-rgb, 5, 150, 105), 0.06);
+}
+
+.cb-delete-panel {
+    margin: 8px 12px 0 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     flex-wrap: wrap;
 }
 

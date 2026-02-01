@@ -141,19 +141,24 @@ async function initCashBoxSettings() {
         
         if (DEBUG) console.log('Cash Box Settings initialized', isEditMode ? '(Edit mode)' : '(Create mode)');
         
-        // Setup Save Changes button handler (with small delay to ensure DOM is ready)
-        setTimeout(() => {
-            const saveBtns = document.querySelectorAll('.btn-primary');
-            if (DEBUG) console.log('Found', saveBtns.length, 'primary buttons');
-            
-            saveBtns.forEach(btn => {
-                if (DEBUG) console.log('Button text:', btn.textContent);
-                if (btn.textContent.includes('Save')) {
-                    btn.addEventListener('click', handleSave);
-                    if (DEBUG) console.log('Save button handler attached');
+        const saveBtn = document.getElementById('cashBoxSaveBtn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', handleSave);
+        }
+
+        const cancelBtn = document.getElementById('cashBoxCancelBtn');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                const referrer = document.referrer;
+                if (referrer && referrer.includes('dashboard.html')) {
+                    window.location.replace('dashboard.html');
+                } else if (referrer && referrer.includes('spendnote-cash-box-list.html')) {
+                    window.location.replace('spendnote-cash-box-list.html');
+                } else {
+                    window.location.replace('spendnote-cash-box-list.html');
                 }
             });
-        }, 100);
+        }
 
         // Summary live updates (name/icon/color)
         bindSummaryLiveUpdates();

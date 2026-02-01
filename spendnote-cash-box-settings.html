@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=13">
-    <link rel="stylesheet" href="assets/css/cash-box-settings.css?v=4">
+    <link rel="stylesheet" href="assets/css/cash-box-settings.css?v=5">
 </head>
 <body>
 <div id="nav-container"></div>
@@ -36,34 +36,27 @@
             <p class="page-subtitle" id="cashBoxSettingsSubtitle">Configure cash box details and default receipt appearance settings.</p>
         </div>
 
-        <!-- SUMMARY HEADER ROW -->
-        <div class="summary-row">
-            <div class="summary-card">
-                <div class="summary-left">
-                    <div class="summary-icon" id="summaryIcon">
-                        <i class="fas fa-building"></i>
+        <!-- TOP GRID (Transaction Detail-like) -->
+        <div class="cb-topbar">
+            <div class="cb-top-grid">
+                <!-- SUMMARY (small - left/top) -->
+                <div class="summary-card">
+                    <div class="summary-left">
+                        <div class="summary-icon" id="summaryIcon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="summary-info">
+                            <div class="summary-id" id="summaryId">SN-007</div>
+                            <div class="summary-name" id="summaryName">Main Office</div>
+                        </div>
                     </div>
-                    <div class="summary-info">
-                        <div class="summary-id" id="summaryId">SN-007</div>
-                        <div class="summary-name" id="summaryName">Main Office</div>
+                    <div class="summary-center">
+                        <div class="summary-balance-label">CURRENT BALANCE</div>
+                        <div class="summary-balance" id="summaryBalance">$18,500</div>
                     </div>
                 </div>
-                <div class="summary-center">
-                    <div class="summary-balance-label">CURRENT BALANCE</div>
-                    <div class="summary-balance" id="summaryBalance">$18,500</div>
-                </div>
-            </div>
 
-            <div class="summary-actions" aria-label="Cash box actions">
-                <button type="button" class="btn btn-secondary">Cancel</button>
-                <button type="button" class="btn btn-primary">Save Changes</button>
-            </div>
-        </div>
-
-        <!-- SETTINGS CARDS: General + Appearance + Team -->
-        <div class="settings-topbar">
-            <div class="settings-top-grid">
-                <!-- GENERAL CARD -->
+                <!-- GENERAL (large - left/bottom) -->
                 <div class="settings-card">
                     <div class="settings-card-title"><i class="fas fa-cog"></i> General</div>
                     <div class="general-fields">
@@ -94,51 +87,11 @@
                                 <span class="field-hint">Receipt ID format</span>
                             </div>
                         </div>
-
-                        <div class="team-inline">
-                            <div class="team-header" onclick="toggleTeamAccess()" style="cursor: pointer;">
-                                <div class="team-inline-title">
-                                    <i class="fas fa-users"></i>
-                                    <span>Team Access</span>
-                                    <span class="pro-badge" style="font-size: 9px; padding: 2px 5px;"><i class="fas fa-crown"></i> Pro</span>
-                                </div>
-                                <div class="team-header-right">
-                                    <span class="team-count">3 members</span>
-                                    <i class="fas fa-chevron-down" id="teamToggleIcon" style="transition: transform 0.3s; color: var(--text-muted); font-size: 12px;"></i>
-                                </div>
-                            </div>
-                            <div class="team-content" id="teamContent" style="display: none;">
-                                <div class="team-members-list">
-                                    <div class="team-member-row">
-                                        <img src="https://i.pravatar.cc/150?img=12" alt="John Doe" class="team-avatar">
-                                        <div class="team-member-info">
-                                            <div class="team-member-name">John Doe</div>
-                                            <div class="team-member-role">Owner</div>
-                                        </div>
-                                    </div>
-                                    <div class="team-member-row">
-                                        <img src="https://i.pravatar.cc/150?img=5" alt="Jane Smith" class="team-avatar">
-                                        <div class="team-member-info">
-                                            <div class="team-member-name">Jane Smith</div>
-                                            <div class="team-member-role">Admin</div>
-                                        </div>
-                                    </div>
-                                    <div class="team-member-row">
-                                        <img src="https://i.pravatar.cc/150?img=8" alt="Mike Johnson" class="team-avatar">
-                                        <div class="team-member-info">
-                                            <div class="team-member-name">Mike Johnson</div>
-                                            <div class="team-member-role">Viewer</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <a href="spendnote-user-settings.html?tab=team" class="team-manage-link"><i class="fas fa-cog"></i> Manage in Settings</a>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-                <!-- APPEARANCE CARD -->
-                <div class="settings-card">
+                <!-- APPEARANCE (tall - right spanning rows) -->
+                <div class="settings-card cb-appearance-card">
                     <div class="settings-card-title"><i class="fas fa-palette"></i> Appearance</div>
                     <div class="appearance-content">
                         <div class="appearance-row">
@@ -195,14 +148,55 @@
             </div>
         </div>
 
-        <div class="cb-delete-wrap">
-            <button class="cb-delete-trigger" id="cashBoxDeleteToggle" type="button" onclick="toggleCashBoxDelete()">
-                <span><i class="fas fa-trash"></i> Delete</span>
-                <i class="fas fa-chevron-down" id="cashBoxDeleteIcon" style="transition: transform 0.3s; color: var(--text-muted); font-size: 12px;"></i>
-            </button>
-            <div class="cb-delete-panel" id="cashBoxDeletePanel" style="display: none;">
-                <div class="cb-delete-copy">Permanently delete this Cash Box and all associated transactions. This action cannot be undone.</div>
-                <button class="danger-btn" id="deleteButton" type="button"><i class="fas fa-trash"></i> Delete Cash Box</button>
+        <div class="cb-actions-row" aria-label="Cash box actions">
+            <div class="left">
+                <button class="cb-delete-trigger" id="cashBoxDeleteToggle" type="button" onclick="toggleCashBoxDelete()"><i class="fas fa-trash"></i> Delete</button>
+            </div>
+            <div class="right">
+                <button type="button" class="btn btn-secondary" id="cashBoxCancelBtn">Cancel</button>
+                <button type="button" class="btn btn-primary" id="cashBoxSaveBtn">Save Changes</button>
+            </div>
+        </div>
+
+        <div class="cb-delete-panel" id="cashBoxDeletePanel" style="display: none;">
+            <div class="cb-delete-copy">Permanently delete this Cash Box and all associated transactions. This action cannot be undone.</div>
+            <button class="danger-btn" id="deleteButton" type="button"><i class="fas fa-trash"></i> Delete Cash Box</button>
+        </div>
+
+        <div class="collapsible-section">
+            <div class="collapsible-header" onclick="toggleTeamAccess()" style="cursor: pointer;">
+                <div class="collapsible-title">
+                    <i class="fas fa-users"></i>
+                    Team Access
+                    <span class="pro-badge"><i class="fas fa-crown"></i> Pro</span>
+                </div>
+                <i class="fas fa-chevron-down" id="teamToggleIcon" style="transition: transform 0.3s; color: var(--text-muted); font-size: 12px;"></i>
+            </div>
+            <div class="collapsible-content" id="teamContent" style="display: none;">
+                <div class="team-members-list">
+                    <div class="team-member-row">
+                        <img src="https://i.pravatar.cc/150?img=12" alt="John Doe" class="team-avatar">
+                        <div class="team-member-info">
+                            <div class="team-member-name">John Doe</div>
+                            <div class="team-member-role">Owner</div>
+                        </div>
+                    </div>
+                    <div class="team-member-row">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Jane Smith" class="team-avatar">
+                        <div class="team-member-info">
+                            <div class="team-member-name">Jane Smith</div>
+                            <div class="team-member-role">Admin</div>
+                        </div>
+                    </div>
+                    <div class="team-member-row">
+                        <img src="https://i.pravatar.cc/150?img=8" alt="Mike Johnson" class="team-avatar">
+                        <div class="team-member-info">
+                            <div class="team-member-name">Mike Johnson</div>
+                            <div class="team-member-role">Viewer</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="spendnote-user-settings.html?tab=team" class="team-manage-link"><i class="fas fa-cog"></i> Manage in Settings</a>
             </div>
         </div>
 
@@ -692,11 +686,10 @@ function toggleTeamAccess() {
 function toggleCashBoxDelete() {
     const panel = document.getElementById('cashBoxDeletePanel');
     const icon = document.getElementById('cashBoxDeleteIcon');
-    if (panel && icon) {
-        const isHidden = panel.style.display === 'none';
-        panel.style.display = isHidden ? 'flex' : 'none';
-        icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
-    }
+    if (!panel) return;
+    const isHidden = panel.style.display === 'none' || !panel.style.display;
+    panel.style.display = isHidden ? 'flex' : 'none';
+    if (icon) icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
 }
 
 // ===== INIT =====
@@ -723,7 +716,7 @@ window.addEventListener('DOMContentLoaded', function() {
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=20"></script>
-<script src="assets/js/cash-box-settings-data.js?v=15"></script>
+<script src="assets/js/cash-box-settings-data.js?v=16"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof initCashBoxSettings === 'function') {
