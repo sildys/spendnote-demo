@@ -12,7 +12,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Avoid long explanations, hedging, or repetitive confirmations.
 - Be professional and forward-looking (anticipate edge cases, choose robust solutions).
 
-## Current state (last updated: 2026-02-01 23:55)
+## Current state (last updated: 2026-02-01 23:58)
 - **Dashboard**
   - Transaction modal works again (fixed duplicate modal JS load + ensured submit handler binds).
   - **Save to Contacts** toggle exists (no auto-save by default).
@@ -36,6 +36,11 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Receipt preview iframe now loads real Supabase data (transaction + cash box + profile).
   - All receipt-related UI controls (toggles, Pro text fields) are initialized from `cash_boxes.receipt_*` settings.
   - Logo preview supports `logoUrl` (from Supabase) or `logoKey` (localStorage override).
+  - Quick receipt behavior:
+    - Receipt IDs are shown by default in Quick mode.
+    - `itemsMode=single|full` controls quick vs detailed line item rendering.
+    - In `itemsMode=single`, exactly one row is filled and its amount equals the Total (grid still shows 5 rows).
+    - `recordedBy=0` hides the recorded-by line.
   - Receipt templates (A4/PDF/Email) fully populate from transaction data:
     - Company name/address from profile
     - Contact name/address from transaction snapshot fields
@@ -53,6 +58,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **Cash Box pages**
   - Cash Box Detail: loads from Supabase (UUID id param), displays `SN-###` code.
   - Cash Box Settings: loads cash box data, displays `SN-###` in subtitle.
+  - Cash Box Settings: receipt preview uses demo data (A4/PDF/Email) and respects quick/detailed + toggles.
   - Cash Box List: delete modal subtitle ready for dynamic data.
 
 ## Key decisions / invariants
@@ -77,6 +83,11 @@ If a chat thread freezes / context is lost: in the new thread say:
 - `e727ef3` Fallback when void columns missing in transactions select
 - `ba3ebf6` UX: History nav unfiltered; Transaction Detail void metadata + styling
 - `f1b2b74` Receipts: show VOID watermark in templates
+- `275b5fc` Quick receipt: single row equals total
+- `f24facc` Quick receipt: keep 5-row grid, fill only first row
+- `40d9127` Quick receipt: single item mode + show receipt id by default
+- `460556c` Settings demo receipt: cash-only copy + single-line addresses + toggles
+- `77d489e` Docs: add UX/bug backlog items
 
 ## Next focus (pick one)
 - **A)** Implement end-to-end transaction create flow + robust error handling (Supabase insert + balance update)
