@@ -27,6 +27,7 @@
 
     let receiptLogoUrl = '';
     const RECEIPT_LOGO_KEY = 'spendnote.proLogoDataUrl';
+    const RECEIPT_MODE_KEY = 'spendnote.receiptMode';
 
     const txId = new URLSearchParams(window.location.search).get('id');
 
@@ -67,7 +68,7 @@
     function applyReceiptMode(mode) {
         const m = mode === 'detailed' ? 'detailed' : 'quick';
         receiptMode = m;
-        try { localStorage.setItem('spendnote.receiptMode', m); } catch (e) {}
+        try { localStorage.setItem(RECEIPT_MODE_KEY, m); } catch (e) {}
 
         const quickSummary = document.getElementById('receiptQuickSummary');
         const detailedToggles = document.getElementById('receiptDetailedToggles');
@@ -90,6 +91,23 @@
             });
         }
         reloadIframe();
+    }
+
+    function getStoredReceiptMode() {
+        try {
+            const v = String(localStorage.getItem(RECEIPT_MODE_KEY) || '').toLowerCase();
+            if (v === 'quick' || v === 'detailed') return v;
+            return '';
+        } catch (_) {
+            return '';
+        }
+    }
+
+    function inferReceiptModeFromOptions(options) {
+        const o = options || {};
+        const keys = Object.keys(QUICK_PRESET);
+        const isQuick = keys.every((k) => String(o[k]) === String(QUICK_PRESET[k]));
+        return isQuick ? 'quick' : 'detailed';
     }
 
     function initReceiptUiFromCashBox(cashBox, profile) {
@@ -187,7 +205,9 @@
             }
         });
 
-        applyReceiptMode('detailed');
+        const storedMode = getStoredReceiptMode();
+        const modeToApply = storedMode || inferReceiptModeFromOptions(displayOptions);
+        applyReceiptMode(modeToApply);
     }
 
     window.onTransactionDetailDataLoaded = ({ tx, cashBox, profile }) => {
@@ -402,9 +422,8 @@ html, body { height: auto !important; overflow: auto !important; }
             });
         }
 
-        try {
-            receiptMode = localStorage.getItem('spendnote.receiptMode') === 'detailed' ? 'detailed' : 'quick';
-        } catch (e) { receiptMode = 'quick'; }
+        const storedMode = getStoredReceiptMode();
+        if (storedMode) receiptMode = storedMode;
 
         document.getElementById('receiptModeQuick')?.addEventListener('change', () => applyReceiptMode('quick'));
         document.getElementById('receiptModeDetailed')?.addEventListener('change', () => applyReceiptMode('detailed'));
