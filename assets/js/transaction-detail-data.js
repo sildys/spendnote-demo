@@ -27,15 +27,34 @@
         const n = Number(amount);
         const safe = Number.isFinite(n) ? n : 0;
         const curr = safeText(currency, 'USD');
+
+        const sn = (typeof window !== 'undefined' && window.SpendNote) ? window.SpendNote : null;
+        if (sn && typeof sn.formatCurrency === 'function') {
+            return sn.formatCurrency(safe, curr);
+        }
+
+        const defaultLocaleByCurrency = {
+            USD: 'en-US',
+            EUR: 'de-DE',
+            GBP: 'en-GB',
+            HUF: 'hu-HU',
+            JPY: 'ja-JP',
+            CHF: 'de-CH',
+            CAD: 'en-CA',
+            AUD: 'en-AU'
+        };
+
+        const resolvedLocale = defaultLocaleByCurrency[curr] || 'en-US';
+
         try {
-            return new Intl.NumberFormat(undefined, {
+            return new Intl.NumberFormat(resolvedLocale, {
                 style: 'currency',
                 currency: curr,
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             }).format(safe);
         } catch (_) {
-            return `$${safe.toFixed(2)}`;
+            return `${safe.toFixed(2)} ${curr}`;
         }
     }
 
