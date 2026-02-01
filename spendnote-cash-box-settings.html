@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=13">
-    <link rel="stylesheet" href="assets/css/cash-box-settings.css?v=5">
+    <link rel="stylesheet" href="assets/css/cash-box-settings.css?v=6">
 </head>
 <body>
 <div id="nav-container"></div>
@@ -81,8 +81,9 @@
                                 </datalist>
                                 <span class="field-warning"><i class="fas fa-exclamation-triangle"></i> Changing currency won't convert existing amounts</span>
                             </div>
-                            <div class="field-group">
-                                <label class="field-label"><i class="fas fa-hashtag"></i> ID Prefix <span class="pro-badge" style="font-size: 9px; padding: 2px 5px;"><i class="fas fa-crown"></i> Pro</span></label>
+                            <div class="field-group id-prefix-group">
+                                <span class="pro-badge id-prefix-badge"><i class="fas fa-crown"></i> Pro</span>
+                                <label class="field-label"><i class="fas fa-hashtag"></i> ID Prefix</label>
                                 <input type="text" class="field-input" id="idPrefixInput" value="SN" placeholder="SN" maxlength="10">
                                 <span class="field-hint">Receipt ID format</span>
                             </div>
