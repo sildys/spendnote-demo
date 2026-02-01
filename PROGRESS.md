@@ -12,7 +12,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Avoid long explanations, hedging, or repetitive confirmations.
 - Be professional and forward-looking (anticipate edge cases, choose robust solutions).
 
-## Current state (last updated: 2026-02-01 19:43)
+## Current state (last updated: 2026-02-01 23:55)
 - **Dashboard**
   - Transaction modal works again (fixed duplicate modal JS load + ensured submit handler binds).
   - **Save to Contacts** toggle exists (no auto-save by default).
@@ -83,3 +83,15 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **B)** Stabilize core IDs everywhere (cash_box_id/contact_id selection + filters + validation)
 - **C)** Contacts list: replace remaining placeholder columns (boxes / #tx / last tx) with real values
 - **D)** Receipt "Done & Print" flow: wire the dashboard modal to open the receipt after saving a transaction
+
+## Backlog (UX + bugs)
+- **High**
+  - Dashboard modal: cash box selection does not propagate to the dashboard state.
+  - CSV export still uses internal IDs instead of display IDs.
+- **Medium**
+  - Avatar image should not show a colored highlight/ring.
+  - Table column widths need adjustment.
+  - Navigation underline styling is still inconsistent.
+  - "Save to Contacts" checkbox: add a short inline hint ("so you can reuse it later").
+- **Low**
+  - Footer redesign.

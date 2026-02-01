@@ -204,6 +204,16 @@ This enables localization and per-cash-box personalization.
 - Contacts cash box filtering / cash box ID handling is not finished yet.
 - Team features (members/roles/cash box access) are not finished yet.
 
+Additional UX/bug backlog:
+
+- Dashboard modal: cash box selection does not propagate correctly.
+- CSV export still uses internal IDs instead of display IDs.
+- Avatar image shows an unwanted colored highlight/ring.
+- Table column widths need adjustment.
+- Navigation underline styling is still inconsistent.
+- "Save to Contacts" checkbox: add a short inline hint ("so you can reuse it later").
+- Footer redesign.
+
 ## Canonical conventions / decisions (do not change casually)
 
 This section is meant to prevent re-explaining core decisions in new chat threads.
