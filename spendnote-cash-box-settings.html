@@ -1868,5 +1868,12 @@
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=20"></script>
     <script src="assets/js/cash-box-settings-data.js?v=11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof initCashBoxSettings === 'function') {
+                initCashBoxSettings();
+            }
+        });
+    </script>
 </body>
 </html>
