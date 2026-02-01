@@ -447,6 +447,16 @@ const DUMMY_PROFILE = {
 };
 
 // ===== RECEIPT PREVIEW =====
+const QUICK_PRESET = {
+    logo: '1',
+    addresses: '1',
+    tracking: '1',
+    additional: '0',
+    note: '0',
+    signatures: '1'
+};
+
+let receiptMode = 'quick';
 let displayOptions = {
     logo: '1',
     addresses: '1',
@@ -474,6 +484,9 @@ function buildReceiptUrl(format) {
     for (const [key, value] of Object.entries(displayOptions)) {
         params.append(key, value);
     }
+
+    params.append('itemsMode', receiptMode === 'quick' ? 'single' : 'full');
+    params.append('recordedBy', '0');
 
     params.append('logoKey', 'spendnote.proLogoDataUrl');
     
@@ -516,6 +529,35 @@ function buildReceiptUrl(format) {
     if (footerNote) params.append('footerNote', footerNote);
     
     return `${baseUrls[format]}?${params.toString()}`;
+}
+
+function applyReceiptMode(mode) {
+    const m = mode === 'detailed' ? 'detailed' : 'quick';
+    receiptMode = m;
+
+    const quickSummary = document.getElementById('receiptQuickSummary');
+    const detailedToggles = document.getElementById('receiptDetailedToggles');
+    if (quickSummary) quickSummary.style.display = m === 'quick' ? 'block' : 'none';
+    if (detailedToggles) detailedToggles.style.display = m === 'detailed' ? 'flex' : 'none';
+
+    const quickRadio = document.getElementById('receiptModeQuick');
+    const detailedRadio = document.getElementById('receiptModeDetailed');
+    if (quickRadio) quickRadio.checked = m === 'quick';
+    if (detailedRadio) detailedRadio.checked = m === 'detailed';
+
+    if (m === 'quick') {
+        displayOptions = { ...QUICK_PRESET };
+        document.querySelectorAll('.toggle-list input[type="checkbox"]').forEach(toggle => {
+            const field = toggle.dataset.field;
+            if (field) toggle.checked = displayOptions[field] === '1';
+        });
+    } else {
+        document.querySelectorAll('.toggle-list input[type="checkbox"]').forEach(toggle => {
+            const field = toggle.dataset.field;
+            if (field) displayOptions[field] = toggle.checked ? '1' : '0';
+        });
+    }
+    reloadIframe();
 }
 
 function reloadIframe() {
@@ -574,21 +616,14 @@ document.querySelectorAll('.format-btn').forEach(btn => {
 // ===== MODE TOGGLE =====
 document.querySelectorAll('input[name="receiptMode"]').forEach(radio => {
     radio.addEventListener('change', function() {
-        const quickSummary = document.getElementById('receiptQuickSummary');
-        const detailedToggles = document.getElementById('receiptDetailedToggles');
-        if (this.value === 'quick') {
-            quickSummary.style.display = 'block';
-            detailedToggles.style.display = 'none';
-        } else {
-            quickSummary.style.display = 'none';
-            detailedToggles.style.display = 'flex';
-        }
+        applyReceiptMode(this.value);
     });
 });
 
 // ===== TOGGLE SWITCHES =====
 document.querySelectorAll('.toggle-list input[type="checkbox"]').forEach(toggle => {
     toggle.addEventListener('change', function() {
+        if (receiptMode !== 'detailed') return;
         const field = this.dataset.field;
         if (field) {
             displayOptions[field] = this.checked ? '1' : '0';
@@ -705,7 +740,7 @@ function toggleCashBoxDelete() {
 
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded', function() {
-    reloadIframe();
+    applyReceiptMode('quick');
     updateZoom();
     
     // Load saved logo

@@ -1,7 +1,7 @@
 ﻿const QUICK_PRESET = {
         logo: '1',
         addresses: '1',
-        tracking: '0',
+        tracking: '1',
         additional: '0',
         note: '0',
         signatures: '1'
@@ -43,7 +43,7 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260201-04');
+        params.append('v', 'receipt-20260201-05');
         if (txId) params.append('txId', txId);
 
         if (currentTxIsVoided) {
@@ -52,6 +52,9 @@
         for (const [key, value] of Object.entries(displayOptions)) {
             params.append(key, value);
         }
+
+        params.append('itemsMode', receiptMode === 'quick' ? 'single' : 'full');
+        params.append('recordedBy', '0');
 
         for (const [key, value] of Object.entries(receiptText)) {
             const v = String(value || '').trim();

@@ -436,6 +436,8 @@
 
   <script>
 const urlParams = new URLSearchParams(window.location.search);
+const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
+const isItemsSingle = itemsMode === 'single';
 
 const initialVoid = urlParams.get('void') === '1';
 window.__spendnoteReceiptVoid = initialVoid;
@@ -619,13 +621,13 @@ if (isDemo) {
     .filter((it) => it.description || Number.isFinite(it.amount));
 
   const rows = (items.length ? items : [{ description: 'Service fee', amount: 79.99 }])
-    .slice(0, 6)
+    .slice(0, isItemsSingle ? 1 : 5)
     .map((it) => {
       const amount = Number.isFinite(it.amount) ? formatMoney(it.amount, demoCurrency) : '';
       return `<tr><td>${safeText(it.description, '&nbsp;')}</td><td class="amount">${amount}</td></tr>`;
     });
 
-  while (rows.length < 6) {
+  while (rows.length < (isItemsSingle ? 1 : 5)) {
     rows.push('<tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>');
   }
 
@@ -673,6 +675,11 @@ if (urlParams.get('addresses') === '0') {
 // Tracking Details (Receipt ID, Cash Box ID, Recorded by)
 if (urlParams.get('tracking') === '0') {
     document.querySelectorAll('.identifiers, .receipt-ids, .recorded-by, .register-id, .receipt-id').forEach(el => el.style.display = 'none');
+}
+
+// Recorded-by (independent)
+if (urlParams.get('recordedBy') === '0') {
+    document.querySelectorAll('.recorded-by').forEach(el => el.style.display = 'none');
 }
 
 // Additional Info (two custom info lines)
@@ -793,7 +800,7 @@ if (urlParams.get('signatures') === '0') {
         const fallbackAmt = Number(tx?.amount);
         const effective = items.length ? items : [{ description: fallbackDesc, amount: fallbackAmt }];
 
-        const maxRows = 5;
+        const maxRows = isItemsSingle ? 1 : 5;
         const rows = effective.slice(0, maxRows).map((it) => {
           const desc = safeText(it.description, '—');
           const amt = formatMoney(it.amount, currency);
