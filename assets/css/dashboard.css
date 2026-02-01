@@ -2370,11 +2370,17 @@ tr:hover [data-category-tag] {
 }
 
 .cashbox-display .cashbox-id {
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 9px;
+    font-weight: 700;
     color: var(--text-muted);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
+    background: var(--surface-elevated);
+    padding: 2px 5px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
 }
 
 .cashbox-display .cashbox-balance {
