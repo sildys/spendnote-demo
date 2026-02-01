@@ -419,31 +419,31 @@
 const DUMMY_TX = {
     id: 'demo-preview',
     display_id: 'SN1-042',
-    transaction_date: new Date().toISOString().split('T')[0],
+    transaction_date: 'Jan 15, 2026',
     type: 'in',
-    amount: 250.00,
-    description: 'Office supplies reimbursement',
-    contact_name: 'John Smith',
-    contact_address: '123 Main Street, Suite 100, New York, NY 10001',
-    contact_custom_field_1: 'EMP-2847',
-    note: 'Reimbursement for Q1 office supplies purchase',
+    amount: 249.97,
+    description: 'Payment received',
+    contact_name: 'John Doe',
+    contact_address: '456 Oak Ave\nSpringfield, IL 62704',
+    contact_custom_field_1: 'CUST-1007',
+    note: 'Paid by card. Thank you!',
     line_items: [
-        { description: 'Printer paper (5 reams)', amount: 89.50 },
-        { description: 'Ink cartridges', amount: 124.00 },
-        { description: 'Sticky notes & pens', amount: 36.50 }
+        { description: 'Service fee', amount: 79.99 },
+        { description: 'Materials', amount: 124.99 },
+        { description: 'Sales tax', amount: 44.99 }
     ],
     cash_box: {
         name: 'Main Office',
         sequence_number: 1,
         currency: 'USD'
     },
-    created_by_user_name: 'Sarah Johnson'
+    created_by_user_name: 'Alex Johnson'
 };
 
 const DUMMY_PROFILE = {
     company_name: 'Acme Corporation',
-    full_name: 'Robert Williams',
-    address: '456 Business Ave, Floor 12, New York, NY 10002'
+    full_name: 'Acme Corporation',
+    address: '123 Main St\nSuite 100\nSpringfield, IL 62701'
 };
 
 // ===== RECEIPT PREVIEW =====
@@ -467,19 +467,23 @@ function buildReceiptUrl(format) {
     };
     
     const params = new URLSearchParams();
-    params.append('v', 'settings-preview-01');
+    params.append('v', 'settings-preview-02');
     params.append('demo', '1');
     
     // Display options
     for (const [key, value] of Object.entries(displayOptions)) {
         params.append(key, value);
     }
+
+    params.append('logoKey', 'spendnote.proLogoDataUrl');
     
     // Dummy data params
     params.append('demoCompany', DUMMY_PROFILE.company_name);
     params.append('demoAddress', DUMMY_PROFILE.address);
+    params.append('demoCompanyId', 'ACME-1023');
     params.append('demoContact', DUMMY_TX.contact_name);
     params.append('demoContactAddress', DUMMY_TX.contact_address);
+    params.append('demoContactId', DUMMY_TX.contact_custom_field_1);
     params.append('demoAmount', DUMMY_TX.amount);
     params.append('demoCurrency', DUMMY_TX.cash_box.currency);
     params.append('demoDate', DUMMY_TX.transaction_date);
@@ -487,6 +491,12 @@ function buildReceiptUrl(format) {
     params.append('demoCashBoxId', 'SN-001');
     params.append('demoNote', DUMMY_TX.note);
     params.append('demoCreatedBy', DUMMY_TX.created_by_user_name);
+
+    const demoItems = (Array.isArray(DUMMY_TX.line_items) ? DUMMY_TX.line_items : [])
+        .map(it => `${String(it.description || '').trim()}|${Number(it.amount)}`)
+        .filter(Boolean)
+        .join(';');
+    params.append('demoItems', demoItems);
     
     // Pro text customizations
     const receiptTitle = document.getElementById('receiptTitle')?.value;

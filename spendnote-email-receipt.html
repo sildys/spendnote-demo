@@ -647,6 +647,129 @@ if (footerNote) {
     }
 }
 
+const txIdParam = urlParams.get('txId');
+const isDemo = urlParams.get('demo') === '1' && !txIdParam;
+if (isDemo) {
+  function safeText(value, fallback) {
+    const v = value === undefined || value === null ? '' : String(value);
+    return v.trim() ? v : (fallback || '');
+  }
+
+  function setTextAll(selector, text) {
+    document.querySelectorAll(selector).forEach((el) => {
+      el.textContent = text;
+    });
+  }
+
+  function setHtmlAll(selector, html) {
+    document.querySelectorAll(selector).forEach((el) => {
+      el.innerHTML = html;
+    });
+  }
+
+  function formatMoney(amount, currency) {
+    const n = Number(amount);
+    const v = Number.isFinite(n) ? n : 0;
+    try {
+      return new Intl.NumberFormat('en-US', { style: 'currency', currency: currency || 'USD' }).format(v);
+    } catch (_) {
+      return `$${v.toFixed(2)}`;
+    }
+  }
+
+  const demoCompany = safeText(urlParams.get('demoCompany'), 'Acme Corporation');
+  const demoAddress = safeText(urlParams.get('demoAddress'), '123 Main St\nSpringfield, IL 62701');
+  const demoCompanyId = safeText(urlParams.get('demoCompanyId'), '');
+
+  const demoContact = safeText(urlParams.get('demoContact'), 'John Doe');
+  const demoContactAddress = safeText(urlParams.get('demoContactAddress'), '456 Oak Ave\nSpringfield, IL 62704');
+  const demoContactId = safeText(urlParams.get('demoContactId'), '');
+
+  const demoDate = safeText(urlParams.get('demoDate'), 'Jan 15, 2026');
+  const demoCashBoxId = safeText(urlParams.get('demoCashBoxId'), 'SN-001');
+  const demoReceiptId = safeText(urlParams.get('demoReceiptId'), 'SN1-042');
+  const demoCreatedBy = safeText(urlParams.get('demoCreatedBy'), 'Alex Johnson');
+
+  const demoCurrency = safeText(urlParams.get('demoCurrency'), 'USD');
+  const demoAmount = Number(urlParams.get('demoAmount'));
+  const demoNote = safeText(urlParams.get('demoNote'), '');
+
+  setTextAll('span.register-id', demoCashBoxId || '—');
+  setTextAll('span.receipt-id-line', demoReceiptId || '—');
+  setTextAll('.recorded-by', `Recorded by: ${demoCreatedBy || '—'}`);
+  setTextAll('.receipt-date', `Date: ${demoDate || '—'}`);
+
+  setTextAll('.company-name', demoCompany);
+  setTextAll('.contact-name', demoContact);
+
+  const companyAddressHtml = demoAddress
+    .split(/\r?\n/)
+    .map((l) => safeText(l, ''))
+    .filter(Boolean)
+    .join('<br>');
+  const contactAddressHtml = demoContactAddress
+    .split(/\r?\n/)
+    .map((l) => safeText(l, ''))
+    .filter(Boolean)
+    .join('<br>');
+
+  setHtmlAll('.company-address', companyAddressHtml);
+  setHtmlAll('.contact-address', contactAddressHtml);
+  document.querySelectorAll('.company-address, .contact-address').forEach((el) => (el.style.display = ''));
+
+  if (demoCompanyId) {
+    setTextAll('.company-id', demoCompanyId);
+    document.querySelectorAll('.company-id').forEach((el) => (el.style.display = ''));
+  }
+  if (demoContactId) {
+    setTextAll('.contact-id', demoContactId);
+    document.querySelectorAll('.contact-id').forEach((el) => (el.style.display = ''));
+  }
+
+  const rawItems = safeText(urlParams.get('demoItems'), '');
+  const items = rawItems
+    .split(';')
+    .map((chunk) => chunk.trim())
+    .filter(Boolean)
+    .map((chunk) => {
+      const [desc, amt] = chunk.split('|');
+      return {
+        description: safeText(desc, ''),
+        amount: Number(amt)
+      };
+    })
+    .filter((it) => it.description || Number.isFinite(it.amount));
+
+  const rows = (items.length ? items : [{ description: 'Service fee', amount: 79.99 }])
+    .slice(0, 5)
+    .map((it) => {
+      const amount = Number.isFinite(it.amount) ? formatMoney(it.amount, demoCurrency) : '';
+      return `<tr><td>${safeText(it.description, '&nbsp;')}</td><td class="amount">${amount}</td></tr>`;
+    });
+
+  while (rows.length < 5) {
+    rows.push('<tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>');
+  }
+
+  const tbody = document.querySelector('.items-section tbody');
+  if (tbody) tbody.innerHTML = rows.join('');
+
+  const totalValue = Number.isFinite(demoAmount)
+    ? demoAmount
+    : items.reduce((sum, it) => sum + (Number.isFinite(it.amount) ? it.amount : 0), 0);
+  const totalEl = document.querySelector('.total-amount');
+  if (totalEl) totalEl.textContent = formatMoney(totalValue, demoCurrency);
+
+  const notesEl = document.querySelector('.notes');
+  const notesTextEl = document.querySelector('.notes-text');
+  if (!demoNote) {
+    if (notesEl) notesEl.style.display = 'none';
+  } else {
+    if (notesTextEl) notesTextEl.textContent = demoNote;
+    if (notesEl) notesEl.style.display = '';
+  }
+}
+
 // Logo
 if (urlParams.get('logo') === '0') {
     document.querySelectorAll('.logo, .logo-box, .logo-img, .logo-container, .sn-logo').forEach(el => el.style.display = 'none');
