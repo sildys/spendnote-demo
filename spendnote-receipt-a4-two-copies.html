@@ -323,7 +323,7 @@ body {
     <div class="topbar">
   <div>
     <div class="title">Cash Receipt</div>
-    <div class="meta"><span class="recorded-by">Recorded by: —</span><span class="date-separator"> &nbsp; </span>Date: —</div>
+    <div class="meta">Date: —</div>
   </div>
   <div class="right-block">
     <div class="identifiers">
@@ -405,7 +405,7 @@ body {
     <div class="topbar">
   <div>
     <div class="title">Cash Receipt</div>
-    <div class="meta"><span class="recorded-by">Recorded by: —</span><span class="date-separator"> &nbsp; </span>Date: —</div>
+    <div class="meta">Date: —</div>
   </div>
   <div class="right-block">
     <div class="identifiers">
@@ -575,9 +575,9 @@ body {
     document.querySelectorAll('.from-address, .to-address, .party-address, .company-address, .contact-address').forEach(el => el.style.display = 'none');
   }
   
-  // Tracking Details (Receipt ID, Cash Box ID, Recorded by)
+  // Tracking Details (Receipt ID, Cash Box ID)
   if (urlParams.get('tracking') === '0') {
-    document.querySelectorAll('.identifiers, .receipt-ids, .recorded-by, .register-id, .receipt-id, .date-separator').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.identifiers, .receipt-ids, .register-id, .receipt-id').forEach(el => el.style.display = 'none');
   }
   
   // Additional Info (two custom info lines)
@@ -638,7 +638,7 @@ body {
         function getCashBoxCode(tx) {
           const cbSeq = Number(tx?.cash_box?.sequence_number || tx?.cash_box_sequence);
           if (Number.isFinite(cbSeq) && cbSeq > 0) {
-            return `CR-${String(cbSeq).padStart(3, '0')}`;
+            return `SN-${String(cbSeq).padStart(3, '0')}`;
           }
           return '';
         }
@@ -674,7 +674,7 @@ body {
         document.querySelectorAll('.contact-id').forEach((el) => (el.style.display = 'none'));
         setTextAll('.register-id', 'Cash Box ID: —');
         setTextAll('.receipt-id-line', 'Receipt ID: —');
-        setHtmlAll('.meta', `<span class="recorded-by">Recorded by: —</span><span class="date-separator"> &nbsp; </span>Date: —`);
+        setHtmlAll('.meta', `Date: —`);
         document.querySelectorAll('.items tbody').forEach((tbody) => {
           tbody.innerHTML = '<tr><td>&nbsp;</td><td></td></tr>'.repeat(5);
         });
@@ -760,7 +760,6 @@ body {
 
           const displayId = getDisplayId(tx);
           const cashBoxCode = getCashBoxCode(tx);
-          const createdBy = safeText(tx.created_by_user_name || tx.created_by, '');
           const txDate = tx.transaction_date || tx.created_at;
           const contactName = safeText(tx.contact_name || tx.contact?.name, '');
           const contactAddress = safeText(tx.contact_address || tx.contact?.address, '');
@@ -794,14 +793,14 @@ body {
             el.innerHTML = '';
             el.appendChild(strong);
             el.appendChild(document.createTextNode(notes));
+            el.style.display = '';
           });
 
           setTextAll('.register-id', `Cash Box ID: ${cashBoxCode || '—'}`);
           setTextAll('.receipt-id-line', `Receipt ID: ${displayId || '—'}`);
-  el.style.display = '';
           
           const d = formatDateShort(txDate);
-          setHtmlAll('.meta', `<span class="recorded-by">Recorded by: ${createdBy || '—'}</span><span class="date-separator"> &nbsp; </span>Date: ${d || '—'}`);
+          setHtmlAll('.meta', `Date: ${d || '—'}`);
 
           setTextAll('.contact-name', contactName || '—');
           if (contactAddress) {

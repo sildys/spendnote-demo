@@ -83,6 +83,14 @@ async function loadCashBoxData(id) {
                 option.classList.toggle('selected', option.dataset.icon === cashBox.icon);
             });
         }
+
+        // Update header subtitle (avoid hardcoded demo values)
+        const seq = Number(cashBox.sequence_number);
+        const displayCode = Number.isFinite(seq) && seq > 0 ? `SN-${String(seq).padStart(3, '0')}` : '—';
+        const subtitle = document.getElementById('cashBoxSettingsSubtitle');
+        if (subtitle) {
+            subtitle.textContent = `Configure ${cashBox.name || '—'} (${displayCode})`;
+        }
         
         if (DEBUG) console.log('Cash box data loaded:', cashBox.name);
         

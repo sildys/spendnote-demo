@@ -97,7 +97,7 @@
     function getCashBoxCode(tx) {
         const cbSeq = Number(tx?.cash_box?.sequence_number || tx?.cash_box_sequence);
         if (Number.isFinite(cbSeq) && cbSeq > 0) {
-            return `CR-${String(cbSeq).padStart(3, '0')}`;
+            return `SN-${String(cbSeq).padStart(3, '0')}`;
         }
         return '';
     }

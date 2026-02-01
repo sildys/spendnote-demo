@@ -697,8 +697,8 @@
                     <i class="fas fa-building"></i>
                 </div>
                 <div class="header-info">
-                    <h1>Main Office</h1>
-                    <div class="cash-box-id">CR-001</div>
+                    <h1 id="cashBoxDetailName">—</h1>
+                    <div class="cash-box-id" id="cashBoxDetailCode">—</div>
                 </div>
             </div>
             <div class="header-balance">
@@ -1095,69 +1095,78 @@
         }
 
         // Cashbox ID to color mapping - ID is the reference, color can change
-        const cashboxColorMap = {
-            'CR-001': { hex: '#059669', rgb: '5, 150, 105' }, // Main Office
-            'CR-002': { hex: '#f59e0b', rgb: '245, 158, 11' }, // Event Fund
-            'CR-003': { hex: '#3b82f6', rgb: '59, 130, 246' }, // Petty Cash
-            'CR-004': { hex: '#8b5cf6', rgb: '139, 92, 246' }, // Marketing Budget
-            'CR-005': { hex: '#ef4444', rgb: '239, 68, 68' }  // Emergency Fund
-        };
+        const cashboxColorMap = {};
 
         // updateMenuColors is provided by main.js (window.updateMenuColors)
 
         document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const cashboxId = urlParams.get('id') || 'CR-001';
-            const colorData = cashboxColorMap[cashboxId] || cashboxColorMap['CR-001'];
-            document.documentElement.style.setProperty('--active', colorData.hex);
-            document.documentElement.style.setProperty('--active-rgb', colorData.rgb);
-            document.documentElement.style.setProperty('--cashbox-rgb', colorData.rgb);
-
-            const inBtn = document.getElementById('detailQuickInBtn');
-            if (inBtn) {
-                inBtn.addEventListener('click', () => {
-                    window.location.href = `dashboard.html?cashbox=${cashboxId}&direction=in#new-transaction`;
-                });
-            }
-            const outBtn = document.getElementById('detailQuickOutBtn');
-            if (outBtn) {
-                outBtn.addEventListener('click', () => {
-                    window.location.href = `dashboard.html?cashbox=${cashboxId}&direction=out#new-transaction`;
-                });
-            }
-
-            const settingsBtn = document.getElementById('detailSettingsBtn');
-            if (settingsBtn) {
-                settingsBtn.setAttribute('href', `spendnote-cash-box-settings.html?id=${cashboxId}`);
-            }
-            
-            // Update nav menu colors
-            updateMenuColors(colorData.hex);
-            
-            // Update table border and row hover colors
-            const transactionsTable = document.querySelector('.transactions-table');
-            if (transactionsTable) {
-                transactionsTable.style.setProperty('--cashbox-rgb', colorData.rgb);
-            }
-            
-            // Update all table rows with cashbox color
-            document.querySelectorAll('tbody tr').forEach(row => {
-                row.style.setProperty('--cashbox-rgb', colorData.rgb);
-                row.style.setProperty('--cashbox-color', colorData.hex);
-            });
-            
-            // Update all View links to pass the Cash Box ID parameter
-            document.querySelectorAll('.action-btn').forEach(link => {
-                const currentHref = link.getAttribute('href');
-                if (currentHref && !currentHref.includes('cashboxId=')) {
-                    link.setAttribute('href', currentHref + '?cashboxId=' + cashboxId);
+            (async () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const cashboxId = urlParams.get('id');
+                if (!cashboxId || !window.db?.cashBoxes?.getById) {
+                    return;
                 }
-            });
-            
-            // Update Dashboard links to include cashbox parameter for carousel navigation
-            document.querySelectorAll('a[href="dashboard.html"]').forEach(link => {
-                link.setAttribute('href', `dashboard.html?cashbox=${cashboxId}`);
-            });
+
+                const cashBox = await window.db.cashBoxes.getById(cashboxId);
+                if (!cashBox) return;
+
+                const nameEl = document.getElementById('cashBoxDetailName');
+                if (nameEl) nameEl.textContent = cashBox.name || '—';
+
+                const seq = Number(cashBox.sequence_number);
+                const code = Number.isFinite(seq) && seq > 0 ? `SN-${String(seq).padStart(3, '0')}` : '—';
+                const codeEl = document.getElementById('cashBoxDetailCode');
+                if (codeEl) codeEl.textContent = code;
+
+                const color = String(cashBox.color || '#059669');
+                const rgb = (window.SpendNote && typeof window.SpendNote.hexToRgb === 'function')
+                    ? window.SpendNote.hexToRgb(color)
+                    : '5, 150, 105';
+
+                document.documentElement.style.setProperty('--active', color);
+                document.documentElement.style.setProperty('--active-rgb', rgb);
+                document.documentElement.style.setProperty('--cashbox-rgb', rgb);
+
+                try {
+                    localStorage.setItem('activeCashBoxId', cashboxId);
+                    localStorage.setItem('activeCashBoxColor', color);
+                    localStorage.setItem('activeCashBoxRgb', rgb);
+                } catch (_) {}
+
+                if (typeof window.updateMenuColors === 'function') {
+                    window.updateMenuColors(color);
+                }
+
+                const inBtn = document.getElementById('detailQuickInBtn');
+                if (inBtn) {
+                    inBtn.addEventListener('click', () => {
+                        window.location.href = `dashboard.html?cashbox=${cashboxId}&direction=in#new-transaction`;
+                    });
+                }
+                const outBtn = document.getElementById('detailQuickOutBtn');
+                if (outBtn) {
+                    outBtn.addEventListener('click', () => {
+                        window.location.href = `dashboard.html?cashbox=${cashboxId}&direction=out#new-transaction`;
+                    });
+                }
+
+                const settingsBtn = document.getElementById('detailSettingsBtn');
+                if (settingsBtn) {
+                    settingsBtn.setAttribute('href', `spendnote-cash-box-settings.html?id=${cashboxId}`);
+                }
+
+                // Update table border and row hover colors
+                const transactionsTable = document.querySelector('.transactions-table');
+                if (transactionsTable) {
+                    transactionsTable.style.setProperty('--cashbox-rgb', rgb);
+                }
+
+                // Update all table rows with cashbox color
+                document.querySelectorAll('tbody tr').forEach(row => {
+                    row.style.setProperty('--cashbox-rgb', rgb);
+                    row.style.setProperty('--cashbox-color', color);
+                });
+            })().catch(() => {});
 
             // Bulk actions functionality
             const bulkActionsPanel = document.getElementById('bulkActions');
