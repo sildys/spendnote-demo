@@ -22,1245 +22,210 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
-    <link rel="stylesheet" href="assets/css/app-layout.css?v=12">
-    <style>
-        /* ===== CASH BOX SETTINGS PAGE SPECIFIC STYLES ===== */
-        
-        /* PRO BADGE */
- 
-        
-        /* SETTINGS SECTIONS */
-        .settings-container {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .settings-section {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 28px;
-            box-shadow: 0 2px 16px var(--shadow);
-        }
-        
-        /* RECEIPTS SECTION - two column layout */
-        .receipts-layout {
-            display: grid;
-            grid-template-columns: 1fr 600px;
-            gap: 24px;
-        }
-        
-        @media (max-width: 1400px) {
-            .receipts-layout {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-            
-            .receipt-preview-panel {
-                position: relative;
-                top: 0;
-                order: -1;
-            }
-        }
-        
-        .receipts-settings {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .receipt-preview-panel {
-            background: var(--surface-elevated);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 20px;
-            position: sticky;
-            top: 100px;
-            max-height: calc(100vh - 120px);
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .preview-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-        
-        .preview-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .preview-title i {
-            color: var(--active);
-        }
-        
-        .zoom-controls {
-            display: flex;
-            gap: 4px;
-            align-items: center;
-        }
-        
-        .zoom-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text);
-            font-size: 14px;
-        }
-        
-        .zoom-btn:hover {
-            background: var(--surface-elevated);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-        
-        .zoom-level {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: 600;
-            min-width: 45px;
-            text-align: center;
-        }
-        
-        .receipt-preview-container {
-            flex: 1;
-            overflow: auto;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: white;
-            position: relative;
-        }
-        
-        .receipt-preview-wrapper {
-            width: 100%;
-            display: block;
-        }
-        
-        .receipt-preview-frame {
-            width: 100%;
-            height: 1400px;
-            border: none;
-            background: white;
-            display: block;
-            zoom: 0.7;
-            transition: zoom 0.2s ease;
-        }
-        
-        /* Mock Receipt Preview */
-        .receipt-preview-mock {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            max-height: 520px;
-            overflow-y: auto;
-        }
-        
-        .mock-receipt {
-            font-size: 12px;
-            color: var(--text);
-            line-height: 1.5;
-        }
-        
-        .mock-logo {
-            text-align: center;
-            margin-bottom: 8px;
-        }
-        
-        .mock-logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--active);
-            color: white;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
-        }
-        
-        .mock-company {
-            text-align: center;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-        
-        .mock-address {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 11px;
-            margin-bottom: 12px;
-        }
-        
-        .mock-divider {
-            border-top: 1px dashed var(--border);
-            margin: 12px 0;
-        }
-        
-        .mock-title {
-            text-align: center;
-            font-weight: 800;
-            font-size: 14px;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-        
-        .mock-id {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 11px;
-            margin-bottom: 12px;
-        }
-        
-        .mock-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-        
-        .mock-label {
-            color: var(--text-muted);
-            font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .mock-Contact {
-            margin-bottom: 12px;
-        }
-        
-        .mock-amount {
-            display: flex;
-            justify-content: space-between;
-            font-size: 16px;
-            padding: 10px 0;
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            margin: 12px 0;
-        }
-        
-        .mock-amount strong {
-            color: var(--active);
-        }
-        
-        .mock-txid, .mock-note {
-            margin-bottom: 8px;
-            font-size: 11px;
-        }
-        
-        .mock-signatures {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-            margin-top: 20px;
-        }
-        
-        .mock-sig {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .mock-sig-line {
-            border-top: 1px solid var(--text);
-            margin-bottom: 4px;
-            margin-top: 30px;
-        }
-        
-        .mock-sig span {
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-        
-        /* Hidden state for preview elements */
-        .mock-receipt .hidden {
-            display: none !important;
-        }
-        
-        @media (max-width: 900px) {
-            .receipts-layout {
-                grid-template-columns: 1fr;
-            }
-            .receipt-preview-panel {
-                position: static;
-            }
-        }
-
-        .section-header {
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-
-        .section-description {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        /* FORM ELEMENTS */
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .form-row-2col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 16px;
-        }
-
-        .form-row-2col .form-group {
-            margin-bottom: 0;
-        }
-
-        @media (max-width: 600px) {
-            .form-row-2col {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .form-label {
-            display: block;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-
-        .form-hint {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-size: 12px;
-            font-family: inherit;
-            color: var(--text);
-            background: var(--surface);
-            transition: all 0.2s;
-        }
-
-        .form-input:hover {
-            border-color: rgba(0,0,0,0.15);
-        }
-
-        .form-input:focus {
-            border-color: var(--active);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(var(--active-rgb), 0.1);
-        }
-
-        .form-input:disabled {
-            background: var(--surface-elevated);
-            color: var(--text-muted);
-            cursor: not-allowed;
-        }
-
-        textarea.form-input {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-size: 12px;
-            font-family: inherit;
-            color: var(--text);
-            background: var(--surface);
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .form-select:hover {
-            border-color: rgba(0,0,0,0.15);
-        }
-
-        .form-select:focus {
-            border-color: var(--active);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(var(--active-rgb), 0.1);
-        }
-
-        /* WARNING BOX */
-        .warning-box {
-            display: flex;
-            gap: 12px;
-            padding: 14px 16px;
-            background: rgba(245, 158, 11, 0.05);
-            border: 1px solid rgba(245, 158, 11, 0.2);
-            border-radius: 12px;
-            margin-top: 12px;
-        }
-
-        .warning-box i {
-            color: var(--orange);
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-
-        .warning-text {
-            font-size: 14px;
-            color: var(--text);
-            line-height: 1.5;
-        }
-
-        .warning-box.hidden {
-            display: none;
-        }
-
-        /* COLOR PALETTE */
-        .color-palette {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .color-option {
-            aspect-ratio: 1;
-            border-radius: 12px;
-            border: 3px solid transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .color-option:hover {
-            transform: scale(1.05);
-        }
-
-        .color-option.selected {
-            border-color: var(--text);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .color-option.selected::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-weight: 900;
-            font-size: 20px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        /* ICON PICKER */
-        .icon-palette {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .icon-option {
-            aspect-ratio: 1;
-            border-radius: 12px;
-            border: 2px solid var(--border);
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-            background: var(--surface);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: var(--text-muted);
-        }
-
-        .icon-option:hover {
-            transform: scale(1.05);
-            border-color: var(--active);
-            color: var(--active);
-        }
-
-        .icon-option.selected {
-            border-color: var(--active);
-            border-width: 3px;
-            background: rgba(var(--active-rgb), 0.05);
-            color: var(--active);
-            box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.2);
-        }
-
-        /* TOGGLE SWITCHES */
-        .toggle-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .toggle-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-        }
-
-        .toggle-label {
-            font-size: 12px;
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 48px;
-            height: 28px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--border);
-            border-radius: 28px;
-            transition: 0.3s;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-
-        .toggle-switch input:checked + .toggle-slider {
-            background-color: var(--active);
-            box-shadow: 0 6px 16px rgba(var(--active-rgb), 0.25);
-        }
-
-        .toggle-switch input:checked + .toggle-slider:before {
-            transform: translateX(20px);
-        }
-
-        .toggle-switch input:disabled + .toggle-slider {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* TEMPLATE SELECTOR */
-        .template-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-            margin-top: 12px;
-        }
-
-        .template-card {
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: var(--surface);
-        }
-
-        .template-card:hover {
-            border-color: var(--active);
-            box-shadow: 0 4px 12px var(--shadow);
-        }
-
-        .template-card.selected {
-            border-color: var(--active);
-            background: rgba(var(--active-rgb), 0.02);
-        }
-
-        .template-preview {
-            width: 100%;
-            aspect-ratio: 3/4;
-            background: var(--surface-elevated);
-            border-radius: 8px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            color: var(--text-muted);
-        }
-
-        .template-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text);
-            text-align: center;
-        }
-
-        /* FORMAT CARDS (Receipts section) */
-        .format-cards {
-            display: flex;
-            flex-direction: row;
-            gap: 8px;
-        }
-
-        .format-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px 12px;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex: 1;
-            text-align: center;
-        }
-
-        .format-card:hover {
-            border-color: var(--active);
-            background: rgba(var(--active-rgb), 0.02);
-        }
-
-        .format-card.active {
-            border-color: var(--active);
-            background: rgba(var(--active-rgb), 0.05);
-            box-shadow: 0 2px 8px rgba(var(--active-rgb), 0.15);
-        }
-
-        .format-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 8px;
-            background: rgba(var(--active-rgb), 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: var(--active);
-            flex-shrink: 0;
-        }
-
-        .format-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .format-name {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text);
-            line-height: 1.2;
-        }
-
-        .format-desc {
-            font-size: 10px;
-            color: var(--text-muted);
-            line-height: 1.2;
-            display: none;
-        }
-
-        /* RECEIPT TOGGLES */
-        .receipt-toggles {
-            display: flex;
-            flex-direction: column;
-            background: var(--surface-elevated);
-            border-radius: 14px;
-            overflow: hidden;
-        }
-
-        .receipt-toggle-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .receipt-toggle-item:last-child {
-            border-bottom: none;
-        }
-
-        .receipt-toggle-item .toggle-label {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        /* UPGRADE BADGE */
- 
-
-        /* TEAM ACCESS - Compact */
-        .team-access-compact {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-        }
-
-        .team-avatars {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .team-avatar-small {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--surface);
-            box-shadow: 0 0 0 1px var(--border);
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .team-avatar-small:hover {
-            transform: scale(1.1);
-            z-index: 1;
-        }
-
-        .team-count {
-            font-size: 13px;
-            color: var(--text-muted);
-            font-weight: 600;
-            margin-left: 4px;
-        }
-
-        .team-manage-link {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .team-manage-link:hover {
-            border-color: var(--active);
-            color: var(--active);
-        }
-
-        .team-manage-link i {
-            font-size: 12px;
-        }
-
-        /* TEAM ACCESS - Collapsible */
-        .team-access-collapsible {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px 20px;
-        }
-
-        .team-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .team-header:hover {
-            opacity: 0.8;
-        }
-
-        .team-members-compact {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .team-member-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .team-avatar-mini {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border);
-        }
-
-        .team-info-mini {
-            flex: 1;
-        }
-
-        .team-name-mini {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .team-role-mini {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        /* DANGER ZONE */
-        .danger-zone {
-            background: rgba(239, 68, 68, 0.08);
-            border: 2px solid rgba(239, 68, 68, 0.4);
-        }
-
-        .danger-button {
-            padding: 12px 20px;
-            border: 2px solid var(--red);
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--red);
-            background: transparent;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .danger-button:hover {
-            background: var(--red);
-            color: white;
-        }
-
-        .danger-button i {
-            margin-right: 8px;
-        }
-
-        /* SAVE BUTTON */
-        .save-actions {
-            width: 100%;
-            padding: 20px 0;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            position: sticky;
-            bottom: 0;
-            z-index: 50;
-            box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
-        }
-
-        .save-actions-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-
-        .btn-small {
-            padding: 10px 16px;
-            font-size: 14px;
-            border-radius: 10px;
-        }
-        .inline-cta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px dashed var(--border);
-        }
-        .inline-cta .cta-text {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.4;
-        }
-        .inline-cta a {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--active);
-            text-decoration: none;
-        }
-        .inline-cta a:hover {
-            text-decoration: underline;
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="assets/css/app-layout.css?v=13">
+    <link rel="stylesheet" href="assets/css/cash-box-settings.css?v=1">
 </head>
 <body>
-<!-- Navigation loaded dynamically by nav-loader.js -->
 <div id="nav-container"></div>
 
-    <div class="app-container">
-        <main class="main-content">
-            <!-- PAGE HEADER -->
-            <div class="page-header">
-                <h1 class="page-title">Cash Box Settings</h1>
-                <p class="page-subtitle" id="cashBoxSettingsSubtitle">Configure —</p>
-            </div>
+<div class="app-container">
+    <main class="main-content">
+        <!-- PAGE HEADER -->
+        <div class="page-header" style="margin-bottom: 16px;">
+            <h1 class="page-title">Cash Box Settings</h1>
+            <p class="page-subtitle" id="cashBoxSettingsSubtitle">Configure —</p>
+        </div>
 
-            <!-- TEAM ACCESS - Collapsible -->
-        <div class="team-access-collapsible" style="margin-bottom: 24px;">
-            <div class="team-header" onclick="toggleTeamAccess()" style="cursor: pointer;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-users" style="color: var(--text-muted);"></i>
-                    <span style="font-size: 14px; font-weight: 600; color: var(--text);">Team Access</span>
-                    <span class="pro-badge"><i class="fas fa-crown"></i> Pro</span>
-                    <span style="font-size: 13px; color: var(--text-muted);">(3 members)</span>
+        <!-- TOP SECTION: General + Appearance -->
+        <div class="settings-topbar">
+            <div class="settings-top-grid">
+                <!-- GENERAL CARD -->
+                <div class="settings-card">
+                    <div class="settings-card-title"><i class="fas fa-cog"></i> General</div>
+                    <div class="general-fields">
+                        <div class="field-row-3">
+                            <div class="field-group">
+                                <label class="field-label">Cash Box Name</label>
+                                <input type="text" class="field-input" id="cashBoxNameInput" placeholder="e.g., Main Office">
+                                <span class="field-hint">Appears on receipts</span>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">Currency</label>
+                                <input type="text" class="field-input" id="currencySelect" list="currencyList" value="USD" autocapitalize="characters" autocomplete="off" spellcheck="false">
+                                <datalist id="currencyList">
+                                    <option value="USD" label="US Dollar ($)"></option>
+                                    <option value="EUR" label="Euro (€)"></option>
+                                    <option value="GBP" label="British Pound (£)"></option>
+                                    <option value="HUF" label="Hungarian Forint (Ft)"></option>
+                                    <option value="JPY" label="Japanese Yen (¥)"></option>
+                                    <option value="CHF" label="Swiss Franc (CHF)"></option>
+                                    <option value="CAD" label="Canadian Dollar (CA$)"></option>
+                                    <option value="AUD" label="Australian Dollar (A$)"></option>
+                                </datalist>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">ID Prefix <span class="pro-badge" style="font-size: 9px; padding: 2px 5px;"><i class="fas fa-crown"></i> Pro</span></label>
+                                <input type="text" class="field-input" id="idPrefixInput" value="SN" placeholder="SN" maxlength="10">
+                                <span class="field-hint">Receipt ID format</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <i class="fas fa-chevron-down" id="teamToggleIcon" style="transition: transform 0.3s; color: var(--text-muted); font-size: 12px;"></i>
-            </div>
-            <div class="team-content" id="teamContent" style="display: none; padding-top: 12px;">
-                <div class="team-members-compact">
-                    <div class="team-member-row">
-                        <img src="https://i.pravatar.cc/150?img=12" alt="John Doe" class="team-avatar-mini">
-                        <div class="team-info-mini">
-                            <div class="team-name-mini">John Doe</div>
-                            <div class="team-role-mini">Owner</div>
+
+                <!-- APPEARANCE CARD -->
+                <div class="settings-card">
+                    <div class="settings-card-title"><i class="fas fa-palette"></i> Appearance</div>
+                    <div class="appearance-content">
+                        <div class="appearance-row">
+                            <label class="appearance-label">Accent Color</label>
+                            <div class="color-palette" id="colorPalette">
+                                <!-- Row 1: Greens & Teals -->
+                                <div class="color-option selected" style="background: #059669;" data-color="#059669" data-rgb="5, 150, 105" title="Emerald"></div>
+                                <div class="color-option" style="background: #10b981;" data-color="#10b981" data-rgb="16, 185, 129" title="Green"></div>
+                                <div class="color-option" style="background: #14b8a6;" data-color="#14b8a6" data-rgb="20, 184, 166" title="Teal"></div>
+                                <div class="color-option" style="background: #06b6d4;" data-color="#06b6d4" data-rgb="6, 182, 212" title="Cyan"></div>
+                                <!-- Row 2: Blues -->
+                                <div class="color-option" style="background: #0ea5e9;" data-color="#0ea5e9" data-rgb="14, 165, 233" title="Sky"></div>
+                                <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6" data-rgb="59, 130, 246" title="Blue"></div>
+                                <div class="color-option" style="background: #6366f1;" data-color="#6366f1" data-rgb="99, 102, 241" title="Indigo"></div>
+                                <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6" data-rgb="139, 92, 246" title="Violet"></div>
+                                <!-- Row 3: Purples & Pinks -->
+                                <div class="color-option" style="background: #a855f7;" data-color="#a855f7" data-rgb="168, 85, 247" title="Purple"></div>
+                                <div class="color-option" style="background: #d946ef;" data-color="#d946ef" data-rgb="217, 70, 239" title="Fuchsia"></div>
+                                <div class="color-option" style="background: #ec4899;" data-color="#ec4899" data-rgb="236, 72, 153" title="Pink"></div>
+                                <div class="color-option" style="background: #f43f5e;" data-color="#f43f5e" data-rgb="244, 63, 94" title="Rose"></div>
+                                <!-- Row 4: Oranges & Yellows -->
+                                <div class="color-option" style="background: #ef4444;" data-color="#ef4444" data-rgb="239, 68, 68" title="Red"></div>
+                                <div class="color-option" style="background: #f97316;" data-color="#f97316" data-rgb="249, 115, 22" title="Orange"></div>
+                                <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b" data-rgb="245, 158, 11" title="Amber"></div>
+                                <div class="color-option" style="background: #eab308;" data-color="#eab308" data-rgb="234, 179, 8" title="Yellow"></div>
+                                <!-- Row 5: Neutrals -->
+                                <div class="color-option" style="background: #64748b;" data-color="#64748b" data-rgb="100, 116, 139" title="Slate"></div>
+                                <div class="color-option" style="background: #78716c;" data-color="#78716c" data-rgb="120, 113, 108" title="Stone"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="team-member-row">
-                        <img src="https://i.pravatar.cc/150?img=5" alt="Jane Smith" class="team-avatar-mini">
-                        <div class="team-info-mini">
-                            <div class="team-name-mini">Jane Smith</div>
-                            <div class="team-role-mini">Admin</div>
-                        </div>
-                    </div>
-                    <div class="team-member-row">
-                        <img src="https://i.pravatar.cc/150?img=8" alt="Mike Johnson" class="team-avatar-mini">
-                        <div class="team-info-mini">
-                            <div class="team-name-mini">Mike Johnson</div>
-                            <div class="team-role-mini">Viewer</div>
+                        <div class="appearance-row">
+                            <label class="appearance-label">Icon</label>
+                            <div class="icon-palette" id="iconPalette">
+                                <div class="icon-option selected" data-icon="fa-building"><i class="fas fa-building"></i></div>
+                                <div class="icon-option" data-icon="fa-store"><i class="fas fa-store"></i></div>
+                                <div class="icon-option" data-icon="fa-cash-register"><i class="fas fa-cash-register"></i></div>
+                                <div class="icon-option" data-icon="fa-wallet"><i class="fas fa-wallet"></i></div>
+                                <div class="icon-option" data-icon="fa-piggy-bank"><i class="fas fa-piggy-bank"></i></div>
+                                <div class="icon-option" data-icon="fa-landmark"><i class="fas fa-landmark"></i></div>
+                                <div class="icon-option" data-icon="fa-briefcase"><i class="fas fa-briefcase"></i></div>
+                                <div class="icon-option" data-icon="fa-home"><i class="fas fa-home"></i></div>
+                                <div class="icon-option" data-icon="fa-star"><i class="fas fa-star"></i></div>
+                                <div class="icon-option" data-icon="fa-heart"><i class="fas fa-heart"></i></div>
+                                <div class="icon-option" data-icon="fa-gift"><i class="fas fa-gift"></i></div>
+                                <div class="icon-option" data-icon="fa-calendar-alt"><i class="fas fa-calendar-alt"></i></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <a href="spendnote-user-settings.html?tab=team" style="display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; font-size: 13px; font-weight: 600; color: var(--active); text-decoration: none;">
-                    <i class="fas fa-cog" style="font-size: 11px;"></i>
-                    Manage in Settings
-                </a>
             </div>
         </div>
 
-        <!-- SETTINGS SECTIONS -->
-        <div class="settings-container">
-            <!-- GENERAL -->
-            <section class="settings-section">
-                <div class="section-header">
-                    <h2 class="section-title">General</h2>
-                    <p class="section-description">Basic information about this Cash Box</p>
+        <!-- TEAM ACCESS BAR -->
+        <div class="team-bar">
+            <div class="team-bar-left">
+                <div class="team-bar-icon"><i class="fas fa-users"></i></div>
+                <div class="team-bar-info">
+                    <div class="team-bar-title">Team Access <span class="pro-badge" style="font-size: 9px; padding: 2px 5px;"><i class="fas fa-crown"></i> Pro</span></div>
+                    <div class="team-bar-count">3 members have access</div>
                 </div>
+            </div>
+            <a href="spendnote-user-settings.html?tab=team" class="team-bar-link"><i class="fas fa-cog"></i> Manage</a>
+        </div>
 
-                <div style="display: grid; grid-template-columns: 2fr 1.5fr 1fr; gap: 20px; margin-bottom: 16px;">
-                    <div class="form-group">
-                        <label class="form-label">Cash Box name</label>
-                        <input type="text" class="form-input" id="cashBoxNameInput" placeholder="e.g., Main Office">
-                        <p class="form-hint">Appears on receipts and dashboard</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Currency</label>
-                        <input
-                            type="text"
-                            class="form-input"
-                            id="currencySelect"
-                            list="currencyList"
-                            value="USD"
-                            autocapitalize="characters"
-                            autocomplete="off"
-                            spellcheck="false"
-                            inputmode="latin"
-                        >
-                        <datalist id="currencyList">
-                            <option value="USD" label="US Dollar ($)"></option>
-                            <option value="EUR" label="Euro (€)"></option>
-                            <option value="GBP" label="British Pound (£)"></option>
-                            <option value="HUF" label="Hungarian Forint (Ft)"></option>
-                            <option value="JPY" label="Japanese Yen (¥)"></option>
-                            <option value="CHF" label="Swiss Franc (CHF)"></option>
-                            <option value="CAD" label="Canadian Dollar (CA$)"></option>
-                            <option value="AUD" label="Australian Dollar (A$)"></option>
-                            <option value="SEK" label="Swedish Krona (SEK)"></option>
-                            <option value="NOK" label="Norwegian Krone (NOK)"></option>
-                            <option value="DKK" label="Danish Krone (DKK)"></option>
-                            <option value="PLN" label="Polish Złoty (PLN)"></option>
-                            <option value="CZK" label="Czech Koruna (CZK)"></option>
-                            <option value="RON" label="Romanian Leu (RON)"></option>
-                            <option value="BGN" label="Bulgarian Lev (BGN)"></option>
-                            <option value="HRK" label="Croatian Kuna (HRK)"></option>
-                            <option value="RSD" label="Serbian Dinar (RSD)"></option>
-                            <option value="TRY" label="Turkish Lira (TRY)"></option>
-                            <option value="UAH" label="Ukrainian Hryvnia (UAH)"></option>
-                            <option value="RUB" label="Russian Ruble (RUB)"></option>
-                            <option value="CNY" label="Chinese Yuan (CNY)"></option>
-                            <option value="HKD" label="Hong Kong Dollar (HKD)"></option>
-                            <option value="SGD" label="Singapore Dollar (SGD)"></option>
-                            <option value="INR" label="Indian Rupee (INR)"></option>
-                            <option value="KRW" label="South Korean Won (KRW)"></option>
-                            <option value="THB" label="Thai Baht (THB)"></option>
-                            <option value="IDR" label="Indonesian Rupiah (IDR)"></option>
-                            <option value="MYR" label="Malaysian Ringgit (MYR)"></option>
-                            <option value="PHP" label="Philippine Peso (PHP)"></option>
-                            <option value="VND" label="Vietnamese Đồng (VND)"></option>
-                            <option value="BRL" label="Brazilian Real (BRL)"></option>
-                            <option value="MXN" label="Mexican Peso (MXN)"></option>
-                            <option value="ARS" label="Argentine Peso (ARS)"></option>
-                            <option value="CLP" label="Chilean Peso (CLP)"></option>
-                            <option value="COP" label="Colombian Peso (COP)"></option>
-                            <option value="PEN" label="Peruvian Sol (PEN)"></option>
-                            <option value="ZAR" label="South African Rand (ZAR)"></option>
-                            <option value="EGP" label="Egyptian Pound (EGP)"></option>
-                            <option value="MAD" label="Moroccan Dirham (MAD)"></option>
-                            <option value="SAR" label="Saudi Riyal (SAR)"></option>
-                            <option value="AED" label="UAE Dirham (AED)"></option>
-                            <option value="ILS" label="Israeli Shekel (ILS)"></option>
-                            <option value="NZD" label="New Zealand Dollar (NZ$)"></option>
-                            <option value="N/A" label="(type a currency code)"></option>
-
-                            <option value="FT" label="Forint (HUF)"></option>
-                            <option value="FORINT" label="Forint (HUF)"></option>
-                            <option value="EURO" label="Euro (EUR)"></option>
-                            <option value="DOLLAR" label="Dollar (USD)"></option>
-                            <option value="POUND" label="Pound (GBP)"></option>
-                            <option value="YEN" label="Yen (JPY)"></option>
-                        </datalist>
-                        <p class="form-hint">Transaction currency</p>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">
-                            ID Prefix
-                            <span class="upgrade-badge">
-                                <i class="fas fa-crown"></i>
-                                Pro
-                            </span>
-                        </label>
-                        <input type="text" class="form-input" value="REC-" placeholder="e.g., INV-" maxlength="10">
-                        <p class="form-hint">Receipt ID format</p>
+        <!-- RECEIPT & PRO OPTIONS GRID -->
+        <div class="settings-grid">
+            <!-- RECEIPT & PRINT -->
+            <div class="collapsible-section">
+                <div class="collapsible-header">
+                    <div class="collapsible-title">
+                        <i class="fas fa-receipt"></i>
+                        Receipt & Print Settings
                     </div>
                 </div>
-
-                <div class="warning-box hidden" id="currencyWarning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div class="warning-text">
-                        <strong>Changing currency affects existing data.</strong><br>
-                        This Cash Box has 47 transactions. Changing currency won't convert amounts — balances will display in the new currency symbol.
-                    </div>
-                </div>
-
-            </section>
-
-            <!-- APPEARANCE -->
-            <section class="settings-section">
-                <div class="section-header">
-                    <h2 class="section-title">Appearance</h2>
-                    <p class="section-description">Customize the accent color for this Cash Box</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Accent color</label>
-                    <p class="form-hint" style="margin-bottom: 12px;">This color appears in indicators and highlights (not in balances)</p>
-                    
-                    <div class="color-palette">
-                        <div class="color-option selected" style="background: #059669;" data-color="#059669"></div>
-                        <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
-                        <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
-                        <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
-                        <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
-                        <div class="color-option" style="background: #14b8a6;" data-color="#14b8a6"></div>
-                        <div class="color-option" style="background: #f97316;" data-color="#f97316"></div>
-                        <div class="color-option" style="background: #06b6d4;" data-color="#06b6d4"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Cash Box icon (appearance only)</label>
-                    <p class="form-hint" style="margin-bottom: 12px;">Choose an icon to represent this Cash Box</p>
-                    
-                    <div class="icon-palette">
-                        <div class="icon-option selected" data-icon="building">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div class="icon-option" data-icon="store">
-                            <i class="fas fa-store"></i>
-                        </div>
-                        <div class="icon-option" data-icon="calendar">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="icon-option" data-icon="wallet">
-                            <i class="fas fa-wallet"></i>
-                        </div>
-                        <div class="icon-option" data-icon="bullhorn">
-                            <i class="fas fa-bullhorn"></i>
-                        </div>
-                        <div class="icon-option" data-icon="dollar">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="icon-option" data-icon="home">
-                            <i class="fas fa-home"></i>
-                        </div>
-                        <div class="icon-option" data-icon="briefcase">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <div class="icon-option" data-icon="chart">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="icon-option" data-icon="star">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <div class="icon-option" data-icon="flag">
-                            <i class="fas fa-flag"></i>
-                        </div>
-                        <div class="icon-option" data-icon="heart">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div class="icon-option" data-icon="bolt">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                        <div class="icon-option" data-icon="gift">
-                            <i class="fas fa-gift"></i>
-                        </div>
-                        <div class="icon-option" data-icon="tag">
-                            <i class="fas fa-tag"></i>
-                        </div>
-                        <div class="icon-option" data-icon="bell">
-                            <i class="fas fa-bell"></i>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- RECEIPTS -->
-            <section class="settings-section">
-                <div class="section-header">
-                    <h2 class="section-title">Receipts</h2>
-                    <p class="section-description">Default receipt settings for this Cash Box</p>
-                </div>
-
-                <div class="receipts-layout">
-                    <!-- LEFT: Settings -->
-                    <div class="receipts-settings">
-                        <!-- DEFAULT FORMAT -->
-                        <div class="form-group">
-                            <label class="form-label">Default format</label>
-                            <p class="form-hint" style="margin-bottom: 12px;">When you click "Save & Print", this format will be used</p>
-                            <div class="format-cards">
-                                <div class="format-card active" data-format="a4">
-                                    <div class="format-icon">
+                <div class="collapsible-content" id="receiptSection">
+                    <div class="receipt-layout">
+                        <!-- Controls -->
+                        <div class="receipt-controls">
+                            <!-- Format -->
+                            <div>
+                                <div class="control-group-label">Default Format</div>
+                                <div class="format-buttons">
+                                    <button class="format-btn active" data-format="a4">
                                         <i class="fas fa-copy"></i>
-                                    </div>
-                                    <div class="format-info">
-                                        <div class="format-name">Print (2 copies)</div>
-                                        <div class="format-desc">One for you, one for recipient</div>
-                                    </div>
-                                </div>
-                                <div class="format-card" data-format="pdf">
-                                    <div class="format-icon">
+                                        Print
+                                    </button>
+                                    <button class="format-btn" data-format="pdf">
                                         <i class="fas fa-file-pdf"></i>
-                                    </div>
-                                    <div class="format-info">
-                                        <div class="format-name">PDF Receipt</div>
-                                        <div class="format-desc">Download as PDF file</div>
-                                    </div>
-                                </div>
-                                <div class="format-card" data-format="email">
-                                    <div class="format-icon">
+                                        PDF
+                                    </button>
+                                    <button class="format-btn" data-format="email">
                                         <i class="fas fa-envelope"></i>
-                                    </div>
-                                    <div class="format-info">
-                                        <div class="format-name">Email Receipt</div>
-                                        <div class="format-desc">Send to recipient</div>
-                                    </div>
+                                        Email
+                                    </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- FIELDS TO SHOW -->
-                        <div class="form-group">
-                            <label class="form-label">Fields to show</label>
-                            <p class="form-hint" style="margin-bottom: 12px;">Amount, Date, and Payer/Receiver names are always shown</p>
-                            
-                            <div class="receipt-toggles">
-                                <div class="receipt-toggle-item">
-                                    <span class="toggle-label">Show Logo</span>
+                            <!-- Mode -->
+                            <div>
+                                <div class="control-group-label">Fields</div>
+                                <div class="mode-toggle">
+                                    <input type="radio" name="receiptMode" id="receiptModeQuick" value="quick" checked>
+                                    <label for="receiptModeQuick">Quick</label>
+                                    <input type="radio" name="receiptMode" id="receiptModeDetailed" value="detailed">
+                                    <label for="receiptModeDetailed">Detailed</label>
+                                </div>
+                            </div>
+
+                            <!-- Quick Summary -->
+                            <div id="receiptQuickSummary" class="quick-summary">
+                                <strong>Quick preset:</strong> Logo, addresses, line items, total, signatures
+                            </div>
+
+                            <!-- Detailed Toggles -->
+                            <div id="receiptDetailedToggles" class="toggle-list" style="display: none;">
+                                <div class="toggle-item">
+                                    <span>Logo</span>
                                     <label class="toggle-switch">
                                         <input type="checkbox" checked data-field="logo">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
-                                <div class="receipt-toggle-item">
-                                    <span class="toggle-label">Show Addresses</span>
+                                <div class="toggle-item">
+                                    <span>Addresses</span>
                                     <label class="toggle-switch">
                                         <input type="checkbox" checked data-field="addresses">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
-                                <div class="receipt-toggle-item">
-                                    <span class="toggle-label">Show Tracking Details</span>
+                                <div class="toggle-item">
+                                    <span>Receipt IDs</span>
                                     <label class="toggle-switch">
-                                        <input type="checkbox" checked data-field="tracking">
+                                        <input type="checkbox" data-field="tracking">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
-                                <div class="receipt-toggle-item">
-                                    <span class="toggle-label">Show Additional Info</span>
+                                <div class="toggle-item">
+                                    <span>Additional IDs</span>
                                     <label class="toggle-switch">
-                                        <input type="checkbox" checked data-field="additional">
+                                        <input type="checkbox" data-field="additional">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
-                                <div class="receipt-toggle-item">
-                                    <span class="toggle-label">Show Note</span>
+                                <div class="toggle-item">
+                                    <span>Notes</span>
                                     <label class="toggle-switch">
-                                        <input type="checkbox" checked data-field="note">
+                                        <input type="checkbox" data-field="note">
                                         <span class="toggle-slider"></span>
                                     </label>
                                 </div>
-                                <div class="receipt-toggle-item">
-                                    <span class="toggle-label">Show Signatures</span>
+                                <div class="toggle-item">
+                                    <span>Signatures</span>
                                     <label class="toggle-switch">
                                         <input type="checkbox" checked data-field="signatures">
                                         <span class="toggle-slider"></span>
@@ -1269,205 +234,124 @@
                             </div>
                         </div>
 
-                        <!-- CUSTOMIZE RECEIPT TEXT (PRO) -->
-                        <div class="form-group">
-                            <label class="form-label">
-                                Customize Receipt Text
-                                <span class="upgrade-badge">
-                                    <i class="fas fa-crown"></i> Pro
-                                </span>
-                            </label>
-                            <p class="form-hint" style="margin-bottom: 16px;">Customize the text labels and messages on your receipts</p>
-                            
-                            <!-- CASH BOX LOGO UPLOAD -->
-                            <div style="margin-bottom: 24px; padding: 16px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
-                                <label class="form-label" style="font-size: 13px; margin-bottom: 6px;">
-                                    Cash Box Logo
-                                    <span class="upgrade-badge" style="font-size: 10px; padding: 2px 6px;">
-                                        <i class="fas fa-crown"></i> Pro
-                                    </span>
-                                </label>
-                                <p class="form-hint" style="font-size: 12px; margin-bottom: 12px;">Override the default logo for receipts from this Cash Box. Leave empty to use your account logo.</p>
-                                
-                                <div style="display: flex; align-items: center; gap: 16px;">
-                                    <!-- Logo Preview -->
-                                    <div id="logoPreview" style="display: none; width: 64px; height: 64px; border: 2px solid #e2e8f0; border-radius: 8px; overflow: hidden; background: white;">
-                                        <img id="logoPreviewImg" src="" alt="Logo preview" style="width: 100%; height: 100%; object-fit: contain;">
-                                    </div>
-                                    
-                                    <!-- Upload Controls -->
-                                    <div style="flex: 1;">
-                                        <input type="file" id="cashBoxLogoInput" accept="image/png,image/jpeg,image/jpg,image/svg+xml" style="display: none;">
-                                        <button type="button" class="btn btn-secondary" id="uploadLogoBtn" style="margin-right: 8px;">
-                                            <i class="fas fa-upload"></i> Upload Logo
-                                        </button>
-                                        <button type="button" class="btn btn-outline" id="removeLogoBtn" style="display: none;">
-                                            <i class="fas fa-trash"></i> Remove
-                                        </button>
-                                        <p class="form-hint" style="font-size: 11px; margin-top: 8px;">PNG, JPG, SVG. Max 2MB.</p>
-                                    </div>
+                        <!-- Preview -->
+                        <div class="receipt-preview">
+                            <div class="preview-toolbar">
+                                <div class="preview-label"><i class="fas fa-eye"></i> Preview</div>
+                                <div class="zoom-controls">
+                                    <button class="zoom-btn" id="zoomOutBtn" type="button"><i class="fas fa-minus"></i></button>
+                                    <span class="zoom-level" id="zoomLevel">60%</span>
+                                    <button class="zoom-btn" id="zoomInBtn" type="button"><i class="fas fa-plus"></i></button>
+                                    <button class="zoom-btn" id="zoomResetBtn" type="button"><i class="fas fa-redo"></i></button>
                                 </div>
                             </div>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                                <div>
-                                    <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Receipt title</label>
-                                    <input type="text" class="form-input" id="receiptTitle" placeholder="Cash Receipt" style="font-size: 12px; padding: 6px 10px;">
-                                    <p class="form-hint" style="font-size: 11px; margin-top: 2px;">The main heading on your receipt</p>
-                                </div>
-                                <div>
-                                    <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Total label</label>
-                                    <input type="text" class="form-input" id="totalLabel" placeholder="Total handed over" style="font-size: 12px; padding: 6px 10px;">
-                                </div>
-                            </div>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                                <div>
-                                    <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">From label</label>
-                                    <input type="text" class="form-input" id="fromLabel" placeholder="FROM" style="font-size: 12px; padding: 6px 10px;">
-                                </div>
-                                <div>
-                                    <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">To label</label>
-                                    <input type="text" class="form-input" id="toLabel" placeholder="TO" style="font-size: 12px; padding: 6px 10px;">
-                                </div>
-                            </div>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                                <div>
-                                    <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Description label</label>
-                                    <input type="text" class="form-input" id="descriptionLabel" placeholder="Description" style="font-size: 12px; padding: 6px 10px;">
-                                </div>
-                                <div>
-                                    <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Amount label</label>
-                                    <input type="text" class="form-input" id="amountLabel" placeholder="Amount" style="font-size: 12px; padding: 6px 10px;">
-                                </div>
-                            </div>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                                <div>
-                                    <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Note label</label>
-                                    <input type="text" class="form-input" id="notesLabel" placeholder="Notes" style="font-size: 12px; padding: 6px 10px;">
-                                </div>
-                                <div></div>
-                            </div>
-                            
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                                <div>
-                                    <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Issued by label</label>
-                                    <input type="text" class="form-input" id="issuedByLabel" placeholder="Issued by" style="font-size: 12px; padding: 6px 10px;">
-                                </div>
-                                <div>
-                                    <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Received by label</label>
-                                    <input type="text" class="form-input" id="receivedByLabel" placeholder="Received by" style="font-size: 12px; padding: 6px 10px;">
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <label class="form-label" style="font-size: 12px; margin-bottom: 4px;">Footer note</label>
-                                <textarea class="form-input" id="footerNote" placeholder="e.g., Thank you for your business!" rows="2" style="font-size: 12px; padding: 6px 10px;"></textarea>
-                                <p class="form-hint" style="font-size: 11px; margin-top: 2px;">Custom message printed on every receipt</p>
-                            </div>
-                            
-                            <!-- Upgrade CTA hidden for testing -->
-                            <div style="margin-top: 16px; padding: 12px; background: #f8f9fa; border-radius: 8px; text-align: center; display: none;">
-                                <p style="margin: 0 0 8px 0; font-size: 13px; color: #666;">
-                                    <i class="fas fa-lock" style="margin-right: 4px;"></i>
-                                    Upgrade to Pro to customize receipt text
-                                </p>
-                                <button class="btn btn-primary" style="padding: 6px 16px; font-size: 13px;">
-                                    <i class="fas fa-crown"></i> Upgrade to Pro
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- RIGHT: Preview -->
-                    <div class="receipt-preview-panel">
-                        <div class="preview-header">
-                            <div class="preview-title">
-                                <i class="fas fa-eye"></i>
-                                Live Preview
-                            </div>
-                            <div class="zoom-controls">
-                                <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <span class="zoom-level" id="zoomLevel">70%</span>
-                                <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                                <button class="zoom-btn" onclick="resetZoom()" title="Reset Zoom">
-                                    <i class="fas fa-redo"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- RECEIPT PREVIEW IFRAME -->
-                        <div class="receipt-preview-container">
-                            <div class="receipt-preview-wrapper" id="receiptWrapper">
-                                <iframe id="receiptFrame" class="receipt-preview-frame" src="spendnote-receipt-a4-two-copies.html"></iframe>
+                            <div class="preview-frame-container" id="receiptPreviewContainer">
+                                <iframe id="receiptFrame" class="preview-frame" src="about:blank"></iframe>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- DANGER ZONE -->
-            <section class="settings-section danger-zone">
-                <div class="section-header">
-                    <h2 class="section-title">Danger Zone</h2>
-                    <p class="section-description">Permanent actions that cannot be undone</p>
+            <!-- PRO OPTIONS -->
+            <div class="collapsible-section">
+                <div class="collapsible-header">
+                    <div class="collapsible-title">
+                        <i class="fas fa-crown"></i>
+                        Pro Options
+                        <span class="pro-badge"><i class="fas fa-crown"></i> Pro</span>
+                    </div>
                 </div>
-
-                <div class="form-group">
-                    <button class="danger-button" id="deleteButton">
-                        <i class="fas fa-trash"></i>
-                        Request Cash Box deletion
-                    </button>
-                    <p class="form-hint">This will permanently delete this Cash Box and all 47 transactions. This action cannot be undone.</p>
+                <div class="collapsible-content" id="proSection">
+                    <div class="pro-content">
+                        <div class="pro-grid">
+                            <div class="pro-field full">
+                                <label>Logo</label>
+                                <div class="pro-logo-box">
+                                    <div class="pro-logo-preview" id="logoPreview"><img id="logoPreviewImg" alt="" /></div>
+                                    <div class="pro-logo-actions">
+                                        <input type="file" id="logoInput" accept="image/png,image/jpeg,image/jpg,image/svg+xml" style="display: none;">
+                                        <button type="button" class="btn btn-secondary" id="uploadLogoBtn"><i class="fas fa-upload"></i> Upload</button>
+                                        <button type="button" class="btn btn-secondary" id="removeLogoBtn" style="display: none;"><i class="fas fa-trash"></i> Remove</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pro-field">
+                                <label>Receipt Title</label>
+                                <input type="text" id="receiptTitle" placeholder="Cash Receipt">
+                            </div>
+                            <div class="pro-field">
+                                <label>Total Label</label>
+                                <input type="text" id="totalLabel" placeholder="Total handed over">
+                            </div>
+                            <div class="pro-field">
+                                <label>From Label</label>
+                                <input type="text" id="fromLabel" placeholder="FROM">
+                            </div>
+                            <div class="pro-field">
+                                <label>To Label</label>
+                                <input type="text" id="toLabel" placeholder="TO">
+                            </div>
+                            <div class="pro-field">
+                                <label>Description Label</label>
+                                <input type="text" id="descriptionLabel" placeholder="Description">
+                            </div>
+                            <div class="pro-field">
+                                <label>Amount Label</label>
+                                <input type="text" id="amountLabel" placeholder="Amount">
+                            </div>
+                            <div class="pro-field full">
+                                <label>Footer Note</label>
+                                <textarea rows="2" id="footerNote" placeholder="Thank you for your business!"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </section>
+            </div>
         </div>
-    </div>
 
-    <!-- SAVE ACTIONS -->
-    <div class="save-actions">
-        <div class="save-actions-inner">
-            <button class="btn btn-secondary">Cancel</button>
-            <button class="btn btn-primary">Save Changes</button>
+        <!-- DANGER ZONE -->
+        <div class="danger-section">
+            <div class="danger-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span class="danger-title">Danger Zone</span>
+            </div>
+            <div class="danger-content">
+                <div class="danger-text">Permanently delete this Cash Box and all associated transactions. This action cannot be undone.</div>
+                <button class="danger-btn" id="deleteButton"><i class="fas fa-trash"></i> Delete Cash Box</button>
+            </div>
         </div>
-    </div>
 
-    <!-- Modern 2-Row Footer -->
+    </main>
+</div>
+
+<!-- SAVE ACTIONS -->
+<div class="save-actions">
+    <div class="save-actions-inner">
+        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-primary">Save Changes</button>
+    </div>
+</div>
+
 <footer class="app-footer">
     <div class="app-footer-container">
-        <!-- Top Row -->
         <div class="app-footer-top">
-            <!-- Brand Section with Disclaimer -->
             <div class="app-footer-brand">
                 <a href="dashboard.html" class="app-footer-brand-logo">
                     <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Main body with subtle gray pattern -->
                         <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="white"/>
-                        <!-- Folded corner - darker gray -->
                         <path d="M32 4 L38 10 L32 10 Z" fill="rgba(0,0,0,0.15)"/>
-                        <!-- Folded corner outline -->
                         <path d="M32 4 L32 10 L38 10" stroke="rgba(0,0,0,0.2)" stroke-width="1.5" stroke-linejoin="round"/>
-                        <!-- Receipt lines - light gray -->
                         <line x1="14" y1="14" x2="30" y2="14" stroke="rgba(0,0,0,0.15)" stroke-width="2.5" stroke-linecap="round"/>
                         <line x1="14" y1="19" x2="26" y2="19" stroke="rgba(0,0,0,0.12)" stroke-width="2.5" stroke-linecap="round"/>
                         <line x1="14" y1="24" x2="30" y2="24" stroke="rgba(0,0,0,0.15)" stroke-width="2.5" stroke-linecap="round"/>
                         <line x1="14" y1="29" x2="22" y2="29" stroke="rgba(0,0,0,0.1)" stroke-width="2.5" stroke-linecap="round"/>
-                        <!-- Bottom zigzag - gray -->
                         <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="rgba(0,0,0,0.2)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                     <span>SpendNote</span>
                 </a>
-                <p class="app-footer-brand-desc">
-                    Cash receipt management for modern teams. Simple, secure, transparent.
-                </p>
+                <p class="app-footer-brand-desc">Cash receipt management for modern teams.</p>
             </div>
-            
-            <!-- Right: Links + Disclaimer -->
             <div class="app-footer-right">
                 <div class="app-footer-links-simple">
                     <a href="index.html#features">Features</a>
@@ -1475,405 +359,308 @@
                     <a href="spendnote-faq.html">FAQ</a>
                     <a href="spendnote-terms.html">Legal</a>
                 </div>
-                
-                <!-- Disclaimer on right side -->
                 <div class="app-footer-brand-disclaimer">
                     <i class="fas fa-info-circle"></i>
                     <span>Cash handoff documentation only. Not a tax or accounting tool.</span>
                 </div>
             </div>
         </div>
-        
-        <!-- Bottom Row -->
         <div class="app-footer-bottom">
-            <div class="app-footer-copyright">
-                2026 SpendNote. All rights reserved.
-            </div>
+            <div class="app-footer-copyright">2026 SpendNote. All rights reserved.</div>
         </div>
     </div>
 </footer>
 
+<script>
+// ===== DUMMY DATA FOR RECEIPT PREVIEW =====
+const DUMMY_TX = {
+    id: 'demo-preview',
+    display_id: 'SN1-042',
+    transaction_date: new Date().toISOString().split('T')[0],
+    type: 'in',
+    amount: 250.00,
+    description: 'Office supplies reimbursement',
+    contact_name: 'John Smith',
+    contact_address: '123 Main Street, Suite 100, New York, NY 10001',
+    contact_custom_field_1: 'EMP-2847',
+    note: 'Reimbursement for Q1 office supplies purchase',
+    line_items: [
+        { description: 'Printer paper (5 reams)', amount: 89.50 },
+        { description: 'Ink cartridges', amount: 124.00 },
+        { description: 'Sticky notes & pens', amount: 36.50 }
+    ],
+    cash_box: {
+        name: 'Main Office',
+        sequence_number: 1,
+        currency: 'USD'
+    },
+    created_by_user_name: 'Sarah Johnson'
+};
 
+const DUMMY_PROFILE = {
+    company_name: 'Acme Corporation',
+    full_name: 'Robert Williams',
+    address: '456 Business Ave, Floor 12, New York, NY 10002'
+};
 
+// ===== RECEIPT PREVIEW =====
+let displayOptions = {
+    logo: '1',
+    addresses: '1',
+    tracking: '1',
+    additional: '1',
+    note: '1',
+    signatures: '1'
+};
 
+let currentFormat = 'a4';
+let currentZoom = 0.6;
 
-
-
-
-    <script>
-        // Currency warning
-        const currencySelect = document.getElementById('currencySelect');
-        const currencyWarning = document.getElementById('currencyWarning');
-
-        if (currencySelect) {
-            if (!currencySelect.dataset.originalCurrency) {
-                currencySelect.dataset.originalCurrency = currencySelect.value;
-            }
-
-            const normalizeCurrency = (value) => (value || '')
-                .toString()
-                .trim()
-                .toUpperCase();
-
-            const updateCurrencyWarning = () => {
-                const current = normalizeCurrency(currencySelect.value);
-                const original = normalizeCurrency(currencySelect.dataset.originalCurrency);
-
-                if (currencyWarning) {
-                    if (current && original && current !== original) {
-                        currencyWarning.classList.remove('hidden');
-                    } else {
-                        currencyWarning.classList.add('hidden');
-                    }
-                }
-            };
-
-            currencySelect.addEventListener('input', updateCurrencyWarning);
-            currencySelect.addEventListener('change', updateCurrencyWarning);
-        }
-
-        // Color picker
-        document.querySelectorAll('.color-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.color-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
-
-                const color = this.dataset.color;
-                if (color) {
-                    document.documentElement.style.setProperty('--active', color);
-                    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(String(color).trim());
-                    const rgb = m ? `${parseInt(m[1], 16)}, ${parseInt(m[2], 16)}, ${parseInt(m[3], 16)}` : '5, 150, 105';
-                    document.documentElement.style.setProperty('--active-rgb', rgb);
-                }
-            });
-        });
-
-        // Icon picker
-        document.querySelectorAll('.icon-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.icon-option').forEach(opt => {
-                    opt.classList.remove('selected');
-                });
-                this.classList.add('selected');
-            });
-        });
-
-        // Template selector
-        document.querySelectorAll('.template-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.template-card').forEach(c => {
-                    c.classList.remove('selected');
-                });
-                this.classList.add('selected');
-            });
-        });
-
-        // Format card selector (Receipts section)
-        document.querySelectorAll('.format-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.format-card').forEach(c => {
-                    c.classList.remove('active');
-                });
-                this.classList.add('active');
-            });
-        });
-
-        // Receipt preview - track display options
-        let displayOptions = {
-            logo: '1',
-            addresses: '1',
-            tracking: '1',
-            additional: '1',
-            note: '1',
-            signatures: '1'
-        };
-
-        // Track current format
-        let currentFormat = 'a4';
-
-        // Build URL with parameters
-        function buildReceiptUrl(format) {
-            const baseUrls = {
-                'a4': 'spendnote-receipt-a4-two-copies.html',
-                'pdf': 'spendnote-pdf-receipt.html',
-                'email': 'spendnote-email-receipt.html'
-            };
-            
-            const params = new URLSearchParams();
-            for (const [key, value] of Object.entries(displayOptions)) {
-                params.append(key, value);
-            }
-            
-            // Add custom text parameters
-            const receiptTitle = document.getElementById('receiptTitle')?.value;
-            const totalLabel = document.getElementById('totalLabel')?.value;
-            const fromLabel = document.getElementById('fromLabel')?.value;
-            const toLabel = document.getElementById('toLabel')?.value;
-            const descriptionLabel = document.getElementById('descriptionLabel')?.value;
-            const amountLabel = document.getElementById('amountLabel')?.value;
-            const notesLabel = document.getElementById('notesLabel')?.value;
-            const issuedByLabel = document.getElementById('issuedByLabel')?.value;
-            const receivedByLabel = document.getElementById('receivedByLabel')?.value;
-            const footerNote = document.getElementById('footerNote')?.value;
-            
-            if (receiptTitle) params.append('receiptTitle', receiptTitle);
-            if (totalLabel) params.append('totalLabel', totalLabel);
-            if (fromLabel) params.append('fromLabel', fromLabel);
-            if (toLabel) params.append('toLabel', toLabel);
-            if (descriptionLabel) params.append('descriptionLabel', descriptionLabel);
-            if (amountLabel) params.append('amountLabel', amountLabel);
-            if (notesLabel) params.append('notesLabel', notesLabel);
-            if (issuedByLabel) params.append('issuedByLabel', issuedByLabel);
-            if (receivedByLabel) params.append('receivedByLabel', receivedByLabel);
-            if (footerNote) params.append('footerNote', footerNote);
-            
-            return `${baseUrls[format]}?${params.toString()}`;
-        }
-
-        // Reload iframe with current settings
-        function reloadIframe() {
-            const iframe = document.getElementById('receiptFrame');
-            if (iframe) {
-                iframe.src = buildReceiptUrl(currentFormat);
-            }
-        }
-
-        // Toggle switches for receipt fields - update iframe in real-time
-        document.querySelectorAll('.receipt-toggles input[type="checkbox"]').forEach(toggle => {
-            toggle.addEventListener('change', function() {
-                const field = this.dataset.field;
-                if (field) {
-                    // Update display options
-                    displayOptions[field] = this.checked ? '1' : '0';
-                    // Reload iframe with new settings
-                    reloadIframe();
-                }
-            });
-        });
-
-        // Custom text fields - update iframe on input change
-        ['receiptTitle', 'totalLabel', 'fromLabel', 'toLabel', 'descriptionLabel', 'amountLabel', 'notesLabel', 'issuedByLabel', 'receivedByLabel', 'footerNote'].forEach(fieldId => {
-            const field = document.getElementById(fieldId);
-            if (field) {
-                field.addEventListener('input', function() {
-                    reloadIframe();
-                });
-            }
-        });
-
-        // Format card selector - update preview format
-        document.querySelectorAll('.format-card').forEach(card => {
-            card.addEventListener('click', function() {
-                document.querySelectorAll('.format-card').forEach(c => {
-                    c.classList.remove('active');
-                });
-                this.classList.add('active');
-                
-                // Update current format and reload preview
-                currentFormat = this.dataset.format;
-                reloadIframe();
-            });
-        });
-
-        // Cash Box Logo Upload functionality
-        const logoInput = document.getElementById('cashBoxLogoInput');
-        const uploadLogoBtn = document.getElementById('uploadLogoBtn');
-        const removeLogoBtn = document.getElementById('removeLogoBtn');
-        const logoPreview = document.getElementById('logoPreview');
-        const logoPreviewImg = document.getElementById('logoPreviewImg');
-        let currentLogoData = null;
-
-        // Upload button click - trigger file input
-        if (uploadLogoBtn) {
-            uploadLogoBtn.addEventListener('click', function() {
-                logoInput.click();
-            });
-        }
-
-        // Handle file selection
-        if (logoInput) {
-            logoInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-
-                // Validate file type
-                const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
-                if (!validTypes.includes(file.type)) {
-                    alert('Please upload a PNG, JPG, or SVG file.');
-                    return;
-                }
-
-                // Validate file size (2MB max)
-                const maxSize = 2 * 1024 * 1024; // 2MB in bytes
-                if (file.size > maxSize) {
-                    alert('File size must be less than 2MB.');
-                    return;
-                }
-
-                // Read and preview the file
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    currentLogoData = event.target.result;
-                    logoPreviewImg.src = currentLogoData;
-                    logoPreview.style.display = 'block';
-                    removeLogoBtn.style.display = 'inline-block';
-                    
-                    // Save logo to localStorage (backend integration pending)
-                    try {
-                        localStorage.setItem('spendnote.cashBoxLogo', currentLogoData);
-                    } catch (e) {
-                        console.warn('Could not save logo to localStorage');
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Remove logo
-        if (removeLogoBtn) {
-            removeLogoBtn.addEventListener('click', function() {
-                currentLogoData = null;
-                logoPreviewImg.src = '';
-                logoPreview.style.display = 'none';
-                removeLogoBtn.style.display = 'none';
-                logoInput.value = '';
-                
-                // Remove logo from localStorage
-                try {
-                    localStorage.removeItem('spendnote.cashBoxLogo');
-                } catch (e) {
-                    console.warn('Could not remove logo from localStorage');
-                }
-            });
-        }
-
-        // Initialize iframe on page load
-        window.addEventListener('DOMContentLoaded', function() {
-            reloadIframe();
-            
-            // Load saved logo from localStorage
-            try {
-                const savedLogo = localStorage.getItem('spendnote.cashBoxLogo');
-                if (savedLogo) {
-                    currentLogoData = savedLogo;
-                    logoPreviewImg.src = savedLogo;
-                    logoPreview.style.display = 'block';
-                    removeLogoBtn.style.display = 'inline-block';
-                }
-            } catch (e) {
-                console.warn('Could not load logo from localStorage');
-            }
-        });
-
-        // Zoom functionality
-        let currentZoom = 0.7;
-        const zoomStep = 0.05;
-        const minZoom = 0.6;
-        const maxZoom = 1.3;
-
-        function updateZoom() {
-            const iframe = document.getElementById('receiptFrame');
-            const zoomLevel = document.getElementById('zoomLevel');
-            if (iframe && zoomLevel) {
-                iframe.style.zoom = currentZoom;
-                zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
-            }
-        }
-
-        function zoomIn() {
-            if (currentZoom < maxZoom) {
-                currentZoom = Math.min(currentZoom + zoomStep, maxZoom);
-                updateZoom();
-            }
-        }
-
-        function zoomOut() {
-            if (currentZoom > minZoom) {
-                currentZoom = Math.max(currentZoom - zoomStep, minZoom);
-                updateZoom();
-            }
-        }
-
-        function resetZoom() {
-            currentZoom = 0.7;
-            updateZoom();
-        }
-
-        // Team Management Functions
-        function addUser() {
-            const email = document.getElementById('newUserEmail').value;
-            const role = document.getElementById('newUserRole').value;
-            
-            if (!email) {
-                alert('Please enter an email address');
-                return;
-            }
-            
-            // Email validation
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Please enter a valid email address');
-                return;
-            }
-            
-            alert(`User ${email} added as ${role} (demo only)`);
-            
-            // Clear inputs
-            document.getElementById('newUserEmail').value = '';
-            document.getElementById('newUserRole').value = 'admin';
-        }
-        
-        function removeUser(button) {
-            const memberItem = button.closest('.team-member-item');
-            const userName = memberItem.querySelector('.team-member-name').textContent;
-            
-            if (confirm(`Remove ${userName} from this Cash Box?\n\nThey will no longer be able to access this Cash Box.`)) {
-                memberItem.style.opacity = '0.5';
-                setTimeout(() => {
-                    memberItem.remove();
-                    alert(`${userName} removed (demo only)`);
-                }, 300);
-            }
-        }
-
-        // Toggle team access
-        function toggleTeamAccess() {
-            const teamContent = document.getElementById('teamContent');
-            const toggleIcon = document.getElementById('teamToggleIcon');
-            
-            if (teamContent.style.display === 'none') {
-                teamContent.style.display = 'block';
-                toggleIcon.style.transform = 'rotate(180deg)';
-            } else {
-                teamContent.style.display = 'none';
-                toggleIcon.style.transform = 'rotate(0deg)';
-            }
-        }
-
-        // Delete confirmation
-        document.getElementById('deleteButton').addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete "Main Office"?\n\nThis will permanently delete:\n• This Cash Box\n• All 47 transactions\n• All associated data\n\nThis action cannot be undone.')) {
-                alert('Cash Box deleted (demo only)');
-            }
-        });
-    </script>
+function buildReceiptUrl(format) {
+    const baseUrls = {
+        'a4': 'spendnote-receipt-a4-two-copies.html',
+        'pdf': 'spendnote-pdf-receipt.html',
+        'email': 'spendnote-email-receipt.html'
+    };
     
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20"></script>
-    <script src="assets/js/auth-guard.js"></script>
-    <script src="assets/js/nav-loader.js?v=7"></script>
-    <script>loadNav();</script>
-    <script src="assets/js/main.js?v=20"></script>
-    <script src="assets/js/cash-box-settings-data.js?v=11"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof initCashBoxSettings === 'function') {
-                initCashBoxSettings();
-            }
+    const params = new URLSearchParams();
+    params.append('v', 'settings-preview-01');
+    params.append('demo', '1');
+    
+    // Display options
+    for (const [key, value] of Object.entries(displayOptions)) {
+        params.append(key, value);
+    }
+    
+    // Dummy data params
+    params.append('demoCompany', DUMMY_PROFILE.company_name);
+    params.append('demoAddress', DUMMY_PROFILE.address);
+    params.append('demoContact', DUMMY_TX.contact_name);
+    params.append('demoContactAddress', DUMMY_TX.contact_address);
+    params.append('demoAmount', DUMMY_TX.amount);
+    params.append('demoCurrency', DUMMY_TX.cash_box.currency);
+    params.append('demoDate', DUMMY_TX.transaction_date);
+    params.append('demoReceiptId', DUMMY_TX.display_id);
+    params.append('demoCashBoxId', 'SN-001');
+    params.append('demoNote', DUMMY_TX.note);
+    params.append('demoCreatedBy', DUMMY_TX.created_by_user_name);
+    
+    // Pro text customizations
+    const receiptTitle = document.getElementById('receiptTitle')?.value;
+    const totalLabel = document.getElementById('totalLabel')?.value;
+    const fromLabel = document.getElementById('fromLabel')?.value;
+    const toLabel = document.getElementById('toLabel')?.value;
+    const descriptionLabel = document.getElementById('descriptionLabel')?.value;
+    const amountLabel = document.getElementById('amountLabel')?.value;
+    const footerNote = document.getElementById('footerNote')?.value;
+    
+    if (receiptTitle) params.append('receiptTitle', receiptTitle);
+    if (totalLabel) params.append('totalLabel', totalLabel);
+    if (fromLabel) params.append('fromLabel', fromLabel);
+    if (toLabel) params.append('toLabel', toLabel);
+    if (descriptionLabel) params.append('descriptionLabel', descriptionLabel);
+    if (amountLabel) params.append('amountLabel', amountLabel);
+    if (footerNote) params.append('footerNote', footerNote);
+    
+    return `${baseUrls[format]}?${params.toString()}`;
+}
+
+function reloadIframe() {
+    const iframe = document.getElementById('receiptFrame');
+    if (iframe) {
+        iframe.src = buildReceiptUrl(currentFormat);
+    }
+}
+
+function updateZoom() {
+    const iframe = document.getElementById('receiptFrame');
+    const zoomLevel = document.getElementById('zoomLevel');
+    if (iframe && zoomLevel) {
+        iframe.style.zoom = currentZoom;
+        zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
+    }
+}
+
+// ===== COLOR PICKER =====
+document.querySelectorAll('.color-option').forEach(option => {
+    option.addEventListener('click', function() {
+        document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+        this.classList.add('selected');
+        
+        const color = this.dataset.color;
+        const rgb = this.dataset.rgb;
+        if (color && rgb) {
+            document.documentElement.style.setProperty('--active', color);
+            document.documentElement.style.setProperty('--active-rgb', rgb);
+            try {
+                localStorage.setItem('activeCashBoxColor', color);
+                localStorage.setItem('activeCashBoxRgb', rgb);
+            } catch (e) {}
+        }
+    });
+});
+
+// ===== ICON PICKER =====
+document.querySelectorAll('.icon-option').forEach(option => {
+    option.addEventListener('click', function() {
+        document.querySelectorAll('.icon-option').forEach(opt => opt.classList.remove('selected'));
+        this.classList.add('selected');
+    });
+});
+
+// ===== FORMAT BUTTONS =====
+document.querySelectorAll('.format-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentFormat = this.dataset.format;
+        reloadIframe();
+    });
+});
+
+// ===== MODE TOGGLE =====
+document.querySelectorAll('input[name="receiptMode"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const quickSummary = document.getElementById('receiptQuickSummary');
+        const detailedToggles = document.getElementById('receiptDetailedToggles');
+        if (this.value === 'quick') {
+            quickSummary.style.display = 'block';
+            detailedToggles.style.display = 'none';
+        } else {
+            quickSummary.style.display = 'none';
+            detailedToggles.style.display = 'flex';
+        }
+    });
+});
+
+// ===== TOGGLE SWITCHES =====
+document.querySelectorAll('.toggle-list input[type="checkbox"]').forEach(toggle => {
+    toggle.addEventListener('change', function() {
+        const field = this.dataset.field;
+        if (field) {
+            displayOptions[field] = this.checked ? '1' : '0';
+            reloadIframe();
+        }
+    });
+});
+
+// ===== PRO TEXT FIELDS =====
+['receiptTitle', 'totalLabel', 'fromLabel', 'toLabel', 'descriptionLabel', 'amountLabel', 'footerNote'].forEach(fieldId => {
+    const field = document.getElementById(fieldId);
+    if (field) {
+        field.addEventListener('input', function() {
+            reloadIframe();
         });
-    </script>
+    }
+});
+
+// ===== ZOOM CONTROLS =====
+document.getElementById('zoomOutBtn')?.addEventListener('click', () => {
+    if (currentZoom > 0.4) {
+        currentZoom = Math.max(currentZoom - 0.05, 0.4);
+        updateZoom();
+    }
+});
+
+document.getElementById('zoomInBtn')?.addEventListener('click', () => {
+    if (currentZoom < 1.2) {
+        currentZoom = Math.min(currentZoom + 0.05, 1.2);
+        updateZoom();
+    }
+});
+
+document.getElementById('zoomResetBtn')?.addEventListener('click', () => {
+    currentZoom = 0.6;
+    updateZoom();
+});
+
+// ===== LOGO UPLOAD =====
+const logoInput = document.getElementById('logoInput');
+const uploadLogoBtn = document.getElementById('uploadLogoBtn');
+const removeLogoBtn = document.getElementById('removeLogoBtn');
+const logoPreview = document.getElementById('logoPreview');
+const logoPreviewImg = document.getElementById('logoPreviewImg');
+
+uploadLogoBtn?.addEventListener('click', () => logoInput?.click());
+
+logoInput?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
+    if (!validTypes.includes(file.type)) {
+        alert('Please upload a PNG, JPG, or SVG file.');
+        return;
+    }
+    
+    if (file.size > 2 * 1024 * 1024) {
+        alert('File size must be less than 2MB.');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        logoPreviewImg.src = event.target.result;
+        logoPreview.classList.add('visible');
+        removeLogoBtn.style.display = 'inline-flex';
+        try {
+            localStorage.setItem('spendnote.proLogoDataUrl', event.target.result);
+        } catch (e) {}
+        reloadIframe();
+    };
+    reader.readAsDataURL(file);
+});
+
+removeLogoBtn?.addEventListener('click', () => {
+    logoPreviewImg.src = '';
+    logoPreview.classList.remove('visible');
+    removeLogoBtn.style.display = 'none';
+    logoInput.value = '';
+    try {
+        localStorage.removeItem('spendnote.proLogoDataUrl');
+    } catch (e) {}
+    reloadIframe();
+});
+
+// ===== DELETE BUTTON =====
+document.getElementById('deleteButton')?.addEventListener('click', function() {
+    const name = document.getElementById('cashBoxNameInput')?.value || 'this Cash Box';
+    if (confirm(`Are you sure you want to delete "${name}"?\n\nThis will permanently delete:\n• This Cash Box\n• All transactions\n• All associated data\n\nThis action cannot be undone.`)) {
+        alert('Cash Box deleted (demo only)');
+    }
+});
+
+// ===== INIT =====
+window.addEventListener('DOMContentLoaded', function() {
+    reloadIframe();
+    updateZoom();
+    
+    // Load saved logo
+    try {
+        const savedLogo = localStorage.getItem('spendnote.proLogoDataUrl');
+        if (savedLogo && logoPreviewImg && logoPreview && removeLogoBtn) {
+            logoPreviewImg.src = savedLogo;
+            logoPreview.classList.add('visible');
+            removeLogoBtn.style.display = 'inline-flex';
+        }
+    } catch (e) {}
+});
+</script>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js?v=20"></script>
+<script src="assets/js/auth-guard.js"></script>
+<script src="assets/js/nav-loader.js?v=7"></script>
+<script>loadNav();</script>
+<script src="assets/js/main.js?v=20"></script>
+<script src="assets/js/cash-box-settings-data.js?v=11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof initCashBoxSettings === 'function') {
+            initCashBoxSettings();
+        }
+    });
+</script>
 </body>
 </html>
