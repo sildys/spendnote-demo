@@ -619,6 +619,7 @@ tr:hover {
 
  .pro-badge i,
  .upgrade-badge i {
+     color: currentColor !important;
      font-size: 11px !important;
  }
 
