@@ -611,7 +611,7 @@ function initDashboardModal() {
     if (window.location.hash === '#new-transaction') {
         const params = new URLSearchParams(window.location.search);
         const preset = {};
-        if (params.get('cashbox')) preset.cashBoxId = params.get('cashbox');
+        if (params.get('cashBoxId')) preset.cashBoxId = params.get('cashBoxId');
         if (params.get('direction') === 'in' || params.get('direction') === 'out') preset.direction = params.get('direction');
 
         const doOpen = function() { setTimeout(function() { openModal(preset); }, 0); history.replaceState(null, null, 'dashboard.html'); };

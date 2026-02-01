@@ -286,8 +286,8 @@ function initTransactionsNavLink() {
     document.getElementById('navTransactions')?.addEventListener('click', (e) => {
         e.preventDefault();
         const active = document.querySelector('.register-card.active');
-        window.location.href = active 
-            ? `spendnote-transaction-history.html?cashbox=${encodeURIComponent(active.dataset.name)}&color=${encodeURIComponent(active.dataset.color)}`
+        window.location.href = active && active.dataset.id
+            ? `spendnote-transaction-history.html?cashBoxId=${encodeURIComponent(active.dataset.id)}`
             : 'spendnote-transaction-history.html';
     });
 }

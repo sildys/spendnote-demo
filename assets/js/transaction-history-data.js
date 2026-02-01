@@ -599,7 +599,7 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const urlCashBoxId = urlParams.get('cashboxId');
+        const urlCashBoxId = urlParams.get('cashBoxId');
         // NOTE: Do NOT use localStorage.activeCashBoxId here - it would filter out all transactions
         // that don't belong to the dashboard's active cash box. Only filter by URL param.
 

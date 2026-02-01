@@ -947,7 +947,7 @@
             if (window.location.hash !== '#new-transaction') return;
             const getPresetFromUrl = () => {
                 const params = new URLSearchParams(window.location.search);
-                const cashBoxId = params.get('cashbox');
+                const cashBoxId = params.get('cashBoxId');
                 const direction = params.get('direction');
                 const preset = {};
                 if (cashBoxId) preset.cashBoxId = cashBoxId;
@@ -1683,7 +1683,7 @@
         
         // Navigate to the correct slide based on URL parameter (cashbox ID)
         const urlParams = new URLSearchParams(window.location.search);
-        const returnFromCashBoxId = urlParams.get('cashbox');
+        const returnFromCashBoxId = urlParams.get('cashBoxId');
         if (returnFromCashBoxId) {
             // Find the slide index for the cashbox ID
             const allSlides = document.querySelectorAll('.swiper-slide');
@@ -1732,12 +1732,11 @@
                 
                 // Get active cash box
                 const activeCashBox = document.querySelector('.register-card.active');
-                if (activeCashBox) {
-                    const cashBoxName = activeCashBox.dataset.name;
-                    const cashBoxColor = activeCashBox.dataset.color;
+                if (activeCashBox && activeCashBox.dataset.id) {
+                    const cashBoxId = activeCashBox.dataset.id;
                     
-                    // Navigate with URL parameters
-                    window.location.href = `spendnote-transaction-history.html?cashbox=${encodeURIComponent(cashBoxName)}&color=${encodeURIComponent(cashBoxColor)}`;
+                    // Navigate with cashBoxId UUID parameter
+                    window.location.href = `spendnote-transaction-history.html?cashBoxId=${encodeURIComponent(cashBoxId)}`;
                 } else {
                     // No active cash box, navigate without filter
                     window.location.href = 'spendnote-transaction-history.html';
