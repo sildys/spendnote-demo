@@ -424,13 +424,13 @@ const DUMMY_TX = {
     amount: 249.97,
     description: 'Payment received',
     contact_name: 'John Doe',
-    contact_address: '456 Oak Ave\nSpringfield, IL 62704',
+    contact_address: '456 Oak Ave, Springfield, IL 62704',
     contact_custom_field_1: 'CUST-1007',
-    note: 'Paid by card. Thank you!',
+    note: 'Cash received in person.',
     line_items: [
+        { description: 'Services', amount: 149.99 },
         { description: 'Service fee', amount: 79.99 },
-        { description: 'Materials', amount: 124.99 },
-        { description: 'Sales tax', amount: 44.99 }
+        { description: 'Supplies', amount: 19.99 }
     ],
     cash_box: {
         name: 'Main Office',
@@ -443,16 +443,16 @@ const DUMMY_TX = {
 const DUMMY_PROFILE = {
     company_name: 'Acme Corporation',
     full_name: 'Acme Corporation',
-    address: '123 Main St\nSuite 100\nSpringfield, IL 62701'
+    address: '123 Main St, Springfield, IL 62701'
 };
 
 // ===== RECEIPT PREVIEW =====
 let displayOptions = {
     logo: '1',
     addresses: '1',
-    tracking: '1',
-    additional: '1',
-    note: '1',
+    tracking: '0',
+    additional: '0',
+    note: '0',
     signatures: '1'
 };
 
@@ -480,17 +480,17 @@ function buildReceiptUrl(format) {
     // Dummy data params
     params.append('demoCompany', DUMMY_PROFILE.company_name);
     params.append('demoAddress', DUMMY_PROFILE.address);
-    params.append('demoCompanyId', 'ACME-1023');
+    params.append('demoCompanyId', '');
     params.append('demoContact', DUMMY_TX.contact_name);
     params.append('demoContactAddress', DUMMY_TX.contact_address);
-    params.append('demoContactId', DUMMY_TX.contact_custom_field_1);
+    params.append('demoContactId', '');
     params.append('demoAmount', DUMMY_TX.amount);
     params.append('demoCurrency', DUMMY_TX.cash_box.currency);
     params.append('demoDate', DUMMY_TX.transaction_date);
     params.append('demoReceiptId', DUMMY_TX.display_id);
     params.append('demoCashBoxId', 'SN-001');
     params.append('demoNote', DUMMY_TX.note);
-    params.append('demoCreatedBy', DUMMY_TX.created_by_user_name);
+    // recorded-by is intentionally not shown in settings previews
 
     const demoItems = (Array.isArray(DUMMY_TX.line_items) ? DUMMY_TX.line_items : [])
         .map(it => `${String(it.description || '').trim()}|${Number(it.amount)}`)

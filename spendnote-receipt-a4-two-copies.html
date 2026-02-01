@@ -626,16 +626,26 @@ body {
     setTextAll('.company-name', demoCompany);
     setTextAll('.contact-name', demoContact);
 
-    const companyAddressHtml = demoAddress
-      .split(/\r?\n/)
-      .map((l) => safeText(l, ''))
-      .filter(Boolean)
-      .join('<br>');
-    const contactAddressHtml = demoContactAddress
-      .split(/\r?\n/)
-      .map((l) => safeText(l, ''))
-      .filter(Boolean)
-      .join('<br>');
+    const addressToHtml = (raw) => {
+      const value = safeText(raw, '');
+      if (!value) return '';
+      if (value.includes('\n')) {
+        return value
+          .split(/\r?\n/)
+          .map((l) => safeText(l, ''))
+          .filter(Boolean)
+          .slice(0, 2)
+          .join('<br>');
+      }
+      const idx = value.indexOf(',');
+      if (idx === -1) return value;
+      const first = safeText(value.slice(0, idx), '');
+      const rest = safeText(value.slice(idx + 1), '');
+      return rest ? `${first}<br>${rest}` : first;
+    };
+
+    const companyAddressHtml = addressToHtml(demoAddress);
+    const contactAddressHtml = addressToHtml(demoContactAddress);
 
     setHtmlAll('.company-address', companyAddressHtml);
     setHtmlAll('.contact-address', contactAddressHtml);
