@@ -2,10 +2,121 @@
 const DEBUG = window.SpendNoteDebug || false;
 let isEditMode = false;
 let currentCashBoxId = null;
+let currentCashBoxData = null;
+let hasInitialized = false;
+
+function toRgbStringFromHex(hex) {
+    try {
+        const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(String(hex || '').trim());
+        if (!m) return null;
+        return `${parseInt(m[1], 16)}, ${parseInt(m[2], 16)}, ${parseInt(m[3], 16)}`;
+    } catch (e) {
+        return null;
+    }
+}
+
+function normalizeFaIcon(icon) {
+    const raw = String(icon || '').trim();
+    if (!raw) return 'fa-building';
+    if (raw.includes('fa-')) {
+        const m = raw.match(/fa-[a-z0-9-]+/i);
+        return m ? m[0] : 'fa-building';
+    }
+    return raw.startsWith('fa') ? raw : `fa-${raw}`;
+}
+
+function getCashBoxDisplayCode(cashBox) {
+    const seq = Number(cashBox?.sequence_number);
+    return Number.isFinite(seq) && seq > 0 ? `SN-${String(seq).padStart(3, '0')}` : '—';
+}
+
+function formatMoney(amount, currency) {
+    const safeAmount = Number(amount);
+    const value = Number.isFinite(safeAmount) ? safeAmount : 0;
+    const curr = String(currency || 'USD').toUpperCase();
+    try {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: curr }).format(value);
+    } catch (e) {
+        return `$${value.toFixed(2)}`;
+    }
+}
+
+function updateSummaryCard(cashBox) {
+    const summaryCard = document.querySelector('.summary-card');
+    if (!summaryCard) return;
+
+    const iconWrap = document.getElementById('summaryIcon');
+    const idEl = document.getElementById('summaryId');
+    const nameEl = document.getElementById('summaryName');
+    const balanceEl = document.getElementById('summaryBalance');
+    const historyBtn = document.getElementById('summaryHistoryBtn');
+
+    const displayCode = getCashBoxDisplayCode(cashBox);
+    const iconClass = normalizeFaIcon(cashBox?.icon);
+    const color = cashBox?.color || '#059669';
+    const rgb = toRgbStringFromHex(color) || '5, 150, 105';
+
+    if (iconWrap) {
+        iconWrap.style.background = color;
+        iconWrap.innerHTML = `<i class="fas ${iconClass}"></i>`;
+    }
+    if (idEl) idEl.textContent = displayCode;
+    if (nameEl) nameEl.textContent = cashBox?.name || '—';
+    if (balanceEl) balanceEl.textContent = formatMoney(cashBox?.current_balance, cashBox?.currency);
+    if (historyBtn) historyBtn.href = currentCashBoxId ? `spendnote-cash-box-detail.html?id=${encodeURIComponent(currentCashBoxId)}` : 'spendnote-cash-box-detail.html';
+
+    // Keep page accent in sync (visual only)
+    document.documentElement.style.setProperty('--active', color);
+    document.documentElement.style.setProperty('--active-rgb', rgb);
+}
+
+function bindSummaryLiveUpdates() {
+    const nameInput = document.getElementById('cashBoxNameInput');
+    if (nameInput) {
+        nameInput.addEventListener('input', () => {
+            const nameEl = document.getElementById('summaryName');
+            if (nameEl) nameEl.textContent = nameInput.value.trim() || '—';
+        });
+    }
+
+    const currencyInput = document.getElementById('currencySelect');
+    if (currencyInput) {
+        currencyInput.addEventListener('input', () => {
+            const balanceEl = document.getElementById('summaryBalance');
+            if (!balanceEl) return;
+            const currency = String(currencyInput.value || 'USD').toUpperCase();
+            const amount = currentCashBoxData?.current_balance;
+            balanceEl.textContent = formatMoney(amount, currency);
+        });
+    }
+
+    // Icon palette -> summary icon
+    document.querySelectorAll('.icon-option').forEach(option => {
+        option.addEventListener('click', () => {
+            const iconWrap = document.getElementById('summaryIcon');
+            const selected = document.querySelector('.icon-option.selected');
+            const iconClass = normalizeFaIcon(selected?.dataset?.icon);
+            if (iconWrap) iconWrap.innerHTML = `<i class="fas ${iconClass}"></i>`;
+        });
+    });
+
+    // Color palette -> summary background
+    document.querySelectorAll('.color-option').forEach(option => {
+        option.addEventListener('click', () => {
+            const iconWrap = document.getElementById('summaryIcon');
+            const selected = document.querySelector('.color-option.selected');
+            const color = selected?.dataset?.color;
+            if (iconWrap && color) iconWrap.style.background = color;
+        });
+    });
+}
 
 // Initialize page
 async function initCashBoxSettings() {
     try {
+        if (hasInitialized) return;
+        hasInitialized = true;
+
         // Check if we're in edit mode (URL has id parameter)
         const urlParams = new URLSearchParams(window.location.search);
         currentCashBoxId = urlParams.get('id');
@@ -16,15 +127,18 @@ async function initCashBoxSettings() {
             await loadCashBoxData(currentCashBoxId);
             
             // Update page title
-            const pageTitle = document.querySelector('.page-title-group h1');
+            const pageTitle = document.querySelector('.page-title');
             if (pageTitle) pageTitle.textContent = 'Edit Cash Box';
         } else {
             // Create mode
             isEditMode = false;
             
             // Update page title
-            const pageTitle = document.querySelector('.page-title-group h1');
+            const pageTitle = document.querySelector('.page-title');
             if (pageTitle) pageTitle.textContent = 'Create Cash Box';
+
+            const summaryCard = document.querySelector('.summary-card');
+            if (summaryCard) summaryCard.style.display = 'none';
         }
         
         if (DEBUG) console.log('Cash Box Settings initialized', isEditMode ? '(Edit mode)' : '(Create mode)');
@@ -42,6 +156,9 @@ async function initCashBoxSettings() {
                 }
             });
         }, 100);
+
+        // Summary live updates (name/icon/color)
+        bindSummaryLiveUpdates();
         
     } catch (error) {
         console.error('❌ Error initializing cash box settings:', error);
@@ -85,12 +202,14 @@ async function loadCashBoxData(id) {
         }
 
         // Update header subtitle (avoid hardcoded demo values)
-        const seq = Number(cashBox.sequence_number);
-        const displayCode = Number.isFinite(seq) && seq > 0 ? `SN-${String(seq).padStart(3, '0')}` : '—';
+        const displayCode = getCashBoxDisplayCode(cashBox);
         const subtitle = document.getElementById('cashBoxSettingsSubtitle');
         if (subtitle) {
             subtitle.textContent = `Configure ${cashBox.name || '—'} (${displayCode})`;
         }
+
+        currentCashBoxData = cashBox;
+        updateSummaryCard(cashBox);
         
         if (DEBUG) console.log('Cash box data loaded:', cashBox.name);
         
