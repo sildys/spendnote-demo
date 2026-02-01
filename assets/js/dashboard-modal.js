@@ -199,10 +199,16 @@ function initModalCashboxCarousel() {
         if (!card.dataset.id) return;
         const iconEl = card.querySelector('.register-icon i');
         const iconClass = iconEl ? Array.from(iconEl.classList).find(function(cls) { return cls.startsWith('fa-') && cls !== 'fa-fw'; }) : null;
-        const displayId = String(card.dataset.displayCode || '').trim() || (function() {
+        let displayId = String(card.dataset.displayCode || '').trim() || (function() {
             const idEl = card.querySelector('.register-id');
             return idEl ? String(idEl.textContent || '').trim() : '';
         })();
+        if (!displayId) {
+            const seq = Number(card.dataset.sequenceNumber || '');
+            if (Number.isFinite(seq) && seq > 0) {
+                displayId = 'SN-' + String(seq).padStart(3, '0');
+            }
+        }
         modalCashBoxes.push({
             id: card.dataset.id,
             name: card.querySelector('.register-name') ? card.querySelector('.register-name').textContent : 'Cash Box',
@@ -241,12 +247,17 @@ function updateModalCashboxDisplay() {
                 const idEl = card.querySelector('.register-id');
                 if (idEl) codeText = String(idEl.textContent || '').trim();
             }
+            if (!codeText) {
+                const seq = Number(card.dataset.sequenceNumber || '');
+                if (Number.isFinite(seq) && seq > 0) {
+                    codeText = 'SN-' + String(seq).padStart(3, '0');
+                }
+            }
         }
         if (!codeText && cashbox.displayId) {
             codeText = cashbox.displayId;
         }
         idDisplayEl.textContent = codeText || '—';
-        console.log('Modal cashbox ID display:', codeText, 'from card:', card ? 'found' : 'not found', 'cashbox.displayId:', cashbox.displayId);
     }
     if (balanceEl) {
         const card = document.querySelector('.register-card[data-id="' + cashbox.id + '"]');

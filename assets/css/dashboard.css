@@ -2361,6 +2361,9 @@ tr:hover [data-category-tag] {
 }
 
 .cashbox-display .cashbox-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-size: 13px;
     font-weight: 700;
     color: var(--text);
@@ -2372,7 +2375,7 @@ tr:hover [data-category-tag] {
 .cashbox-display .cashbox-id {
     font-size: 40px;
     font-weight: 700;
-    color: var(--text-muted);
+    color: var(--text);
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     letter-spacing: 0.02em;
     background: var(--surface-elevated);
@@ -2381,6 +2384,7 @@ tr:hover [data-category-tag] {
     display: inline-block;
     margin-right: 16px;
     vertical-align: middle;
+    flex: 0 0 auto;
 }
 
 .cashbox-display .cashbox-balance {
