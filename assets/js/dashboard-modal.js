@@ -234,10 +234,19 @@ function updateModalCashboxDisplay() {
     if (nameEl) nameEl.textContent = cashbox.name;
     if (idDisplayEl) {
         const card = document.querySelector('.register-card[data-id="' + cashbox.id + '"]');
-        const codeText = card
-            ? (String(card.dataset.displayCode || '').trim() || (card.querySelector('.register-id') ? String(card.querySelector('.register-id').textContent || '').trim() : ''))
-            : (cashbox.displayId || '');
+        let codeText = '';
+        if (card) {
+            codeText = String(card.dataset.displayCode || '').trim();
+            if (!codeText) {
+                const idEl = card.querySelector('.register-id');
+                if (idEl) codeText = String(idEl.textContent || '').trim();
+            }
+        }
+        if (!codeText && cashbox.displayId) {
+            codeText = cashbox.displayId;
+        }
         idDisplayEl.textContent = codeText || '—';
+        console.log('Modal cashbox ID display:', codeText, 'from card:', card ? 'found' : 'not found', 'cashbox.displayId:', cashbox.displayId);
     }
     if (balanceEl) {
         const card = document.querySelector('.register-card[data-id="' + cashbox.id + '"]');
