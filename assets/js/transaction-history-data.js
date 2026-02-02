@@ -572,7 +572,6 @@
 
         renderLoadingRow(tbody);
 
-        const cashBoxSelect = qs('#filterRegister');
         const pagination = qs('.pagination-controls');
         const paginationInfo = qs('.pagination-info');
         const perPageSelect = qs('#perPageSelect');
@@ -732,9 +731,6 @@
                     cashBoxById.set(String(cb.id), cb);
                 }
             });
-
-            // Only pre-select cash box if explicitly passed via URL (e.g. from cash box detail page)
-            ensureCashBoxSelectOptions(cashBoxSelect, state.cashBoxes, urlCashBoxId || null);
 
             const cashBoxDatalist = qs('#cashBoxDatalist');
             ensureCashBoxDatalist(cashBoxDatalist, state.cashBoxes);
@@ -954,7 +950,7 @@
         };
 
         const updateStats = async (serverCtx) => {
-            const currency = serverCtx.filters.currency;
+            let currency = serverCtx.filters.currency;
 
             const elTotal = qs('#statTotalTransactions');
             const elBoxes = qs('#statCashBoxes');
@@ -964,6 +960,21 @@
             const elIn = qs('#statTotalIn');
             const elOut = qs('#statTotalOut');
             const elNet = qs('#statNetBalance');
+
+            if (!currency) {
+                const ids = Array.isArray(serverCtx.cashBoxIds) ? serverCtx.cashBoxIds.filter(Boolean) : [];
+                if (ids.length) {
+                    const currencies = new Set();
+                    ids.forEach((id) => {
+                        const cb = cashBoxById.get(String(id));
+                        const c = safeText(cb?.currency, '');
+                        if (c) currencies.add(c);
+                    });
+                    if (currencies.size === 1) {
+                        currency = Array.from(currencies)[0];
+                    }
+                }
+            }
 
             if (!currency) {
                 if (elIn) elIn.textContent = '—';
@@ -1051,6 +1062,12 @@
                 }
                 return tx;
             });
+
+            // On pages that don't show the system-wide cash box count (e.g. Cash Box Detail),
+            // display the filtered total instead of the global total.
+            if (elTotal && !elBoxes) {
+                elTotal.textContent = String(Number(pageRes?.count) || 0);
+            }
 
             await updateStats(serverCtx);
 
