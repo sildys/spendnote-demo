@@ -37,6 +37,37 @@ function clearActiveCashBoxIfMatches(cashBoxId) {
     } catch (e) {}
 }
 
+function togglePanelDisplay(panelEl, displayWhenVisible) {
+    if (!panelEl) return;
+    const isHidden = panelEl.style.display === 'none' || !panelEl.style.display;
+    panelEl.style.display = isHidden ? (displayWhenVisible || 'block') : 'none';
+}
+
+function bindTeamAccessToggle() {
+    const content = document.getElementById('teamContent');
+    if (!content) return;
+
+    const header = content.previousElementSibling;
+    const icon = document.getElementById('teamToggleIcon');
+    if (!header) return;
+
+    header.addEventListener('click', () => {
+        const isHidden = content.style.display === 'none' || !content.style.display;
+        content.style.display = isHidden ? 'block' : 'none';
+        if (icon) icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+}
+
+function bindCashBoxDeletePanelToggle() {
+    const toggleBtn = document.getElementById('cashBoxDeleteToggle');
+    const panel = document.getElementById('cashBoxDeletePanel');
+    if (!toggleBtn || !panel) return;
+
+    toggleBtn.addEventListener('click', () => {
+        togglePanelDisplay(panel, 'flex');
+    });
+}
+
 async function handleDeleteCashBox() {
     try {
         if (!currentCashBoxId) {
@@ -258,6 +289,11 @@ async function initCashBoxSettings() {
         const deleteBtn = document.getElementById('deleteButton');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', handleDeleteCashBox);
+        }
+
+        bindTeamAccessToggle();
+        if (isEditMode) {
+            bindCashBoxDeletePanelToggle();
         }
 
         // Summary live updates (name/icon/color)

@@ -151,7 +151,7 @@
 
         <div class="cb-actions-row" aria-label="Cash box actions">
             <div class="left">
-                <button class="cb-delete-trigger" id="cashBoxDeleteToggle" type="button" onclick="toggleCashBoxDelete()"><i class="fas fa-trash"></i> Delete</button>
+                <button class="cb-delete-trigger" id="cashBoxDeleteToggle" type="button"><i class="fas fa-trash"></i> Delete</button>
             </div>
             <div class="right">
                 <button type="button" class="btn btn-secondary" id="cashBoxCancelBtn">Cancel</button>
@@ -165,7 +165,7 @@
         </div>
 
         <div class="collapsible-section">
-            <div class="collapsible-header" onclick="toggleTeamAccess()" style="cursor: pointer;">
+            <div class="collapsible-header" style="cursor: pointer;">
                 <div class="collapsible-title">
                     <i class="fas fa-users"></i>
                     Team Access
@@ -710,26 +710,6 @@ removeLogoBtn?.addEventListener('click', () => {
     reloadIframe();
 });
 
-// ===== TEAM ACCESS TOGGLE =====
-function toggleTeamAccess() {
-    const content = document.getElementById('teamContent');
-    const icon = document.getElementById('teamToggleIcon');
-    if (content && icon) {
-        const isHidden = content.style.display === 'none';
-        content.style.display = isHidden ? 'block' : 'none';
-        icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
-    }
-}
-
-function toggleCashBoxDelete() {
-    const panel = document.getElementById('cashBoxDeletePanel');
-    const icon = document.getElementById('cashBoxDeleteIcon');
-    if (!panel) return;
-    const isHidden = panel.style.display === 'none' || !panel.style.display;
-    panel.style.display = isHidden ? 'flex' : 'none';
-    if (icon) icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
-}
-
 // ===== INIT =====
 window.addEventListener('DOMContentLoaded', function() {
     applyReceiptMode('quick');
@@ -754,13 +734,6 @@ window.addEventListener('DOMContentLoaded', function() {
 <script src="assets/js/nav-loader.js?v=7"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=20"></script>
-<script src="assets/js/cash-box-settings-data.js?v=17"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof initCashBoxSettings === 'function') {
-            initCashBoxSettings();
-        }
-    });
-</script>
+<script src="assets/js/cash-box-settings-data.js?v=18"></script>
 </body>
 </html>
