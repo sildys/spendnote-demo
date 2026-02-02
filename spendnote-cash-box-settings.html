@@ -496,7 +496,7 @@ function buildReceiptUrl(format) {
     params.append('demoCompanyId', '');
     params.append('demoContact', DUMMY_TX.contact_name);
     params.append('demoContactAddress', DUMMY_TX.contact_address);
-    params.append('demoContactId', '');
+    params.append('demoContactId', DUMMY_TX.contact_custom_field_1 || '');
     params.append('demoAmount', DUMMY_TX.amount);
     params.append('demoCurrency', DUMMY_TX.cash_box.currency);
     params.append('demoDate', DUMMY_TX.transaction_date);
