@@ -750,7 +750,8 @@
             font-weight: 900;
             font-size: 11px;
             letter-spacing: 0.04em;
-            width: 74px;
+            min-width: 74px;
+            width: auto;
             box-sizing: border-box;
         }
 
@@ -989,8 +990,8 @@
             </div>
 
             <div class="summary-actions">
-                <button class="btn btn-secondary btn-small" id="detailQuickInBtn" title="New IN transaction">IN</button>
-                <button class="btn btn-secondary btn-small" id="detailQuickOutBtn" title="New OUT transaction">OUT</button>
+                <button class="btn btn-secondary btn-small" id="detailQuickInBtn" title="New income transaction">Income</button>
+                <button class="btn btn-secondary btn-small" id="detailQuickOutBtn" title="New expense transaction">Expense</button>
                 <a class="btn btn-secondary" id="detailSettingsBtn" href="#" title="Cash Box Settings">
                     <i class="fas fa-cog"></i>
                     Settings
@@ -1009,14 +1010,14 @@
             <div class="stat-card in">
                 <div class="stat-label">
                     <i class="fas fa-arrow-down"></i>
-                    Total IN
+                    Total Income
                 </div>
                 <div class="stat-value" id="statTotalIn">—</div>
             </div>
             <div class="stat-card out">
                 <div class="stat-label">
                     <i class="fas fa-arrow-up"></i>
-                    Total OUT
+                    Total Expense
                 </div>
                 <div class="stat-value" id="statTotalOut">—</div>
             </div>
@@ -1087,8 +1088,8 @@
                 </div>
                 <div class="filter-tabs">
                     <button class="filter-tab active" data-filter="all">All</button>
-                    <button class="filter-tab" data-filter="in">IN</button>
-                    <button class="filter-tab" data-filter="out">OUT</button>
+                    <button class="filter-tab" data-filter="in">Income</button>
+                    <button class="filter-tab" data-filter="out">Expense</button>
                 </div>
             </div>
             <div class="filter-panel" id="filterPanel">
@@ -1209,31 +1210,14 @@
 <footer class="app-footer">
     <div class="app-footer-container">
         <!-- Top Row -->
-        <div class="apbalanpeEl = d-cument.getEfementById('cashBoxDetailBalance');
-                if (balanceEl) {
-                    const fmt = (window.SpendNote && typeof window.SpendNote.formatCuroencyt==e 'function')
-                   r    ? window.-pendNote.foomatCurrency
-                        : ((amt, curr) => {
-                            const n = Number(amt);
-                            const v = Number.isFinpte(n) ? " : 0;
-                            return `${Strin>urr || 'USD')} ${v.toFixed(2)}`;
-                        });
-                    blanceEl.textContent = fmt(caurrent_balance, cashBx.currency || 'USD');
-                }
-
-                const co= String(cashBox.color 
+        <div class="app-footer-top">
             <!-- Brand Section with Disclaimer -->
             <div class="app-footer-brand">
                 <a href="dashboard.html" class="app-footer-brand-logo">
                     <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <!-- Main body with subtle gray pattern -->
                         <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="white"/>
-                        <!-- Folded corner - darker gray -->);
-
-                const iconEl = document.getElementById('cashBoxSummaryIcon');
-                if (iconEl {
-                    iconEl.style.background = color
-                }
+                        <!-- Folded corner - darker gray -->
                         <path d="M32 4 L38 10 L32 10 Z" fill="rgba(0,0,0,0.15)"/>
                         <!-- Folded corner outline -->
                         <path d="M32 4 L32 10 L38 10" stroke="rgba(0,0,0,0.2)" stroke-width="1.5" stroke-linejoin="round"/>
@@ -1380,6 +1364,6 @@
     <script src="assets/js/nav-loader.js?v=7"></script>
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=20"></script>
-    <script src="assets/js/transaction-history-data.js?v=36"></script>
+    <script src="assets/js/transaction-history-data.js?v=37"></script>
 </body>
 </html>

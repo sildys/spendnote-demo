@@ -388,7 +388,7 @@
 
             const pillClass = isVoided ? 'void' : (isIncome ? 'in' : 'out');
             const pillIcon = isVoided ? 'fa-ban' : (isIncome ? 'fa-arrow-down' : 'fa-arrow-up');
-            const pillLabel = isVoided ? 'VOID' : (isIncome ? 'IN' : 'OUT');
+            const pillLabel = isVoided ? 'VOID' : (isIncome ? 'INCOME' : 'EXPENSE');
 
             tr.innerHTML = `
                 <td><input type="checkbox" class="row-checkbox" data-tx-id="${safeText(tx.id, '')}"></td>
