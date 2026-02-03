@@ -366,3 +366,6 @@ function loadRecentTransactionsSync(transactions) {
         if (window.SpendNoteDebug) console.error('❌ Error loading transactions:', error);
     }
 }
+
+// Export for use in other scripts
+window.loadDashboardData = loadDashboardData;
