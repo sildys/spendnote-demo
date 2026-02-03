@@ -43,7 +43,7 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260203-01');
+        params.append('v', 'receipt-20260203-02');
         if (txId) params.append('txId', txId);
 
         if (currentTxIsVoided) {
