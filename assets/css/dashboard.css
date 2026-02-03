@@ -2568,6 +2568,11 @@ tr:hover [data-category-tag] {
 #createTransactionModalContainer[data-mode="detailed"] .modal-contact-email { grid-column: 2; grid-row: 2; }
 #createTransactionModalContainer[data-mode="detailed"] .modal-contact-save { grid-column: 3; grid-row: 2; }
 
+#createTransactionModalContainer #modalContactAddress {
+    min-height: 56px;
+    resize: vertical;
+}
+
 #createTransactionModalContainer[data-mode="detailed"] .modal-label-spacer {
     height: 20px;
     margin-bottom: 8px;
