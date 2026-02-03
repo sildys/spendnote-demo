@@ -352,15 +352,52 @@ var db = {
         },
 
         async delete(id) {
-            const { error } = await supabaseClient
-                .from('cash_boxes')
-                .delete()
-                .eq('id', id);
-            if (error) {
-                console.error('Error deleting cash box:', error);
-                return { success: false, error: error.message };
+            try {
+                const user = await auth.getCurrentUser();
+                if (!user) {
+                    console.error('No authenticated user');
+                    return { success: false, error: 'Not authenticated' };
+                }
+
+                // 1) Delete related transactions
+                const txDelete = await supabaseClient
+                    .from('transactions')
+                    .delete()
+                    .eq('user_id', user.id)
+                    .eq('cash_box_id', id);
+
+                if (txDelete.error) {
+                    console.error('Error deleting cash box transactions:', txDelete.error);
+                    return { success: false, error: txDelete.error.message };
+                }
+
+                // 2) Delete related access rows
+                const accessDelete = await supabaseClient
+                    .from('cash_box_access')
+                    .delete()
+                    .eq('cash_box_id', id);
+
+                if (accessDelete.error) {
+                    console.error('Error deleting cash box access:', accessDelete.error);
+                    return { success: false, error: accessDelete.error.message };
+                }
+
+                // 3) Delete the cash box itself
+                const boxDelete = await supabaseClient
+                    .from('cash_boxes')
+                    .delete()
+                    .eq('id', id);
+
+                if (boxDelete.error) {
+                    console.error('Error deleting cash box:', boxDelete.error);
+                    return { success: false, error: boxDelete.error.message };
+                }
+
+                return { success: true };
+            } catch (err) {
+                console.error('Error deleting cash box:', err);
+                return { success: false, error: err?.message || 'Delete failed' };
             }
-            return { success: true };
         }
     },
 
