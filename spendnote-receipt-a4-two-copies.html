@@ -789,6 +789,8 @@ body {
         const txId = new URLSearchParams(window.location.search).get('txId');
         if (!txId) return;
 
+        const overrideContactAddress = String(new URLSearchParams(window.location.search).get('overrideContactAddress') || '').trim();
+
         const waitForDb = async () => {
           for (let i = 0; i < 200; i++) {
             if (window.db?.transactions?.getById) return true;
@@ -940,7 +942,7 @@ body {
           } catch (_) {}
 
           try {
-            const hasContactAddress = Boolean(String(tx?.contact_address || tx?.contact?.address || '').trim());
+            const hasContactAddress = Boolean(overrideContactAddress || String(tx?.contact_address || tx?.contact?.address || '').trim());
             if (!hasContactAddress && tx.contact_id && window.db?.contacts?.getById) {
               tx.contact = await window.db.contacts.getById(tx.contact_id);
             }
@@ -957,7 +959,7 @@ body {
           const cashBoxCode = getCashBoxCode(tx);
           const txDate = tx.transaction_date || tx.created_at;
           const contactName = safeText(tx.contact_name || tx.contact?.name, '');
-          const contactAddress = safeText(tx.contact_address || tx.contact?.address, '');
+          const contactAddress = overrideContactAddress || safeText(tx.contact_address || tx.contact?.address, '');
           const contactOtherId = safeText(tx.contact_custom_field_1, '');
 
           const currency = safeText(tx.cash_box?.currency, 'USD');

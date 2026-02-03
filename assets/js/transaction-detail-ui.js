@@ -33,6 +33,7 @@
     let reloadTimer = null;
     let hasInitializedFromTxData = false;
     let currentTxIsVoided = false;
+    let overrideContactAddress = '';
 
     const txId = new URLSearchParams(window.location.search).get('id');
 
@@ -43,8 +44,13 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260203-02');
+        params.append('v', 'receipt-20260203-03');
         if (txId) params.append('txId', txId);
+
+        const addrOverride = String(overrideContactAddress || '').trim();
+        if (addrOverride) {
+            params.append('overrideContactAddress', addrOverride);
+        }
 
         if (currentTxIsVoided) {
             params.append('void', '1');
@@ -240,6 +246,12 @@
 
     window.onTransactionDetailDataLoaded = ({ tx, cashBox, profile }) => {
         hasInitializedFromTxData = true;
+
+        try {
+            overrideContactAddress = String(tx?.contact_address || tx?.contact?.address || '').trim();
+        } catch (_) {
+            overrideContactAddress = '';
+        }
 
         try {
             const isVoided = String(tx?.status || 'active').toLowerCase() === 'voided';
