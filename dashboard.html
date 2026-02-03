@@ -1250,8 +1250,10 @@
             }
         }
         
-        // Load contacts when modal opens
-        loadContactsForAutocomplete();
+        // Load contacts when db is ready (retry on focus if not loaded)
+        if (window.db && window.db.contacts) {
+            loadContactsForAutocomplete();
+        }
         
         let selectedContactIndex = -1;
         
@@ -1336,8 +1338,11 @@
             selectedContactIndex = -1;
         });
         
-        // Focus event
-        ContactInput.addEventListener('focus', (e) => {
+        // Focus event - also try to load contacts if not loaded yet
+        ContactInput.addEventListener('focus', async (e) => {
+            if (!contactsLoaded) {
+                await loadContactsForAutocomplete();
+            }
             if (e.target.value) {
                 const results = filterContacts(e.target.value);
                 showAutocomplete(results);
