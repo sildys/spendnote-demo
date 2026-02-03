@@ -1341,11 +1341,6 @@
                 cashBoxQuery.disabled = true;
                 cashBoxQuery.tabIndex = -1;
             }
-
-            const viewAllLink = document.getElementById('viewAllTxLink');
-            if (viewAllLink && cashboxId) {
-                viewAllLink.setAttribute('href', `spendnote-transaction-history.html?cashBoxId=${encodeURIComponent(cashboxId)}`);
-            }
         });
     </script>
     
