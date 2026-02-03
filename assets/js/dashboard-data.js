@@ -58,7 +58,7 @@ async function loadDashboardData() {
 
         const debug = Boolean(window.SpendNoteDebug);
 
-        const { hexToRgb, getIconClass, getColorClass, formatCurrency } = getSpendNoteHelpers();
+        const { hexToRgb, getIconClass, formatCurrency } = getSpendNoteHelpers();
 
         const cashBoxesPromise = db.cashBoxes.getAll({
             select: 'id, name, color, currency, icon, current_balance, created_at, sort_order, sequence_number'
@@ -87,9 +87,7 @@ async function loadDashboardData() {
                 const color = box.color || '#059669';
                 const rgb = hexToRgb(color);
                 const iconClass = getIconClass(box.icon);
-                const colorClass = getColorClass(color);
                 const isActive = (defaultActiveId && box.id === defaultActiveId) ? 'active' : '';
-                const iconStyle = `background: ${color};`;
 
                 const seq = Number(box.sequence_number);
                 const displayCode = Number.isFinite(seq) && seq > 0
@@ -106,14 +104,15 @@ async function loadDashboardData() {
                              data-id="${box.id}" 
                              data-name="${box.name}" 
                              data-color="${color}" 
-                             data-rgb="${rgb}"
+                              data-rgb="${rgb}"
                              data-display-code="${displayCode}"
                              data-sequence-number="${Number.isFinite(seq) ? seq : ''}"
+                             style="--card-color: ${color}; --card-rgb: ${rgb};"
                              role="button" 
                              tabindex="0">
                             <div class="register-top">
                                 <div class="register-header-left">
-                                    <a href="spendnote-cash-box-detail.html?id=${box.id}" class="register-icon ${colorClass} register-icon-link" style="${iconStyle}" aria-label="Cash Box detail">
+                                    <a href="spendnote-cash-box-detail.html?id=${box.id}" class="register-icon register-icon-link" aria-label="Cash Box detail">
                                         <i class="fas ${iconClass}"></i>
                                     </a>
                                     <div class="register-info">
