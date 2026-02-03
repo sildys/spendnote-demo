@@ -1234,7 +1234,12 @@
         let contactsLoaded = false;
         
         async function loadContactsForAutocomplete() {
-            if (contactsLoaded || !window.db || !window.db.contacts) return;
+            if (contactsLoaded) return;
+            // Wait for db to be available
+            if (!window.db || !window.db.contacts) {
+                setTimeout(loadContactsForAutocomplete, 200);
+                return;
+            }
             try {
                 const data = await window.db.contacts.getAll();
                 Contacts = (data || []).map(c => ({
@@ -1245,15 +1250,14 @@
                     displayId: formatContactDisplayId(c.sequence_number)
                 }));
                 contactsLoaded = true;
+                console.log('Contacts loaded for autocomplete:', Contacts.length);
             } catch (e) {
                 console.error('Failed to load contacts:', e);
             }
         }
         
-        // Load contacts when db is ready (retry on focus if not loaded)
-        if (window.db && window.db.contacts) {
-            loadContactsForAutocomplete();
-        }
+        // Start trying to load contacts (will retry until db is ready)
+        loadContactsForAutocomplete();
         
         let selectedContactIndex = -1;
         
