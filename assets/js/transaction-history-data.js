@@ -960,6 +960,8 @@
             const elIn = qs('#statTotalIn');
             const elOut = qs('#statTotalOut');
             const elNet = qs('#statNetBalance');
+            const elTodayIn = qs('#statTodayIn');
+            const elTodayOut = qs('#statTodayOut');
 
             if (!currency) {
                 const ids = Array.isArray(serverCtx.cashBoxIds) ? serverCtx.cashBoxIds.filter(Boolean) : [];
@@ -980,6 +982,8 @@
                 if (elIn) elIn.textContent = '—';
                 if (elOut) elOut.textContent = '—';
                 if (elNet) elNet.textContent = '—';
+                if (elTodayIn) elTodayIn.textContent = '—';
+                if (elTodayOut) elTodayOut.textContent = '—';
                 return;
             }
 
@@ -1000,6 +1004,29 @@
             if (elIn) elIn.textContent = formatCurrency(Number.isFinite(totalIn) ? totalIn : 0, currency);
             if (elOut) elOut.textContent = formatCurrency(Number.isFinite(totalOut) ? totalOut : 0, currency);
             if (elNet) elNet.textContent = formatCurrency((Number.isFinite(totalIn) ? totalIn : 0) - (Number.isFinite(totalOut) ? totalOut : 0), currency);
+
+            if (elTodayIn || elTodayOut) {
+                const today = new Date();
+                const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString();
+                const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999).toISOString();
+
+                const dailyStats = await window.db.transactions.getStats({
+                    cashBoxIds: serverCtx.cashBoxIds || null,
+                    type: serverCtx.type || null,
+                    createdByUserId: serverCtx.filters.createdById || null,
+                    startDate: todayStart,
+                    endDate: todayEnd,
+                    amountMin: serverCtx.filters.amountMin,
+                    amountMax: serverCtx.filters.amountMax,
+                    txIdQuery: serverCtx.filters.txIdQuery || null,
+                    contactQuery: serverCtx.filters.contactQuery || null
+                });
+
+                const todayIn = Number(dailyStats?.totalIn);
+                const todayOut = Number(dailyStats?.totalOut);
+                if (elTodayIn) elTodayIn.textContent = formatCurrency(Number.isFinite(todayIn) ? todayIn : 0, currency);
+                if (elTodayOut) elTodayOut.textContent = formatCurrency(Number.isFinite(todayOut) ? todayOut : 0, currency);
+            }
         };
 
         const mapSortKey = (key) => {
