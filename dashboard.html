@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=12">
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=6">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=7">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" /></head>
 <body>
 <!-- Navigation loaded dynamically by nav-loader.js -->
@@ -200,24 +200,12 @@
                             </div>
                             <div class="form-group modal-contact-address">
                                 <label for="modalContactAddress">Address <span style="font-size: 11px; color: var(--text-muted); font-weight: 500;">(optional)</span></label>
-                                <input type="hidden" id="modalContactAddress" value="">
-                                <div class="split-address-control" role="group" aria-label="Address">
-                                    <input
-                                        type="text"
-                                        id="modalContactAddressLine1"
-                                        class="split-address-input"
-                                        placeholder="Street"
-                                        autocomplete="off"
-                                    >
-                                    <span class="split-address-sep" aria-hidden="true">|</span>
-                                    <input
-                                        type="text"
-                                        id="modalContactAddressLine2"
-                                        class="split-address-input"
-                                        placeholder="City, ZIP"
-                                        autocomplete="off"
-                                    >
-                                </div>
+                                <textarea 
+                                    id="modalContactAddress" 
+                                    class="form-control modal-address-textarea" 
+                                    placeholder="Street (press Enter for line 2)"
+                                    rows="1"
+                                ></textarea>
                             </div>
                             <div class="form-group modal-detailed-only modal-contact-company" id="modalContactDetails">
                                 <label for="modalContactCompanyId">Other ID</label>

@@ -8,51 +8,80 @@ function initTransactionForm() {
     if (form.dataset.txSubmitBound === '1') return;
     form.dataset.txSubmitBound = '1';
 
-    const addressHidden = document.getElementById('modalContactAddress');
-    const addressLine1 = document.getElementById('modalContactAddressLine1');
-    const addressLine2 = document.getElementById('modalContactAddressLine2');
-    const setAddressFromParts = () => {
-        if (!addressHidden) return;
-        const left = String(addressLine1?.value || '').trim();
-        const right = String(addressLine2?.value || '').trim();
-        if (left && right) {
-            addressHidden.value = `${left} | ${right}`;
-        } else {
-            addressHidden.value = left || right || '';
+    const addressTextarea = document.getElementById('modalContactAddress');
+    const ADDRESS_LINE_MAX = 34;
+
+    const enforceAddressConstraints = () => {
+        if (!addressTextarea) return;
+
+        let value = String(addressTextarea.value || '');
+        value = value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+        let lines = value.split('\n');
+        lines = lines.slice(0, 2).map((line) => String(line || '').slice(0, ADDRESS_LINE_MAX));
+        const nextValue = lines.join('\n');
+
+        if (nextValue !== addressTextarea.value) {
+            addressTextarea.value = nextValue;
         }
-    };
-    const setPartsFromAddress = (raw) => {
-        const value = String(raw || '');
-        const idx = value.indexOf('|');
-        if (idx !== -1) {
-            const left = value.slice(0, idx).trim();
-            const right = value.slice(idx + 1).trim();
-            if (addressLine1) addressLine1.value = left;
-            if (addressLine2) addressLine2.value = right;
-        } else {
-            if (addressLine1) addressLine1.value = value.trim();
-            if (addressLine2) addressLine2.value = '';
-        }
-        if (addressHidden) addressHidden.value = value;
+
+        addressTextarea.classList.toggle('is-two-lines', nextValue.includes('\n'));
     };
 
-    if (addressLine1 && addressLine2 && addressHidden) {
-        // Initialize split parts from existing hidden value (if any)
-        setPartsFromAddress(addressHidden.value);
-
+    if (addressTextarea) {
         window.__setModalContactAddress = (value) => {
-            setPartsFromAddress(value);
+            addressTextarea.value = String(value || '');
+            enforceAddressConstraints();
         };
 
-        [addressLine1, addressLine2].forEach((el) => {
-            el.addEventListener('input', setAddressFromParts);
-        });
+        enforceAddressConstraints();
 
-        // Typing '|' in line1 jumps to line2
-        addressLine1.addEventListener('keydown', (e) => {
-            if (e.key === '|') {
-                e.preventDefault();
-                addressLine2.focus();
+        addressTextarea.addEventListener('input', enforceAddressConstraints);
+        addressTextarea.addEventListener('paste', () => setTimeout(enforceAddressConstraints, 0));
+        addressTextarea.addEventListener('keydown', (e) => {
+            const value = String(addressTextarea.value || '').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            const lines = value.split('\n');
+
+            if (e.key === 'Enter') {
+                if (lines.length >= 2) {
+                    e.preventDefault();
+                    return;
+                }
+                setTimeout(enforceAddressConstraints, 0);
+                return;
+            }
+
+            // Allow navigation/editing keys
+            if (
+                e.ctrlKey || e.metaKey || e.altKey ||
+                e.key === 'Backspace' || e.key === 'Delete' ||
+                e.key === 'ArrowLeft' || e.key === 'ArrowRight' ||
+                e.key === 'ArrowUp' || e.key === 'ArrowDown' ||
+                e.key === 'Home' || e.key === 'End' ||
+                e.key === 'Tab'
+            ) {
+                return;
+            }
+
+            // Block additional typing once current line reaches limit (unless user adds a newline)
+            if (e.key && e.key.length === 1) {
+                const start = addressTextarea.selectionStart ?? 0;
+                const end = addressTextarea.selectionEnd ?? start;
+
+                const before = value.slice(0, start);
+                const after = value.slice(end);
+                const beforeLineStart = before.lastIndexOf('\n') + 1;
+                const beforeLine = before.slice(beforeLineStart);
+                const afterLineEndRel = after.indexOf('\n');
+                const afterLine = afterLineEndRel === -1 ? after : after.slice(0, afterLineEndRel);
+
+                const currentLineLen = beforeLine.length + afterLine.length;
+                const replacingLen = end - start;
+                const nextLineLen = currentLineLen - replacingLen + 1;
+
+                if (nextLineLen > ADDRESS_LINE_MAX) {
+                    e.preventDefault();
+                }
             }
         });
     }
