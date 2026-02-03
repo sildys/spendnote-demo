@@ -25,15 +25,10 @@ function getSpendNoteHelpers() {
         ? sn.getIconClass.bind(sn)
         : () => 'fa-building';
 
-    const getColorClass = (sn && typeof sn.getColorClass === 'function')
-        ? sn.getColorClass.bind(sn)
-        : () => 'green';
-
     return {
         hexToRgb,
         formatCurrency,
-        getIconClass,
-        getColorClass
+        getIconClass
     };
 }
 
@@ -69,13 +64,12 @@ async function loadCashBoxList() {
                 cashBoxesForNumbering.map((box, idx) => [box.id, idx + 1])
             );
 
-            const { hexToRgb, formatCurrency, getIconClass, getColorClass } = getSpendNoteHelpers();
+            const { hexToRgb, formatCurrency, getIconClass } = getSpendNoteHelpers();
 
             cashBoxes.forEach((box, index) => {
                 const color = box.color || '#059669';
                 const rgb = hexToRgb(color);
                 const iconClass = getIconClass(box.icon);
-                const colorClass = getColorClass(color);
                 
 
                 const seq = Number(box.sequence_number);
@@ -104,7 +98,7 @@ async function loadCashBoxList() {
                 
                 // Create list row HTML
                 allCardsHTML += `
-                    <div class="register-row ${colorClass}" 
+                    <div class="register-row" 
                          data-id="${box.id}" 
                          data-name="${box.name}" 
                          data-color="${color}" 
@@ -114,7 +108,7 @@ async function loadCashBoxList() {
                         <div class="drag-handle" title="Drag to reorder" aria-label="Reorder">
                             <i class="fas fa-grip-vertical"></i>
                         </div>
-                        <a class="register-icon ${colorClass} register-icon-link" href="spendnote-cash-box-detail.html?id=${box.id}" title="Cash Box Detail" aria-label="Cash Box Detail">
+                        <a class="register-icon register-icon-link" href="spendnote-cash-box-detail.html?id=${box.id}" title="Cash Box Detail" aria-label="Cash Box Detail">
                             <i class="fas ${iconClass}"></i>
                         </a>
                         <div class="register-info">
