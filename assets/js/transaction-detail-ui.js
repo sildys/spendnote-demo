@@ -144,18 +144,20 @@
         return isQuick ? 'quick' : 'detailed';
     }
 
-    function initReceiptUiFromCashBox(cashBox, profile) {
+    function initReceiptUiFromCashBox(cashBox, profile, tx) {
         const cb = cashBox || {};
-        receiptText.receiptTitle = cb.receipt_title || '';
-        receiptText.totalLabel = cb.receipt_total_label || '';
-        receiptText.fromLabel = cb.receipt_from_label || '';
-        receiptText.toLabel = cb.receipt_to_label || '';
-        receiptText.descriptionLabel = cb.receipt_description_label || '';
-        receiptText.amountLabel = cb.receipt_amount_label || '';
-        receiptText.notesLabel = cb.receipt_notes_label || '';
-        receiptText.issuedByLabel = cb.receipt_issued_by_label || '';
-        receiptText.receivedByLabel = cb.receipt_received_by_label || '';
-        receiptText.footerNote = cb.receipt_footer_note || '';
+        const t = tx || {};
+        // Transaction-specific labels override cash box defaults
+        receiptText.receiptTitle = t.receipt_title || cb.receipt_title || '';
+        receiptText.totalLabel = t.receipt_total_label || cb.receipt_total_label || '';
+        receiptText.fromLabel = t.receipt_from_label || cb.receipt_from_label || '';
+        receiptText.toLabel = t.receipt_to_label || cb.receipt_to_label || '';
+        receiptText.descriptionLabel = t.receipt_description_label || cb.receipt_description_label || '';
+        receiptText.amountLabel = t.receipt_amount_label || cb.receipt_amount_label || '';
+        receiptText.notesLabel = t.receipt_notes_label || cb.receipt_notes_label || '';
+        receiptText.issuedByLabel = t.receipt_issued_by_label || cb.receipt_issued_by_label || '';
+        receiptText.receivedByLabel = t.receipt_received_by_label || cb.receipt_received_by_label || '';
+        receiptText.footerNote = t.receipt_footer_note || cb.receipt_footer_note || '';
 
         const titleEl = document.getElementById('txReceiptTitle');
         const totalEl = document.getElementById('txTotalLabel');
@@ -163,6 +165,8 @@
         const toEl = document.getElementById('txToLabel');
         const descEl = document.getElementById('txDescriptionLabel');
         const amtEl = document.getElementById('txAmountLabel');
+        const issuedEl = document.getElementById('txIssuedByLabel');
+        const receivedEl = document.getElementById('txReceivedByLabel');
         const footerEl = document.getElementById('txFooterNote');
 
         const defaults = {
@@ -172,6 +176,8 @@
             toLabel: 'TO',
             descriptionLabel: 'Description',
             amountLabel: 'Amount',
+            issuedByLabel: 'Issued by',
+            receivedByLabel: 'Received by',
             footerNote: ''
         };
 
@@ -181,6 +187,8 @@
         if (toEl) toEl.value = receiptText.toLabel || defaults.toLabel;
         if (descEl) descEl.value = receiptText.descriptionLabel || defaults.descriptionLabel;
         if (amtEl) amtEl.value = receiptText.amountLabel || defaults.amountLabel;
+        if (issuedEl) issuedEl.value = receiptText.issuedByLabel || defaults.issuedByLabel;
+        if (receivedEl) receivedEl.value = receiptText.receivedByLabel || defaults.receivedByLabel;
         if (footerEl) footerEl.value = receiptText.footerNote || defaults.footerNote;
 
         const bindText = (el, key) => {
@@ -197,6 +205,8 @@
         bindText(toEl, 'toLabel');
         bindText(descEl, 'descriptionLabel');
         bindText(amtEl, 'amountLabel');
+        bindText(issuedEl, 'issuedByLabel');
+        bindText(receivedEl, 'receivedByLabel');
         bindText(footerEl, 'footerNote');
 
         receiptLogoUrl = String(cb.cash_box_logo_url || profile?.account_logo_url || '').trim();
@@ -271,7 +281,7 @@
             // ignore void ui sync failures
         }
 
-        initReceiptUiFromCashBox(cashBox, profile);
+        initReceiptUiFromCashBox(cashBox, profile, tx);
         requestReload(0);
     };
 
@@ -539,6 +549,48 @@ html, body { height: auto !important; overflow: auto !important; }
                 }
             });
         });
+
+        const saveLabelsBtn = document.getElementById('txSaveLabelsBtn');
+        if (saveLabelsBtn) {
+            saveLabelsBtn.addEventListener('click', async () => {
+                if (!txId || !window.db?.transactions?.update) return;
+
+                saveLabelsBtn.disabled = true;
+                saveLabelsBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+                try {
+                    const updates = {
+                        receipt_title: receiptText.receiptTitle || null,
+                        receipt_total_label: receiptText.totalLabel || null,
+                        receipt_from_label: receiptText.fromLabel || null,
+                        receipt_to_label: receiptText.toLabel || null,
+                        receipt_description_label: receiptText.descriptionLabel || null,
+                        receipt_amount_label: receiptText.amountLabel || null,
+                        receipt_issued_by_label: receiptText.issuedByLabel || null,
+                        receipt_received_by_label: receiptText.receivedByLabel || null,
+                        receipt_footer_note: receiptText.footerNote || null
+                    };
+
+                    const result = await window.db.transactions.update(txId, updates);
+                    if (result?.success) {
+                        saveLabelsBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+                        setTimeout(() => {
+                            saveLabelsBtn.innerHTML = '<i class="fas fa-save"></i> Save Labels';
+                            saveLabelsBtn.disabled = false;
+                        }, 1500);
+                    } else {
+                        throw new Error(result?.error || 'Save failed');
+                    }
+                } catch (err) {
+                    console.error('Failed to save labels:', err);
+                    saveLabelsBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                    setTimeout(() => {
+                        saveLabelsBtn.innerHTML = '<i class="fas fa-save"></i> Save Labels';
+                        saveLabelsBtn.disabled = false;
+                    }, 2000);
+                }
+            });
+        }
 
         applyReceiptMode(receiptMode);
         requestReload(0);
