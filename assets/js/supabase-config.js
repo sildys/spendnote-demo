@@ -532,6 +532,7 @@ var db = {
                     .from('transactions')
                     .select(select)
                     .eq('user_id', user.id)
+                    .order('created_at', { ascending: false })
                     .order('transaction_date', { ascending: false });
 
                 if (!filters.includeSystem) {
@@ -542,9 +543,7 @@ var db = {
                     query = query.eq('status', filters.status);
                 }
 
-                if (withCreatedAtOrder) {
-                    query = query.order('created_at', { ascending: false });
-                }
+                // created_at ordering is always applied above to ensure newest transactions appear first
 
                 if (filters.cashBoxId) {
                     query = query.eq('cash_box_id', filters.cashBoxId);
