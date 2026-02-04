@@ -618,15 +618,15 @@
                 return;
             }
 
-            const { data, error, count } = await window.supabaseClient
+            let query = window.supabaseClient
                 .from('transactions')
                 .select('id,type,amount,receipt_number,transaction_date,created_at,cash_box_id,cash_box_sequence,tx_sequence_in_box,status,is_system,cash_box:cash_boxes(id,name,color,currency,sequence_number)', { count: 'exact' })
                 .eq('user_id', user.id)
                 .eq('contact_id', id)
-                .eq('status', 'active')
                 .order('transaction_date', { ascending: false })
-                .order('created_at', { ascending: false })
                 .limit(5);
+
+            const { data, error, count } = await query;
 
             if (error) {
                 console.error('Contact transactions load error:', error);
