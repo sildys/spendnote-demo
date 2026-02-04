@@ -151,7 +151,15 @@ function initNavEvents() {
 
 function highlightCurrentPage() {
     const currentPathname = window.location.pathname || '';
-    const currentFile = (currentPathname.split('/').filter(Boolean).pop() || 'dashboard.html').toLowerCase();
+    const rawFile = (currentPathname.split('/').filter(Boolean).pop() || '').toLowerCase();
+    let currentFile = rawFile;
+    if (!currentFile) {
+        currentFile = 'dashboard.html';
+    } else if (currentFile === 'index.html') {
+        currentFile = 'dashboard.html';
+    } else if (!currentFile.includes('.')) {
+        currentFile = `${currentFile}.html`;
+    }
     const pageMap = {
         'dashboard': ['dashboard.html'],
         'cash-boxes': ['spendnote-cash-box-list.html', 'spendnote-cash-box-detail.html', 'spendnote-cash-box-settings.html'],
