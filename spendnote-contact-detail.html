@@ -618,20 +618,37 @@
                 return;
             }
 
-            let query = window.supabaseClient
+            console.log('Loading transactions for contact:', id, 'user:', user.id);
+
+            // First try simple query without join
+            let { data, error, count } = await window.supabaseClient
                 .from('transactions')
-                .select('id,type,amount,receipt_number,transaction_date,created_at,cash_box_id,cash_box_sequence,tx_sequence_in_box,status,is_system,cash_box:cash_boxes(id,name,color,currency,sequence_number)', { count: 'exact' })
+                .select('*', { count: 'exact' })
                 .eq('user_id', user.id)
                 .eq('contact_id', id)
                 .order('transaction_date', { ascending: false })
                 .limit(5);
 
-            const { data, error, count } = await query;
+            console.log('Transaction query result:', { data, error, count });
 
             if (error) {
                 console.error('Contact transactions load error:', error);
                 list.innerHTML = '<div class="empty-state"><div class="empty-state-text">Unable to load transactions.</div></div>';
                 return;
+            }
+
+            // If we have data, fetch cash boxes separately
+            if (data && data.length > 0) {
+                const cbIds = [...new Set(data.map(tx => tx.cash_box_id).filter(Boolean))];
+                if (cbIds.length > 0) {
+                    const { data: cbData } = await window.supabaseClient
+                        .from('cash_boxes')
+                        .select('id,name,color,currency,sequence_number')
+                        .in('id', cbIds);
+                    const cbMap = {};
+                    (cbData || []).forEach(cb => { cbMap[cb.id] = cb; });
+                    data = data.map(tx => ({ ...tx, cash_box: cbMap[tx.cash_box_id] || null }));
+                }
             }
 
             const txs = Array.isArray(data) ? data : [];
