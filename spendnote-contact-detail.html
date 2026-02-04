@@ -15,30 +15,29 @@
     <style>
         /* ===== CONTACT DETAIL PAGE SPECIFIC STYLES ===== */
 
-        .main-content { 
-            padding-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px; 
-        }
-
         /* HEADER */
-        .page-header {
-            margin-bottom: 20px;
+        .contact-header-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 16px;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-left {
+            min-width: 0;
         }
 
         .header-left h1 {
-            font-size: 28px !important;
-            font-weight: 800 !important;
-            letter-spacing: -0.02em !important;
-            margin-bottom: 12px !important;
+            margin: 0 !important;
         }
 
         .contact-id-badge {
@@ -49,8 +48,8 @@
             border: 2px solid rgba(5, 150, 105, 0.2);
             border-radius: 12px;
             font-weight: 800;
-            font-size: 16px;
-            margin-bottom: 12px;
+            font-size: 14px;
+            margin-bottom: 10px;
         }
 
         .contact-meta {
@@ -59,6 +58,8 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            margin-top: 8px;
+            flex-wrap: wrap;
         }
 
         .contact-meta span {
@@ -70,50 +71,7 @@
         .header-actions {
             display: flex;
             gap: 12px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: var(--bg);
-            color: var(--text);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--surface);
-            border-color: var(--primary);
-        }
-
-        .btn-danger {
-            background: var(--error);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-            transform: translateY(-1px);
         }
 
         /* CONTENT GRID */
@@ -132,8 +90,9 @@
         /* CARD */
         .card {
             background: var(--surface);
-            border-radius: 24px;
-            box-shadow: 0 1px 3px var(--shadow);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
             overflow: hidden;
         }
 
@@ -143,13 +102,13 @@
         }
 
         .card-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
             color: var(--text);
         }
 
         .card-body {
-            padding: 24px;
+            padding: 24px 32px;
         }
 
         /* FORM */
@@ -305,8 +264,8 @@
         }
 
         .transaction-icon.out {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error);
+            background: rgba(var(--out-rgb), 0.10);
+            color: var(--out);
         }
 
         .transaction-info {
@@ -336,7 +295,7 @@
         }
 
         .transaction-amount.out {
-            color: var(--error);
+            color: var(--out);
         }
 
         /* EMPTY STATE */
@@ -365,6 +324,7 @@
 <div class="app-container">
     <main class="main-content">
         <div class="page-header">
+            <div class="contact-header-card">
             <div class="header-top">
                 <div class="header-left">
                     <div class="contact-id-badge" id="contactIdBadge">CONT-001</div>
@@ -376,6 +336,7 @@
                 <div class="header-actions" id="headerActions">
                     <!-- Actions will be dynamically added -->
                 </div>
+            </div>
             </div>
         </div>
 

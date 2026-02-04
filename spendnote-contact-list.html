@@ -17,13 +17,14 @@
         /* ContactS CARD */
         .Contacts-card {
             background: var(--surface);
-            border-radius: 24px;
-            box-shadow: 0 1px 3px var(--shadow);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
             overflow: hidden;
         }
 
         .Contacts-header {
-            padding: 24px 32px;
+            padding: 16px;
             border-bottom: 1px solid var(--border);
         }
 
@@ -36,7 +37,7 @@
         }
 
         .Contacts-title {
-            font-size: 24px;
+            font-size: 18px;
             font-weight: 800;
             color: var(--text);
         }
@@ -101,28 +102,9 @@
         }
 
         .add-Contact-btn-large {
-            padding: 14px 32px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .add-Contact-btn-large:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(5, 150, 105, 0.4);
-        }
-
-        .add-Contact-btn-large i {
-            font-size: 16px;
         }
 
         .search-box {
@@ -155,6 +137,14 @@
         }
 
         /* TABLE */
+        .table-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
         .table-wrapper {
             overflow-x: auto;
             max-width: 100%;
@@ -171,13 +161,14 @@
         }
 
         .Contacts-table th {
-            padding: 16px 24px;
+            padding: 8px 10px;
             text-align: left;
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
+            white-space: nowrap;
         }
 
         .Contacts-table th.sortable {
@@ -189,7 +180,7 @@
 
         .Contacts-table th.sortable:hover {
             color: var(--text);
-            background: rgba(5, 150, 105, 0.05);
+            background: rgba(var(--active-rgb), 0.05);
         }
 
         .Contacts-table th.sortable i {
@@ -201,13 +192,13 @@
         .Contacts-table th.sortable.asc i::before {
             content: "\f0de";
             opacity: 1;
-            color: var(--primary);
+            color: var(--active);
         }
 
         .Contacts-table th.sortable.desc i::before {
             content: "\f0dd";
             opacity: 1;
-            color: var(--primary);
+            color: var(--active);
         }
 
         .Contacts-table tbody tr {
@@ -215,13 +206,18 @@
             transition: background 0.2s;
         }
 
+        .Contacts-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
         .Contacts-table tbody tr:hover {
-            background: var(--bg);
+            background: rgba(var(--active-rgb), 0.06);
         }
 
         .Contacts-table td {
-            padding: 20px 24px;
-            font-size: 12px;
+            padding: 8px 10px;
+            font-size: 13px;
+            white-space: nowrap;
         }
 
         .Contact-name {
@@ -236,7 +232,12 @@
 
         .Contact-contact {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
+        }
+
+        #selectAllHeader,
+        .row-checkbox {
+            accent-color: var(--primary);
         }
 
         .cashbox-dot {
@@ -251,6 +252,11 @@
             display: flex;
             gap: 8px;
             justify-content: flex-end;
+        }
+
+        .Contacts-table th.col-action,
+        .Contacts-table tbody td:last-child {
+            text-align: center;
         }
 
         .tx-action {
@@ -412,14 +418,51 @@
         }
 
         /* BULK ACTIONS */
-        .bulk-action-btn {
+        .bulk-actions {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
             padding: 8px 16px;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 700;
+            background: linear-gradient(135deg, rgba(var(--active-rgb), 0.08), rgba(var(--active-rgb), 0.03));
+            border-left: 3px solid var(--active);
+            border-radius: 0;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .bulk-actions.show {
+            display: flex;
+        }
+
+        .bulk-actions-text {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .bulk-actions-text strong {
             color: var(--text);
+            font-weight: 700;
+        }
+
+        .bulk-actions-text span {
+            color: var(--active);
+            font-weight: 800;
+        }
+
+        .bulk-actions-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .bulk-action-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            background: white;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
@@ -428,10 +471,8 @@
         }
 
         .bulk-action-btn:hover {
-            background: var(--bg);
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-1px);
+            background: rgba(var(--active-rgb), 0.1);
+            color: var(--active);
         }
 
         /* EMPTY STATE */
@@ -458,109 +499,6 @@
             font-size: 16px;
             color: var(--text-muted);
             margin-bottom: 32px;
-        }
-
-        /* FOOTER */
-        footer {
-            background: var(--surface);
-            padding: 3rem 2rem 2rem;
-            border-top: 1px solid var(--border);
-            margin-top: 60px;
-        }
-
-        .newsletter-form {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .newsletter-form input {
-            flex: 1;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.95rem;
-        }
-
-        .newsletter-form button {
-            padding: 0.75rem 1.5rem;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .newsletter-form button:hover {
-            background: var(--primary-dark);
-        }
-
-        .footer-links h4 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #000000;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links ul li {
-            margin-bottom: 0.75rem;
-        }
-
-        .footer-links ul li a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
-
-        .footer-links ul li a:hover {
-            color: var(--primary);
-        }
-
-        .footer-bottom {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .footer-bottom p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .footer-social a {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .footer-social a:hover {
-            background: var(--primary);
-            color: white;
         }
 
         /* STICKY ADD TRANSACTION BUTTON */
@@ -606,7 +544,7 @@
             </div>
         </div>
 
-        <div class="Contacts-card">
+        <div class="table-container">
         <div class="Contacts-header">
             <div class="contacts-header-top">
                 <h2 class="Contacts-title" style="margin: 0;">All Contacts</h2>
@@ -621,7 +559,7 @@
                         <i class="fas fa-search"></i>
                         <input type="text" id="searchInput" placeholder="Search Contacts...">
                     </div>
-                    <button class="add-Contact-btn-large" id="addContactBtn">
+                    <button class="btn btn-primary btn-large add-Contact-btn-large" id="addContactBtn">
                         <i class="fas fa-plus"></i>
                         Add Contact
                     </button>
@@ -629,9 +567,9 @@
             </div>
             
             <!-- Bulk Actions -->
-            <div class="bulk-actions" id="bulkActions" style="display: none; margin-top: 20px; padding: 16px 32px; background: rgba(5, 150, 105, 0.05); border-radius: 12px; align-items: center; gap: 20px;">
-                <span style="font-size: 14px; font-weight: 700; color: var(--text);"><span id="selectedCount">0</span> selected</span>
-                <div style="display: flex; gap: 8px;">
+            <div class="bulk-actions" id="bulkActions">
+                <span class="bulk-actions-text"><strong><span id="selectedCount">0</span> selected</strong></span>
+                <div class="bulk-actions-buttons">
                     <button class="bulk-action-btn" id="bulkExportCSV">
                         <i class="fas fa-file-csv"></i>
                         Export CSV
@@ -688,7 +626,7 @@
                         <th style="width: 90px; text-align: center;" title="Cash Boxes">Boxes <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-column="transactions" style="width: 50px; text-align: center;" title="Number of Transactions"># <i class="fas fa-sort"></i></th>
                         <th class="sortable" data-column="date" style="width: 110px;">Last Tx <i class="fas fa-sort"></i></th>
-                        <th style="width: 90px; text-align: center;">Action</th>
+                        <th class="col-action" style="width: 90px;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="ContactsTableBody">
@@ -1074,12 +1012,13 @@
             const checked = document.querySelectorAll('.row-checkbox:checked').length;
             const bulkActions = document.getElementById('bulkActions');
             const selectedCount = document.getElementById('selectedCount');
-            
-            if (checked > 0) {
-                bulkActions.style.display = 'flex';
+
+            if (selectedCount) {
                 selectedCount.textContent = checked;
-            } else {
-                bulkActions.style.display = 'none';
+            }
+
+            if (bulkActions) {
+                bulkActions.classList.toggle('show', checked > 0);
             }
         }
 
