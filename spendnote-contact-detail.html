@@ -133,20 +133,19 @@
         .form-group textarea {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid var(--border);
+            border: 1px solid var(--border);
             border-radius: 12px;
             font-size: 14px;
             font-family: inherit;
             transition: all 0.2s;
-            background: var(--bg);
+            background: var(--surface);
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
-            background: var(--surface);
+            border-color: var(--active);
+            box-shadow: 0 0 0 3px rgba(var(--active-rgb), 0.1);
         }
 
         .form-group input:disabled,
@@ -157,8 +156,15 @@
         }
 
         .form-group textarea {
-            min-height: 100px;
             resize: vertical;
+        }
+
+        .two-line-textarea {
+            min-height: unset;
+            height: calc(2 * 1.4em + 28px);
+            line-height: 1.4;
+            resize: none;
+            overflow: auto;
         }
 
         .form-help {
@@ -327,10 +333,10 @@
             <div class="contact-header-card">
             <div class="header-top">
                 <div class="header-left">
-                    <div class="contact-id-badge" id="contactIdBadge">CONT-001</div>
+                    <div class="contact-id-badge" id="contactIdBadge">—</div>
                     <h1 id="pageTitle">Contact Details</h1>
                     <div class="contact-meta" id="contactMeta">
-                        <span><i class="fas fa-calendar"></i> Created: Jan 1, 2026</span>
+                        <span style="color: var(--text-muted); font-style: italic;">Loading…</span>
                     </div>
                 </div>
                 <div class="header-actions" id="headerActions">
@@ -367,13 +373,13 @@
 
                         <div class="form-group">
                             <label for="contactAddress">Address</label>
-                            <textarea id="contactAddress" name="contactAddress"></textarea>
+                            <textarea id="contactAddress" name="contactAddress" rows="2" class="two-line-textarea"></textarea>
                             <p class="form-help">Optional - contact's full address</p>
                         </div>
 
                         <div class="form-group">
                             <label for="contactNotes">Notes</label>
-                            <textarea id="contactNotes" name="contactNotes"></textarea>
+                            <textarea id="contactNotes" name="contactNotes" rows="2" class="two-line-textarea"></textarea>
                             <p class="form-help">Optional - any additional notes about this contact</p>
                         </div>
 
@@ -400,11 +406,11 @@
                         <div class="stats-grid">
                             <div class="stat-box">
                                 <div class="stat-label">Transactions</div>
-                                <div class="stat-value" id="statTransactions">8</div>
+                                <div class="stat-value" id="statTransactions">—</div>
                             </div>
                             <div class="stat-box">
                                 <div class="stat-label">Last Activity</div>
-                                <div class="stat-value" style="font-size: 16px;" id="statLastActivity">Jan 3, 2026</div>
+                                <div class="stat-value" style="font-size: 16px;" id="statLastActivity">—</div>
                             </div>
                         </div>
                     </div>
@@ -416,7 +422,7 @@
                         <h2 class="card-title">Recent Transactions</h2>
                     </div>
                     <div class="card-body" id="transactionsList">
-                        <!-- Transactions will be dynamically added -->
+                        <div class="empty-state"><div class="empty-state-text">Loading…</div></div>
                     </div>
                 </div>
             </div>
@@ -727,9 +733,24 @@
             document.getElementById('contactForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
 
+                const ensureMaxTwoLines = (value) => {
+                    const lines = String(value ?? '')
+                        .replace(/\r\n/g, '\n')
+                        .replace(/\r/g, '\n')
+                        .split('\n');
+                    return lines.length <= 2;
+                };
+
                 const user = await window.auth.getCurrentUser();
                 if (!user) {
                     alert('You are not logged in.');
+                    return;
+                }
+
+                const rawAddress = document.getElementById('contactAddress').value;
+                const rawNotes = document.getElementById('contactNotes').value;
+                if (!ensureMaxTwoLines(rawAddress) || !ensureMaxTwoLines(rawNotes)) {
+                    alert('Address and Notes can be max 2 lines (receipt size constraint).');
                     return;
                 }
 
@@ -738,8 +759,8 @@
                     name: document.getElementById('contactName').value.trim(),
                     email: document.getElementById('contactEmail').value.trim() || null,
                     phone: document.getElementById('contactPhone').value.trim() || null,
-                    address: document.getElementById('contactAddress').value.trim() || null,
-                    notes: document.getElementById('contactNotes').value.trim() || null
+                    address: rawAddress.trim() || null,
+                    notes: rawNotes.trim() || null
                 };
 
                 if (!payload.name) {
