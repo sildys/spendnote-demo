@@ -209,7 +209,8 @@
         // Collect unique currencies from cash boxes
         const currencies = new Set();
         cashBoxes.forEach((cb) => {
-            if (cb && cb.currency) currencies.add(cb.currency);
+            const c = cb && cb.currency ? safeText(cb.currency, '').trim().toUpperCase() : '';
+            if (c) currencies.add(c);
         });
 
         selectEl.innerHTML = '';
@@ -230,7 +231,7 @@
     function getFiltersFromUi(state) {
         const cashBoxQuery = safeText(qs('#filterCashBoxQuery')?.value, '');
         const cashBoxId = getCashBoxIdFromQuery(cashBoxQuery, state.cashBoxes);
-        const currency = safeText(qs('#filterCurrency')?.value, '');
+        const currency = safeText(qs('#filterCurrency')?.value, '').trim().toUpperCase();
         const txIdQuery = safeText(qs('#filterTxId')?.value, '').toLowerCase();
         const contactQuery = safeText(qs('#filterContactQuery')?.value, '').toLowerCase();
         const createdById = safeText(qs('#filterCreatedBy')?.value, '');
@@ -722,8 +723,6 @@
             .then(async () => {
                 const stats = await window.db.transactions.getStats({});
                 state.totalTxCount = Number(stats?.count) || 0;
-                const elTotal = qs('#statTotalTransactions');
-                if (elTotal) elTotal.textContent = String(state.totalTxCount || 0);
             })
             .catch(() => {
                 state.totalTxCount = 0;
@@ -930,7 +929,7 @@
             let currencyCashBoxIds = null;
             if (filters.currency) {
                 currencyCashBoxIds = state.cashBoxes
-                    .filter((cb) => safeText(cb?.currency, '') === filters.currency)
+                    .filter((cb) => safeText(cb?.currency, '').trim().toUpperCase() === filters.currency)
                     .map((cb) => cb.id);
             }
 
@@ -967,13 +966,91 @@
             };
         };
 
+        const hasAnyActiveFilter = (ctx) => {
+            const f = ctx?.filters || {};
+            const hasCashBox = Boolean(f.cashBoxId || f.cashBoxQuery);
+            const hasCurrency = Boolean(f.currency);
+            const hasDir = Boolean(f.direction && f.direction !== 'all');
+            const hasText = Boolean(f.txIdQuery || f.contactQuery);
+            const hasCreated = Boolean(f.createdById);
+            const hasDates = Boolean(f.dateFrom || f.dateTo);
+            const hasAmount = (f.amountMin !== null && f.amountMin !== undefined) || (f.amountMax !== null && f.amountMax !== undefined);
+            return hasCashBox || hasCurrency || hasDir || hasText || hasCreated || hasDates || hasAmount;
+        };
+
+        const getFilteredCashBoxCount = async (ctx) => {
+            const ids = Array.isArray(ctx?.cashBoxIds) ? ctx.cashBoxIds.filter(Boolean) : null;
+            if (ids) return ids.length;
+
+            if (!hasAnyActiveFilter(ctx)) {
+                return state.cashBoxes.length || 0;
+            }
+
+            // Cache by filters (avoid repeated scans)
+            const key = JSON.stringify({
+                f: ctx?.filters || {},
+                type: ctx?.type || null
+            });
+            if (state.__cashBoxCountCacheKey === key && Number.isFinite(state.__cashBoxCountCacheValue)) {
+                return state.__cashBoxCountCacheValue;
+            }
+
+            const seen = new Set();
+            const perPage = 1000;
+            const maxRows = 5000;
+            let page = 1;
+            let total = null;
+
+            while (true) {
+                const res = await window.db.transactions.getPage({
+                    select: 'cash_box_id',
+                    page,
+                    perPage,
+                    cashBoxIds: null,
+                    type: ctx?.type || null,
+                    createdByUserId: ctx?.filters?.createdById || null,
+                    startDate: ctx?.filters?.dateFrom || null,
+                    endDate: ctx?.filters?.dateTo || null,
+                    amountMin: ctx?.filters?.amountMin,
+                    amountMax: ctx?.filters?.amountMax,
+                    txIdQuery: ctx?.filters?.txIdQuery || null,
+                    contactQuery: ctx?.filters?.contactQuery || null,
+                    sortKey: 'date',
+                    sortDir: 'desc'
+                });
+
+                total = total === null ? (Number(res?.count) || 0) : total;
+                const rows = Array.isArray(res?.data) ? res.data : [];
+                rows.forEach((r) => {
+                    const id = safeText(r?.cash_box_id, '').trim();
+                    if (id) seen.add(id);
+                });
+
+                if (rows.length < perPage) break;
+                if ((page * perPage) >= (total || 0)) break;
+                if ((page * perPage) >= maxRows) break;
+                page += 1;
+            }
+
+            state.__cashBoxCountCacheKey = key;
+            state.__cashBoxCountCacheValue = seen.size;
+            return seen.size;
+        };
+
         const updateStats = async (serverCtx) => {
             let currency = serverCtx.filters.currency;
 
             const elTotal = qs('#statTotalTransactions');
             const elBoxes = qs('#statCashBoxes');
-            if (elTotal) elTotal.textContent = String(state.totalTxCount || 0);
-            if (elBoxes) elBoxes.textContent = String(state.cashBoxes.length || 0);
+            if (elTotal) elTotal.textContent = String(Number(serverCtx.filteredTxCount) || 0);
+            if (elBoxes) {
+                try {
+                    const boxes = await getFilteredCashBoxCount(serverCtx);
+                    elBoxes.textContent = String(Number(boxes) || 0);
+                } catch (_) {
+                    elBoxes.textContent = String(state.cashBoxes.length || 0);
+                }
+            }
 
             const elIn = qs('#statTotalIn');
             const elOut = qs('#statTotalOut');
@@ -1063,6 +1140,7 @@
 
             // Short-circuit empty intersection (currency + cashbox query)
             if (Array.isArray(serverCtx.cashBoxIds) && serverCtx.cashBoxIds.length === 0) {
+                serverCtx.filteredTxCount = 0;
                 await updateStats(serverCtx);
                 renderTableRows(tbody, []);
                 state.pagination.onChange = render;
@@ -1100,6 +1178,8 @@
                 updateBulk();
                 return;
             }
+
+            serverCtx.filteredTxCount = Number(pageRes?.count) || 0;
 
             const rows = (Array.isArray(pageRes?.data) ? pageRes.data : []).map((tx) => {
                 if (tx && !tx.cash_box && tx.cash_box_id) {
