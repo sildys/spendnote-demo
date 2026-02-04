@@ -16,49 +16,72 @@
         /* ===== CONTACT DETAIL PAGE SPECIFIC STYLES ===== */
 
         /* HEADER */
-        .contact-header-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 16px;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .header-top {
+        .contact-summary-card {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: flex-start;
             gap: 16px;
+            padding: 14px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            box-shadow: 0 2px 8px var(--shadow);
             flex-wrap: wrap;
         }
 
-        .header-left {
+        .summary-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .contact-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: rgba(var(--active-rgb), 0.10);
+            color: var(--active);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            flex-shrink: 0;
+        }
+
+        .summary-info {
             min-width: 0;
         }
 
-        .header-left h1 {
-            margin: 0 !important;
+        .contact-id-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 2px;
         }
 
-        .contact-id-badge {
-            display: inline-block;
-            padding: 8px 16px;
-            background: rgba(5, 150, 105, 0.1);
-            color: var(--primary);
-            border: 2px solid rgba(5, 150, 105, 0.2);
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 14px;
-            margin-bottom: 10px;
+        .summary-name {
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 520px;
         }
 
         .contact-meta {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-muted);
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-top: 8px;
+            gap: 12px;
+            margin-top: 6px;
             flex-wrap: wrap;
         }
 
@@ -68,10 +91,47 @@
             gap: 6px;
         }
 
-        .header-actions {
+        .summary-center {
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .summary-stat {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            min-width: 140px;
+        }
+
+        .summary-stat-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 6px;
+        }
+
+        .summary-stat-value {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--text);
+        }
+
+        .summary-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
         }
 
         /* CONTENT GRID */
@@ -114,6 +174,26 @@
         /* FORM */
         .form-group {
             margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .form-grid .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-grid .span-2 {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 720px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .form-group label {
@@ -196,36 +276,6 @@
         .info-value.empty {
             color: var(--text-muted);
             font-style: italic;
-        }
-
-        /* STATS */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .stat-box {
-            background: var(--bg);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--text);
         }
 
         /* TRANSACTIONS LIST */
@@ -330,19 +380,32 @@
 <div class="app-container">
     <main class="main-content">
         <div class="page-header">
-            <div class="contact-header-card">
-            <div class="header-top">
-                <div class="header-left">
-                    <div class="contact-id-badge" id="contactIdBadge">—</div>
-                    <h1 id="pageTitle">Contact Details</h1>
-                    <div class="contact-meta" id="contactMeta">
-                        <span style="color: var(--text-muted); font-style: italic;">Loading…</span>
+            <div class="contact-summary-card">
+                <div class="summary-left">
+                    <div class="contact-avatar" id="contactAvatar">—</div>
+                    <div class="summary-info">
+                        <div class="contact-id-badge">
+                            <span class="badge badge-success" id="contactIdBadge">—</span>
+                        </div>
+                        <div class="summary-name" id="pageTitle">Contact Details</div>
+                        <div class="contact-meta" id="contactMeta">
+                            <span style="color: var(--text-muted); font-style: italic;">Loading…</span>
+                        </div>
                     </div>
                 </div>
-                <div class="header-actions" id="headerActions">
-                    <!-- Actions will be dynamically added -->
+                <div class="summary-center" id="contactSummaryStats">
+                    <div class="summary-stats">
+                        <div class="summary-stat">
+                            <div class="summary-stat-label">Transactions</div>
+                            <div class="summary-stat-value" id="statTransactions">—</div>
+                        </div>
+                        <div class="summary-stat">
+                            <div class="summary-stat-label">Last Activity</div>
+                            <div class="summary-stat-value" id="statLastActivity">—</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="summary-actions" id="headerActions"></div>
             </div>
         </div>
 
@@ -354,21 +417,23 @@
                 </div>
                 <div class="card-body">
                     <form id="contactForm">
-                        <div class="form-group">
-                            <label for="contactName">Name <span class="required">*</span></label>
-                            <input type="text" id="contactName" name="contactName" required>
-                        </div>
+                        <div class="form-grid">
+                            <div class="form-group span-2">
+                                <label for="contactName">Name <span class="required">*</span></label>
+                                <input type="text" id="contactName" name="contactName" required>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="contactEmail">Email</label>
-                            <input type="email" id="contactEmail" name="contactEmail">
-                            <p class="form-help">Optional - contact's email address</p>
-                        </div>
+                            <div class="form-group">
+                                <label for="contactEmail">Email</label>
+                                <input type="email" id="contactEmail" name="contactEmail">
+                                <p class="form-help">Optional - contact's email address</p>
+                            </div>
 
-                        <div class="form-group">
-                            <label for="contactPhone">Phone</label>
-                            <input type="tel" id="contactPhone" name="contactPhone">
-                            <p class="form-help">Optional - contact's phone number</p>
+                            <div class="form-group">
+                                <label for="contactPhone">Phone</label>
+                                <input type="tel" id="contactPhone" name="contactPhone">
+                                <p class="form-help">Optional - contact's phone number</p>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -397,25 +462,6 @@
 
             <!-- Right Column: Stats & Transactions -->
             <div>
-                <!-- Stats Card -->
-                <div class="card" style="margin-bottom: 24px;" id="statsCard">
-                    <div class="card-header">
-                        <h2 class="card-title">Statistics</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="stats-grid">
-                            <div class="stat-box">
-                                <div class="stat-label">Transactions</div>
-                                <div class="stat-value" id="statTransactions">—</div>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-label">Last Activity</div>
-                                <div class="stat-value" style="font-size: 16px;" id="statLastActivity">—</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Recent Transactions Card -->
                 <div class="card" id="transactionsCard">
                     <div class="card-header">
@@ -576,11 +622,12 @@
                     badge.textContent = '—';
                     badge.style.opacity = '0.5';
                 }
+                const statsWrap = document.getElementById('contactSummaryStats');
+                if (statsWrap) statsWrap.style.display = 'none';
                 document.getElementById('pageTitle').textContent = 'Add New Contact';
                 document.getElementById('contactMeta').innerHTML = `
                     <span style="color: var(--text-muted); font-style: italic;">New contact - ID will be assigned on save</span>
                 `;
-                document.getElementById('statsCard').style.display = 'none';
                 document.getElementById('transactionsCard').style.display = 'none';
                 document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(field => {
                     field.disabled = false;
@@ -611,6 +658,14 @@
                 badge.style.opacity = '1';
             }
 
+            const avatar = document.getElementById('contactAvatar');
+            if (avatar) {
+                const name = safeText(resolved?.name, '').trim();
+                const parts = name.split(/\s+/).filter(Boolean);
+                const initials = parts.length ? `${(parts[0]?.[0] || '').toUpperCase()}${(parts[1]?.[0] || '').toUpperCase()}`.trim() : '—';
+                avatar.textContent = initials || '—';
+            }
+
             resolvedContactUuid = safeText(resolved?.id, null);
             document.getElementById('pageTitle').textContent = resolved.name || 'Contact';
 
@@ -623,7 +678,26 @@
             const createdAt = resolved?.created_at || resolved?.created || null;
             const meta = document.getElementById('contactMeta');
             if (meta) {
-                meta.innerHTML = `<span><i class="fas fa-calendar"></i> Created: ${formatDateShort(createdAt)}</span>`;
+                meta.innerHTML = '';
+                const items = [];
+
+                items.push({ icon: 'fa-calendar', text: `Created: ${formatDateShort(createdAt)}` });
+
+                const email = safeText(resolved?.email, '');
+                if (email) items.push({ icon: 'fa-envelope', text: email });
+
+                const phone = safeText(resolved?.phone, '');
+                if (phone) items.push({ icon: 'fa-phone', text: phone });
+
+                items.forEach(({ icon, text }) => {
+                    const span = document.createElement('span');
+                    const i = document.createElement('i');
+                    i.className = `fas ${icon}`;
+                    const t = document.createTextNode(` ${text}`);
+                    span.appendChild(i);
+                    span.appendChild(t);
+                    meta.appendChild(span);
+                });
             }
 
             document.querySelectorAll('#contactForm input, #contactForm textarea').forEach(field => {
