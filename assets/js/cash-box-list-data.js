@@ -40,6 +40,26 @@ async function loadCashBoxList() {
         });
         
         if (cashBoxes && cashBoxes.length > 0) {
+            const txCountByCashBoxId = new Map();
+            try {
+                if (window.db?.transactions?.getStats) {
+                    await Promise.all(
+                        cashBoxes
+                            .filter((b) => b && b.id)
+                            .map(async (box) => {
+                                try {
+                                    const stats = await window.db.transactions.getStats({ cashBoxId: box.id });
+                                    txCountByCashBoxId.set(box.id, Number(stats?.count) || 0);
+                                } catch (_) {
+                                    txCountByCashBoxId.set(box.id, 0);
+                                }
+                            })
+                    );
+                }
+            } catch (_) {
+                // ignore tx count failures
+            }
+
             // Get the list container
             const grid = document.querySelector('.registers-list');
             if (!grid) return;
@@ -81,7 +101,7 @@ async function loadCashBoxList() {
                 const formattedBalance = formatCurrency(box.current_balance || 0, box.currency || 'USD');
                 
                 // Get transaction count from database
-                const txCount = box.transaction_count || 0;
+                const txCount = txCountByCashBoxId.has(box.id) ? (txCountByCashBoxId.get(box.id) || 0) : 0;
                 
                 // Get users with access (mock for now - will be from database)
                 const users = box.users || [
