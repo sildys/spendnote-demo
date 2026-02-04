@@ -210,9 +210,17 @@ Additional UX/bug backlog:
 - CSV export still uses internal IDs instead of display IDs.
 - Avatar image shows an unwanted colored highlight/ring.
 - Table column widths need adjustment.
-- Navigation underline styling is still inconsistent.
 - "Save to Contacts" checkbox: add a short inline hint ("so you can reuse it later").
 - Footer redesign.
+
+Recent UX fixes:
+
+- Navigation: active page menu item is underlined.
+- Cash Boxes list: shows per-cash-box transaction count (active, non-system).
+- Transaction History:
+  - Stats counts reflect the active filters (transactions + cash boxes).
+  - Currency filter normalizes values and applies immediately on change.
+  - Total IN / OUT / Net Balance compute when the filter result resolves to a single currency (otherwise shows `—`).
 
 Cash Box deletion:
 
@@ -316,6 +324,9 @@ This section is meant to prevent re-explaining core decisions in new chat thread
 - Search/filter across transactions.
 - Contact ID display is intentionally minimal:
   - if there is no saved contact sequence, show **`—`** (no placeholder `CONT-*`).
+- Stats cards:
+  - `Total Transactions` and `Cash Boxes` reflect the active filters.
+  - Monetary totals are shown only when the filter result is a single currency.
 
 ## Pages / routes (high level)
 

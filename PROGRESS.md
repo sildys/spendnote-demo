@@ -12,7 +12,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Avoid long explanations, hedging, or repetitive confirmations.
 - Be professional and forward-looking (anticipate edge cases, choose robust solutions).
 
-## Current state (last updated: 2026-02-02 21:46)
+## Current state (last updated: 2026-02-04 02:07)
 - **Dashboard**
   - Transaction modal works again (fixed duplicate modal JS load + ensured submit handler binds).
   - **Save to Contacts** toggle exists (no auto-save by default).
@@ -27,6 +27,13 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Loads from Supabase (server-side pagination + filters).
   - Does **not** auto-filter by the previously selected Cash Box (dashboard active cash box).
   - Hides system/reversal transactions (`is_system=true`) and treats legacy `is_system=NULL` as non-system.
+  - Currency filter values are normalized (uppercase) and apply correctly.
+  - Stats cards reflect the active filters:
+    - `Total Transactions`: filtered result count
+    - `Cash Boxes`: cash boxes in the filtered result
+  - Monetary totals:
+    - `Total IN / Total OUT / Net Balance` compute when the filtered result resolves to a single currency
+    - otherwise they show `—`
   - Voided transactions:
     - show a distinct **VOID** badge
     - amount is dimmed + struck-through
@@ -63,6 +70,11 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Cash Box Settings: removed inline `onclick` handlers (bindings live in JS).
   - Cash Box Settings: Danger Zone hard delete implemented (shows transaction count, requires typing `DELETE`, deletes cash box + cascaded transactions).
   - Cash Box List: delete modal subtitle ready for dynamic data.
+  - Cash Box List: shows per-cash-box transaction count (active, non-system).
+
+- **Navigation** ✅
+  - Active page menu item is underlined.
+  - Active page detection works for pretty URLs (e.g. `/dashboard` as well as `dashboard.html`).
 
 ## Key decisions / invariants
 - **“Unsaved contact” indicator**: keep it minimal in Transaction History.
