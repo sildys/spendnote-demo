@@ -42,14 +42,28 @@ async function loadCashBoxList() {
         if (cashBoxes && cashBoxes.length > 0) {
             const txCountByCashBoxId = new Map();
             try {
-                if (window.db?.transactions?.getStats) {
+                const user = await window.auth?.getCurrentUser?.();
+                const client = window.supabaseClient;
+                if (user && client) {
                     await Promise.all(
                         cashBoxes
                             .filter((b) => b && b.id)
                             .map(async (box) => {
                                 try {
-                                    const stats = await window.db.transactions.getStats({ cashBoxId: box.id });
-                                    txCountByCashBoxId.set(box.id, Number(stats?.count) || 0);
+                                    const { count, error } = await client
+                                        .from('transactions')
+                                        .select('id', { count: 'exact', head: true })
+                                        .eq('user_id', user.id)
+                                        .eq('cash_box_id', box.id)
+                                        .eq('status', 'active')
+                                        .or('is_system.is.null,is_system.eq.false');
+
+                                    if (error) {
+                                        txCountByCashBoxId.set(box.id, 0);
+                                        return;
+                                    }
+
+                                    txCountByCashBoxId.set(box.id, Number(count) || 0);
                                 } catch (_) {
                                     txCountByCashBoxId.set(box.id, 0);
                                 }
