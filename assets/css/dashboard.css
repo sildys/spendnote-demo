@@ -3913,8 +3913,12 @@ tr:hover [data-category-tag] {
     text-align: right;
 }
 
-.autocomplete-wrapper {
+.autocomplete-wrapper,
+.modal-contact-name {
     position: relative;
+}
+
+.autocomplete-wrapper {
     flex: 1;
 }
 
