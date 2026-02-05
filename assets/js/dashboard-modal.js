@@ -482,21 +482,25 @@ window.updateLineItemsTotal = updateLineItemsTotal;
 // CONTACT AUTOCOMPLETE
 // ========================================
 async function loadContactsForAutocomplete() {
-    if (contactsLoaded || !window.db || !window.db.contacts) return;
+    if (contactsLoaded) { console.log('[ContactAC] Already loaded:', Contacts.length); return; }
+    if (!window.db || !window.db.contacts) { console.warn('[ContactAC] db.contacts not ready, retrying...'); setTimeout(loadContactsForAutocomplete, 300); return; }
     try {
+        console.log('[ContactAC] Loading contacts from DB...');
         const data = await window.db.contacts.getAll();
         Contacts = (data || []).map(function(c) {
             const displayId = formatContactDisplayId(c && c.sequence_number);
             return { id: c.id, name: c.name || '', address: c.address || '', contact: c.email || '', displayId: displayId };
         });
         contactsLoaded = true;
-    } catch (e) { console.error('Failed to load contacts:', e); }
+        console.log('[ContactAC] Loaded', Contacts.length, 'contacts');
+    } catch (e) { console.error('[ContactAC] Failed to load contacts:', e); }
 }
 
 function initContactAutocomplete() {
     const input = getEl('modalContactName');
     const dropdown = getEl('ContactAutocomplete');
-    if (!input || !dropdown) { console.warn('Contact autocomplete: input or dropdown not found'); return; }
+    console.log('[ContactAC] Init called, input:', !!input, 'dropdown:', !!dropdown);
+    if (!input || !dropdown) { console.warn('[ContactAC] input or dropdown not found'); return; }
 
     loadContactsForAutocomplete();
     let selectedIdx = -1;
@@ -558,10 +562,13 @@ function initContactAutocomplete() {
     }
 
     input.addEventListener('input', async function(e) {
+        console.log('[ContactAC] Input event, value:', e.target.value, 'contactsLoaded:', contactsLoaded);
         const idEl = getEl('modalContactId');
         if (idEl) idEl.value = '';
         if (!contactsLoaded) await loadContactsForAutocomplete();
-        show(filter(e.target.value));
+        const results = filter(e.target.value);
+        console.log('[ContactAC] Filter results:', results.length);
+        show(results);
         selectedIdx = -1;
     });
     input.addEventListener('focus', async function(e) {
