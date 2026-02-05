@@ -408,7 +408,7 @@
                 <td><div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarUrl}" alt="${createdBy}"></div></div></td>
                 <td>
                     <div class="tx-actions">
-                        <button type="button" class="tx-action btn-duplicate" data-tx-id="${safeText(tx.id, '')}">
+                        <button type="button" class="tx-action btn-duplicate" data-tx-id="${safeText(tx.id, '')}" data-cash-box-id="${safeText(tx.cash_box_id || tx.cash_box?.id, '')}" data-direction="${isIncome ? 'in' : 'out'}" data-amount="${safeText(tx.amount, '')}" data-date="${safeText(tx.transaction_date || tx.created_at, '')}" data-contact-id="${safeText(tx.contact_id || tx.contact?.id, '')}" data-description="${encodeURIComponent(safeText(tx.description, ''))}" data-contact-name="${encodeURIComponent(safeText(contactName, ''))}">
                             <i class="fas fa-copy"></i>
                             <span>Duplicate</span>
                         </button>

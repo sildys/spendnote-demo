@@ -330,6 +330,13 @@ function loadRecentTransactionsSync(transactions) {
                 const initials = getInitials(createdByName === '—' ? '' : createdByName);
                 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#10b981"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#ffffff">${initials}</text></svg>`;
                 const avatarUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
+                const contactName = tx.contact?.name || tx.contact_name || '';
+                const contactId = tx.contact_id || tx.contact?.id || '';
+                const cashBoxId = tx.cash_box_id || tx.cash_box?.id || '';
+                const dateIso = tx.transaction_date || tx.created_at || '';
+                const descEnc = encodeURIComponent(String(tx.description || ''));
+                const contactEnc = encodeURIComponent(String(contactName || ''));
                 const rowHTML = `
                     <div class="table-grid" tabindex="0" style="--cashbox-rgb: ${cashBoxRgb}; --cashbox-color: ${cashBoxColor};">
                         <div class="tx-type-pill ${isIncome ? 'in' : 'out'}">
@@ -341,12 +348,12 @@ function loadRecentTransactionsSync(transactions) {
                             <span class="time">${formattedTime}</span>
                         </div>
                         <div class="tx-cashbox"><span class="cashbox-badge" style="--cb-color: ${cashBoxColor};">${tx.cash_box?.name || 'Unknown'}</span></div>
-                        <div class="tx-person">${tx.contact?.name || tx.contact_name || 'N/A'}</div>
+                        <div class="tx-person">${contactName || 'N/A'}</div>
                         <div class="tx-desc">${tx.description || 'No description'}</div>
                         <div class="tx-amount ${isIncome ? 'in' : 'out'}">${isIncome ? '+' : '-'}${formattedAmount}</div>
                         <div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarUrl}" alt="${createdByName}"></div></div>
                         <div class="tx-actions">
-                            <button type="button" class="tx-action btn-duplicate" data-tx-id="${tx.id}">
+                            <button type="button" class="tx-action btn-duplicate" data-tx-id="${tx.id}" data-cash-box-id="${cashBoxId}" data-direction="${isIncome ? 'in' : 'out'}" data-amount="${String(tx.amount ?? '')}" data-date="${String(dateIso || '')}" data-contact-id="${String(contactId || '')}" data-description="${descEnc}" data-contact-name="${contactEnc}">
                                 <i class="fas fa-copy"></i>
                                 <span>Duplicate</span>
                             </button>

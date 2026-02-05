@@ -294,11 +294,40 @@ document.addEventListener('click', function(e) {
     const txId = btn.dataset.txId;
     if (!txId) return;
 
+    const decode = (v) => {
+        if (v === undefined || v === null) return '';
+        try { return decodeURIComponent(String(v)); } catch { return String(v); }
+    };
+
+    const preset = {
+        cashBoxId: btn.dataset.cashBoxId || null,
+        direction: btn.dataset.direction || null,
+        amount: decode(btn.dataset.amount || ''),
+        date: btn.dataset.date || null,
+        contactId: btn.dataset.contactId || '',
+        contactName: decode(btn.dataset.contactName || ''),
+        description: decode(btn.dataset.description || ''),
+        transactionId: ''
+    };
+
     // If on dashboard and duplicateTransaction is available, use it directly
+    if (typeof window.openModal === 'function' && document.getElementById('createTransactionModal')) {
+        window.openModal(preset);
+        return;
+    }
     if (typeof window.duplicateTransaction === 'function') {
         window.duplicateTransaction(txId);
     } else {
-        // Navigate to dashboard with duplicate parameter
-        window.location.href = 'dashboard.html?duplicate=' + encodeURIComponent(txId) + '#new-transaction';
+        // Navigate to dashboard with duplicate parameter and prefill fields
+        const params = new URLSearchParams();
+        params.set('duplicate', txId);
+        if (preset.cashBoxId) params.set('cashBoxId', preset.cashBoxId);
+        if (preset.direction) params.set('direction', preset.direction);
+        if (preset.amount !== undefined && preset.amount !== null) params.set('amount', String(preset.amount));
+        if (preset.date) params.set('date', String(preset.date));
+        if (preset.contactId) params.set('contactId', String(preset.contactId));
+        if (preset.contactName) params.set('contactName', String(preset.contactName));
+        if (preset.description) params.set('description', String(preset.description));
+        window.location.href = 'dashboard.html?' + params.toString() + '#new-transaction';
     }
 });

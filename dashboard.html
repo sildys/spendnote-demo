@@ -857,7 +857,7 @@
             if (typeof updateLineItemsTotal === 'function') updateLineItemsTotal();
         }
 
-        function openModal(preset) {
+        function legacyOpenModal(preset) {
             const isEventLike = preset && typeof preset === 'object' && 'preventDefault' in preset && 'target' in preset;
             const options = isEventLike ? {} : (preset || {});
 
@@ -935,18 +935,24 @@
             requestAnimationFrame(() => requestAnimationFrame(focusPrimary));
         }
 
-        // Make openModal available globally for testing
-        window.openModal = openModal;
-
-        if (openModalBtn) {
-            openModalBtn.addEventListener('click', openModal);
+        if (openModalBtn && !openModalBtn.dataset.modalBound) {
+            openModalBtn.dataset.modalBound = '1';
+            openModalBtn.addEventListener('click', (e) => {
+                if (typeof window.openModal === 'function') {
+                    window.openModal(e);
+                } else {
+                    legacyOpenModal(e);
+                }
+            });
         }
 
-        // Open modal if hash is #new-transaction
+        // Open modal if hash is #new-transaction (legacy fallback only)
         (function() {
             if (window.location.hash !== '#new-transaction') return;
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('duplicate')) return;
+
             const getPresetFromUrl = () => {
-                const params = new URLSearchParams(window.location.search);
                 const cashBoxId = params.get('cashBoxId');
                 const direction = params.get('direction');
                 const preset = {};
@@ -956,7 +962,13 @@
             };
             const openFromHash = () => {
                 const preset = getPresetFromUrl();
-                setTimeout(() => openModal(preset), 0);
+                setTimeout(() => {
+                    if (typeof window.openModal === 'function') {
+                        window.openModal(preset);
+                    } else {
+                        legacyOpenModal(preset);
+                    }
+                }, 0);
                 history.replaceState(null, null, 'dashboard.html');
             };
             if (window.__spendnoteDashboardDataLoaded) {
@@ -967,7 +979,7 @@
         })();
 
         // Close modal
-        function closeModal() {
+        function legacyCloseModal() {
             modal.classList.remove('active');
             modal.setAttribute('aria-hidden', 'true');
             document.body.classList.remove('modal-open');
@@ -999,8 +1011,14 @@
             lastModalFocusEl = null;
         }
 
-        if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-        if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
+        if (closeModalBtn) closeModalBtn.addEventListener('click', () => {
+            if (typeof window.closeModal === 'function') window.closeModal();
+            else legacyCloseModal();
+        });
+        if (cancelModalBtn) cancelModalBtn.addEventListener('click', () => {
+            if (typeof window.closeModal === 'function') window.closeModal();
+            else legacyCloseModal();
+        });
 
         const dirInRadio = document.getElementById('modalDirectionIn');
         const dirOutRadio = document.getElementById('modalDirectionOut');
