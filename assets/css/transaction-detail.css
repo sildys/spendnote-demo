@@ -225,16 +225,17 @@
             margin-right: 8px;
         }
 
-        .btn-outline-primary {
+        .tx-actions-row .btn.btn-outline-primary {
             background: white;
-            color: var(--primary) !important;
-            border: 1.5px solid var(--primary);
+            color: var(--primary, var(--active, #059669)) !important;
+            border: 1.5px solid var(--primary, var(--active, #059669));
             box-shadow: none;
         }
 
-        .btn-outline-primary:hover {
+        .tx-actions-row .btn.btn-outline-primary:hover {
             background: rgba(5, 150, 105, 0.08);
-            border-color: var(--primary-dark);
+            border-color: var(--primary-dark, #047857);
+            color: var(--primary, var(--active, #059669)) !important;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
         }
