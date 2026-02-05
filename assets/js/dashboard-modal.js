@@ -725,6 +725,16 @@ function initDashboardModal() {
     const modalAmount = getEl('modalAmount');
     if (modalAmount) modalAmount.addEventListener('input', updateLineItemsTotal);
 
+    // Event delegation for line item amount changes
+    const lineItemsContainer = getEl('modalLineItemsContainer');
+    if (lineItemsContainer) {
+        lineItemsContainer.addEventListener('input', function(e) {
+            if (e.target.classList.contains('line-item-amount')) {
+                updateLineItemsTotal();
+            }
+        });
+    }
+
     initContactAutocomplete();
 
     const descInput = getEl('modalDescription');
