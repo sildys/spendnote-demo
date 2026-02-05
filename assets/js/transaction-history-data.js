@@ -61,6 +61,26 @@
         return (first + last).toUpperCase().slice(0, 2) || 'SN';
     }
 
+    function getCreatedByAvatarUrl(createdByName) {
+        try {
+            const storedAvatar = localStorage.getItem('spendnote.user.avatar.v1');
+            if (storedAvatar) return storedAvatar;
+        } catch (_) {
+            // ignore
+        }
+
+        let avatarColor = '#10b981';
+        try {
+            avatarColor = localStorage.getItem('spendnote.user.avatarColor.v1') || '#10b981';
+        } catch (_) {
+            // ignore
+        }
+
+        const initials = getInitials(createdByName === '—' ? '' : createdByName);
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="${avatarColor}"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#ffffff">${initials}</text></svg>`;
+        return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+    }
+
     function getDisplayId(tx) {
         // Use Supabase sequence numbers if available (SN{cash_box_seq}-{tx_seq})
         const cbSeq = tx?.cash_box_sequence;
@@ -382,10 +402,7 @@
             const contactName = safeText(tx.contact?.name || tx.contact_name, '—');
             const contactId = getContactDisplayId(tx);
             const createdBy = safeText(tx.created_by_user_name || tx.created_by, '—');
-
-            const initials = getInitials(createdBy === '—' ? '' : createdBy);
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#10b981"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#ffffff">${initials}</text></svg>`;
-            const avatarUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+            const avatarUrl = getCreatedByAvatarUrl(createdBy);
 
             const pillClass = isVoided ? 'void' : (isIncome ? 'in' : 'out');
             const pillIcon = isVoided ? 'fa-ban' : (isIncome ? 'fa-arrow-down' : 'fa-arrow-up');

@@ -287,6 +287,26 @@ function loadRecentTransactionsSync(transactions) {
 
         const { hexToRgb, formatCurrency, getInitials, normalizeHexColor } = getSpendNoteHelpers();
 
+        const getCreatedByAvatarUrl = (createdByName) => {
+            try {
+                const storedAvatar = localStorage.getItem('spendnote.user.avatar.v1');
+                if (storedAvatar) return storedAvatar;
+            } catch (_) {
+                // ignore
+            }
+
+            let avatarColor = '#10b981';
+            try {
+                avatarColor = localStorage.getItem('spendnote.user.avatarColor.v1') || '#10b981';
+            } catch (_) {
+                // ignore
+            }
+
+            const initials = getInitials(createdByName === '—' ? '' : createdByName);
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="${avatarColor}"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#ffffff">${initials}</text></svg>`;
+            return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+        };
+
         // Remove demo rows (keep header)
         const existingRows = Array.from(wrapper.querySelectorAll('.table-grid'))
             .filter((el) => !el.classList.contains('table-header'));
@@ -327,9 +347,7 @@ function loadRecentTransactionsSync(transactions) {
                 });
 
                 const createdByName = tx.created_by_user_name || tx.created_by || '—';
-                const initials = getInitials(createdByName === '—' ? '' : createdByName);
-                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="32" fill="#10b981"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#ffffff">${initials}</text></svg>`;
-                const avatarUrl = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+                const avatarUrl = getCreatedByAvatarUrl(createdByName);
 
                 const contactName = tx.contact?.name || tx.contact_name || '';
                 const contactId = tx.contact_id || tx.contact?.id || '';
