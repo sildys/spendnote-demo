@@ -664,10 +664,8 @@
             document.getElementById('pageTitle').textContent = resolved.name || 'Contact';
 
             document.getElementById('contactName').value = resolved.name || '';
-            document.getElementById('contactEmail').value = resolved.email || '';
-            document.getElementById('contactPhone').value = resolved.phone || '';
             document.getElementById('contactAddress').value = resolved.address || '';
-            document.getElementById('contactNotes').value = resolved.notes || '';
+            document.getElementById('contactEmail').value = resolved.email || '';
 
             const createdAt = resolved?.created_at || resolved?.created || null;
             const meta = document.getElementById('contactMeta');
