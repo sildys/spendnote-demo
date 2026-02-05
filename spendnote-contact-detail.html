@@ -439,6 +439,10 @@
                         <div class="stat-box-label">Last Activity</div>
                         <div class="stat-box-value" id="statLastActivity">—</div>
                     </div>
+                    <div class="stat-box">
+                        <div class="stat-box-label">Cash Boxes</div>
+                        <div class="stat-box-value" id="statCashBoxes" style="display: flex; gap: 4px; align-items: center;">—</div>
+                    </div>
                 </div>
 
                 <!-- Recent Transactions Card -->
@@ -745,6 +749,33 @@
             const lastDt = txs.length ? new Date(txs[0]?.transaction_date || txs[0]?.created_at || '') : null;
             if (statsLast) {
                 statsLast.textContent = (lastDt && Number.isFinite(lastDt.getTime())) ? formatDateShort(lastDt) : '—';
+            }
+
+            // Render cash box dots
+            const statsCashBoxes = document.getElementById('statCashBoxes');
+            if (statsCashBoxes && data && data.length > 0) {
+                const cbIds = [...new Set(data.map(tx => tx.cash_box_id).filter(Boolean))];
+                const maxDots = 3;
+                const visibleIds = cbIds.slice(0, maxDots);
+                const extraCount = cbIds.length - maxDots;
+                const extraNames = cbIds.slice(maxDots).map(id => {
+                    const tx = data.find(t => t.cash_box_id === id);
+                    return tx?.cash_box?.name || 'Cash Box';
+                }).join(', ');
+                
+                let dotsHtml = visibleIds.map(id => {
+                    const tx = data.find(t => t.cash_box_id === id);
+                    const cb = tx?.cash_box;
+                    const name = cb?.name || 'Cash Box';
+                    const color = cb?.color || '#94a3b8';
+                    return `<span style="width: 12px; height: 12px; border-radius: 50%; background: ${color}; display: inline-block;" title="${name}"></span>`;
+                }).join('');
+                
+                if (extraCount > 0) {
+                    dotsHtml += `<span style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-left: 2px; cursor: help;" title="${extraNames}">+${extraCount}</span>`;
+                }
+                
+                statsCashBoxes.innerHTML = dotsHtml || '—';
             }
 
             if (!txs.length) {
