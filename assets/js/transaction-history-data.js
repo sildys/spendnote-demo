@@ -594,7 +594,7 @@
 
         const state = {
             direction: 'all',
-            sort: { key: 'date', direction: 'desc' },
+            sort: { key: 'id', direction: 'desc' },
             pagination: getPaginationState(),
             cashBoxes: [],
             cashBoxById: new Map(),
