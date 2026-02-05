@@ -345,12 +345,16 @@ function loadRecentTransactionsSync(transactions) {
                         <div class="tx-desc">${tx.description || 'No description'}</div>
                         <div class="tx-amount ${isIncome ? 'in' : 'out'}">${isIncome ? '+' : '-'}${formattedAmount}</div>
                         <div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarUrl}" alt="${createdByName}"></div></div>
-                        <button type="button" class="tx-action btn-duplicate" data-tx-id="${tx.id}">
-                            <i class="fas fa-copy"></i>
-                        </button>
-                        <a href="spendnote-transaction-detail.html?id=${tx.id}" class="tx-action btn-view">
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
+                        <div class="tx-actions">
+                            <button type="button" class="tx-action btn-duplicate" data-tx-id="${tx.id}">
+                                <i class="fas fa-copy"></i>
+                                <span>Duplicate</span>
+                            </button>
+                            <a href="spendnote-transaction-detail.html?id=${encodeURIComponent(tx.id)}" class="tx-action btn-view">
+                                <span>View</span>
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
                 `;
 

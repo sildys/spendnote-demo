@@ -298,6 +298,9 @@ function openModal(preset) {
     document.addEventListener('keydown', handleModalKeydown, true);
     document.addEventListener('focusin', handleModalFocusIn, true);
 
+    const form = getEl('modalTransactionForm');
+    if (form) form.reset();
+
     const dateField = getEl('modalDateField');
     if (dateField) {
         const now = new Date();
@@ -308,6 +311,33 @@ function openModal(preset) {
         dateField.dataset.fullDate = now.toISOString();
         const dateValue = getEl('modalDate');
         if (dateValue) dateValue.value = yyyy + '-' + mm + '-' + dd;
+    }
+
+    if (Object.prototype.hasOwnProperty.call(options, 'date') && options.date) {
+        const raw = String(options.date);
+        let yyyy = '', mm = '', dd = '';
+        if (/^\d{4}-\d{2}-\d{2}/.test(raw)) {
+            const parts = raw.slice(0, 10).split('-');
+            yyyy = parts[0];
+            mm = parts[1];
+            dd = parts[2];
+        } else {
+            const d = new Date(raw);
+            if (!Number.isNaN(d.getTime())) {
+                yyyy = String(d.getFullYear());
+                mm = String(d.getMonth() + 1).padStart(2, '0');
+                dd = String(d.getDate()).padStart(2, '0');
+            }
+        }
+        if (yyyy && mm && dd) {
+            const dateValue = getEl('modalDate');
+            if (dateValue) dateValue.value = yyyy + '-' + mm + '-' + dd;
+            const df = getEl('modalDateField');
+            if (df) {
+                df.value = mm + '/' + dd + '/' + yyyy;
+                df.dataset.fullDate = yyyy + '-' + mm + '-' + dd;
+            }
+        }
     }
 
     initModalCashboxCarousel();
@@ -338,25 +368,29 @@ function openModal(preset) {
     }
 
     // Pre-fill fields if provided (for duplicate functionality)
-    if (options.amount) {
+    if (Object.prototype.hasOwnProperty.call(options, 'amount')) {
         const amountEl = getEl('modalAmount');
-        if (amountEl) amountEl.value = options.amount;
+        if (amountEl) amountEl.value = options.amount || '';
     }
-    if (options.description) {
+    if (Object.prototype.hasOwnProperty.call(options, 'description')) {
         const descEl = getEl('modalDescription');
-        if (descEl) descEl.value = options.description;
+        if (descEl) descEl.value = options.description || '';
     }
-    if (options.contactName) {
-        const contactEl = getEl('modalContact');
-        if (contactEl) contactEl.value = options.contactName;
+    if (Object.prototype.hasOwnProperty.call(options, 'contactName')) {
+        const contactEl = getEl('modalContactName');
+        if (contactEl) contactEl.value = options.contactName || '';
     }
-    if (options.transactionId) {
+    if (Object.prototype.hasOwnProperty.call(options, 'contactId')) {
+        const contactIdEl = getEl('modalContactId');
+        if (contactIdEl) contactIdEl.value = options.contactId || '';
+    }
+    if (Object.prototype.hasOwnProperty.call(options, 'transactionId')) {
         const txIdEl = getEl('modalTransactionId');
-        if (txIdEl) txIdEl.value = options.transactionId;
+        if (txIdEl) txIdEl.value = options.transactionId || '';
     }
-    if (options.note) {
+    if (Object.prototype.hasOwnProperty.call(options, 'note')) {
         const noteEl = getEl('modalNote');
-        if (noteEl) noteEl.value = options.note;
+        if (noteEl) noteEl.value = options.note || '';
     }
 
     requestAnimationFrame(function() {
@@ -712,6 +746,8 @@ async function duplicateTransaction(txId) {
             amount: tx.amount || '',
             description: tx.description || '',
             contactName: tx.contact?.name || tx.contact_name || '',
+            contactId: tx.contact_id || tx.contact?.id || '',
+            date: tx.transaction_date || tx.created_at || null,
             transactionId: '', // Clear the transaction ID for duplicate
             note: tx.notes || tx.note || ''
         };

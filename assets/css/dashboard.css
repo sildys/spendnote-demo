@@ -869,7 +869,7 @@
 
         .table-grid {
             display: grid;
-            grid-template-columns: 72px 120px minmax(100px, 1fr) minmax(100px, 1fr) minmax(140px, 1.5fr) 130px 48px 48px 80px;
+            grid-template-columns: 72px 150px minmax(130px, 1.1fr) minmax(130px, 1.1fr) minmax(180px, 1.6fr) 140px minmax(150px, 1.2fr) 160px;
             gap: 16px;
             padding: 14px 20px;
             align-items: center;
@@ -896,8 +896,20 @@
             padding-left: 12px;
         }
         .table-grid > :nth-child(8) {
-            justify-self: center;
-            text-align: center;
+            justify-self: end;
+            text-align: right;
+        }
+
+        .tx-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        .tx-actions .tx-action {
+            width: auto !important;
+            padding: 6px 12px !important;
+            min-width: 0 !important;
         }
         /* Row hover/focus uses cashbox color */
         .table-grid:not(.table-header):hover {
