@@ -239,6 +239,8 @@
             background: var(--surface);
             box-shadow: 0 2px 8px var(--shadow);
             transform: translateX(4px);
+            border-left: 3px solid var(--cb-color, #94a3b8);
+            padding-left: 13px;
         }
 
         .transaction-left {
@@ -448,7 +450,7 @@
                 <!-- Recent Transactions Card -->
                 <div class="card" id="transactionsCard">
                     <div class="card-header">
-                        <h2 class="card-title">Recent Transactions</h2>
+                        <h2 class="card-title">Latest Transactions</h2>
                     </div>
                     <div class="card-body" id="transactionsList">
                         <div class="empty-state"><div class="empty-state-text">Loading…</div></div>
@@ -813,7 +815,7 @@
                         </span>
                     `;
                     return `
-                        <a class="transaction-item" href="spendnote-transaction-detail.html?id=${encodeURIComponent(safeText(tx?.id, ''))}">
+                        <a class="transaction-item" href="spendnote-transaction-detail.html?id=${encodeURIComponent(safeText(tx?.id, ''))}" style="--cb-color: ${cbColor};">
                             <div class="transaction-left">
                                 <div class="transaction-icon ${iconCls}" title="${isIn ? 'Income' : 'Expense'}" aria-label="${isIn ? 'Income' : 'Expense'}">
                                     <i class="fas ${isIn ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
