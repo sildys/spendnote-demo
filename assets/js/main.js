@@ -281,3 +281,19 @@ SpendNote.updateMenuColors = updateMenuColors;
 
 // Export for use in other scripts
 window.SpendNote = SpendNote;
+
+// ========================================
+// DUPLICATE TRANSACTION HANDLER
+// ========================================
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-duplicate[data-tx-id]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const txId = btn.dataset.txId;
+    if (!txId) return;
+
+    // Navigate to dashboard with duplicate parameter
+    window.location.href = 'dashboard.html?duplicate=' + encodeURIComponent(txId) + '#new-transaction';
+});

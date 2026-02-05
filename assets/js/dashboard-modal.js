@@ -733,11 +733,9 @@ async function duplicateTransaction(txId) {
 
 window.duplicateTransaction = duplicateTransaction;
 
-// Setup duplicate button click handler (delegated)
-document.addEventListener('click', function(e) {
-    const btn = e.target.closest('.btn-duplicate[data-tx-id]');
-    if (!btn) return;
-    e.preventDefault();
-    const txId = btn.dataset.txId;
-    if (txId) duplicateTransaction(txId);
-});
+// Auto-initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDashboardModal);
+} else {
+    initDashboardModal();
+}
