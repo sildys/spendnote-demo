@@ -755,7 +755,7 @@
             const statsCashBoxes = document.getElementById('statCashBoxes');
             if (statsCashBoxes && data && data.length > 0) {
                 const cbIds = [...new Set(data.map(tx => tx.cash_box_id).filter(Boolean))];
-                const maxDots = 3;
+                const maxDots = 15;
                 const visibleIds = cbIds.slice(0, maxDots);
                 const extraCount = cbIds.length - maxDots;
                 const extraNames = cbIds.slice(maxDots).map(id => {
