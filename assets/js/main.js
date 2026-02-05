@@ -23,40 +23,43 @@ function updateMenuColors(color) {
 
 window.updateMenuColors = updateMenuColors;
 
-// Navigation menu functionality
-document.addEventListener('DOMContentLoaded', function() {
+function initSpendNoteNav() {
+    if (window.__spendnoteNavInitDone) {
+        return;
+    }
+    window.__spendnoteNavInitDone = true;
+
     // Mobile menu toggle (if needed in future)
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
-    
     if (menuToggle && navLinks) {
         menuToggle.addEventListener('click', () => {
             navLinks.classList.toggle('active');
         });
     }
-    
-    // Load and apply saved active cash box color
-    const savedColor = localStorage.getItem('activeCashBoxColor');
-    const savedRgb = localStorage.getItem('activeCashBoxRgb');
-    
-    if (savedColor && savedRgb) {
-        // Apply saved colors to CSS variables
-        document.documentElement.style.setProperty('--active', savedColor);
-        document.documentElement.style.setProperty('--active-rgb', savedRgb);
 
-        updateMenuColors(savedColor);
+    // Load and apply saved active cash box color
+    try {
+        const savedColor = localStorage.getItem('activeCashBoxColor');
+        const savedRgb = localStorage.getItem('activeCashBoxRgb');
+        if (savedColor && savedRgb) {
+            document.documentElement.style.setProperty('--active', savedColor);
+            document.documentElement.style.setProperty('--active-rgb', savedRgb);
+            updateMenuColors(savedColor);
+        }
+    } catch (_) {
+        // ignore
     }
-    
+
     // User avatar dropdown
     const userAvatarBtn = document.getElementById('userAvatarBtn');
     const userDropdown = document.getElementById('userDropdown');
-    
     if (userAvatarBtn && userDropdown) {
         userAvatarBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             userDropdown.classList.toggle('show');
         });
-        
+
         // Close dropdown when clicking outside
         document.addEventListener('click', (e) => {
             if (!userAvatarBtn.contains(e.target) && !userDropdown.contains(e.target)) {
@@ -65,18 +68,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Populate user identity in nav + real logout (only on app pages)
+    // Populate user identity in nav + real logout
     if (window.auth && window.db && window.supabaseClient) {
-        // Small delay to ensure nav is fully loaded
+        // Defer refresh so window.refreshUserNav is guaranteed to be assigned.
         setTimeout(() => {
-            updateUserNav();
-        }, 100);
+            if (typeof window.refreshUserNav === 'function') {
+                window.refreshUserNav();
+            } else {
+                updateUserNav();
+            }
+        }, 0);
         bindLogoutLinks();
+
+        if (!window.__spendnoteAuthListenerBound && window.supabaseClient?.auth?.onAuthStateChange) {
+            window.__spendnoteAuthListenerBound = true;
+            window.supabaseClient.auth.onAuthStateChange(() => {
+                setTimeout(() => {
+                    window.refreshUserNav?.();
+                }, 0);
+            });
+        }
     }
 
     // Global New Transaction button behavior:
-    // - On dashboard: modal may be wired inline (openModal function).
-    // - On other pages: navigate to the create transaction page.
     const addTransactionBtn = document.getElementById('addTransactionBtn');
     if (addTransactionBtn) {
         addTransactionBtn.addEventListener('click', (event) => {
@@ -87,7 +101,14 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'dashboard.html#new-transaction';
         });
     }
-});
+}
+
+// Navigation menu functionality
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSpendNoteNav);
+} else {
+    initSpendNoteNav();
+}
 
 async function updateUserNav() {
     const nameEls = document.querySelectorAll('.user-name');
@@ -161,6 +182,35 @@ function getInitials(name) {
 
 // Export to window
 window.updateUserNav = updateUserNav;
+
+async function waitForUserNavReady(maxMs = 4000) {
+    const start = Date.now();
+    while ((Date.now() - start) < maxMs) {
+        const hasAvatarSlot = Boolean(document.querySelector('.user-avatar img'));
+        if (!hasAvatarSlot) {
+            await new Promise(r => setTimeout(r, 60));
+            continue;
+        }
+
+        if (window.auth && typeof window.auth.getCurrentUser === 'function') {
+            const user = await window.auth.getCurrentUser({ force: true });
+            if (user) return true;
+        }
+
+        await new Promise(r => setTimeout(r, 200));
+    }
+    return false;
+}
+
+window.refreshUserNav = async () => {
+    try {
+        const ok = await waitForUserNavReady();
+        if (!ok) return;
+        await window.updateUserNav();
+    } catch (_) {
+        // ignore
+    }
+};
 
 function bindLogoutLinks() {
     const logoutLinks = Array.from(document.querySelectorAll('[data-action="logout"], .user-dropdown-item'))

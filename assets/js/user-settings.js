@@ -29,6 +29,18 @@ const writeAvatar = (dataUrl) => { try { dataUrl ? localStorage.setItem(AVATAR_K
 const readAvatarColor = () => { try { return localStorage.getItem(AVATAR_COLOR_KEY) || '#10b981'; } catch { return '#10b981'; } };
 const writeAvatarColor = (color) => { try { localStorage.setItem(AVATAR_COLOR_KEY, color); } catch {} };
 
+const persistAvatarColor = async (color) => {
+    try {
+        if (!window.db?.profiles?.update) return;
+        const result = await window.db.profiles.update({ avatar_color: color });
+        if (!result?.success) {
+            return;
+        }
+    } catch (_) {
+        // ignore (column may not exist)
+    }
+};
+
 // Logo localStorage
 const LOGO_KEY = 'spendnote.receipt.logo.v1';
 const readLogo = () => { try { return localStorage.getItem(LOGO_KEY); } catch { return null; } };
@@ -298,8 +310,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const color = btn.dataset.color;
         if (!color) return;
         writeAvatarColor(color);
+        persistAvatarColor(color);
         const fullName = document.getElementById('profileFullName')?.value || '';
         applyAvatar(fullName);
+        window.refreshUserNav?.();
     });
 
     // Avatar upload
@@ -314,12 +328,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!dataUrl?.startsWith('data:image/')) { alert('Invalid image.'); return; }
             writeAvatar(dataUrl);
             applyAvatar(document.getElementById('profileFullName')?.value);
+            window.refreshUserNav?.();
         };
         reader.readAsDataURL(file);
     });
     document.getElementById('avatarRemoveBtn')?.addEventListener('click', () => {
         writeAvatar(null);
         applyAvatar(document.getElementById('profileFullName')?.value);
+        window.refreshUserNav?.();
     });
 
     // Profile form

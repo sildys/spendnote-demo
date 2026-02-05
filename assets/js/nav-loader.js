@@ -63,6 +63,22 @@ function loadNav(containerId = 'nav-container') {
         container.innerHTML = NAV_HTML;
         highlightCurrentPage();
         initNavEvents();
+
+        // Ensure avatar/identity gets refreshed even if main.js loads after nav.
+        (function scheduleIdentityRefresh() {
+            let tries = 0;
+            const tick = () => {
+                tries += 1;
+                if (typeof window.refreshUserNav === 'function') {
+                    window.refreshUserNav();
+                    return;
+                }
+                if (tries < 40) {
+                    setTimeout(tick, 100);
+                }
+            };
+            setTimeout(tick, 0);
+        })();
     }
 }
 
