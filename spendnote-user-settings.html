@@ -30,25 +30,25 @@
             <div>
                 <!-- PROFILE -->
                 <div class="settings-card">
+                    <div class="profile-header-section">
+                        <div class="avatar-preview" id="avatarPreview">
+                            <span id="avatarInitials">—</span>
+                            <img id="avatarImg" alt="Avatar">
+                        </div>
+                        <div class="profile-header-info">
+                            <div class="avatar-name" id="profileDisplayName">—</div>
+                            <div class="avatar-email" id="profileDisplayEmail">—</div>
+                            <div class="avatar-actions">
+                                <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+                                <button type="button" class="btn btn-secondary btn-small" id="avatarUploadBtn"><i class="fas fa-upload"></i> Upload</button>
+                                <button type="button" class="btn btn-secondary btn-small" id="avatarRemoveBtn"><i class="fas fa-trash"></i> Remove</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="settings-card-header">
                         <div>
-                            <div class="settings-card-title">Profile</div>
-                            <div class="settings-card-subtitle">Your personal information</div>
-                        </div>
-                        <div class="profile-header-right">
-                            <div class="avatar-preview" id="avatarPreview">
-                                <span id="avatarInitials">—</span>
-                                <img id="avatarImg" alt="Avatar">
-                            </div>
-                            <div class="avatar-info">
-                                <div class="avatar-name" id="profileDisplayName">—</div>
-                                <div class="avatar-email" id="profileDisplayEmail">—</div>
-                                <div class="avatar-actions">
-                                    <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
-                                    <button type="button" class="btn btn-secondary btn-small" id="avatarUploadBtn"><i class="fas fa-upload"></i> Upload</button>
-                                    <button type="button" class="btn btn-secondary btn-small" id="avatarRemoveBtn"><i class="fas fa-trash"></i> Remove</button>
-                                </div>
-                            </div>
+                            <div class="settings-card-title">Profile Information</div>
+                            <div class="settings-card-subtitle">Your account details</div>
                         </div>
                     </div>
                     <form id="profileForm">
@@ -65,27 +65,42 @@
                                 <label>Role</label>
                                 <div id="profileRole" class="role-badge member" style="width: fit-content;">—</div>
                             </div>
-                            <div class="form-group span-2">
-                                <label for="accentColorPicker">Accent Color</label>
-                                <div class="accent-row">
-                                    <div class="accent-swatches" id="accentSwatches">
-                                        <button type="button" class="accent-swatch" data-color="#10b981" style="background:#10b981;"></button>
-                                        <button type="button" class="accent-swatch" data-color="#3b82f6" style="background:#3b82f6;"></button>
-                                        <button type="button" class="accent-swatch" data-color="#8b5cf6" style="background:#8b5cf6;"></button>
-                                        <button type="button" class="accent-swatch" data-color="#f59e0b" style="background:#f59e0b;"></button>
-                                        <button type="button" class="accent-swatch" data-color="#ec4899" style="background:#ec4899;"></button>
-                                        <button type="button" class="accent-swatch" data-color="#ef4444" style="background:#ef4444;"></button>
-                                    </div>
-                                    <input type="color" id="accentColorPicker" value="#10b981" />
-                                    <div class="accent-value" id="accentColorValue">#10b981</div>
-                                </div>
-                            </div>
                         </div>
                         <div class="form-actions">
                             <button type="button" class="btn btn-secondary" id="profileResetBtn">Reset</button>
                             <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
                         </div>
                     </form>
+                </div>
+
+                <!-- PERSONALIZATION -->
+                <div class="settings-card">
+                    <div class="settings-card-header">
+                        <div>
+                            <div class="settings-card-title">Personalization</div>
+                            <div class="settings-card-subtitle">Customize your app appearance</div>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group span-2">
+                            <label for="accentColorPicker">Accent Color</label>
+                            <div class="accent-row">
+                                <div class="accent-swatches" id="accentSwatches">
+                                    <button type="button" class="accent-swatch" data-color="#10b981" style="background:#10b981;"></button>
+                                    <button type="button" class="accent-swatch" data-color="#3b82f6" style="background:#3b82f6;"></button>
+                                    <button type="button" class="accent-swatch" data-color="#8b5cf6" style="background:#8b5cf6;"></button>
+                                    <button type="button" class="accent-swatch" data-color="#f59e0b" style="background:#f59e0b;"></button>
+                                    <button type="button" class="accent-swatch" data-color="#ec4899" style="background:#ec4899;"></button>
+                                    <button type="button" class="accent-swatch" data-color="#ef4444" style="background:#ef4444;"></button>
+                                </div>
+                                <input type="color" id="accentColorPicker" value="#10b981" />
+                                <div class="accent-value" id="accentColorValue">#10b981</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-primary" id="savePersonalizationBtn"><i class="fas fa-save"></i> Apply</button>
+                    </div>
                 </div>
 
                 <!-- RECEIPT IDENTITY -->

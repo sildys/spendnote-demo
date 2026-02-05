@@ -33,11 +33,19 @@
     flex-wrap: wrap;
 }
 
-.profile-header-right {
+.profile-header-section {
     display: flex;
     align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(var(--active-rgb), 0.05), rgba(var(--active-rgb), 0.02));
+    border-radius: 12px;
+    margin-bottom: 24px;
+}
+
+.profile-header-info {
+    flex: 1;
+    min-width: 0;
 }
 
 .settings-card-title {

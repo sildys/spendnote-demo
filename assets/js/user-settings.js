@@ -384,14 +384,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         const fullName = document.getElementById('profileFullName')?.value?.trim();
         if (!fullName) { alert('Full Name is required.'); return; }
 
-        const accentHex = document.getElementById('accentColorPicker')?.value || readAccentColor() || '#10b981';
-        writeAccent(accentHex);
-        applyAccent(accentHex);
-
         const result = await window.db.profiles.update({ full_name: fullName });
         if (!result?.success) { alert(result?.error || 'Failed to save.'); return; }
         fillProfile(result.data);
         alert('Profile saved.');
+    });
+
+    // Personalization Apply button
+    document.getElementById('savePersonalizationBtn')?.addEventListener('click', () => {
+        const accentHex = document.getElementById('accentColorPicker')?.value || readAccentColor() || '#10b981';
+        writeAccent(accentHex);
+        applyAccent(accentHex);
+        alert('Accent color applied.');
     });
 
     // Logo upload
