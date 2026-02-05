@@ -513,8 +513,14 @@ function initContactAutocomplete() {
 
     function select(c) {
         input.value = c.name;
-        getEl('modalContactAddress').value = c.address;
-        getEl('modalContactId').value = c.id;
+        if (typeof window.__setModalContactAddress === 'function') {
+            window.__setModalContactAddress(c.address);
+        } else {
+            const addrEl = getEl('modalContactAddress');
+            if (addrEl) addrEl.value = c.address;
+        }
+        const idEl = getEl('modalContactId');
+        if (idEl) idEl.value = '';
         dropdown.classList.remove('show');
         selectedIdx = -1;
     }
@@ -677,6 +683,8 @@ function initDashboardModal() {
 
     const modalAmount = getEl('modalAmount');
     if (modalAmount) modalAmount.addEventListener('input', updateLineItemsTotal);
+
+    initContactAutocomplete();
 
     const descInput = getEl('modalDescription');
     const descDropdown = getEl('descriptionAutocomplete');
