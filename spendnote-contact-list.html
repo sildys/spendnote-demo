@@ -897,7 +897,10 @@
                     : `<div class="Contact-contact">${escapeHtml(contactText)}</div>`;
 
                 const addressHtml = address
-                    ? `<div class="Contact-address">${escapeHtml(address)}</div>`
+                    ? `<div class="Contact-contact">${escapeHtml(address)}</div>`
+                    : '';
+                const emailHtml = email
+                    ? `<div class="Contact-address">${escapeHtml(email)}</div>`
                     : '';
 
                 const stats = (c?.id && statsByContactId.has(String(c.id))) ? statsByContactId.get(String(c.id)) : null;
@@ -936,8 +939,8 @@
                             <div class="Contact-name">${escapeHtml(name)}</div>
                         </td>
                         <td>
-                            ${contactTextHtml}
-                            ${addressHtml}
+                            ${addressHtml || '<div class="Contact-contact" style="color: var(--text-muted); font-style: italic;">—</div>'}
+                            ${emailHtml}
                         </td>
                         <td style="text-align: center;">
                             <div style="display: flex; gap: 4px; justify-content: center;">
