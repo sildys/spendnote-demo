@@ -780,6 +780,7 @@ async function duplicateTransaction(txId) {
 
     try {
         const tx = await window.db.transactions.getById(txId);
+        console.log('[Duplicate] Transaction data:', tx);
         if (!tx) {
             alert('Transaction not found.');
             return;
@@ -803,6 +804,8 @@ async function duplicateTransaction(txId) {
             note: tx.notes || tx.note || '',
             lineItems: extraItems
         };
+        console.log('[Duplicate] Preset:', preset);
+        console.log('[Duplicate] Line items:', lineItems);
 
         // Navigate to dashboard if not already there
         if (!document.getElementById('createTransactionModal')) {
