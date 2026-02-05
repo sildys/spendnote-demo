@@ -403,6 +403,11 @@ function openModal(preset) {
     if (Object.prototype.hasOwnProperty.call(options, 'note')) {
         const noteEl = getEl('modalNote');
         if (noteEl) noteEl.value = options.note || '';
+        // Open note section if there's data
+        if (options.note) {
+            const noteSection = getEl('modalNoteSection');
+            if (noteSection) noteSection.open = true;
+        }
     }
 
     // Pre-fill line items if provided (for duplicate)
