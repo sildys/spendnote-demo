@@ -530,16 +530,11 @@ function initContactAutocomplete() {
     }
 
     function show(results) {
-        if (!results.length && input.value.length > 0) {
-            dropdown.innerHTML = '<div class="autocomplete-add-new" data-action="add-new"><i class="fas fa-plus"></i> Add "' + input.value + '" as new Contact</div>';
-            dropdown.classList.add('show');
-            return;
-        }
         if (!results.length) { dropdown.classList.remove('show'); return; }
 
         var html = results.map(function(c, i) {
             return '<div class="autocomplete-item ' + (i === selectedIdx ? 'active' : '') + '" data-index="' + i + '"><div class="autocomplete-item-name">' + c.name + '</div><div class="autocomplete-item-details">' + (c.displayId ? '<div class="autocomplete-item-detail"><i class="fas fa-tag"></i>' + c.displayId + '</div>' : '') + (c.address ? '<div class="autocomplete-item-detail"><i class="fas fa-map-marker-alt"></i>' + c.address.split(',')[0] + '</div>' : '') + '</div></div>';
-        }).join('') + '<div class="autocomplete-add-new" data-action="add-new"><i class="fas fa-plus"></i> Add new Contact</div>';
+        }).join('');
 
         dropdown.innerHTML = html;
         dropdown.classList.add('show');
@@ -550,9 +545,6 @@ function initContactAutocomplete() {
                 if (f[+item.dataset.index]) select(f[+item.dataset.index]);
             });
         });
-
-        var addNew = dropdown.querySelector('.autocomplete-add-new');
-        if (addNew) addNew.addEventListener('click', function() { dropdown.classList.remove('show'); input.focus(); });
     }
 
     function updateActive() {
