@@ -411,19 +411,21 @@ function openModal(preset) {
         updateModalModeUI('detailed', { persist: false });
         
         // Render extra line items
-        const container = getEl('modalLineItemsContainer');
-        if (container) {
-            container.innerHTML = '';
+        const itemsContainer = getEl('modalLineItemsContainer');
+        if (itemsContainer) {
+            itemsContainer.innerHTML = '';
             options.lineItems.forEach(function(item, idx) {
                 const row = document.createElement('div');
                 row.className = 'form-row-line-item';
                 row.innerHTML = '<div class="form-group"><input type="text" class="line-item-input" data-item-index="' + (idx + 1) + '" placeholder="Item description" value="' + (item.description || '').replace(/"/g, '&quot;') + '"></div><div class="form-group"><div class="amount-input-wrapper"><span class="currency-symbol">$</span><input type="text" class="line-item-input line-item-amount" data-amount-index="' + (idx + 1) + '" placeholder="0.00" value="' + (item.amount || '') + '"></div></div>';
-                container.appendChild(row);
+                itemsContainer.appendChild(row);
             });
             setDetailedItemsExpanded(true);
-            updateLineItemsTotal();
         }
     }
+
+    // Always update total after prefill
+    setTimeout(function() { updateLineItemsTotal(); }, 0);
 
     requestAnimationFrame(function() {
         requestAnimationFrame(function() {
