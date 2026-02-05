@@ -67,7 +67,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Populate user identity in nav + real logout (only on app pages)
     if (window.auth && window.db && window.supabaseClient) {
-        updateUserNav();
+        // Small delay to ensure nav is fully loaded
+        setTimeout(() => {
+            updateUserNav();
+        }, 100);
         bindLogoutLinks();
     }
 
@@ -155,6 +158,9 @@ function getInitials(name) {
     const initials = parts.slice(0, 2).map((part) => part[0].toUpperCase()).join('');
     return initials || 'U';
 }
+
+// Export to window
+window.updateUserNav = updateUserNav;
 
 function bindLogoutLinks() {
     const logoutLinks = Array.from(document.querySelectorAll('[data-action="logout"], .user-dropdown-item'))
