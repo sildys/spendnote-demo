@@ -245,7 +245,20 @@ function initTransactionForm() {
                 }
             }
 
-            // Ensure contact exists
+            // Try to find existing contact by name to link the transaction
+            if (!payload.contact_id && contactName && window.db?.contacts?.getAll) {
+                try {
+                    const allContacts = await window.db.contacts.getAll();
+                    const match = (allContacts || []).find(c => c.name && c.name.toLowerCase() === contactName.toLowerCase());
+                    if (match && match.id) {
+                        payload.contact_id = match.id;
+                    }
+                } catch (e) {
+                    console.warn('[TxSave] Could not lookup contact:', e);
+                }
+            }
+
+            // Ensure contact exists (create new if Save to Contacts is checked)
             let ensuredContact = null;
             const shouldSaveContact = Boolean(document.getElementById('modalSaveContact')?.checked);
             if (!payload.contact_id && shouldSaveContact && window.db?.contacts?.getOrCreate && typeof window.db.contacts.getOrCreate === 'function') {
