@@ -268,7 +268,9 @@ function initTransactionForm() {
             }
 
             // Create transaction
+            console.log('[TxSave] Creating transaction with payload:', payload);
             const result = await window.db.transactions.create(payload);
+            console.log('[TxSave] Result:', result);
             if (!result || !result.success) {
                 const raw = String(result?.error || '').trim();
                 const lower = raw.toLowerCase();
