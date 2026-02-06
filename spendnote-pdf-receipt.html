@@ -23,6 +23,35 @@
       padding: 20px;
       -webkit-font-smoothing: antialiased;
     }
+
+    .actions {
+      max-width: 800px;
+      margin: 0 auto 12px auto;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      color: #111827;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .no-print {
+      display: block;
+    }
     
     .receipt {
       max-width: 800px;
@@ -299,6 +328,22 @@
         padding: 0;
         max-width: 100%;
       }
+
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    body.exporting {
+      background: white;
+      padding: 0;
+    }
+
+    body.exporting .receipt {
+      box-shadow: none;
+      border-radius: 0;
+      padding: 0;
+      max-width: 100%;
     }
     
     /* SCREEN */
@@ -309,6 +354,9 @@
     }
   </style></head>
 <body>
+  <div class="actions no-print">
+    <button id="btnDownloadPdf" type="button" class="btn" disabled>Download PDF</button>
+  </div>
   <div class="receipt">
     <div class="void-watermark" aria-hidden="true">VOID</div>
     
@@ -434,10 +482,91 @@
 
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script>
 const urlParams = new URLSearchParams(window.location.search);
 const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
 const isItemsSingle = itemsMode === 'single';
+
+function toSafeFileName(input) {
+  return String(input || 'receipt')
+    .trim()
+    .replace(/[\\/:*?"<>|]+/g, '-')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function downloadReceiptPdf() {
+  const receiptEl = document.querySelector('.receipt');
+  if (!receiptEl) return;
+
+  if (typeof window.html2canvas !== 'function') {
+    alert('PDF export failed: html2canvas is not available.');
+    return;
+  }
+
+  const jspdf = window.jspdf;
+  const JsPDF = jspdf && jspdf.jsPDF ? jspdf.jsPDF : null;
+  if (!JsPDF) {
+    alert('PDF export failed: jsPDF is not available.');
+    return;
+  }
+
+  const btn = document.getElementById('btnDownloadPdf');
+  const prevText = btn ? btn.textContent : '';
+  try {
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Preparing PDF...';
+    }
+
+    document.body.classList.add('exporting');
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    const canvas = await window.html2canvas(receiptEl, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      useCORS: true,
+      logging: false
+    });
+
+    const imgData = canvas.toDataURL('image/png');
+
+    const pdf = new JsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+    const pageW = pdf.internal.pageSize.getWidth();
+    const pageH = pdf.internal.pageSize.getHeight();
+
+    const imgW = canvas.width;
+    const imgH = canvas.height;
+    const ratio = Math.min(pageW / imgW, pageH / imgH);
+
+    const renderW = imgW * ratio;
+    const renderH = imgH * ratio;
+    const x = (pageW - renderW) / 2;
+    const y = (pageH - renderH) / 2;
+
+    pdf.addImage(imgData, 'PNG', x, y, renderW, renderH, undefined, 'FAST');
+
+    const displayId = document.title || 'receipt';
+    const fileName = `${toSafeFileName(displayId)}.pdf`;
+    pdf.save(fileName);
+  } catch (e) {
+    console.error(e);
+    alert('Could not generate PDF.');
+  } finally {
+    document.body.classList.remove('exporting');
+    if (btn) {
+      btn.textContent = prevText;
+      btn.disabled = false;
+    }
+  }
+}
+
+try {
+  const btn = document.getElementById('btnDownloadPdf');
+  if (btn) btn.addEventListener('click', downloadReceiptPdf);
+} catch (_) {}
 
 const initialVoid = urlParams.get('void') === '1';
 window.__spendnoteReceiptVoid = initialVoid;
@@ -660,6 +789,11 @@ if (isDemo) {
     if (notesTextEl) notesTextEl.textContent = demoNote;
     if (notesEl) notesEl.style.display = '';
   }
+
+  try {
+    const btn = document.getElementById('btnDownloadPdf');
+    if (btn) btn.disabled = false;
+  } catch (_) {}
 }
 
 // Logo
@@ -965,6 +1099,11 @@ if (urlParams.get('signatures') === '0') {
         if (displayId) {
           document.title = displayId;
         }
+
+        try {
+          const btn = document.getElementById('btnDownloadPdf');
+          if (btn) btn.disabled = false;
+        } catch (_) {}
       } catch (_) {
         // ignore
       }

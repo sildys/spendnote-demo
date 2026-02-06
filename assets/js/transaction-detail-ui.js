@@ -45,7 +45,7 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260206-03');
+        params.append('v', 'receipt-20260206-05');
         if (txId) params.append('txId', txId);
 
         const addrOverride = String(overrideContactAddress || '').trim();
@@ -423,7 +423,17 @@ html, body { height: auto !important; overflow: auto !important; }
         }
         if (pdfBtn) {
             pdfBtn.addEventListener('click', () => {
-                setFormat('pdf');
+                const receiptWindow = window.open('about:blank', '_blank');
+                const url = buildReceiptUrl('pdf');
+
+                if (receiptWindow && !receiptWindow.closed) {
+                    receiptWindow.location.href = url;
+                } else {
+                    const opened = window.open(url, '_blank');
+                    if (!opened) {
+                        alert('Popup blocked. Please allow popups to download PDFs.');
+                    }
+                }
             });
         }
         if (emailBtn) {
