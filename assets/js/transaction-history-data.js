@@ -16,6 +16,34 @@
         return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
     }
 
+    function normalizeContactQuery(value) {
+        const v = String(value || '').trim().toLowerCase();
+        const m = /^cont-(\d+)$/.exec(v);
+        if (!m) return v;
+        const n = Number(m[1]);
+        if (!Number.isFinite(n) || n <= 0) return v;
+        return `cont-${String(n).padStart(3, '0')}`;
+    }
+
+    function normalizeCashBoxQuery(value) {
+        const v = String(value || '').trim().toLowerCase();
+        const m = /^(cb|sn)-(\d+)$/.exec(v);
+        if (!m) return v;
+        const n = Number(m[2]);
+        if (!Number.isFinite(n) || n <= 0) return v;
+        return `${m[1]}-${String(n).padStart(3, '0')}`;
+    }
+
+    function normalizeTxIdQuery(value) {
+        const v = String(value || '').trim().toLowerCase();
+        const m = /^sn(\d+)-(\d+)$/.exec(v);
+        if (!m) return v;
+        const cb = Number(m[1]);
+        const seq = Number(m[2]);
+        if (!Number.isFinite(cb) || cb <= 0 || !Number.isFinite(seq) || seq <= 0) return v;
+        return `sn${String(cb)}-${String(seq).padStart(3, '0')}`;
+    }
+
     function normalizeHexColor(hex) {
         const h = String(hex || '').trim();
         if (!h) return '#059669';
@@ -134,7 +162,7 @@
         cashBoxes.forEach((box) => {
             const opt = document.createElement('option');
             opt.value = box.id;
-            opt.textContent = safeText(box.name, box.id);
+            opt.textContent = safeText(box.name, 'Cash Box');
             selectEl.appendChild(opt);
         });
 
@@ -149,12 +177,30 @@
 
         (cashBoxes || []).forEach((box) => {
             if (!box) return;
+            const seq = Number(box?.sequence_number);
+            const displaySn = Number.isFinite(seq) && seq > 0 ? `SN-${String(seq).padStart(3, '0')}` : '';
+            const displayCb = Number.isFinite(seq) && seq > 0 ? `CB-${String(seq).padStart(3, '0')}` : '';
             const opt = document.createElement('option');
             const name = safeText(box.name, '');
             const id = safeText(box.id, '');
             opt.value = name || id;
-            opt.label = id ? `${name || id} (${id})` : (name || id);
+            const labelId = displaySn || displayCb;
+            opt.label = labelId ? `${name || 'Cash Box'} (${labelId})` : (name || 'Cash Box');
             datalistEl.appendChild(opt);
+
+            if (displaySn) {
+                const optSn = document.createElement('option');
+                optSn.value = displaySn;
+                optSn.label = name || 'Cash Box';
+                datalistEl.appendChild(optSn);
+            }
+
+            if (displayCb) {
+                const optCb = document.createElement('option');
+                optCb.value = displayCb;
+                optCb.label = name || 'Cash Box';
+                datalistEl.appendChild(optCb);
+            }
         });
     }
 
@@ -181,9 +227,14 @@
         });
     }
 
-    function getCashBoxIdFromQuery(query, cashBoxes) {
+    function getCashBoxIdFromQuery(query, cashBoxes, cashBoxByQuery) {
         const q = safeText(query, '').trim().toLowerCase();
         if (!q) return null;
+
+        const mapped = cashBoxByQuery && typeof cashBoxByQuery.get === 'function'
+            ? cashBoxByQuery.get(normalizeCashBoxQuery(q))
+            : null;
+        if (mapped) return mapped;
 
         // Exact ID match
         const exactId = (cashBoxes || []).find((b) => safeText(b?.id, '').toLowerCase() === q);
@@ -260,10 +311,10 @@
 
     function getFiltersFromUi(state) {
         const cashBoxQuery = safeText(qs('#filterCashBoxQuery')?.value, '');
-        const cashBoxId = getCashBoxIdFromQuery(cashBoxQuery, state.cashBoxes);
+        const cashBoxId = getCashBoxIdFromQuery(cashBoxQuery, state.cashBoxes, state.cashBoxByQuery);
         const currency = safeText(qs('#filterCurrency')?.value, '').trim().toUpperCase();
-        const txIdQuery = safeText(qs('#filterTxId')?.value, '').toLowerCase();
-        const contactQuery = safeText(qs('#filterContactQuery')?.value, '').toLowerCase();
+        const txIdQuery = normalizeTxIdQuery(safeText(qs('#filterTxId')?.value, '')).toLowerCase();
+        const contactQuery = normalizeContactQuery(safeText(qs('#filterContactQuery')?.value, '')).toLowerCase();
         const createdById = safeText(qs('#filterCreatedBy')?.value, '');
 
         const dateFrom = safeText(qs('#filterDateFrom')?.value, '');
@@ -626,7 +677,8 @@
             cashBoxes: [],
             cashBoxById: new Map(),
             totalTxCount: 0,
-            contactByQuery: new Map()
+            contactByQuery: new Map(),
+            cashBoxByQuery: new Map()
         };
 
         const txSelect = 'id, cash_box_id, type, amount, description, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name, cash_box_sequence, tx_sequence_in_box, status, voided_at, voided_by_user_name, contact:contacts(id, name, sequence_number)';
@@ -1101,7 +1153,7 @@
                     const ids = Array.isArray(serverCtx.cashBoxIds) ? serverCtx.cashBoxIds : null;
                     if (ids && ids.length === 1) {
                         const cb = cashBoxById.get(String(ids[0])) || null;
-                        return safeText(cb?.name, ids[0]);
+                        return safeText(cb?.name, '—');
                     }
                     if (ids && ids.length > 1) return `Multiple (${ids.length})`;
                     return 'All';
@@ -1170,7 +1222,7 @@
                     cashBoxQueryInput.value = safeText(only.name, only.id);
                 } else if (urlCashBoxId) {
                     const pre = state.cashBoxes.find((b) => String(b?.id) === String(urlCashBoxId));
-                    cashBoxQueryInput.value = pre ? safeText(pre.name, pre.id) : urlCashBoxId;
+                    cashBoxQueryInput.value = pre ? safeText(pre.name, '') : '';
                 }
             }
 
@@ -1270,13 +1322,21 @@
 
         try {
             if (debug) console.log('[TxHistory] Fetching cash boxes...');
-            const cashBoxes = await window.db.cashBoxes.getAll({ select: 'id, name, color, currency' });
+            const cashBoxes = await window.db.cashBoxes.getAll({ select: 'id, name, color, currency, sequence_number' });
             state.cashBoxes = Array.isArray(cashBoxes) ? cashBoxes : [];
             if (debug) console.log('[TxHistory] Got', state.cashBoxes.length, 'cash boxes');
 
             state.cashBoxes.forEach((cb) => {
                 if (cb && cb.id) {
                     cashBoxById.set(String(cb.id), cb);
+
+                    const seq = Number(cb?.sequence_number);
+                    if (Number.isFinite(seq) && seq > 0) {
+                        const cbCode = `cb-${String(seq).padStart(3, '0')}`;
+                        const snCode = `sn-${String(seq).padStart(3, '0')}`;
+                        state.cashBoxByQuery.set(cbCode, String(cb.id));
+                        state.cashBoxByQuery.set(snCode, String(cb.id));
+                    }
                 }
             });
 
