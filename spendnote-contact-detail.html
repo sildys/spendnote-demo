@@ -518,7 +518,7 @@
     <script>
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const contactId = urlParams.get('id');
+        const contactIdRaw = urlParams.get('id');
         const mode = urlParams.get('mode');
 
         // Initialize page
@@ -538,6 +538,20 @@
 
         function isUuid(value) {
             return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || ''));
+        }
+
+        const contactId = (() => {
+            const v = String(contactIdRaw || '').trim();
+            if (!v) return '';
+            if (isUuid(v)) return v;
+            const seq = parseContactDisplayId(v);
+            if (Number.isFinite(seq)) return v;
+            return '';
+        })();
+
+        if (contactIdRaw && !contactId && mode !== 'new') {
+            alert('Invalid Contact ID.');
+            window.location.replace('spendnote-contact-list.html');
         }
 
         function safeText(value, fallback = '') {
@@ -567,8 +581,7 @@
             }
             const receiptNumber = safeText(tx?.receipt_number, '');
             if (receiptNumber) return receiptNumber;
-            const id = safeText(tx?.id, '');
-            return id ? (id.length > 10 ? `${id.slice(0, 8)}…` : id) : '—';
+            return '—';
         }
 
         let resolvedContactUuid = null;

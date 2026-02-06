@@ -746,8 +746,7 @@
             }
             const receiptNumber = String(tx?.receipt_number || '').trim();
             if (receiptNumber) return receiptNumber;
-            const id = String(tx?.id || '').trim();
-            return id ? id.slice(0, 8) : '—';
+            return '—';
         }
         
         function applyFilters() {
@@ -929,7 +928,7 @@
                 const extraIds = cashBoxIds.slice(maxDots);
                 const extraNames = extraIds.map(id => {
                     const cb = cashBoxById.get(String(id)) || null;
-                    return cb?.name || id.slice(0, 8);
+                    return cb?.name || '—';
                 }).join(', ');
                 
                 let dotsHtml = '';
@@ -949,9 +948,14 @@
                     }
                 }
 
-                const href = c?.id
-                    ? `spendnote-contact-detail.html?id=${encodeURIComponent(String(c.id))}`
-                    : 'spendnote-contact-list.html';
+                const href = (() => {
+                    const contactUuid = String(c?.id || '').trim();
+                    if (!contactUuid) return 'spendnote-contact-list.html';
+                    const display = String(displayId || '').trim();
+                    const useDisplay = display && display !== '—';
+                    const idParam = useDisplay ? display : contactUuid;
+                    return `spendnote-contact-detail.html?id=${encodeURIComponent(idParam)}`;
+                })();
 
                 const tr = document.createElement('tr');
                 tr.dataset.cashBoxIds = cashBoxIds.join(',');
