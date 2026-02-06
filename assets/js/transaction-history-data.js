@@ -642,7 +642,7 @@
         const overlayId = 'spendnoteBulkPdfOverlay';
         const printStyleId = 'spendnoteBulkPdfPrintStyle';
 
-        function showPdfOverlay(rowsForPdf, title, summaryLines) {
+        function showPdfOverlay(rowsForPdf, title, summaryLines, metaText) {
             let overlay = document.getElementById(overlayId);
             if (!overlay) {
                 overlay = document.createElement('div');
@@ -657,6 +657,7 @@
                   <div id="${overlayId}Panel" style="max-width:1100px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,0.35);overflow:hidden;">
                     <div style="padding:18px 18px 14px;border-bottom:1px solid #e5e7eb;">
                       <div id="${overlayId}Title" style="font-size:16px;font-weight:900;color:#0f172a;"></div>
+                      <div id="${overlayId}Meta" style="margin-top:6px;font-size:12px;color:#0f172a;opacity:0.7;line-height:1.4;"></div>
                       <div id="${overlayId}Hint" style="margin-top:6px;font-size:12px;color:#64748b;line-height:1.5;">Click <strong>Print / Save as PDF</strong>, then choose <strong>Save as PDF</strong> in the print dialog. (Shortcut: <strong>Ctrl+P</strong>)</div>
                       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
                         <button type="button" id="${overlayId}Print" style="appearance:none;border:1px solid #0f172a;background:#0f172a;color:#fff;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;">Print / Save as PDF</button>
@@ -706,6 +707,13 @@
 
             const titleEl = document.getElementById(`${overlayId}Title`);
             if (titleEl) titleEl.textContent = String(title || 'Export');
+
+            const metaEl = document.getElementById(`${overlayId}Meta`);
+            const meta = String(metaText || '').trim();
+            if (metaEl) {
+                metaEl.textContent = meta;
+                metaEl.style.display = meta ? 'block' : 'none';
+            }
 
             const tbodyEl = document.getElementById(`${overlayId}Body`);
             const countEl = document.getElementById(`${overlayId}Count`);
@@ -976,7 +984,13 @@
                 });
 
                 summaryLines.sort((a, b) => String(a.currency).localeCompare(String(b.currency)));
-                showPdfOverlay(rowsForPdf, `Filtered transactions (${rowsForPdf.length})`, summaryLines);
+                const fFrom = safeText(serverCtx?.filters?.dateFrom, '');
+                const fTo = safeText(serverCtx?.filters?.dateTo, '');
+                const rangeText = fFrom && fTo
+                    ? `Date range: ${fFrom} – ${fTo}`
+                    : (fFrom ? `Date range: from ${fFrom}` : (fTo ? `Date range: until ${fTo}` : 'Date range: All time'));
+
+                showPdfOverlay(rowsForPdf, `Filtered transactions (${rowsForPdf.length})`, summaryLines, rangeText);
             } finally {
                 if (btn) btn.disabled = false;
                 if (btn) btn.textContent = prevText;
