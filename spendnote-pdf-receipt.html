@@ -799,6 +799,17 @@ if (isDemo) {
     const btn = document.getElementById('btnDownloadPdf');
     if (btn) btn.disabled = false;
   } catch (_) {}
+
+  try {
+    if (shouldAutoDownload) {
+      setTimeout(() => {
+        downloadReceiptPdf();
+        setTimeout(() => {
+          try { window.close(); } catch (_) {}
+        }, 800);
+      }, 150);
+    }
+  } catch (_) {}
 }
 
 // Logo
@@ -1108,6 +1119,17 @@ if (urlParams.get('signatures') === '0') {
         try {
           const btn = document.getElementById('btnDownloadPdf');
           if (btn) btn.disabled = false;
+        } catch (_) {}
+
+        try {
+          if (shouldAutoDownload) {
+            setTimeout(() => {
+              downloadReceiptPdf();
+              setTimeout(() => {
+                try { window.close(); } catch (_) {}
+              }, 800);
+            }, 150);
+          }
         } catch (_) {}
       } catch (_) {
         // ignore
