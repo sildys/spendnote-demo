@@ -657,7 +657,7 @@
                   <div id="${overlayId}Panel" style="max-width:1100px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,0.35);overflow:hidden;">
                     <div style="padding:18px 18px 14px;border-bottom:1px solid #e5e7eb;">
                       <div id="${overlayId}Title" style="font-size:16px;font-weight:900;color:#0f172a;"></div>
-                      <div id="${overlayId}Meta" style="margin-top:6px;font-size:12px;color:#0f172a;opacity:0.7;line-height:1.4;"></div>
+                      <div id="${overlayId}Meta" style="margin-top:6px;font-size:12px;color:#0f172a;opacity:0.7;line-height:1.4;white-space:pre-line;"></div>
                       <div id="${overlayId}Hint" style="margin-top:6px;font-size:12px;color:#64748b;line-height:1.5;">Click <strong>Print / Save as PDF</strong>, then choose <strong>Save as PDF</strong> in the print dialog. (Shortcut: <strong>Ctrl+P</strong>)</div>
                       <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
                         <button type="button" id="${overlayId}Print" style="appearance:none;border:1px solid #0f172a;background:#0f172a;color:#fff;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;">Print / Save as PDF</button>
@@ -984,13 +984,73 @@
                 });
 
                 summaryLines.sort((a, b) => String(a.currency).localeCompare(String(b.currency)));
-                const fFrom = safeText(serverCtx?.filters?.dateFrom, '');
-                const fTo = safeText(serverCtx?.filters?.dateTo, '');
-                const rangeText = fFrom && fTo
-                    ? `Date range: ${fFrom} – ${fTo}`
-                    : (fFrom ? `Date range: from ${fFrom}` : (fTo ? `Date range: until ${fTo}` : 'Date range: All time'));
+                const filters = serverCtx?.filters || {};
 
-                showPdfOverlay(rowsForPdf, `Filtered transactions (${rowsForPdf.length})`, summaryLines, rangeText);
+                const uiCashBoxQuery = safeText(qs('#filterCashBoxQuery')?.value, '').trim();
+                const uiCurrency = safeText(qs('#filterCurrency')?.value, '').trim().toUpperCase();
+                const uiTxId = safeText(qs('#filterTxId')?.value, '').trim();
+                const uiContact = safeText(qs('#filterContactQuery')?.value, '').trim();
+                const uiCreatedByText = safeText(qs('#filterCreatedBy')?.selectedOptions?.[0]?.textContent, '').trim();
+                const uiDateFrom = safeText(qs('#filterDateFrom')?.value, '').trim();
+                const uiDateTo = safeText(qs('#filterDateTo')?.value, '').trim();
+                const uiAmtMin = safeText(qs('#filterAmountMin')?.value, '').trim();
+                const uiAmtMax = safeText(qs('#filterAmountMax')?.value, '').trim();
+
+                const fFrom = uiDateFrom || safeText(filters?.dateFrom, '');
+                const fTo = uiDateTo || safeText(filters?.dateTo, '');
+                const rangeText = fFrom && fTo
+                    ? `${fFrom} – ${fTo}`
+                    : (fFrom ? `from ${fFrom}` : (fTo ? `until ${fTo}` : 'All time'));
+
+                const cashBoxText = (() => {
+                    if (uiCashBoxQuery) return uiCashBoxQuery;
+                    const ids = Array.isArray(serverCtx.cashBoxIds) ? serverCtx.cashBoxIds : null;
+                    if (ids && ids.length === 1) {
+                        const cb = cashBoxById.get(String(ids[0])) || null;
+                        return safeText(cb?.name, ids[0]);
+                    }
+                    if (ids && ids.length > 1) return `Multiple (${ids.length})`;
+                    return 'All';
+                })();
+
+                const directionText = (() => {
+                    const d = String(filters?.direction || 'all').toLowerCase();
+                    if (d === 'in') return 'IN';
+                    if (d === 'out') return 'OUT';
+                    return 'All';
+                })();
+
+                const currencyText = uiCurrency || safeText(filters?.currency, '') || 'All';
+
+                const amountText = (() => {
+                    if (uiAmtMin && uiAmtMax) return `${uiAmtMin} – ${uiAmtMax}`;
+                    if (uiAmtMin) return `min ${uiAmtMin}`;
+                    if (uiAmtMax) return `max ${uiAmtMax}`;
+                    const min = filters?.amountMin;
+                    const max = filters?.amountMax;
+                    if (min !== null && min !== undefined && max !== null && max !== undefined) return `${min} – ${max}`;
+                    if (min !== null && min !== undefined) return `min ${min}`;
+                    if (max !== null && max !== undefined) return `max ${max}`;
+                    return 'All';
+                })();
+
+                const metaLines = [
+                    `Date range: ${rangeText}`,
+                    `Cash Box: ${cashBoxText}`,
+                    `Currency: ${currencyText}`,
+                    `Direction: ${directionText}`,
+                    `Transaction: ${uiTxId || safeText(filters?.txIdQuery, '') || 'Any'}`,
+                    `Contact: ${uiContact || 'Any'}`,
+                    `Created by: ${uiCreatedByText || 'All team members'}`,
+                    `Amount range: ${amountText}`
+                ];
+
+                showPdfOverlay(
+                    rowsForPdf,
+                    `Filtered transactions (${rowsForPdf.length})`,
+                    summaryLines,
+                    metaLines.join('\n')
+                );
             } finally {
                 if (btn) btn.disabled = false;
                 if (btn) btn.textContent = prevText;
