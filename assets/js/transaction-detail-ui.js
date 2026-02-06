@@ -584,8 +584,52 @@ html, body { height: auto !important; overflow: auto !important; }
                     `<tr><td style="padding:10px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;">${safeText(it.description, '—')}</td><td style="padding:10px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;text-align:right;font-weight:700;">${formatMoney(it.amount)}</td></tr>`
                 ).join('');
 
-                const pdfRelative = buildReceiptUrl('pdf', { download: '1' });
-                const pdfUrl = new URL(pdfRelative, window.location.origin).toString();
+                const pdfParams = new URLSearchParams();
+                pdfParams.set('demo', '1');
+                pdfParams.set('download', '1');
+                pdfParams.set('preview', '0');
+                pdfParams.set('demoCompany', companyName);
+                pdfParams.set('demoAddress', companyAddress);
+                pdfParams.set('demoContact', contactName);
+                pdfParams.set('demoContactAddress', contactAddress);
+                pdfParams.set('demoDate', dateStr);
+                pdfParams.set('demoCashBoxId', cashBoxCode);
+                pdfParams.set('demoReceiptId', receiptId);
+                pdfParams.set('demoCurrency', currency);
+                if (notesText) pdfParams.set('demoNote', notesText);
+
+                const itemsParam = effectiveItems
+                    .slice(0, 5)
+                    .map((it) => {
+                        const d = safeText(it?.description, '').replace(/\|/g, '/').replace(/;/g, ',');
+                        const a = Number(it?.amount);
+                        const amt = Number.isFinite(a) ? String(a) : '';
+                        return `${d}|${amt}`;
+                    })
+                    .join(';');
+                if (itemsParam) pdfParams.set('demoItems', itemsParam);
+                pdfParams.set('demoAmount', String(Number.isFinite(Number(tx.amount)) ? Number(tx.amount) : 0));
+
+                for (const [key, value] of Object.entries(displayOptions)) {
+                    pdfParams.set(key, String(value));
+                }
+                pdfParams.set('itemsMode', receiptMode === 'quick' ? 'single' : 'full');
+                pdfParams.set('recordedBy', '0');
+                for (const [key, value] of Object.entries(receiptText)) {
+                    const v = String(value || '').trim();
+                    if (v) pdfParams.set(key, v);
+                }
+
+                let storedLogo = '';
+                try { storedLogo = localStorage.getItem(RECEIPT_LOGO_KEY) || ''; } catch (_) {}
+                if (storedLogo) {
+                    pdfParams.set('logoKey', RECEIPT_LOGO_KEY);
+                } else if (receiptLogoUrl) {
+                    pdfParams.set('logoUrl', receiptLogoUrl);
+                }
+                if (currentTxIsVoided) pdfParams.set('void', '1');
+
+                const pdfUrl = `${window.location.origin}/spendnote-pdf-receipt.html?${pdfParams.toString()}`;
 
                 const total = formatMoney(tx.amount);
                 const notesText = safeText(tx.notes, '');
@@ -594,49 +638,112 @@ html, body { height: auto !important; overflow: auto !important; }
                 const isVoided = tx.status === 'voided';
                 const voidWatermark = isVoided ? `<div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-18deg);font-size:86px;font-weight:900;letter-spacing:4px;color:rgba(120,120,120,0.12);text-transform:uppercase;pointer-events:none;z-index:3;">VOID</div>` : '';
 
-                return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Arial,sans-serif;background:#f5f5f5;">
-<div style="max-width:600px;margin:0 auto;padding:40px 20px;">
-<div style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-<div style="background:linear-gradient(135deg,#059669 0%,#10b981 100%);padding:32px 40px;text-align:center;">
-<h1 style="color:#fff;font-size:24px;font-weight:900;margin:0 0 8px 0;">Cash Receipt</h1>
-<p style="color:rgba(255,255,255,0.9);font-size:14px;margin:0;">Your receipt is ready</p>
-</div>
-<div style="padding:40px;">
-<div style="background:#fafafa;border:1px solid #e0e0e0;border-radius:8px;padding:24px;margin-bottom:32px;position:relative;">
-${voidWatermark}
-<div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-<div><div style="font-size:20px;font-weight:900;color:#000;margin-bottom:4px;">Cash Receipt</div><div style="font-size:12px;color:#666;">Date: ${dateStr}</div></div>
-<div style="text-align:right;font-size:11px;color:#666;"><strong>Cash Box ID:</strong> ${cashBoxCode}<br><strong>Receipt ID:</strong> ${receiptId}</div>
-</div>
-<div style="height:2px;background:#000;margin:16px 0 20px;"></div>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
-<div><div style="font-size:11px;font-weight:700;color:#999;text-transform:uppercase;margin-bottom:8px;">From</div><div style="font-size:14px;font-weight:800;color:#000;margin-bottom:4px;">${companyName}</div><div style="font-size:13px;color:#666;">${companyAddress.replace(/\n/g, '<br>')}</div></div>
-<div><div style="font-size:11px;font-weight:700;color:#999;text-transform:uppercase;margin-bottom:8px;">To</div><div style="font-size:14px;font-weight:800;color:#000;margin-bottom:4px;">${contactName}</div><div style="font-size:13px;color:#666;">${contactAddress.replace(/\n/g, '<br>')}</div></div>
-</div>
-<table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
-<thead><tr><th style="background:#f8fafc;font-size:11px;font-weight:700;text-transform:uppercase;color:#666;text-align:left;padding:10px 8px;border-bottom:1px solid #e0e0e0;">Description</th><th style="background:#f8fafc;font-size:11px;font-weight:700;text-transform:uppercase;color:#666;text-align:right;padding:10px 8px;border-bottom:1px solid #e0e0e0;">Amount</th></tr></thead>
-<tbody>${itemsHtml}</tbody>
-</table>
-<div style="background:linear-gradient(135deg,#059669 0%,#10b981 100%);color:#fff;padding:16px 20px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-<div style="font-size:13px;font-weight:700;text-transform:uppercase;">Total handed over</div>
-<div style="font-size:24px;font-weight:900;">${total}</div>
-</div>
-${notesHtml}
-</div>
-</div>
-</div>
+                return `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cash Receipt</title>
+  </head>
+  <body style="margin:0;padding:0;background-color:#f5f5f5;font-family:Arial,'Helvetica Neue',Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;background-color:#f5f5f5;">
+      <tr>
+        <td align="center" style="padding:32px 12px;">
+          <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;width:600px;max-width:600px;background-color:#ffffff;border-radius:12px;overflow:hidden;">
+            <tr>
+              <td align="center" style="padding:28px 24px;background-color:#059669;">
+                <div style="font-size:24px;line-height:1.2;font-weight:900;color:#ffffff;margin:0;">Cash Receipt</div>
+                <div style="font-size:14px;line-height:1.4;font-weight:500;color:#eafff7;margin-top:8px;">Your receipt is ready</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:28px 24px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
+                  <tr>
+                    <td style="font-size:12px;color:#666666;line-height:1.5;">
+                      <strong style="color:#000000;">Date:</strong> ${dateStr}
+                    </td>
+                    <td align="right" style="font-size:12px;color:#666666;line-height:1.5;">
+                      <strong style="color:#000000;">Cash Box ID:</strong> ${cashBoxCode}<br />
+                      <strong style="color:#000000;">Receipt ID:</strong> ${receiptId}
+                    </td>
+                  </tr>
+                </table>
 
-<div style="text-align:center;margin:0 0 32px 0;">
-  <a href="${pdfUrl}" style="display:inline-block;background:#059669;color:#ffffff;text-decoration:none;padding:16px 32px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:0.02em;">Download PDF Receipt</a>
-</div>
+                <div style="height:2px;background-color:#000000;margin:16px 0 18px 0;"></div>
 
-<div style="background:#fafafa;padding:32px 40px;text-align:center;border-top:1px solid #e0e0e0;">
-<div style="font-size:14px;font-weight:700;color:#000;margin-bottom:16px;">SpendNote</div>
-<p style="font-size:12px;color:#999;margin:0;">Proof of cash handoff. Not a tax document.<br>2026 SpendNote. All rights reserved.</p>
-</div>
-</div>
-</div>
-</body></html>`;
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;">
+                  <tr>
+                    <td width="50%" valign="top" style="padding-right:10px;">
+                      <div style="font-size:11px;font-weight:700;color:#999999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">From</div>
+                      <div style="font-size:14px;font-weight:800;color:#000000;margin-bottom:4px;">${companyName}</div>
+                      <div style="font-size:13px;color:#666666;line-height:1.5;">${companyAddress.replace(/\n/g, '<br>')}</div>
+                    </td>
+                    <td width="50%" valign="top" style="padding-left:10px;">
+                      <div style="font-size:11px;font-weight:700;color:#999999;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">To</div>
+                      <div style="font-size:14px;font-weight:800;color:#000000;margin-bottom:4px;">${contactName}</div>
+                      <div style="font-size:13px;color:#666666;line-height:1.5;">${contactAddress.replace(/\n/g, '<br>')}</div>
+                    </td>
+                  </tr>
+                </table>
+
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;margin-top:18px;border:1px solid #e0e0e0;border-radius:8px;">
+                  <tr>
+                    <td style="background-color:#f8fafc;padding:10px 8px;font-size:11px;font-weight:700;text-transform:uppercase;color:#666666;border-bottom:1px solid #e0e0e0;">Description</td>
+                    <td align="right" style="background-color:#f8fafc;padding:10px 8px;font-size:11px;font-weight:700;text-transform:uppercase;color:#666666;border-bottom:1px solid #e0e0e0;">Amount</td>
+                  </tr>
+                  ${effectiveItems
+                    .slice(0, 5)
+                    .map((it) => {
+                      const desc = safeText(it?.description, '—');
+                      const amt = formatMoney(it?.amount);
+                      return `<tr><td style="padding:10px 8px;font-size:13px;border-bottom:1px solid #f0f0f0;">${desc}</td><td align="right" style="padding:10px 8px;font-size:13px;font-weight:700;border-bottom:1px solid #f0f0f0;">${amt}</td></tr>`;
+                    })
+                    .join('')}
+                </table>
+
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;margin-top:18px;">
+                  <tr>
+                    <td style="background-color:#059669;color:#ffffff;padding:14px 16px;border-radius:8px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;">Total handed over</td>
+                    <td align="right" style="background-color:#059669;color:#ffffff;padding:14px 16px;border-radius:8px;font-size:22px;font-weight:900;">${total}</td>
+                  </tr>
+                </table>
+
+                ${notesText ? `
+                <div style="margin-top:18px;background-color:#f0f9ff;border-left:4px solid #059669;padding:14px 12px;">
+                  <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#666666;margin-bottom:8px;">Notes</div>
+                  <div style="font-size:13px;color:#333333;line-height:1.6;">${notesText}</div>
+                </div>
+                ` : ''}
+
+                ${currentTxIsVoided ? `
+                <div style="margin-top:18px;color:#666666;font-size:12px;">This receipt is marked as VOID.</div>
+                ` : ''}
+
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:collapse;margin-top:24px;">
+                  <tr>
+                    <td align="center">
+                      <a href="${pdfUrl}" style="display:inline-block;background-color:#059669;color:#ffffff;text-decoration:none;padding:14px 22px;border-radius:8px;font-size:14px;font-weight:700;">Download PDF Receipt</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding:22px 24px;background-color:#fafafa;border-top:1px solid #e0e0e0;">
+                <div style="font-size:14px;font-weight:700;color:#000000;margin-bottom:10px;">SpendNote</div>
+                <div style="font-size:12px;color:#999999;line-height:1.6;">
+                  Proof of cash handoff. Not a tax document.<br />
+                  2026 SpendNote. All rights reserved.
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
             } catch (err) {
                 console.error('Generate email HTML error:', err);
                 return null;
