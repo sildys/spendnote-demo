@@ -573,7 +573,7 @@ html, body { height: auto !important; overflow: auto !important; }
                 
                 const cbSeq = cashBox?.sequence_number || tx.cash_box_sequence;
                 const txSeq = tx.tx_sequence_in_box;
-                const receiptId = (cbSeq && txSeq) ? `SN${cbSeq}-${String(txSeq).padStart(3, '0')}` : safeText(tx.receipt_number, tx.id?.slice(0, 8) || '—');
+                const receiptId = (cbSeq && txSeq) ? `SN${cbSeq}-${String(txSeq).padStart(3, '0')}` : safeText(tx.receipt_number, '—');
                 const cashBoxCode = cbSeq ? `SN-${String(cbSeq).padStart(3, '0')}` : '—';
 
                 const txDate = tx.transaction_date || tx.created_at;

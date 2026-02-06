@@ -116,9 +116,7 @@
         const receipt = safeText(tx?.receipt_number, '');
         if (receipt) return receipt;
 
-        const id = safeText(tx?.id, '');
-        if (!id) return '—';
-        return id.length > 10 ? `${id.slice(0, 8)}…` : id;
+        return '—';
     }
 
     function getCashBoxCode(tx) {

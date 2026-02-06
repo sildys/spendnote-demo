@@ -180,7 +180,7 @@
 
         function showDeleteModal(name, id, txCount) {
             currentRegisterToDelete = { name, id, txCount };
-            document.getElementById('modalRegisterName').textContent = `${name} (${id})`;
+            document.getElementById('modalRegisterName').textContent = `${name}`;
             document.getElementById('modalTxCount').textContent = txCount;
             document.getElementById('deleteModal').classList.add('show');
         }
