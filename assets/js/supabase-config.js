@@ -1,6 +1,6 @@
 // Supabase Configuration
 const SUPABASE_URL = 'https://zrnnharudlgxuvewqryj.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_Vg44Z7eJacwji3iLii0Dxg_mQlSfwi-';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5oYXJ1ZGxneHV2ZXdxcnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyOTkxMDgsImV4cCI6MjA4Mjg3NTEwOH0.kQLRMVrl_uYYzZwX387uFs_BAXc9c5v7EhcvGhPR7v4';
 
 if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260129-1339');
 window.__spendnoteSupabaseConfigBuild = '20260129-1339';
