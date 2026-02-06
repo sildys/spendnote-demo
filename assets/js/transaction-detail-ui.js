@@ -457,6 +457,15 @@ html, body { height: auto !important; overflow: auto !important; }
                     if (txId && window.db?.transactions?.getById) {
                         const tx = await window.db.transactions.getById(txId);
                         prefillEmail = String(tx?.contact_email || tx?.contact?.email || '').trim();
+
+                        if (!prefillEmail && tx?.contact_id && window.db?.contacts?.getById) {
+                            try {
+                                const c = await window.db.contacts.getById(tx.contact_id);
+                                prefillEmail = String(c?.email || '').trim();
+                            } catch (_) {
+                                // ignore
+                            }
+                        }
                     }
                 } catch (_) {}
 
@@ -493,8 +502,7 @@ html, body { height: auto !important; overflow: auto !important; }
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${anonKey}`,
-                            'apikey': anonKey
+                            'Authorization': `Bearer ${anonKey}`
                         },
                         body: JSON.stringify({
                             to: email,
@@ -503,9 +511,19 @@ html, body { height: auto !important; overflow: auto !important; }
                         })
                     });
 
-                    const data = await res.json();
+                    let data = null;
+                    try {
+                        data = await res.json();
+                    } catch (_) {
+                        data = null;
+                    }
                     if (!res.ok) {
-                        throw new Error(data.error?.message || JSON.stringify(data.error) || 'Failed to send email');
+                        const msg =
+                            data?.error?.message ||
+                            (typeof data?.error === 'string' ? data.error : '') ||
+                            (data ? JSON.stringify(data) : '') ||
+                            `HTTP ${res.status}`;
+                        throw new Error(msg || 'Failed to send email');
                     }
 
                     alert('Receipt sent successfully to ' + email);
@@ -566,6 +584,9 @@ html, body { height: auto !important; overflow: auto !important; }
                     `<tr><td style="padding:10px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;">${safeText(it.description, '—')}</td><td style="padding:10px 8px;border-bottom:1px solid #f0f0f0;font-size:13px;text-align:right;font-weight:700;">${formatMoney(it.amount)}</td></tr>`
                 ).join('');
 
+                const pdfRelative = buildReceiptUrl('pdf', { download: '1' });
+                const pdfUrl = new URL(pdfRelative, window.location.origin).toString();
+
                 const total = formatMoney(tx.amount);
                 const notesText = safeText(tx.notes, '');
                 const notesHtml = notesText ? `<div style="background:#f0f9ff;border-left:4px solid #059669;padding:16px;border-radius:4px;margin-bottom:20px;"><div style="font-size:11px;font-weight:700;text-transform:uppercase;color:#666;margin-bottom:8px;">Notes</div><div style="font-size:13px;color:#333;line-height:1.6;">${notesText}</div></div>` : '';
@@ -603,6 +624,12 @@ ${voidWatermark}
 ${notesHtml}
 </div>
 </div>
+</div>
+
+<div style="text-align:center;margin:0 0 32px 0;">
+  <a href="${pdfUrl}" style="display:inline-block;background:#059669;color:#ffffff;text-decoration:none;padding:16px 32px;border-radius:8px;font-size:14px;font-weight:700;letter-spacing:0.02em;">Download PDF Receipt</a>
+</div>
+
 <div style="background:#fafafa;padding:32px 40px;text-align:center;border-top:1px solid #e0e0e0;">
 <div style="font-size:14px;font-weight:700;color:#000;margin-bottom:16px;">SpendNote</div>
 <p style="font-size:12px;color:#999;margin:0;">Proof of cash handoff. Not a tax document.<br>2026 SpendNote. All rights reserved.</p>
