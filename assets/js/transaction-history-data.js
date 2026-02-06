@@ -642,7 +642,7 @@
         const overlayId = 'spendnoteBulkPdfOverlay';
         const printStyleId = 'spendnoteBulkPdfPrintStyle';
 
-        function showPdfOverlay(rowsForPdf, title) {
+        function showPdfOverlay(rowsForPdf, title, summaryLines) {
             let overlay = document.getElementById(overlayId);
             if (!overlay) {
                 overlay = document.createElement('div');
@@ -679,6 +679,7 @@
                         </thead>
                         <tbody id="${overlayId}Body"></tbody>
                       </table>
+                      <div id="${overlayId}Summary" style="margin-top:14px;padding-top:12px;border-top:1px solid #e5e7eb;"></div>
                     </div>
                   </div>
                 `;
@@ -708,6 +709,7 @@
 
             const tbodyEl = document.getElementById(`${overlayId}Body`);
             const countEl = document.getElementById(`${overlayId}Count`);
+            const summaryEl = document.getElementById(`${overlayId}Summary`);
             if (countEl) countEl.textContent = String(Array.isArray(rowsForPdf) ? rowsForPdf.length : 0);
             if (tbodyEl) {
                 const list = Array.isArray(rowsForPdf) ? rowsForPdf : [];
@@ -722,6 +724,38 @@
                     <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;text-align:right;font-weight:900;">${escapeHtml(r.amount)}</td>
                   </tr>
                 `).join('');
+            }
+
+            if (summaryEl) {
+                const lines = Array.isArray(summaryLines) ? summaryLines : [];
+                if (!lines.length) {
+                    summaryEl.innerHTML = '';
+                } else {
+                    summaryEl.innerHTML = `
+                      <div style="display:flex;justify-content:flex-end;">
+                        <table style="border-collapse:collapse;min-width:320px;">
+                          <thead>
+                            <tr>
+                              <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:8px 10px;border-bottom:1px solid #e5e7eb;">Currency</th>
+                              <th style="text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:8px 10px;border-bottom:1px solid #e5e7eb;">In</th>
+                              <th style="text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:8px 10px;border-bottom:1px solid #e5e7eb;">Out</th>
+                              <th style="text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:8px 10px;border-bottom:1px solid #e5e7eb;">Net</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            ${lines.map((l) => `
+                              <tr>
+                                <td style="padding:8px 10px;border-bottom:1px solid #eef2f7;font-size:12px;font-weight:900;">${escapeHtml(l.currency)}</td>
+                                <td style="padding:8px 10px;border-bottom:1px solid #eef2f7;font-size:12px;text-align:right;font-weight:900;color:#059669;">${escapeHtml(l.inText)}</td>
+                                <td style="padding:8px 10px;border-bottom:1px solid #eef2f7;font-size:12px;text-align:right;font-weight:900;color:#b91c1c;">${escapeHtml(l.outText)}</td>
+                                <td style="padding:8px 10px;border-bottom:1px solid #eef2f7;font-size:12px;text-align:right;font-weight:900;">${escapeHtml(l.netText)}</td>
+                              </tr>
+                            `).join('')}
+                          </tbody>
+                        </table>
+                      </div>
+                    `;
+                }
             }
 
             const close = () => {
@@ -889,7 +923,35 @@
                     if (all.length >= allowedTotal) break;
                 }
 
-                const rowsForPdf = all.slice(0, allowedTotal).map((tx) => {
+                const slice = all.slice(0, allowedTotal);
+
+                const totalsByCurrency = new Map();
+                slice.forEach((tx) => {
+                    const status = safeText(tx?.status, 'active').toLowerCase();
+                    if (status === 'voided') return;
+
+                    const t = safeText(tx?.type, '').toLowerCase();
+                    const amt = Number(tx?.amount);
+                    if (!Number.isFinite(amt)) return;
+                    const curr = safeText(tx?.cash_box?.currency, 'USD');
+                    const prev = totalsByCurrency.get(curr) || { in: 0, out: 0 };
+                    if (t === 'income') prev.in += amt;
+                    if (t === 'expense') prev.out += amt;
+                    totalsByCurrency.set(curr, prev);
+                });
+
+                const summaryLines = Array.from(totalsByCurrency.entries()).map(([currency, totals]) => {
+                    const totalIn = Number(totals?.in) || 0;
+                    const totalOut = Number(totals?.out) || 0;
+                    const net = totalIn - totalOut;
+                    const inText = `+${totalIn.toFixed(2)} ${currency}`;
+                    const outText = `-${totalOut.toFixed(2)} ${currency}`;
+                    const netPrefix = net >= 0 ? '+' : '-';
+                    const netText = `${netPrefix}${Math.abs(net).toFixed(2)} ${currency}`;
+                    return { currency, inText, outText, netText };
+                });
+
+                const rowsForPdf = slice.map((tx) => {
                     if (tx && !tx.cash_box && tx.cash_box_id) {
                         tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
                     }
@@ -908,7 +970,8 @@
                     };
                 });
 
-                showPdfOverlay(rowsForPdf, `Filtered transactions (${rowsForPdf.length})`);
+                summaryLines.sort((a, b) => String(a.currency).localeCompare(String(b.currency)));
+                showPdfOverlay(rowsForPdf, `Filtered transactions (${rowsForPdf.length})`, summaryLines);
             } finally {
                 if (btn) btn.disabled = false;
                 if (btn) btn.textContent = prevText;
