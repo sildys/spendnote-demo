@@ -221,11 +221,22 @@ This enables localization and per-cash-box personalization.
   - Receipt positioned at top of page
   - Uses html2canvas + jsPDF
   - Hidden iframe download (no visible preview or popup)
+  - File name format: `SpendNote_<ReceiptID>.pdf` (example: `SpendNote_SN7-007.pdf`)
 - **Print (A4)**:
   - Opens in normal window with auto-print
   - Two copies per page
 - **Line items**: no artificial limits; all transaction items displayed
 - **Cache-busting**: versioned `v` param on receipt URLs
+
+### Email Receipts (server-sent) - COMPLETED
+
+- Email sending is available **only on Transaction Detail**.
+- Server-side sending uses:
+  - Supabase **Edge Function**: `send-receipt-email`
+  - Resend API (`RESEND_API_KEY` stored as an Edge Functions secret)
+- Email HTML is rendered in an **email-client compatible** layout (no flex/grid dependency).
+- The email contains a **public PDF download link** (no login required for recipients).
+- Email address autocomplete/picker is deferred until roles + the final contacts model is in place.
 
 ### Current gaps / not implemented yet
 

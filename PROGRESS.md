@@ -12,7 +12,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Avoid long explanations, hedging, or repetitive confirmations.
 - Be professional and forward-looking (anticipate edge cases, choose robust solutions).
 
-## Current state (last updated: 2026-02-06 15:40)
+## Current state (last updated: 2026-02-06 19:05)
 - **Dashboard**
   - Transaction modal works again (fixed duplicate modal JS load + ensured submit handler binds).
   - **Save to Contacts** toggle exists (no auto-save by default).
@@ -65,9 +65,17 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **Receipt Export (PDF/Print)** ✅
   - **PDF download**: Letter size (8.5" x 11"), white background, receipt at top with 10mm margins.
   - **PDF download flow**: hidden iframe triggers download without visible preview or popup.
+  - **PDF file name**: `SpendNote_<ReceiptID>.pdf`.
   - **Print (A4)**: opens normal window with auto-print; no more tiny offscreen popup.
   - **Line items**: no 4-item limit; all items display on both A4 and PDF receipts.
   - **Cache-busting**: receipt URLs use versioned `v` param to force reload after updates.
+
+- **Email Receipts (server-sent)** ✅
+  - **Send from Transaction Detail only**.
+  - Supabase **Edge Function** `send-receipt-email` + Resend (`RESEND_API_KEY` secret).
+  - Email uses an **email-client compatible** layout.
+  - Email includes a **public PDF link** (recipient does not need an account).
+  - Email address autocomplete deferred until roles + final contacts model.
 - **Cash Box pages**
   - Cash Box Detail: loads from Supabase (UUID id param), displays `SN-###` code.
   - Cash Box Settings: loads cash box data, displays `SN-###` in subtitle.
