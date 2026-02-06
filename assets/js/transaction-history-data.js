@@ -703,7 +703,7 @@
 
             const w = window.open('', '_blank', 'noopener,noreferrer');
             if (!w) {
-                alert('Popup blocked. Please allow popups for PDF export.');
+                alert('PDF export opens a new tab.\n\nPopup blocked: please allow popups for this site, then click PDF again.');
                 return;
             }
 
@@ -729,14 +729,23 @@
     <style>
       body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; padding: 24px; }
       h1 { font-size: 16px; margin: 0 0 12px; }
+      .hint { color: #6b7280; font-size: 12px; margin: 0 0 16px; line-height: 1.5; }
+      .actions { display: flex; gap: 10px; margin: 0 0 16px; }
+      .btn { appearance: none; border: 1px solid #d1d5db; background: #ffffff; color: #111827; border-radius: 10px; padding: 10px 12px; font-weight: 800; font-size: 12px; cursor: pointer; }
+      .btn.primary { background: #111827; color: #ffffff; border-color: #111827; }
       table { width: 100%; border-collapse: collapse; }
       th, td { border-bottom: 1px solid #e5e7eb; padding: 10px 8px; font-size: 12px; }
       th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #6b7280; }
-      @media print { body { padding: 0; } }
+      @media print { body { padding: 0; } .actions, .hint { display: none; } }
     </style>
   </head>
   <body>
     <h1>Selected transactions (${rows.length})</h1>
+    <p class="hint">This page opens your browser's print dialog. Choose <strong>Save as PDF</strong> to download. If it doesn't open automatically, click <strong>Print / Save as PDF</strong> or press <strong>Ctrl+P</strong>.</p>
+    <div class="actions">
+      <button class="btn primary" type="button" id="printBtn">Print / Save as PDF</button>
+      <button class="btn" type="button" id="closeBtn">Close tab</button>
+    </div>
     <table>
       <thead>
         <tr>
@@ -754,11 +763,16 @@
       </tbody>
     </table>
     <script>
-      window.addEventListener('load', () => { setTimeout(() => window.print(), 50); });
+      const printBtn = document.getElementById('printBtn');
+      const closeBtn = document.getElementById('closeBtn');
+      if (printBtn) printBtn.addEventListener('click', () => window.print());
+      if (closeBtn) closeBtn.addEventListener('click', () => window.close());
+      window.addEventListener('load', () => { setTimeout(() => window.print(), 150); });
     <\/script>
   </body>
 </html>`);
             w.document.close();
+            try { w.focus(); } catch (_) {}
         }
 
         const urlParams = new URLSearchParams(window.location.search);
