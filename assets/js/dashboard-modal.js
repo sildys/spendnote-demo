@@ -817,12 +817,15 @@ async function duplicateTransaction(txId) {
         const firstItem = lineItems[0] || {};
         const extraItems = lineItems.slice(1);
 
+        const duplicateMode = extraItems.length > 0 ? 'detailed' : 'quick';
+
         const fallbackContactId = formatContactDisplayId(tx?.contact?.sequence_number);
         const contactOtherId = String(tx?.contact_custom_field_1 || '').trim() || fallbackContactId || '';
 
         const preset = {
             cashBoxId: tx.cash_box_id || tx.cash_box?.id || null,
             direction: tx.type === 'income' ? 'in' : 'out',
+            mode: duplicateMode,
             amount: firstItem.amount || tx.amount || '',
             description: firstItem.description || tx.description || '',
             contactName: tx.contact?.name || tx.contact_name || '',
