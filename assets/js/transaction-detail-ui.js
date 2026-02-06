@@ -452,8 +452,20 @@ html, body { height: auto !important; overflow: auto !important; }
         }
         if (emailBtn) {
             emailBtn.addEventListener('click', async () => {
-                const recipientEmail = prompt('Enter recipient email address:');
-                if (!recipientEmail || !recipientEmail.trim()) return;
+                let prefillEmail = '';
+                try {
+                    if (txId && window.db?.transactions?.getById) {
+                        const tx = await window.db.transactions.getById(txId);
+                        prefillEmail = String(tx?.contact_email || tx?.contact?.email || '').trim();
+                    }
+                } catch (_) {}
+
+                const recipientEmail = prompt('Send receipt to email address:', prefillEmail);
+                if (recipientEmail === null) return;
+                if (!recipientEmail.trim()) {
+                    alert('Please enter an email address.');
+                    return;
+                }
                 
                 const email = recipientEmail.trim();
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -475,11 +487,17 @@ html, body { height: auto !important; overflow: auto !important; }
                     const txTitle = document.getElementById('txTitle')?.textContent || 'Receipt';
                     const subject = `Your Cash Receipt - ${txTitle}`;
 
+                    let accessToken = '';
+                    try {
+                        const session = await window.supabaseClient?.auth?.getSession?.();
+                        accessToken = session?.data?.session?.access_token || '';
+                    } catch (_) {}
+
                     const res = await fetch('https://zrnnharudlgxuvewqryj.supabase.co/functions/v1/send-receipt-email', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${window.supabaseClient?.auth?.session?.()?.access_token || ''}`
+                            'Authorization': `Bearer ${accessToken}`
                         },
                         body: JSON.stringify({
                             to: email,
@@ -490,7 +508,7 @@ html, body { height: auto !important; overflow: auto !important; }
 
                     const data = await res.json();
                     if (!res.ok) {
-                        throw new Error(data.error?.message || data.error || 'Failed to send email');
+                        throw new Error(data.error?.message || JSON.stringify(data.error) || 'Failed to send email');
                     }
 
                     alert('Receipt sent successfully to ' + email);
