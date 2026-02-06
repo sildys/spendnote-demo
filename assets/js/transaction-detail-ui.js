@@ -36,7 +36,13 @@
     let overrideContactAddress = '';
     let currentCashBoxId = '';
 
-    const txId = new URLSearchParams(window.location.search).get('id');
+    function isUuid(value) {
+        return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
+    }
+
+    const spTx = new URLSearchParams(window.location.search);
+    const txIdRaw = spTx.get('id') || spTx.get('txId');
+    const txId = isUuid(txIdRaw) ? txIdRaw : '';
 
     function buildReceiptUrl(format, extraParams) {
         const baseUrls = {

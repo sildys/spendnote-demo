@@ -185,8 +185,13 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
-        if (!id) {
+        const idRaw = urlParams.get('id') || urlParams.get('txId');
+        const id = String(idRaw || '').trim();
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+        if (!id || !isUuid) {
+            try {
+                console.warn('[TxDetail] Missing/invalid tx id in URL');
+            } catch (_) {}
             return;
         }
 

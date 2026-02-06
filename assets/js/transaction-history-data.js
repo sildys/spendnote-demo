@@ -12,6 +12,10 @@
         return v.trim() ? v : (fallback || '');
     }
 
+    function isUuid(value) {
+        return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
+    }
+
     function normalizeHexColor(hex) {
         const h = String(hex || '').trim();
         if (!h) return '#059669';
@@ -409,7 +413,7 @@
             const pillLabel = isVoided ? 'VOID' : (isIncome ? 'IN' : 'OUT');
 
             tr.innerHTML = `
-                <td><input type="checkbox" class="row-checkbox" data-tx-id="${safeText(tx.id, '')}"></td>
+                <td><input type="checkbox" class="row-checkbox" data-tx-id="${safeText(tx.id, '')}" ${isVoided ? 'disabled' : ''}></td>
                 <td>
                     <div class="tx-type-pill ${pillClass}">
                         <span class="quick-icon"><i class="fas ${pillIcon}"></i></span>
@@ -636,7 +640,8 @@
         }
 
         const urlParams = new URLSearchParams(window.location.search);
-        const urlCashBoxId = urlParams.get('cashBoxId');
+        const urlCashBoxIdRaw = urlParams.get('cashBoxId') || urlParams.get('id');
+        const urlCashBoxId = isUuid(urlCashBoxIdRaw) ? urlCashBoxIdRaw : null;
         // NOTE: Do NOT use localStorage.activeCashBoxId here - it would filter out all transactions
         // that don't belong to the dashboard's active cash box. Only filter by URL param.
 
@@ -847,6 +852,7 @@
         if (selectAllHeader) {
             selectAllHeader.addEventListener('change', () => {
                 qsa('.row-checkbox', tbody).forEach((cb) => {
+                    if (cb.disabled) return;
                     cb.checked = Boolean(selectAllHeader.checked);
                     const row = cb.closest('tr');
                     if (row) row.classList.toggle('is-selected', cb.checked);
@@ -859,10 +865,13 @@
             const count = qsa('.row-checkbox:checked', tbody).length;
             const bulkActions = qs('#bulkActions');
             const selectedCount = qs('#selectedCount');
+            const bulkDeleteBtn = qs('#bulkDelete');
             if (selectedCount) selectedCount.textContent = String(count);
             if (bulkActions) {
-                const enabledActions = qsa('.bulk-action-btn:not(:disabled)', bulkActions).length;
-                bulkActions.classList.toggle('show', count > 0 && enabledActions > 0);
+                bulkActions.classList.toggle('show', count > 0);
+            }
+            if (bulkDeleteBtn && bulkDeleteBtn.dataset.busy !== '1') {
+                bulkDeleteBtn.disabled = count === 0;
             }
         }
 
@@ -933,6 +942,54 @@
         if (exportPdfBtn) {
             exportPdfBtn.addEventListener('click', () => {
                 window.print();
+            });
+        }
+
+        if (bulkDeleteBtn) {
+            bulkDeleteBtn.addEventListener('click', async () => {
+                const selected = qsa('.row-checkbox:checked', tbody)
+                    .map((cb) => safeText(cb?.dataset?.txId, '').trim())
+                    .filter(Boolean);
+
+                if (!selected.length) return;
+
+                const proceed = confirm(`Void ${selected.length} transaction(s)?\n\nThis cannot be undone.`);
+                if (!proceed) return;
+
+                let reason = '';
+                try {
+                    reason = String(prompt('Void reason (optional):', '') || '').trim();
+                } catch (_) {
+                    reason = '';
+                }
+
+                const prevText = bulkDeleteBtn.textContent;
+                bulkDeleteBtn.dataset.busy = '1';
+                bulkDeleteBtn.disabled = true;
+                bulkDeleteBtn.textContent = 'Voiding…';
+
+                try {
+                    if (!window.db?.transactions?.voidTransaction) {
+                        alert('Void is not available.');
+                        return;
+                    }
+
+                    for (const id of selected) {
+                        const res = await window.db.transactions.voidTransaction(id, reason || null);
+                        if (!res || !res.success) {
+                            alert(String(res?.error || 'Failed to void a transaction.'));
+                            break;
+                        }
+                    }
+
+                    if (selectAllHeader) selectAllHeader.checked = false;
+                    updateBulk();
+                    await render();
+                } finally {
+                    bulkDeleteBtn.dataset.busy = '0';
+                    bulkDeleteBtn.disabled = false;
+                    bulkDeleteBtn.textContent = prevText;
+                }
             });
         }
 
@@ -1378,8 +1435,6 @@
                 exportFilteredCsv();
             });
         }
-
-        // bulkDeleteBtn intentionally disabled until admin-only void workflow is implemented
 
         render();
     }
