@@ -654,9 +654,22 @@
                     <div style="background:#fff;padding:24px 32px;border-bottom:2px solid #e2e8f0;">
                       <div style="display:flex;align-items:center;justify-content:space-between;">
                         <div style="display:flex;align-items:center;gap:12px;">
-                          <div style="width:48px;height:48px;background:linear-gradient(135deg,#0f172a 0%,#334155 100%);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(15,23,42,0.3);">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                          </div>
+                          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#pdfLogoGrad)"/>
+                            <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                            <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                            <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                            <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                            <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                            <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                              <linearGradient id="pdfLogoGrad" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#059669"/>
+                                <stop offset="100%" stop-color="#10b981"/>
+                              </linearGradient>
+                            </defs>
+                          </svg>
                           <div>
                             <div style="font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-0.02em;">SpendNote</div>
                             <div style="font-size:12px;color:#64748b;font-weight:600;margin-top:1px;">Transaction Report</div>
@@ -712,9 +725,22 @@
                     <!-- Footer -->
                     <div id="${overlayId}Footer" style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;">
                       <div style="display:flex;align-items:center;gap:10px;">
-                        <div style="width:28px;height:28px;background:#0f172a;border-radius:6px;display:flex;align-items:center;justify-content:center;">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        </div>
+                        <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#pdfFooterGrad)"/>
+                          <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                          <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                          <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                          <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                          <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                          <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                          <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                          <defs>
+                            <linearGradient id="pdfFooterGrad" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                              <stop offset="0%" stop-color="#059669"/>
+                              <stop offset="100%" stop-color="#10b981"/>
+                            </linearGradient>
+                          </defs>
+                        </svg>
                         <div>
                           <div style="font-size:13px;font-weight:700;color:#0f172a;">SpendNote</div>
                           <div style="font-size:10px;color:#64748b;margin-top:-1px;">Cash management made simple</div>
@@ -780,7 +806,7 @@
                 const list = Array.isArray(rowsForPdf) ? rowsForPdf : [];
                 tbodyEl.innerHTML = list.map((r, i) => {
                     const bg = i % 2 === 1 ? 'background:#f8fafc;' : '';
-                    const typeColor = String(r.type).toUpperCase() === 'IN' ? 'color:#059669;' : (String(r.type).toUpperCase() === 'OUT' ? 'color:#dc2626;' : 'color:#64748b;');
+                    const typeColor = String(r.type).toUpperCase() === 'IN' ? 'color:#059669;' : (String(r.type).toUpperCase() === 'OUT' ? 'color:#0f172a;' : 'color:#64748b;');
                     return `
                       <tr style="${bg}">
                         <td style="padding:10px;border-bottom:1px solid #f1f5f9;font-size:12px;font-weight:700;${typeColor}">${escapeHtml(r.type)}</td>
@@ -807,8 +833,8 @@
                           <thead>
                             <tr>
                               <th style="text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:8px 12px;border-bottom:1px solid #d1fae5;">Currency</th>
-                              <th style="text-align:right;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#059669;padding:8px 12px;border-bottom:1px solid #d1fae5;">+ In</th>
-                              <th style="text-align:right;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#dc2626;padding:8px 12px;border-bottom:1px solid #d1fae5;">− Out</th>
+                              <th style="text-align:right;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#059669;padding:8px 12px;border-bottom:1px solid #d1fae5;">In</th>
+                              <th style="text-align:right;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:8px 12px;border-bottom:1px solid #d1fae5;">Out</th>
                               <th style="text-align:right;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#0f172a;padding:8px 12px;border-bottom:1px solid #d1fae5;">Net</th>
                             </tr>
                           </thead>
@@ -816,8 +842,8 @@
                             ${lines.map((l) => `
                               <tr>
                                 <td style="padding:10px 12px;font-size:13px;font-weight:700;color:#0f172a;">${escapeHtml(l.currency)}</td>
-                                <td style="padding:10px 12px;font-size:13px;text-align:right;font-weight:700;color:#059669;">+${escapeHtml(l.inText)}</td>
-                                <td style="padding:10px 12px;font-size:13px;text-align:right;font-weight:700;color:#dc2626;">−${escapeHtml(l.outText)}</td>
+                                <td style="padding:10px 12px;font-size:13px;text-align:right;font-weight:700;color:#059669;">${escapeHtml(l.inText)}</td>
+                                <td style="padding:10px 12px;font-size:13px;text-align:right;font-weight:700;color:#64748b;">${escapeHtml(l.outText)}</td>
                                 <td style="padding:10px 12px;font-size:14px;text-align:right;font-weight:800;color:#0f172a;">${escapeHtml(l.netText)}</td>
                               </tr>
                             `).join('')}
