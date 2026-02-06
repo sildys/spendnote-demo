@@ -217,11 +217,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 24px;
+      padding: 14px 16px;
       background: linear-gradient(135deg, #059669 0%, #10b981 100%);
       color: white;
       border-radius: 8px;
-      margin-bottom: 32px;
+      margin-bottom: 24px;
     }
     
     .total-label {
@@ -232,7 +232,7 @@
     }
     
     .total-amount {
-      font-size: 36px;
+      font-size: 28px;
       font-weight: 900;
       letter-spacing: -0.02em;
     }
@@ -337,12 +337,12 @@
 
     body.exporting {
       background: white;
-      padding: 20px;
+      padding: 0;
     }
 
     body.exporting .receipt {
       box-shadow: none;
-      border-radius: 0;
+      border-radius: 8px;
     }
     
     /* SCREEN */
@@ -536,18 +536,18 @@ async function downloadReceiptPdf() {
     const pageW = pdf.internal.pageSize.getWidth();
     const pageH = pdf.internal.pageSize.getHeight();
 
-    const marginX = 12.7;
-    const marginTop = 20;
-    const marginBottom = 12.7;
+    const marginX = 8.5;
+    const marginTop = 10;
+    const marginBottom = 8.5;
     const targetW = pageW - marginX * 2;
     const targetH = pageH - marginTop - marginBottom;
 
-    const imgW = canvas.width;
-    const imgH = canvas.height;
-    const ratio = Math.min(targetW / imgW, targetH / imgH);
-
-    const renderW = imgW * ratio;
-    const renderH = imgH * ratio;
+    let renderW = targetW;
+    let renderH = (canvas.height * renderW) / canvas.width;
+    if (renderH > targetH) {
+      renderH = targetH;
+      renderW = (canvas.width * renderH) / canvas.height;
+    }
     const x = marginX + (targetW - renderW) / 2;
     const y = marginTop;
 
