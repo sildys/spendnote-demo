@@ -12,12 +12,17 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Avoid long explanations, hedging, or repetitive confirmations.
 - Be professional and forward-looking (anticipate edge cases, choose robust solutions).
 
-## Current state (last updated: 2026-02-06 21:33)
-- **Dashboard**
-  - Transaction modal works again (fixed duplicate modal JS load + ensured submit handler binds).
-  - **Save to Contacts** toggle exists (no auto-save by default).
-  - **Prevents negative cash box balance** on expense (UI-side check).
-  - Save to Contacts checkbox uses theme accent (not red).
+## Current state (last updated: 2026-02-06 21:38)
+- **Dashboard** ✅
+  - Transaction modal fully wired to Supabase:
+    - **Transaction create** via `db.transactions.create()` with full payload
+    - **Robust error handling** (INSUFFICIENT_BALANCE, RLS, profile missing, session expired)
+    - **Balance validation** (UI-side check prevents negative balance on expense)
+    - **Contact linking** (auto-lookup existing contact by name)
+    - **Save to Contacts** (creates new contact if checkbox enabled)
+    - **Verification** (checks transaction exists after insert)
+    - **Dashboard reload** after successful save
+    - **Receipt flow** ("Done & Print" opens receipt in selected format)
   - Cash box cards display **`SN-###`** from `cash_boxes.sequence_number` (not derived index).
 - **Contacts**
   - Contacts list + detail are wired to Supabase.
@@ -156,10 +161,8 @@ If a chat thread freezes / context is lost: in the new thread say:
 - `4487807` Dashboard: created-by avatar fallback uses current user name
 
 ## Next focus (pick one)
-- **A)** Implement end-to-end transaction create flow + robust error handling (Supabase insert + balance update)
 - **B)** Stabilize core IDs everywhere (cash_box_id/contact_id selection + filters + validation)
 - **C)** Contacts list: replace remaining placeholder columns (boxes / #tx / last tx) with real values
-- **D)** Receipt "Done & Print" flow: wire the dashboard modal to open the receipt after saving a transaction
 
 ## Backlog (UX + bugs)
 - **High**
