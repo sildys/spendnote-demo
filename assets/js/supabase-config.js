@@ -36,6 +36,8 @@ var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KE
     }
 });
 
+let transactionsJoinSupported = true;
+
 function isUuid(value) {
     const v = String(value || '').trim();
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
@@ -827,28 +829,46 @@ var db = {
         },
 
         async getById(id) {
-            const attemptJoined = await supabaseClient
-                .from('transactions')
-                .select(`
-                    *,
-                    cash_box:cash_boxes(id, name, color, currency, icon, sequence_number),
-                    contact:contacts(id, name, email, phone, address, sequence_number)
-                `)
-                .eq('id', id)
-                .single();
+            const txId = String(id || '').trim();
+            if (!txId) return null;
 
-            if (!attemptJoined.error && attemptJoined.data) {
-                return attemptJoined.data;
-            }
+            if (transactionsJoinSupported) {
+                const attemptJoined = await supabaseClient
+                    .from('transactions')
+                    .select(`
+                        *,
+                        cash_box:cash_boxes(id, name, color, currency, icon, sequence_number),
+                        contact:contacts(id, name, email, phone, address, sequence_number)
+                    `)
+                    .eq('id', txId)
+                    .single();
 
-            if (attemptJoined.error) {
-                console.warn('Joined transaction fetch failed, falling back to plain select:', attemptJoined.error);
+                if (!attemptJoined.error && attemptJoined.data) {
+                    return attemptJoined.data;
+                }
+
+                if (attemptJoined.error) {
+                    const msg = String(attemptJoined.error?.message || '');
+                    const detail = String(attemptJoined.error?.details || '');
+                    const isSchemaCacheRelationshipError =
+                        msg.includes('Could not find a relationship') ||
+                        msg.includes('schema cache') ||
+                        detail.includes('Could not find a relationship') ||
+                        detail.includes('schema cache') ||
+                        String(attemptJoined.error?.code || '') === 'PGRST200';
+
+                    if (isSchemaCacheRelationshipError) {
+                        transactionsJoinSupported = false;
+                    } else {
+                        console.warn('Joined transaction fetch failed, falling back to plain select:', attemptJoined.error);
+                    }
+                }
             }
 
             const fallback = await supabaseClient
                 .from('transactions')
                 .select('*')
-                .eq('id', id)
+                .eq('id', txId)
                 .single();
 
             if (fallback.error) {
