@@ -589,8 +589,10 @@ async function downloadReceiptPdf() {
     const y = marginTop;
     pdf.addImage(imgData, 'PNG', x, y, renderW, renderH, undefined, 'FAST');
 
-    const displayId = document.title || 'receipt';
-    const fileName = `${toSafeFileName(displayId)}.pdf`;
+    const receiptIdRaw = String(document.querySelector('span.receipt-id-line')?.textContent || '').trim();
+    const receiptId = receiptIdRaw && receiptIdRaw !== '—' ? receiptIdRaw : '';
+    const baseName = receiptId ? `SpendNote_${receiptId}` : `SpendNote_${document.title || 'receipt'}`;
+    const fileName = `${toSafeFileName(baseName)}.pdf`;
     pdf.save(fileName);
   } catch (e) {
     console.error(e);
