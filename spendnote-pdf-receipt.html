@@ -965,17 +965,6 @@ if (urlParams.get('signatures') === '0') {
         if (displayId) {
           document.title = displayId;
         }
-
-        try {
-          const shouldAutoPrint = urlParams.get('autoPrint') === '1' && urlParams.get('txId');
-          if (shouldAutoPrint) {
-            setTimeout(() => {
-              try { window.print(); } catch (_) {}
-            }, 50);
-          }
-        } catch (_) {
-          // ignore
-        }
       } catch (_) {
         // ignore
       }

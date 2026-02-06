@@ -45,7 +45,7 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260206-04');
+        params.append('v', 'receipt-20260206-03');
         if (txId) params.append('txId', txId);
 
         const addrOverride = String(overrideContactAddress || '').trim();
@@ -409,7 +409,7 @@ html, body { height: auto !important; overflow: auto !important; }
             printBtn.addEventListener('click', () => {
                 const format = getCashBoxDefaultReceiptFormat() || 'a4';
                 const receiptWindow = window.open('about:blank', '_blank');
-                const url = buildReceiptUrl(format, (format === 'a4' || format === 'pdf') ? { autoPrint: '1' } : null);
+                const url = buildReceiptUrl(format, format === 'a4' ? { autoPrint: '1' } : null);
 
                 if (receiptWindow && !receiptWindow.closed) {
                     receiptWindow.location.href = url;
@@ -423,17 +423,7 @@ html, body { height: auto !important; overflow: auto !important; }
         }
         if (pdfBtn) {
             pdfBtn.addEventListener('click', () => {
-                const receiptWindow = window.open('about:blank', '_blank');
-                const url = buildReceiptUrl('pdf', { autoPrint: '1' });
-
-                if (receiptWindow && !receiptWindow.closed) {
-                    receiptWindow.location.href = url;
-                } else {
-                    const opened = window.open(url, '_blank');
-                    if (!opened) {
-                        alert('Popup blocked. Please allow popups to print receipts.');
-                    }
-                }
+                setFormat('pdf');
             });
         }
         if (emailBtn) {
