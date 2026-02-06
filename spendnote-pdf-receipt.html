@@ -344,7 +344,11 @@
 
     body.exporting .receipt {
       box-shadow: none;
-      border-radius: 8px;
+      border-radius: 0;
+      max-width: none;
+      width: 800px;
+      margin: 0;
+      padding: 48px;
     }
     
     body.download-mode .actions {
@@ -548,6 +552,7 @@ async function downloadReceiptPdf() {
       btn.textContent = 'Preparing PDF...';
     }
 
+    document.body.classList.remove('download-mode');
     document.body.classList.add('exporting');
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
@@ -589,6 +594,9 @@ async function downloadReceiptPdf() {
     alert('Could not generate PDF.');
   } finally {
     document.body.classList.remove('exporting');
+    if (shouldAutoDownload) {
+      document.body.classList.add('download-mode');
+    }
     if (btn) {
       btn.textContent = prevText;
       btn.disabled = false;
