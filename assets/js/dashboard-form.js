@@ -96,8 +96,42 @@ function initTransactionForm() {
         const wantsReceipt = action === 'done-receipt';
 
         let preopenedReceiptWindow = null;
-        let preopenedPdfWindow = null;
-        const featuresOffscreenTiny = 'popup,width=1,height=1,left=-10000,top=-10000';
+        let intendedPdfDownload = false;
+        let precreatedPdfIframe = null;
+
+        const triggerHiddenPdfDownload = (url) => {
+            try {
+                const iframe = precreatedPdfIframe || document.createElement('iframe');
+                iframe.style.position = 'fixed';
+                iframe.style.left = '-10000px';
+                iframe.style.top = '0';
+                iframe.style.width = '10px';
+                iframe.style.height = '10px';
+                iframe.style.opacity = '0';
+                iframe.style.pointerEvents = 'none';
+                iframe.style.border = '0';
+
+                if (!precreatedPdfIframe) {
+                    document.body.appendChild(iframe);
+                }
+
+                iframe.src = url;
+
+                setTimeout(() => {
+                    try {
+                        iframe.remove();
+                    } catch (_) {
+                        // ignore
+                    }
+                    if (precreatedPdfIframe === iframe) {
+                        precreatedPdfIframe = null;
+                    }
+                }, 30000);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        };
 
         if (wantsReceipt) {
             let intendedFormat = 'a4';
@@ -114,8 +148,23 @@ function initTransactionForm() {
                 intendedFormat = 'a4';
             }
 
-            if (intendedFormat === 'pdf') {
-                preopenedPdfWindow = window.open('about:blank', '_blank', featuresOffscreenTiny);
+            intendedPdfDownload = intendedFormat === 'pdf';
+            if (intendedPdfDownload) {
+                try {
+                    precreatedPdfIframe = document.createElement('iframe');
+                    precreatedPdfIframe.style.position = 'fixed';
+                    precreatedPdfIframe.style.left = '-10000px';
+                    precreatedPdfIframe.style.top = '0';
+                    precreatedPdfIframe.style.width = '10px';
+                    precreatedPdfIframe.style.height = '10px';
+                    precreatedPdfIframe.style.opacity = '0';
+                    precreatedPdfIframe.style.pointerEvents = 'none';
+                    precreatedPdfIframe.style.border = '0';
+                    precreatedPdfIframe.src = 'about:blank';
+                    document.body.appendChild(precreatedPdfIframe);
+                } catch (_) {
+                    precreatedPdfIframe = null;
+                }
             } else {
                 preopenedReceiptWindow = window.open('about:blank', '_blank');
             }
@@ -130,8 +179,9 @@ function initTransactionForm() {
                 // ignore
             }
             try {
-                if (preopenedPdfWindow && !preopenedPdfWindow.closed) {
-                    preopenedPdfWindow.close();
+                if (precreatedPdfIframe) {
+                    precreatedPdfIframe.remove();
+                    precreatedPdfIframe = null;
                 }
             } catch (_) {
                 // ignore
@@ -384,7 +434,7 @@ function initTransactionForm() {
                     };
 
                     const params = new URLSearchParams();
-                    params.set('v', 'print-20260206-21');
+                    params.set('v', 'print-20260206-22');
                     if (createdId) params.set('txId', createdId);
 
                     params.set('itemsMode', mode === 'quick' ? 'single' : 'full');
@@ -457,29 +507,14 @@ function initTransactionForm() {
                 const finalFormat = receipt?.format || 'a4';
 
                 if (finalFormat === 'pdf') {
-                    try {
-                        if (preopenedReceiptWindow && !preopenedReceiptWindow.closed) {
-                            preopenedReceiptWindow.close();
-                        }
-                    } catch (_) {
-                        // ignore
-                    }
-                    if (preopenedPdfWindow && !preopenedPdfWindow.closed) {
-                        preopenedPdfWindow.location.href = url;
-                    } else {
-                        const opened = window.open(url, '_blank', featuresOffscreenTiny);
+                    const ok = triggerHiddenPdfDownload(url);
+                    if (!ok) {
+                        const opened = window.open(url, '_blank');
                         if (!opened) {
                             alert('Popup blocked. Please allow popups to download PDFs.');
                         }
                     }
                 } else {
-                    try {
-                        if (preopenedPdfWindow && !preopenedPdfWindow.closed) {
-                            preopenedPdfWindow.close();
-                        }
-                    } catch (_) {
-                        // ignore
-                    }
                     if (preopenedReceiptWindow && !preopenedReceiptWindow.closed) {
                         preopenedReceiptWindow.location.href = url;
                     } else {

@@ -45,7 +45,7 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260206-17');
+        params.append('v', 'receipt-20260206-18');
         if (txId) params.append('txId', txId);
 
         const addrOverride = String(overrideContactAddress || '').trim();
@@ -405,11 +405,39 @@ html, body { height: auto !important; overflow: auto !important; }
         const pdfBtn = document.getElementById('txPdfBtn');
         const emailBtn = document.getElementById('txEmailBtn');
 
+        const triggerHiddenPdfDownload = (url) => {
+            try {
+                const iframe = document.createElement('iframe');
+                iframe.style.position = 'fixed';
+                iframe.style.left = '-10000px';
+                iframe.style.top = '0';
+                iframe.style.width = '10px';
+                iframe.style.height = '10px';
+                iframe.style.opacity = '0';
+                iframe.style.pointerEvents = 'none';
+                iframe.style.border = '0';
+                iframe.src = url;
+                document.body.appendChild(iframe);
+
+                setTimeout(() => {
+                    try {
+                        iframe.remove();
+                    } catch (_) {
+                        // ignore
+                    }
+                }, 30000);
+            } catch (_) {
+                const opened = window.open(url, '_blank');
+                if (!opened) {
+                    alert('Popup blocked. Please allow popups to download PDFs.');
+                }
+            }
+        };
+
         if (printBtn) {
             printBtn.addEventListener('click', () => {
                 const url = buildReceiptUrl('a4', { autoPrint: '1' });
-                const features = 'popup,width=1,height=1,left=-10000,top=-10000';
-                const opened = window.open(url, '_blank', features);
+                const opened = window.open(url, '_blank');
                 if (!opened) {
                     alert('Popup blocked. Please allow popups to print receipts.');
                 }
@@ -418,11 +446,7 @@ html, body { height: auto !important; overflow: auto !important; }
         if (pdfBtn) {
             pdfBtn.addEventListener('click', () => {
                 const url = buildReceiptUrl('pdf', { download: '1' });
-                const features = 'popup,width=1,height=1,left=-10000,top=-10000';
-                const opened = window.open(url, '_blank', features);
-                if (!opened) {
-                    alert('Popup blocked. Please allow popups to download PDFs.');
-                }
+                triggerHiddenPdfDownload(url);
             });
         }
         if (emailBtn) {
