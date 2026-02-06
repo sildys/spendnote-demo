@@ -34,17 +34,18 @@
     let hasInitializedFromTxData = false;
     let currentTxIsVoided = false;
     let overrideContactAddress = '';
+    let currentCashBoxId = '';
 
     const txId = new URLSearchParams(window.location.search).get('id');
 
-    function buildReceiptUrl(format) {
+    function buildReceiptUrl(format, extraParams) {
         const baseUrls = {
             'a4': 'spendnote-receipt-a4-two-copies.html',
             'pdf': 'spendnote-pdf-receipt.html',
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260203-03');
+        params.append('v', 'receipt-20260206-01');
         if (txId) params.append('txId', txId);
 
         const addrOverride = String(overrideContactAddress || '').trim();
@@ -75,7 +76,29 @@
             params.append('logoUrl', receiptLogoUrl);
         }
 
+        if (extraParams && typeof extraParams === 'object') {
+            for (const [key, value] of Object.entries(extraParams)) {
+                const v = String(value ?? '').trim();
+                if (v) params.append(key, v);
+            }
+        }
+
         return `${baseUrls[format]}?${params.toString()}`;
+    }
+
+    function getCashBoxDefaultReceiptFormat() {
+        const cbId = String(currentCashBoxId || '').trim();
+        if (!cbId) return '';
+        try {
+            const key = `spendnote.cashBox.${cbId}.defaultReceiptFormat.v1`;
+            const stored = String(localStorage.getItem(key) || '').trim().toLowerCase();
+            if (stored === 'a4' || stored === 'pdf' || stored === 'email') {
+                return stored;
+            }
+        } catch (_) {
+            return '';
+        }
+        return '';
     }
 
     function applyReceiptUrlIfChanged(nextUrl) {
@@ -258,6 +281,12 @@
         hasInitializedFromTxData = true;
 
         try {
+            currentCashBoxId = String(cashBox?.id || tx?.cash_box_id || '').trim();
+        } catch (_) {
+            currentCashBoxId = '';
+        }
+
+        try {
             overrideContactAddress = String(tx?.contact_address || tx?.contact?.address || '').trim();
         } catch (_) {
             overrideContactAddress = '';
@@ -378,7 +407,18 @@ html, body { height: auto !important; overflow: auto !important; }
 
         if (printBtn) {
             printBtn.addEventListener('click', () => {
-                window.print();
+                const format = getCashBoxDefaultReceiptFormat() || 'a4';
+                const receiptWindow = window.open('about:blank', '_blank');
+                const url = buildReceiptUrl(format, format === 'a4' ? { autoPrint: '1' } : null);
+
+                if (receiptWindow && !receiptWindow.closed) {
+                    receiptWindow.location.href = url;
+                } else {
+                    const opened = window.open(url, '_blank');
+                    if (!opened) {
+                        alert('Popup blocked. Please allow popups to print receipts.');
+                    }
+                }
             });
         }
         if (pdfBtn) {
