@@ -639,6 +639,119 @@
             });
         }
 
+        const overlayId = 'spendnoteBulkPdfOverlay';
+        const printStyleId = 'spendnoteBulkPdfPrintStyle';
+
+        function showPdfOverlay(rowsForPdf, title) {
+            let overlay = document.getElementById(overlayId);
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = overlayId;
+                overlay.style.position = 'fixed';
+                overlay.style.inset = '0';
+                overlay.style.zIndex = '9999';
+                overlay.style.background = 'rgba(0,0,0,0.55)';
+                overlay.style.display = 'none';
+                overlay.style.padding = '22px';
+                overlay.innerHTML = `
+                  <div id="${overlayId}Panel" style="max-width:1100px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,0.35);overflow:hidden;">
+                    <div style="padding:18px 18px 14px;border-bottom:1px solid #e5e7eb;">
+                      <div id="${overlayId}Title" style="font-size:16px;font-weight:900;color:#0f172a;"></div>
+                      <div id="${overlayId}Hint" style="margin-top:6px;font-size:12px;color:#64748b;line-height:1.5;">Click <strong>Print / Save as PDF</strong>, then choose <strong>Save as PDF</strong> in the print dialog. (Shortcut: <strong>Ctrl+P</strong>)</div>
+                      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
+                        <button type="button" id="${overlayId}Print" style="appearance:none;border:1px solid #0f172a;background:#0f172a;color:#fff;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;">Print / Save as PDF</button>
+                        <button type="button" id="${overlayId}Close" style="appearance:none;border:1px solid #cbd5e1;background:#fff;color:#0f172a;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;">Close</button>
+                        <div style="margin-left:auto;font-size:12px;color:#64748b;font-weight:800;">Rows: <span id="${overlayId}Count">0</span></div>
+                      </div>
+                    </div>
+                    <div id="${overlayId}Content" style="padding:14px 18px 18px;max-height:72vh;overflow:auto;">
+                      <table style="width:100%;border-collapse:collapse;">
+                        <thead>
+                          <tr>
+                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Type</th>
+                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">ID</th>
+                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Date</th>
+                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Cash Box</th>
+                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Contact</th>
+                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Contact ID</th>
+                            <th style="text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Amount</th>
+                          </tr>
+                        </thead>
+                        <tbody id="${overlayId}Body"></tbody>
+                      </table>
+                    </div>
+                  </div>
+                `;
+                document.body.appendChild(overlay);
+            }
+
+            let printStyle = document.getElementById(printStyleId);
+            if (!printStyle) {
+                printStyle = document.createElement('style');
+                printStyle.id = printStyleId;
+                printStyle.textContent = `
+                  @media print {
+                    @page { margin: 12mm; }
+                    body > *:not(#${overlayId}) { display: none !important; }
+                    #${overlayId} { display: block !important; position: static !important; inset: auto !important; background: #ffffff !important; padding: 0 !important; }
+                    #${overlayId}Panel { box-shadow: none !important; border-radius: 0 !important; max-width: none !important; }
+                    #${overlayId}Content { max-height: none !important; overflow: visible !important; }
+                    #${overlayId}Hint { display: none !important; }
+                    #${overlayId}Print, #${overlayId}Close { display: none !important; }
+                  }
+                `;
+                document.head.appendChild(printStyle);
+            }
+
+            const titleEl = document.getElementById(`${overlayId}Title`);
+            if (titleEl) titleEl.textContent = String(title || 'Export');
+
+            const tbodyEl = document.getElementById(`${overlayId}Body`);
+            const countEl = document.getElementById(`${overlayId}Count`);
+            if (countEl) countEl.textContent = String(Array.isArray(rowsForPdf) ? rowsForPdf.length : 0);
+            if (tbodyEl) {
+                const list = Array.isArray(rowsForPdf) ? rowsForPdf : [];
+                tbodyEl.innerHTML = list.map((r) => `
+                  <tr>
+                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.type)}</td>
+                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;font-weight:900;">${escapeHtml(r.id)}</td>
+                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.date)}</td>
+                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.cashBox)}</td>
+                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.contact)}</td>
+                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.contactId)}</td>
+                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;text-align:right;font-weight:900;">${escapeHtml(r.amount)}</td>
+                  </tr>
+                `).join('');
+            }
+
+            const close = () => {
+                overlay.style.display = 'none';
+                try { document.body.classList.remove('spendnote-bulk-pdf-open'); } catch (_) {}
+            };
+
+            const printBtn = document.getElementById(`${overlayId}Print`);
+            const closeBtn = document.getElementById(`${overlayId}Close`);
+
+            if (printBtn) {
+                printBtn.onclick = () => window.print();
+            }
+            if (closeBtn) {
+                closeBtn.onclick = close;
+            }
+
+            overlay.onclick = (e) => {
+                const panel = document.getElementById(`${overlayId}Panel`);
+                if (panel && e.target === overlay) close();
+            };
+
+            const afterPrintHandler = () => close();
+            window.removeEventListener('afterprint', afterPrintHandler);
+            window.addEventListener('afterprint', afterPrintHandler, { once: true });
+
+            overlay.style.display = 'block';
+            try { document.body.classList.add('spendnote-bulk-pdf-open'); } catch (_) {}
+        }
+
         function exportSelectedCsv() {
             const selected = new Set(getSelectedTxIdsFromTable(tbody));
             if (!selected.size) return;
@@ -701,114 +814,105 @@
                     amount: safeText(tr.querySelector('.tx-amount')?.textContent, '')
                 }));
 
-            const overlayId = 'spendnoteBulkPdfOverlay';
-            const printStyleId = 'spendnoteBulkPdfPrintStyle';
+            showPdfOverlay(rows, 'Selected transactions');
+        }
 
-            let overlay = document.getElementById(overlayId);
-            if (!overlay) {
-                overlay = document.createElement('div');
-                overlay.id = overlayId;
-                overlay.style.position = 'fixed';
-                overlay.style.inset = '0';
-                overlay.style.zIndex = '9999';
-                overlay.style.background = 'rgba(0,0,0,0.55)';
-                overlay.style.display = 'none';
-                overlay.style.padding = '22px';
-                overlay.innerHTML = `
-                  <div id="${overlayId}Panel" style="max-width:1100px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,0.35);overflow:hidden;">
-                    <div style="padding:18px 18px 14px;border-bottom:1px solid #e5e7eb;">
-                      <div style="font-size:16px;font-weight:900;color:#0f172a;">Export selected transactions</div>
-                      <div id="${overlayId}Hint" style="margin-top:6px;font-size:12px;color:#64748b;line-height:1.5;">Click <strong>Print / Save as PDF</strong>, then choose <strong>Save as PDF</strong> in the print dialog. (Shortcut: <strong>Ctrl+P</strong>)</div>
-                      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;">
-                        <button type="button" id="${overlayId}Print" style="appearance:none;border:1px solid #0f172a;background:#0f172a;color:#fff;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;">Print / Save as PDF</button>
-                        <button type="button" id="${overlayId}Close" style="appearance:none;border:1px solid #cbd5e1;background:#fff;color:#0f172a;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:900;cursor:pointer;">Close</button>
-                        <div style="margin-left:auto;font-size:12px;color:#64748b;font-weight:800;">Selected: <span id="${overlayId}Count">0</span></div>
-                      </div>
-                    </div>
-                    <div id="${overlayId}Content" style="padding:14px 18px 18px;max-height:72vh;overflow:auto;">
-                      <table style="width:100%;border-collapse:collapse;">
-                        <thead>
-                          <tr>
-                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Type</th>
-                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">ID</th>
-                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Date</th>
-                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Cash Box</th>
-                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Contact</th>
-                            <th style="text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Contact ID</th>
-                            <th style="text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#64748b;padding:10px 8px;border-bottom:1px solid #e5e7eb;">Amount</th>
-                          </tr>
-                        </thead>
-                        <tbody id="${overlayId}Body"></tbody>
-                      </table>
-                    </div>
-                  </div>
-                `;
-                document.body.appendChild(overlay);
+        async function exportFilteredPdf() {
+            if (!window.db?.transactions?.getPage) return;
+
+            const btn = exportPdfBtn;
+            const prevText = btn ? btn.textContent : '';
+            if (btn) btn.disabled = true;
+            if (btn) btn.textContent = 'Preparing…';
+
+            try {
+                const serverCtx = buildServerQuery();
+                if (Array.isArray(serverCtx.cashBoxIds) && serverCtx.cashBoxIds.length === 0) {
+                    showPdfOverlay([], 'Filtered transactions (0)');
+                    return;
+                }
+
+                const exportPerPage = 1000;
+                const first = await window.db.transactions.getPage({
+                    select: txSelect,
+                    page: 1,
+                    perPage: exportPerPage,
+                    cashBoxIds: serverCtx.cashBoxIds || null,
+                    currency: serverCtx.filters.currency || null,
+                    type: serverCtx.type || null,
+                    createdByUserId: serverCtx.filters.createdById || null,
+                    startDate: serverCtx.filters.dateFrom || null,
+                    endDate: serverCtx.filters.dateTo || null,
+                    amountMin: serverCtx.filters.amountMin,
+                    amountMax: serverCtx.filters.amountMax,
+                    txIdQuery: serverCtx.filters.txIdQuery || null,
+                    contactQuery: serverCtx.filters.contactQuery || null,
+                    sortKey: mapSortKey(state.sort.key),
+                    sortDir: state.sort.direction
+                });
+
+                const total = Number(first?.count) || 0;
+                const maxRows = 500;
+                let allowedTotal = total;
+
+                if (total > maxRows) {
+                    const proceed = confirm(`This export matches ${total} transactions.\n\nExporting more than ${maxRows} rows to PDF may be slow.\n\nClick OK to export the first ${maxRows} rows, or Cancel to adjust filters.`);
+                    if (!proceed) return;
+                    allowedTotal = maxRows;
+                }
+
+                const all = [];
+                const firstRows = Array.isArray(first?.data) ? first.data : [];
+                all.push(...firstRows);
+
+                const pages = Math.ceil(allowedTotal / exportPerPage);
+                for (let p = 2; p <= pages; p += 1) {
+                    const res = await window.db.transactions.getPage({
+                        select: txSelect,
+                        page: p,
+                        perPage: exportPerPage,
+                        cashBoxIds: serverCtx.cashBoxIds || null,
+                        currency: serverCtx.filters.currency || null,
+                        type: serverCtx.type || null,
+                        createdByUserId: serverCtx.filters.createdById || null,
+                        startDate: serverCtx.filters.dateFrom || null,
+                        endDate: serverCtx.filters.dateTo || null,
+                        amountMin: serverCtx.filters.amountMin,
+                        amountMax: serverCtx.filters.amountMax,
+                        txIdQuery: serverCtx.filters.txIdQuery || null,
+                        contactQuery: serverCtx.filters.contactQuery || null,
+                        sortKey: mapSortKey(state.sort.key),
+                        sortDir: state.sort.direction
+                    });
+                    const rows = Array.isArray(res?.data) ? res.data : [];
+                    all.push(...rows);
+                    if (all.length >= allowedTotal) break;
+                }
+
+                const rowsForPdf = all.slice(0, allowedTotal).map((tx) => {
+                    if (tx && !tx.cash_box && tx.cash_box_id) {
+                        tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
+                    }
+                    const t = safeText(tx?.type, '').toLowerCase();
+                    const isVoided = safeText(tx?.status, 'active').toLowerCase() === 'voided';
+                    const typeLabel = isVoided ? 'VOID' : (t === 'income' ? 'IN' : (t === 'expense' ? 'OUT' : ''));
+                    const currency = safeText(tx?.cash_box?.currency, 'USD');
+                    return {
+                        type: typeLabel,
+                        id: getDisplayId(tx),
+                        date: formatDateShort(tx?.transaction_date || tx?.created_at),
+                        cashBox: safeText(tx?.cash_box?.name, 'Unknown'),
+                        contact: safeText(tx?.contact?.name || tx?.contact_name, '—'),
+                        contactId: getContactDisplayId(tx),
+                        amount: formatCurrency(tx?.amount, currency)
+                    };
+                });
+
+                showPdfOverlay(rowsForPdf, `Filtered transactions (${rowsForPdf.length})`);
+            } finally {
+                if (btn) btn.disabled = false;
+                if (btn) btn.textContent = prevText;
             }
-
-            let printStyle = document.getElementById(printStyleId);
-            if (!printStyle) {
-                printStyle = document.createElement('style');
-                printStyle.id = printStyleId;
-                printStyle.textContent = `
-                  @media print {
-                    @page { margin: 12mm; }
-                    body > *:not(#${overlayId}) { display: none !important; }
-                    #${overlayId} { display: block !important; position: static !important; inset: auto !important; background: #ffffff !important; padding: 0 !important; }
-                    #${overlayId}Panel { box-shadow: none !important; border-radius: 0 !important; max-width: none !important; }
-                    #${overlayId}Content { max-height: none !important; overflow: visible !important; }
-                    #${overlayId}Hint { display: none !important; }
-                    #${overlayId}Print, #${overlayId}Close { display: none !important; }
-                  }
-                `;
-                document.head.appendChild(printStyle);
-            }
-
-            const tbodyEl = document.getElementById(`${overlayId}Body`);
-            const countEl = document.getElementById(`${overlayId}Count`);
-            if (countEl) countEl.textContent = String(rows.length);
-            if (tbodyEl) {
-                tbodyEl.innerHTML = rows.map((r) => `
-                  <tr>
-                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.type)}</td>
-                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;font-weight:900;">${escapeHtml(r.id)}</td>
-                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.date)}</td>
-                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.cashBox)}</td>
-                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.contact)}</td>
-                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;">${escapeHtml(r.contactId)}</td>
-                    <td style="padding:10px 8px;border-bottom:1px solid #eef2f7;font-size:12px;text-align:right;font-weight:900;">${escapeHtml(r.amount)}</td>
-                  </tr>
-                `).join('');
-            }
-
-            const close = () => {
-                overlay.style.display = 'none';
-                try { document.body.classList.remove('spendnote-bulk-pdf-open'); } catch (_) {}
-            };
-
-            const printBtn = document.getElementById(`${overlayId}Print`);
-            const closeBtn = document.getElementById(`${overlayId}Close`);
-
-            if (printBtn) {
-                printBtn.onclick = () => {
-                    window.print();
-                };
-            }
-            if (closeBtn) {
-                closeBtn.onclick = close;
-            }
-
-            overlay.onclick = (e) => {
-                const panel = document.getElementById(`${overlayId}Panel`);
-                if (panel && e.target === overlay) close();
-            };
-
-            const afterPrintHandler = () => close();
-            window.removeEventListener('afterprint', afterPrintHandler);
-            window.addEventListener('afterprint', afterPrintHandler, { once: true });
-
-            overlay.style.display = 'block';
-            try { document.body.classList.add('spendnote-bulk-pdf-open'); } catch (_) {}
         }
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -1141,7 +1245,7 @@
 
         if (exportPdfBtn) {
             exportPdfBtn.addEventListener('click', () => {
-                window.print();
+                exportFilteredPdf();
             });
         }
 
