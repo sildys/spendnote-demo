@@ -45,7 +45,7 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260206-20');
+        params.append('v', 'receipt-20260206-22');
         if (txId) params.append('txId', txId);
 
         const addrOverride = String(overrideContactAddress || '').trim();
@@ -412,8 +412,8 @@ html, body { height: auto !important; overflow: auto !important; }
                 iframe.style.position = 'fixed';
                 iframe.style.left = '-10000px';
                 iframe.style.top = '0';
-                iframe.style.width = '10px';
-                iframe.style.height = '10px';
+                iframe.style.width = '1200px';
+                iframe.style.height = '1700px';
                 iframe.style.opacity = '0';
                 iframe.style.pointerEvents = 'none';
                 iframe.style.border = '0';

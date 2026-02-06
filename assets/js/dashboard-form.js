@@ -105,8 +105,8 @@ function initTransactionForm() {
                 iframe.style.position = 'fixed';
                 iframe.style.left = '-10000px';
                 iframe.style.top = '0';
-                iframe.style.width = '10px';
-                iframe.style.height = '10px';
+                iframe.style.width = '1200px';
+                iframe.style.height = '1700px';
                 iframe.style.opacity = '0';
                 iframe.style.pointerEvents = 'none';
                 iframe.style.border = '0';
@@ -155,8 +155,8 @@ function initTransactionForm() {
                     precreatedPdfIframe.style.position = 'fixed';
                     precreatedPdfIframe.style.left = '-10000px';
                     precreatedPdfIframe.style.top = '0';
-                    precreatedPdfIframe.style.width = '10px';
-                    precreatedPdfIframe.style.height = '10px';
+                    precreatedPdfIframe.style.width = '1200px';
+                    precreatedPdfIframe.style.height = '1700px';
                     precreatedPdfIframe.style.opacity = '0';
                     precreatedPdfIframe.style.pointerEvents = 'none';
                     precreatedPdfIframe.style.border = '0';
@@ -434,7 +434,7 @@ function initTransactionForm() {
                     };
 
                     const params = new URLSearchParams();
-                    params.set('v', 'print-20260206-23');
+                    params.set('v', 'print-20260206-25');
                     if (createdId) params.set('txId', createdId);
 
                     params.set('itemsMode', mode === 'quick' ? 'single' : 'full');
