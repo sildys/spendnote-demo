@@ -397,6 +397,28 @@ body {
 }
 
 /* RESPONSIVE */
+@media (max-width: 1200px) {
+    .nav-container {
+        padding: 0 var(--space-md);
+    }
+
+    .site-nav .nav-links {
+        gap: 12px;
+    }
+
+    .site-nav .nav-links a {
+        padding: 10px 14px;
+    }
+
+    .site-nav .nav-new-transaction-btn .btn-text {
+        display: none;
+    }
+
+    .user-avatar-wrapper {
+        padding: 6px 8px;
+    }
+}
+
 @media (max-width: 768px) {
     .app-container {
         padding: 20px 16px;
