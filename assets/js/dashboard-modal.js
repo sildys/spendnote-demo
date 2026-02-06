@@ -361,7 +361,14 @@ function openModal(preset) {
     const checkedDir = document.querySelector('input[name="modalDirection"]:checked');
     updateModalDirectionUI(checkedDir ? checkedDir.value : 'in');
 
-    const initialMode = (options.mode === 'detailed' || options.mode === 'quick') ? options.mode : getStoredModalMode();
+    const hasExplicitMode = (options.mode === 'detailed' || options.mode === 'quick');
+    const hasPrefilledLineItems = Array.isArray(options.lineItems) && options.lineItems.length > 0;
+    const isDuplicateFlow = Boolean(options.isDuplicate) || hasPrefilledLineItems;
+
+    const initialMode = hasExplicitMode
+        ? options.mode
+        : (isDuplicateFlow ? getStoredModalMode() : 'quick');
+
     updateModalModeUI(initialMode, { persist: false });
 
     if (initialMode !== 'detailed') {
