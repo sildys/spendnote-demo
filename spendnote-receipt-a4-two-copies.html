@@ -949,14 +949,13 @@ body {
             ? [{ description: fallbackDesc, amount: fallbackAmt }]
             : (items.length ? items : [{ description: fallbackDesc, amount: fallbackAmt }]);
 
-          const fillRows = isItemsSingle ? 1 : 4;
-          const maxRows = 4;
-          const rows = effective.slice(0, fillRows).map((it) => {
+          const rowsSource = isItemsSingle ? effective.slice(0, 1) : effective;
+          const rows = rowsSource.map((it) => {
             const desc = safeText(it.description, '—');
             const amt = formatMoney(it.amount, currency);
             return `<tr><td>${desc}</td><td class="amount">${amt}</td></tr>`;
           });
-          while (rows.length < maxRows) {
+          while (rows.length < 4) {
             rows.push('<tr><td>&nbsp;</td><td></td></tr>');
           }
 
