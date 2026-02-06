@@ -753,9 +753,8 @@
                 printStyle.textContent = `
                   @media print {
                     @page { margin: 12mm; }
-                    body * { visibility: hidden !important; }
-                    #${overlayId}, #${overlayId} * { visibility: visible !important; }
-                    #${overlayId} { position: static !important; inset: auto !important; background: #ffffff !important; padding: 0 !important; }
+                    body > *:not(#${overlayId}) { display: none !important; }
+                    #${overlayId} { display: block !important; position: static !important; inset: auto !important; background: #ffffff !important; padding: 0 !important; }
                     #${overlayId}Panel { box-shadow: none !important; border-radius: 0 !important; max-width: none !important; }
                     #${overlayId}Content { max-height: none !important; overflow: visible !important; }
                     #${overlayId}Print, #${overlayId}Close { display: none !important; }
