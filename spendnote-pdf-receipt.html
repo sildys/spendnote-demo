@@ -570,46 +570,65 @@ async function downloadReceiptPdf() {
     const targetW = pageW - marginX * 2;
     const targetH = pageH - marginTop - marginBottom;
 
-    const renderW = targetW;
-    const pxPerMm = canvas.width / renderW;
-    const sliceHpxMax = Math.max(1, Math.floor(targetH * pxPerMm));
-    const x = marginX;
-    const y = marginTop;
+    const renderHAtFullWidth = (canvas.height * targetW) / canvas.width;
+    const xBase = marginX;
+    const yBase = marginTop;
 
-    const srcCanvas = canvas;
-    let offsetYpx = 0;
-    let pageIndex = 0;
-    while (offsetYpx < srcCanvas.height) {
-      const sliceHpx = Math.min(sliceHpxMax, srcCanvas.height - offsetYpx);
-
-      const pageCanvas = document.createElement('canvas');
-      pageCanvas.width = srcCanvas.width;
-      pageCanvas.height = sliceHpx;
-      const ctx = pageCanvas.getContext('2d');
-      if (!ctx) break;
-
-      ctx.drawImage(
-        srcCanvas,
-        0,
-        offsetYpx,
-        srcCanvas.width,
-        sliceHpx,
-        0,
-        0,
-        srcCanvas.width,
-        sliceHpx
-      );
-
-      const pageImg = pageCanvas.toDataURL('image/png');
-      const sliceHmm = sliceHpx / pxPerMm;
-
-      if (pageIndex > 0) {
-        pdf.addPage();
+    // If it almost fits a single page, scale down slightly to avoid an ugly extra page.
+    // Only fall back to multi-page when it's clearly longer.
+    const SINGLE_PAGE_FIT_THRESHOLD = 1.12;
+    if (renderHAtFullWidth <= targetH * SINGLE_PAGE_FIT_THRESHOLD) {
+      let renderW = targetW;
+      let renderH = renderHAtFullWidth;
+      if (renderH > targetH) {
+        renderH = targetH;
+        renderW = (canvas.width * renderH) / canvas.height;
       }
-      pdf.addImage(pageImg, 'PNG', x, y, renderW, sliceHmm, undefined, 'FAST');
+      const x = xBase + (targetW - renderW) / 2;
+      const y = yBase;
+      pdf.addImage(imgData, 'PNG', x, y, renderW, renderH, undefined, 'FAST');
+    } else {
+      const renderW = targetW;
+      const pxPerMm = canvas.width / renderW;
+      const sliceHpxMax = Math.max(1, Math.floor(targetH * pxPerMm));
+      const x = xBase;
+      const y = yBase;
 
-      offsetYpx += sliceHpx;
-      pageIndex += 1;
+      const srcCanvas = canvas;
+      let offsetYpx = 0;
+      let pageIndex = 0;
+      while (offsetYpx < srcCanvas.height) {
+        const sliceHpx = Math.min(sliceHpxMax, srcCanvas.height - offsetYpx);
+
+        const pageCanvas = document.createElement('canvas');
+        pageCanvas.width = srcCanvas.width;
+        pageCanvas.height = sliceHpx;
+        const ctx = pageCanvas.getContext('2d');
+        if (!ctx) break;
+
+        ctx.drawImage(
+          srcCanvas,
+          0,
+          offsetYpx,
+          srcCanvas.width,
+          sliceHpx,
+          0,
+          0,
+          srcCanvas.width,
+          sliceHpx
+        );
+
+        const pageImg = pageCanvas.toDataURL('image/png');
+        const sliceHmm = sliceHpx / pxPerMm;
+
+        if (pageIndex > 0) {
+          pdf.addPage();
+        }
+        pdf.addImage(pageImg, 'PNG', x, y, renderW, sliceHmm, undefined, 'FAST');
+
+        offsetYpx += sliceHpx;
+        pageIndex += 1;
+      }
     }
 
     const displayId = document.title || 'receipt';
