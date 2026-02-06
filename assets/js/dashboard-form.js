@@ -94,11 +94,44 @@ function initTransactionForm() {
         const actionBtn = e.submitter;
         const action = actionBtn ? actionBtn.value : 'done';
         const wantsReceipt = action === 'done-receipt';
-        const receiptWindow = wantsReceipt ? window.open('about:blank', '_blank') : null;
+
+        let preopenedReceiptWindow = null;
+        let preopenedPdfWindow = null;
+        const featuresOffscreenTiny = 'popup,width=1,height=1,left=-10000,top=-10000';
+
+        if (wantsReceipt) {
+            let intendedFormat = 'a4';
+            try {
+                const cbId = String(document.getElementById('modalCashBoxId')?.value || '').trim();
+                if (cbId) {
+                    const key = `spendnote.cashBox.${cbId}.defaultReceiptFormat.v1`;
+                    const stored = String(localStorage.getItem(key) || '').trim().toLowerCase();
+                    if (stored === 'a4' || stored === 'pdf' || stored === 'email') {
+                        intendedFormat = stored;
+                    }
+                }
+            } catch (_) {
+                intendedFormat = 'a4';
+            }
+
+            if (intendedFormat === 'pdf') {
+                preopenedPdfWindow = window.open('about:blank', '_blank', featuresOffscreenTiny);
+            } else {
+                preopenedReceiptWindow = window.open('about:blank', '_blank');
+            }
+        }
+
         const closeReceiptWindow = () => {
             try {
-                if (receiptWindow && !receiptWindow.closed) {
-                    receiptWindow.close();
+                if (preopenedReceiptWindow && !preopenedReceiptWindow.closed) {
+                    preopenedReceiptWindow.close();
+                }
+            } catch (_) {
+                // ignore
+            }
+            try {
+                if (preopenedPdfWindow && !preopenedPdfWindow.closed) {
+                    preopenedPdfWindow.close();
                 }
             } catch (_) {
                 // ignore
@@ -351,7 +384,7 @@ function initTransactionForm() {
                     };
 
                     const params = new URLSearchParams();
-                    params.set('v', 'print-20260206-16');
+                    params.set('v', 'print-20260206-21');
                     if (createdId) params.set('txId', createdId);
 
                     params.set('itemsMode', mode === 'quick' ? 'single' : 'full');
@@ -413,16 +446,47 @@ function initTransactionForm() {
                     }
 
                     const baseUrl = baseUrls[format] || baseUrls.a4;
-                    return `${baseUrl}?${params.toString()}`;
+                    return {
+                        url: `${baseUrl}?${params.toString()}`,
+                        format
+                    };
                 };
 
-                const url = await buildReceiptUrl();
-                if (receiptWindow && !receiptWindow.closed) {
-                    receiptWindow.location.href = url;
+                const receipt = await buildReceiptUrl();
+                const url = receipt?.url;
+                const finalFormat = receipt?.format || 'a4';
+
+                if (finalFormat === 'pdf') {
+                    try {
+                        if (preopenedReceiptWindow && !preopenedReceiptWindow.closed) {
+                            preopenedReceiptWindow.close();
+                        }
+                    } catch (_) {
+                        // ignore
+                    }
+                    if (preopenedPdfWindow && !preopenedPdfWindow.closed) {
+                        preopenedPdfWindow.location.href = url;
+                    } else {
+                        const opened = window.open(url, '_blank', featuresOffscreenTiny);
+                        if (!opened) {
+                            alert('Popup blocked. Please allow popups to download PDFs.');
+                        }
+                    }
                 } else {
-                    const opened = window.open(url, '_blank');
-                    if (!opened) {
-                        alert('Popup blocked. Please allow popups to print receipts.');
+                    try {
+                        if (preopenedPdfWindow && !preopenedPdfWindow.closed) {
+                            preopenedPdfWindow.close();
+                        }
+                    } catch (_) {
+                        // ignore
+                    }
+                    if (preopenedReceiptWindow && !preopenedReceiptWindow.closed) {
+                        preopenedReceiptWindow.location.href = url;
+                    } else {
+                        const opened = window.open(url, '_blank');
+                        if (!opened) {
+                            alert('Popup blocked. Please allow popups to print receipts.');
+                        }
                     }
                 }
 

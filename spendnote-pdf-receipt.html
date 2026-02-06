@@ -168,7 +168,7 @@
     
     /* TABLE */
     .table-section {
-      margin-bottom: 32px;
+      margin-bottom: 8px;
     }
     
     table {
@@ -208,12 +208,10 @@
       color: #000;
     }
 
-    .table-section tbody tr {
+    .table-section tbody td {
+      padding: 0 16px;
       height: 44px;
-    }
-    
-    tr:last-child td {
-      border-bottom: none;
+      vertical-align: middle;
     }
     
     /* TOTAL */
@@ -349,6 +347,22 @@
       border-radius: 8px;
     }
     
+    body.download-mode .actions {
+      display: none !important;
+    }
+
+    body.download-mode {
+      background: white;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    body.download-mode .receipt {
+      position: fixed;
+      left: -10000px;
+      top: 0;
+    }
+    
     /* SCREEN */
     @media screen {
       body {
@@ -422,11 +436,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
-          <tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
-          <tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
-          <tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
-          <tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
+          <tr class="empty-row"><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
+          <tr class="empty-row"><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
+          <tr class="empty-row"><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
+          <tr class="empty-row"><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
+          <tr class="empty-row"><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>
         </tbody>
       </table>
     </div>
@@ -491,6 +505,20 @@
 const urlParams = new URLSearchParams(window.location.search);
 const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
 const isItemsSingle = itemsMode === 'single';
+
+const shouldAutoDownload = urlParams.get('download') === '1' || (
+  Boolean(urlParams.get('txId')) &&
+  urlParams.get('download') !== '0' &&
+  urlParams.get('preview') !== '1'
+);
+
+const EMPTY_ROW_HTML = '<tr class="empty-row"><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>';
+
+try {
+  if (shouldAutoDownload) {
+    document.body.classList.add('download-mode');
+  }
+} catch (_) {}
 
 function toSafeFileName(input) {
   return String(input || 'receipt')
@@ -577,11 +605,6 @@ try {
   if (btn) btn.addEventListener('click', downloadReceiptPdf);
 } catch (_) {}
 
-const shouldAutoDownload = urlParams.get('download') === '1' || (
-  Boolean(urlParams.get('txId')) &&
-  urlParams.get('download') !== '0' &&
-  urlParams.get('preview') !== '1'
-);
 const initialVoid = urlParams.get('void') === '1';
 window.__spendnoteReceiptVoid = initialVoid;
 if (initialVoid) {
@@ -784,9 +807,8 @@ if (isDemo) {
     const amount = Number.isFinite(Number(it.amount)) ? formatMoney(Number(it.amount), demoCurrency) : '';
     return `<tr><td>${safeText(it.description, '&nbsp;')}</td><td class="amount">${amount}</td></tr>`;
   });
-
   while (rows.length < 5) {
-    rows.push('<tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>');
+    rows.push(EMPTY_ROW_HTML);
   }
 
   const tbody = document.querySelector('.table-section tbody');
@@ -963,7 +985,7 @@ if (urlParams.get('signatures') === '0') {
       setTextAll('span.register-id', '—');
       setTextAll('span.receipt-id-line', '—');
       const tbodyInit = document.querySelector('.table-section tbody');
-      if (tbodyInit) tbodyInit.innerHTML = '<tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>'.repeat(5);
+      if (tbodyInit) tbodyInit.innerHTML = EMPTY_ROW_HTML.repeat(5);
       const totalInit = document.querySelector('.total-amount');
       if (totalInit) totalInit.textContent = '—';
       const notesInit = document.querySelector('.notes');
@@ -1005,7 +1027,7 @@ if (urlParams.get('signatures') === '0') {
           return `<tr><td>${desc}</td><td class="amount">${amt}</td></tr>`;
         });
         while (rows.length < maxRows) {
-          rows.push('<tr><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>');
+          rows.push('<tr class="empty-row"><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>');
         }
 
         const tbody = document.querySelector('.table-section tbody');
@@ -1134,13 +1156,6 @@ if (urlParams.get('signatures') === '0') {
             }, 150);
           }
         } catch (_) {}
-      } catch (_) {
-        // ignore
-      }
-    })();
-  </script>
-</body>
-</html>
       } catch (_) {
         // ignore
       }

@@ -45,7 +45,7 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260206-14');
+        params.append('v', 'receipt-20260206-17');
         if (txId) params.append('txId', txId);
 
         const addrOverride = String(overrideContactAddress || '').trim();
@@ -407,32 +407,21 @@ html, body { height: auto !important; overflow: auto !important; }
 
         if (printBtn) {
             printBtn.addEventListener('click', () => {
-                const format = getCashBoxDefaultReceiptFormat() || 'a4';
-                const receiptWindow = window.open('about:blank', '_blank');
-                const url = buildReceiptUrl(format, format === 'a4' ? { autoPrint: '1' } : null);
-
-                if (receiptWindow && !receiptWindow.closed) {
-                    receiptWindow.location.href = url;
-                } else {
-                    const opened = window.open(url, '_blank');
-                    if (!opened) {
-                        alert('Popup blocked. Please allow popups to print receipts.');
-                    }
+                const url = buildReceiptUrl('a4', { autoPrint: '1' });
+                const features = 'popup,width=1,height=1,left=-10000,top=-10000';
+                const opened = window.open(url, '_blank', features);
+                if (!opened) {
+                    alert('Popup blocked. Please allow popups to print receipts.');
                 }
             });
         }
         if (pdfBtn) {
             pdfBtn.addEventListener('click', () => {
-                const receiptWindow = window.open('about:blank', '_blank');
                 const url = buildReceiptUrl('pdf', { download: '1' });
-
-                if (receiptWindow && !receiptWindow.closed) {
-                    receiptWindow.location.href = url;
-                } else {
-                    const opened = window.open(url, '_blank');
-                    if (!opened) {
-                        alert('Popup blocked. Please allow popups to download PDFs.');
-                    }
+                const features = 'popup,width=1,height=1,left=-10000,top=-10000';
+                const opened = window.open(url, '_blank', features);
+                if (!opened) {
+                    alert('Popup blocked. Please allow popups to download PDFs.');
                 }
             });
         }
