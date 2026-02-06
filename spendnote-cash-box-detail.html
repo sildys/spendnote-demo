@@ -1301,7 +1301,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            const cashboxId = urlParams.get('id');
+            const isUuid = (value) => {
+                return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
+            };
+
+            const cashboxIdRaw = urlParams.get('id') || urlParams.get('cashBoxId');
+            const cashboxId = isUuid(cashboxIdRaw) ? String(cashboxIdRaw).trim() : null;
+
+            if (cashboxIdRaw && !cashboxId) {
+                alert('Invalid Cash Box ID.');
+                window.location.replace('spendnote-cash-box-list.html');
+                return;
+            }
 
             (async () => {
                 if (!cashboxId || !window.db?.cashBoxes?.getById) {
@@ -1382,6 +1393,6 @@
     <script src="assets/js/nav-loader.js?v=8"></script>
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=20"></script>
-    <script src="assets/js/transaction-history-data.js?v=66"></script>
+    <script src="assets/js/transaction-history-data.js?v=67"></script>
 </body>
 </html>
