@@ -84,7 +84,17 @@ function loadNav(containerId = 'nav-container') {
                         avatarColor = '#10b981';
                     }
 
-                    const initials = 'U';
+                    let initials = 'U';
+                    try {
+                        const fullName = String(localStorage.getItem('spendnote.user.fullName.v1') || '').trim();
+                        if (fullName) {
+                            const parts = fullName.split(/\s+/).filter(Boolean);
+                            const next = parts.slice(0, 2).map((p) => (p[0] || '').toUpperCase()).join('');
+                            initials = next || (fullName[0] || 'U').toUpperCase();
+                        }
+                    } catch (_) {
+                        initials = 'U';
+                    }
                     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="32" fill="${avatarColor}"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="700" fill="#ffffff">${initials}</text></svg>`;
                     avatarImg.src = `data:image/svg+xml,${encodeURIComponent(svg)}`;
                 }

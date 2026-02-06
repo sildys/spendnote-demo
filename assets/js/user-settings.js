@@ -24,10 +24,18 @@ const applyRoleBadge = (roleValue) => {
 // Avatar localStorage
 const AVATAR_KEY = 'spendnote.user.avatar.v1';
 const AVATAR_COLOR_KEY = 'spendnote.user.avatarColor.v1';
+const USER_FULLNAME_KEY = 'spendnote.user.fullName.v1';
 const readAvatar = () => { try { return localStorage.getItem(AVATAR_KEY); } catch { return null; } };
 const writeAvatar = (dataUrl) => { try { dataUrl ? localStorage.setItem(AVATAR_KEY, dataUrl) : localStorage.removeItem(AVATAR_KEY); } catch {} };
 const readAvatarColor = () => { try { return localStorage.getItem(AVATAR_COLOR_KEY) || '#10b981'; } catch { return '#10b981'; } };
 const writeAvatarColor = (color) => { try { localStorage.setItem(AVATAR_COLOR_KEY, color); } catch {} };
+const writeUserFullName = (name) => {
+    try {
+        const v = String(name || '').trim();
+        if (v) localStorage.setItem(USER_FULLNAME_KEY, v);
+        else localStorage.removeItem(USER_FULLNAME_KEY);
+    } catch (_) {}
+};
 
 const persistAvatarColor = async (color) => {
     try {
@@ -98,6 +106,7 @@ const applyLogo = () => {
 const fillProfile = (p) => {
     currentProfile = p ? { ...p } : null;
     const fullName = String(p?.full_name || '').trim();
+    writeUserFullName(fullName);
     document.getElementById('profileFullName').value = fullName;
     document.getElementById('profileEmail').value = String(p?.email || '');
 
@@ -111,6 +120,8 @@ const fillProfile = (p) => {
 
     applyAvatar(fullName);
     applyLogo();
+
+    window.refreshUserNav?.();
 };
 
 const loadProfile = async () => {
@@ -347,6 +358,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const result = await window.db.profiles.update({ full_name: fullName });
         if (!result?.success) { alert(result?.error || 'Failed to save.'); return; }
+        writeUserFullName(fullName);
         fillProfile(result.data);
         alert('Profile saved.');
     });
