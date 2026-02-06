@@ -1855,7 +1855,7 @@
             if (!window.db || !window.db.transactions) return;
             const serverCtx = buildServerQuery();
             if (Array.isArray(serverCtx.cashBoxIds) && serverCtx.cashBoxIds.length === 0) {
-                downloadTextFile('Transaction ID,Type,Date,Cash Box,Cash Box ID,Currency,Contact,Contact ID,Amount,Created by,Description,Receipt Number,Transaction UUID\n', 'transactions.csv', 'text/csv;charset=utf-8');
+                downloadTextFile('Transaction ID,Type,Date,Cash Box,Cash Box ID,Currency,Contact,Contact ID,Amount,Created by,Description,Receipt Number\n', 'transactions.csv', 'text/csv;charset=utf-8');
                 return;
             }
 
@@ -1933,8 +1933,7 @@
                     'Amount',
                     'Created by',
                     'Description',
-                    'Receipt Number',
-                    'Transaction UUID'
+                    'Receipt Number'
                 ].join(',');
 
                 const lines = [header];
@@ -1955,8 +1954,7 @@
                         escapeCsv(String(tx?.amount ?? '')),
                         escapeCsv(safeText(tx?.created_by_user_name, '')),
                         escapeCsv(safeText(tx?.description, '')),
-                        escapeCsv(safeText(tx?.receipt_number, '')),
-                        escapeCsv(safeText(tx?.id, ''))
+                        escapeCsv(safeText(tx?.receipt_number, ''))
                     ].join(','));
                 });
 
