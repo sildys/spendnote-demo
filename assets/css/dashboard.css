@@ -893,7 +893,8 @@
             padding-right: 12px;
         }
         .table-grid > :nth-child(7) {
-            padding-left: 12px;
+            justify-self: center;
+            text-align: center;
         }
         .table-grid > :nth-child(8) {
             justify-self: end;
@@ -1112,7 +1113,7 @@
             text-align: right;
             font-variant-numeric: tabular-nums;
         }
-        .tx-amount.in { color: #10b981; }
+        .tx-amount.in { color: var(--primary); }
         .tx-amount.out { color: var(--out); }
         .tx-datetime {
             font-size: 13px;
