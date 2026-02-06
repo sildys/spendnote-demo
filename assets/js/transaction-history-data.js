@@ -214,8 +214,8 @@
             const id = safeText(tx?.contact_id, '');
             if (!name && !id) return;
 
-            const label = id ? `${name || id} (${id})` : (name || id);
-            const value = name || id;
+            const label = name || '—';
+            const value = name || '—';
             const key = `${value}||${label}`;
             if (seen.has(key)) return;
             seen.add(key);
@@ -1253,8 +1253,10 @@
                         const opt = document.createElement('option');
                         const name = safeText(c?.name, '');
                         const id = safeText(c?.id, '');
-                        opt.value = name || id;
-                        opt.label = displayId ? `${name || id} (${displayId})` : (name || id);
+                        opt.value = name || displayId;
+                        opt.label = displayId
+                            ? `${name || displayId} (${displayId})`
+                            : (name || '—');
                         contactDatalist.appendChild(opt);
 
                         if (displayId && id) {
@@ -1264,7 +1266,7 @@
                         if (displayId) {
                             const opt2 = document.createElement('option');
                             opt2.value = displayId;
-                            opt2.label = name || id;
+                            opt2.label = name || displayId;
                             contactDatalist.appendChild(opt2);
                         }
                     });
