@@ -440,6 +440,32 @@ var db = {
             return data;
         },
 
+        async getBySequence(sequenceNumber) {
+            const seq = Number(sequenceNumber);
+            if (!Number.isFinite(seq) || seq <= 0) {
+                return null;
+            }
+
+            const user = await auth.getCurrentUser();
+            if (!user) {
+                console.error('No authenticated user');
+                return null;
+            }
+
+            const { data, error } = await supabaseClient
+                .from('cash_boxes')
+                .select('*')
+                .eq('user_id', user.id)
+                .eq('sequence_number', seq)
+                .single();
+
+            if (error) {
+                return null;
+            }
+
+            return data;
+        },
+
         async create(cashBox) {
             if (window.SpendNoteDebug) console.log('Creating cash box via RPC:', cashBox);
             
@@ -557,6 +583,32 @@ var db = {
                 console.error('Error fetching contact:', error);
                 return null;
             }
+            return data;
+        },
+
+        async getBySequence(sequenceNumber) {
+            const seq = Number(sequenceNumber);
+            if (!Number.isFinite(seq) || seq <= 0) {
+                return null;
+            }
+
+            const user = await auth.getCurrentUser();
+            if (!user) {
+                console.error('No authenticated user');
+                return null;
+            }
+
+            const { data, error } = await supabaseClient
+                .from('contacts')
+                .select('*')
+                .eq('user_id', user.id)
+                .eq('sequence_number', seq)
+                .single();
+
+            if (error) {
+                return null;
+            }
+
             return data;
         },
 
@@ -955,7 +1007,7 @@ var db = {
             const txId = String(id || '').trim();
             if (!txId) return null;
             // #region agent log
-            console.log('[DEBUG db.transactions.getById] start', { txId });
+            if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] start', { txId });
             // #endregion
 
             if (transactionsJoinSupported) {
@@ -971,14 +1023,14 @@ var db = {
 
                 if (!attemptJoined.error && attemptJoined.data) {
                     // #region agent log
-                    console.log('[DEBUG db.transactions.getById] joined success', { txId });
+                    if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] joined success', { txId });
                     // #endregion
                     return attemptJoined.data;
                 }
 
                 if (attemptJoined.error) {
                     // #region agent log
-                    console.log('[DEBUG db.transactions.getById] joined error', {
+                    if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] joined error', {
                         txId,
                         message: attemptJoined.error?.message || null,
                         code: attemptJoined.error?.code || null
@@ -1009,7 +1061,7 @@ var db = {
 
             if (fallback.error) {
                 // #region agent log
-                console.log('[DEBUG db.transactions.getById] fallback error', {
+                if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] fallback error', {
                     txId,
                     message: fallback.error?.message || null,
                     code: fallback.error?.code || null

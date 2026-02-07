@@ -1227,6 +1227,9 @@
 
         const urlCashBoxIdRaw = urlParams.get('cashBoxId') || urlParams.get('id');
         const urlCashBoxId = isUuid(urlCashBoxIdRaw) ? urlCashBoxIdRaw : null;
+        const urlCashBoxQuery = (!urlCashBoxId && safeText(urlCashBoxIdRaw, ''))
+            ? normalizeCashBoxQuery(String(urlCashBoxIdRaw).trim().toLowerCase())
+            : '';
 
         const urlDirectionRaw = safeText(urlParams.get('direction'), '').toLowerCase();
         const urlDirection = (urlDirectionRaw === 'in' || urlDirectionRaw === 'out' || urlDirectionRaw === 'all')
@@ -1256,6 +1259,8 @@
                 } else if (urlCashBoxId) {
                     const pre = state.cashBoxes.find((b) => String(b?.id) === String(urlCashBoxId));
                     cashBoxQueryInput.value = pre ? safeText(pre.name, '') : '';
+                } else if (urlCashBoxQuery && !safeText(cashBoxQueryInput.value, '')) {
+                    cashBoxQueryInput.value = urlCashBoxQuery;
                 }
             }
 

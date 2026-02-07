@@ -281,9 +281,34 @@ async function initCashBoxSettings() {
 
         const urlParams = new URLSearchParams(window.location.search);
         const idRaw = urlParams.get('id') || urlParams.get('cashBoxId');
-        currentCashBoxId = isUuid(idRaw) ? String(idRaw).trim() : null;
-        
-        if (idRaw && !currentCashBoxId) {
+        const raw = String(idRaw || '').trim();
+        currentCashBoxId = raw && isUuid(raw) ? raw : null;
+
+        if (raw && !currentCashBoxId) {
+            try {
+                const seq = (window.SpendNoteIds && typeof window.SpendNoteIds.parseCashBoxDisplayId === 'function')
+                    ? window.SpendNoteIds.parseCashBoxDisplayId(raw)
+                    : null;
+
+                if (Number.isFinite(seq) && seq > 0 && window.db?.cashBoxes?.getBySequence) {
+                    const box = await window.db.cashBoxes.getBySequence(seq);
+                    const uuid = String(box?.id || '').trim();
+                    if (uuid && isUuid(uuid)) {
+                        currentCashBoxId = uuid;
+                        try {
+                            urlParams.set('cashBoxId', uuid);
+                            urlParams.delete('id');
+                            const next = `${window.location.pathname}?${urlParams.toString()}${window.location.hash || ''}`;
+                            window.history.replaceState({}, '', next);
+                        } catch (_) {}
+                    }
+                }
+            } catch (_) {
+                // ignore
+            }
+        }
+
+        if (raw && !currentCashBoxId) {
             alert('Invalid Cash Box ID.');
             window.location.replace('spendnote-cash-box-list.html');
             return;

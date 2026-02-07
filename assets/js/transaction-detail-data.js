@@ -184,19 +184,53 @@
 
         const urlParams = new URLSearchParams(window.location.search);
         const idRaw = urlParams.get('id') || urlParams.get('txId');
-        const id = String(idRaw || '').trim();
-        const ok = (() => {
-            if (!id) return false;
+        const idInput = String(idRaw || '').trim();
+
+        const isUuidLocal = (value) => {
+            const v = String(value || '').trim();
+            if (!v) return false;
             try {
                 if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
-                    return window.SpendNoteIds.isUuid(id);
+                    return window.SpendNoteIds.isUuid(v);
                 }
-            } catch (_) {
+            } catch (_) {}
+            return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
+        };
 
+        const resolveTxId = async () => {
+            if (!idInput) return '';
+            if (isUuidLocal(idInput)) return idInput;
+
+            try {
+                const parsed = (window.SpendNoteIds && typeof window.SpendNoteIds.parseSnDisplayId === 'function')
+                    ? window.SpendNoteIds.parseSnDisplayId(idInput)
+                    : null;
+
+                const cbSeq = Number(parsed?.cashBoxSequence);
+                const txSeq = Number(parsed?.txSequenceInBox);
+                if (!(Number.isFinite(cbSeq) && cbSeq > 0 && Number.isFinite(txSeq) && txSeq > 0)) {
+                    return '';
+                }
+
+                if (!window.supabaseClient) return '';
+
+                const res = await window.supabaseClient
+                    .from('transactions')
+                    .select('id')
+                    .eq('cash_box_sequence', cbSeq)
+                    .eq('tx_sequence_in_box', txSeq)
+                    .limit(1);
+
+                const row = Array.isArray(res?.data) ? res.data[0] : null;
+                const txId = String(row?.id || '').trim();
+                return txId && isUuidLocal(txId) ? txId : '';
+            } catch (_) {
+                return '';
             }
-            return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
-        })();
-        if (!ok) {
+        };
+
+        const id = await resolveTxId();
+        if (!id) {
             if (idRaw) {
                 alert('Invalid Transaction ID.');
             }

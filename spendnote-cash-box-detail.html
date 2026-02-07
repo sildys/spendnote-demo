@@ -1313,20 +1313,47 @@
             };
 
             const cashboxIdRaw = urlParams.get('id') || urlParams.get('cashBoxId');
-            const cashboxId = isUuid(cashboxIdRaw) ? String(cashboxIdRaw).trim() : null;
+            let cashboxId = isUuid(cashboxIdRaw) ? String(cashboxIdRaw).trim() : null;
 
-            if (cashboxIdRaw && !cashboxId) {
-                alert('Invalid Cash Box ID.');
-                window.location.replace('spendnote-cash-box-list.html');
-                return;
-            }
+            const resolveCashBoxId = async () => {
+                if (cashboxId) return cashboxId;
+                const raw = String(cashboxIdRaw || '').trim();
+                if (!raw) return null;
+                try {
+                    const seq = (window.SpendNoteIds && typeof window.SpendNoteIds.parseCashBoxDisplayId === 'function')
+                        ? window.SpendNoteIds.parseCashBoxDisplayId(raw)
+                        : null;
+                    if (!(Number.isFinite(seq) && seq > 0)) return null;
+                    if (!window.db?.cashBoxes?.getBySequence) return null;
+                    const box = await window.db.cashBoxes.getBySequence(seq);
+                    const uuid = String(box?.id || '').trim();
+                    if (!uuid || !isUuid(uuid)) return null;
+                    cashboxId = uuid;
+                    try {
+                        urlParams.set('cashBoxId', uuid);
+                        urlParams.delete('id');
+                        const next = `${window.location.pathname}?${urlParams.toString()}${window.location.hash || ''}`;
+                        window.history.replaceState({}, '', next);
+                    } catch (_) {}
+                    return cashboxId;
+                } catch (_) {
+                    return null;
+                }
+            };
 
             (async () => {
-                if (!cashboxId || !window.db?.cashBoxes?.getById) {
+                const id = await resolveCashBoxId();
+                if (cashboxIdRaw && !id) {
+                    alert('Invalid Cash Box ID.');
+                    window.location.replace('spendnote-cash-box-list.html');
                     return;
                 }
 
-                const cashBox = await window.db.cashBoxes.getById(cashboxId);
+                if (!id || !window.db?.cashBoxes?.getById) {
+                    return;
+                }
+
+                const cashBox = await window.db.cashBoxes.getById(id);
                 if (!cashBox) return;
 
                 const nameEl = document.getElementById('cashBoxDetailName');
@@ -1359,7 +1386,7 @@
                 document.documentElement.style.setProperty('--cashbox-rgb', rgb);
 
                 try {
-                    localStorage.setItem('activeCashBoxId', cashboxId);
+                    localStorage.setItem('activeCashBoxId', id);
                     localStorage.setItem('activeCashBoxColor', color);
                     localStorage.setItem('activeCashBoxRgb', rgb);
                 } catch (_) {}
@@ -1370,7 +1397,7 @@
 
                 const settingsBtn = document.getElementById('detailSettingsBtn');
                 if (settingsBtn) {
-                    settingsBtn.setAttribute('href', `spendnote-cash-box-settings.html?id=${cashboxId}`);
+                    settingsBtn.setAttribute('href', `spendnote-cash-box-settings.html?id=${id}`);
                 }
             })().catch(() => {});
 
@@ -1395,11 +1422,11 @@
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=26"></script>
+    <script src="assets/js/supabase-config.js?v=27"></script>
     <script src="assets/js/auth-guard.js"></script>
     <script src="assets/js/nav-loader.js?v=8"></script>
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=20"></script>
-    <script src="assets/js/transaction-history-data.js?v=71"></script>
+    <script src="assets/js/transaction-history-data.js?v=72"></script>
 </body>
 </html>
