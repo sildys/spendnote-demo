@@ -2,19 +2,6 @@
 // This script should be included on all app pages (not on public pages like index, login, signup)
 
 (async function() {
-    // #region agent log
-    console.log('[DEBUG auth-guard v20260207-2310] loaded', window.location.pathname);
-    // #endregion
-
-    // LocalStorage debug append (works even if supabase-config did not load)
-    const __appendLs = (entry) => {
-        try {
-            const KEY = 'spendnote.debug.ndjson.v1';
-            const line = JSON.stringify({ ts: Date.now(), page: String(window.location.pathname || ''), ...entry });
-            const prev = localStorage.getItem(KEY) || '';
-            localStorage.setItem(KEY, prev ? (prev + '\n' + line) : line);
-        } catch (_) {}
-    };
     let isReceiptTemplate = false;
     let sp = null;
     let hasPublicToken = false;
@@ -25,17 +12,6 @@
     } catch (_) {
         isInIframe = true;
     }
-    // #region agent log
-    // Only attempt localhost ingestion when actually on localhost (avoid CORS noise on deployed site)
-    try {
-        const host = String(window.location.hostname || '');
-        const isLocal = host === 'localhost' || host === '127.0.0.1';
-        if (isLocal) {
-            fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:init',message:'auth-guard start',data:{isInIframe,pathname:window.location.pathname,search:window.location.search},timestamp:Date.now(),hypothesisId:'E'})}).catch(()=>{});
-        }
-    } catch (_) {}
-    __appendLs({ loc:'auth-guard:init', msg:'start', data:{ isInIframe, path:String(window.location.pathname||''), search:String(window.location.search||'') } });
-    // #endregion
     try {
         const path = String(window.location.pathname || '').toLowerCase();
         const file = path.split('/').filter(Boolean).pop() || '';
@@ -44,25 +20,10 @@
             file.includes('receipt') &&
             (file.includes('pdf') || file.includes('email') || file.includes('a4'));
         sp = new URLSearchParams(window.location.search);
-        // #region agent log
-        console.log('[DEBUG auth-guard] detect', {
-            path,
-            file,
-            isReceiptTemplate,
-            isInIframe,
-            bootstrap: sp.get('bootstrap'),
-            isDemo: sp.get('demo') === '1',
-            hasPublicToken: sp.has('publicToken')
-        });
-        // #endregion
         hasPublicToken = sp.has('publicToken');
         isDemo = sp.get('demo') === '1';
         // Skip auth redirect for receipt templates with public tokens or demo mode
         if (isReceiptTemplate && (hasPublicToken || isDemo)) {
-            // #region agent log
-            console.log('[DEBUG auth-guard] skip auth redirect (public/demo)');
-            // #endregion
-            __appendLs({ loc:'auth-guard:skip', msg:'public/demo', data:{ isReceiptTemplate, hasPublicToken, isDemo } });
             return;
         }
         // For iframes with bootstrap=1, try to establish session but don't redirect on failure
@@ -72,12 +33,6 @@
                 try {
                     const bootstrapKey = 'spendnote.session.bootstrap';
                     const bootstrapData = localStorage.getItem(bootstrapKey);
-                    // #region agent log
-                    console.log('[DEBUG auth-guard] iframe bootstrap key', {
-                        hasData: !!bootstrapData,
-                        len: bootstrapData?.length || 0
-                    });
-                    // #endregion
                     if (!bootstrapData) return;
 
                     const parsed = JSON.parse(bootstrapData);
@@ -85,16 +40,10 @@
                     const refreshToken = String(parsed?.refresh_token || '').trim();
                     if (!accessToken || !refreshToken) return;
 
-                    const setRes = await window.supabaseClient.auth.setSession({
+                    await window.supabaseClient.auth.setSession({
                         access_token: accessToken,
                         refresh_token: refreshToken
                     });
-                    // #region agent log
-                    console.log('[DEBUG auth-guard] iframe setSession', {
-                        hasSession: !!setRes?.data?.session,
-                        error: setRes?.error?.message || null
-                    });
-                    // #endregion
                 } catch (_) {}
             };
             await tryBootstrapForIframe();
@@ -102,9 +51,6 @@
         }
         // Skip redirect for iframes entirely (but session bootstrap above will help)
         if (isReceiptTemplate && isInIframe) {
-            // #region agent log
-            console.log('[DEBUG auth-guard] skip auth redirect (iframe)');
-            // #endregion
             return;
         }
     } catch (_) {
@@ -112,7 +58,6 @@
     }
 
     if (!window.supabaseClient) {
-        __appendLs({ loc:'auth-guard:redirect', msg:'missing supabaseClient -> login', data:{ path:String(window.location.pathname||''), search:String(window.location.search||'') } });
         window.location.href = '/spendnote-login.html';
         return;
     }
@@ -180,22 +125,6 @@
             try {
                 const bootstrapKey = 'spendnote.session.bootstrap';
                 const bootstrapData = localStorage.getItem(bootstrapKey);
-                // #region agent log
-                try {
-                    const host = String(window.location.hostname || '');
-                    const isLocal = host === 'localhost' || host === '127.0.0.1';
-                    if (isLocal) {
-                        fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:tryBootstrap',message:'bootstrap data check',data:{hasData:!!bootstrapData,dataLen:bootstrapData?.length||0},timestamp:Date.now(),hypothesisId:'B,C'})}).catch(()=>{});
-                    }
-                } catch (_) {}
-                // #endregion
-                // #region agent log
-                console.log('[DEBUG auth-guard] bootstrap data check', {
-                    hasData: !!bootstrapData,
-                    len: bootstrapData?.length || 0
-                });
-                // #endregion
-                __appendLs({ loc:'auth-guard:bootstrap', msg:'bootstrap data check', data:{ hasData:!!bootstrapData, len:bootstrapData?.length||0 } });
                 if (!bootstrapData) return false;
 
                 const parsed = JSON.parse(bootstrapData);
@@ -208,22 +137,6 @@
                     access_token: accessToken,
                     refresh_token: refreshToken
                 });
-                // #region agent log
-                try {
-                    const host = String(window.location.hostname || '');
-                    const isLocal = host === 'localhost' || host === '127.0.0.1';
-                    if (isLocal) {
-                        fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:afterSetSession',message:'setSession result',data:{hasSession:!!result?.data?.session,error:result?.error?.message||null},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
-                    }
-                } catch (_) {}
-                // #endregion
-                // #region agent log
-                console.log('[DEBUG auth-guard] setSession result', {
-                    hasSession: !!result?.data?.session,
-                    error: result?.error?.message || null
-                });
-                // #endregion
-                __appendLs({ loc:'auth-guard:setSession', msg:'setSession', data:{ hasSession:!!result?.data?.session, error: result?.error?.message || null } });
 
                 // Verify session was actually established
                 if (result?.data?.session) {
@@ -233,26 +146,8 @@
                 // If setSession didn't return session, wait and check again
                 await new Promise(r => setTimeout(r, 100));
                 const check = await window.supabaseClient.auth.getSession();
-                // #region agent log
-                try {
-                    const host = String(window.location.hostname || '');
-                    const isLocal = host === 'localhost' || host === '127.0.0.1';
-                    if (isLocal) {
-                        fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:afterRecheck',message:'session recheck',data:{hasSession:!!check?.data?.session},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
-                    }
-                } catch (_) {}
-                // #endregion
-                // #region agent log
-                console.log('[DEBUG auth-guard] session recheck', {
-                    hasSession: !!check?.data?.session
-                });
-                // #endregion
-                __appendLs({ loc:'auth-guard:recheck', msg:'getSession after setSession', data:{ hasSession:!!check?.data?.session } });
                 return Boolean(check?.data?.session);
             } catch (e) {
-                // #region agent log
-                fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:bootstrapError',message:'bootstrap exception',data:{err:e?.message||String(e)},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
-                // #endregion
                 return false;
             }
         };
@@ -297,13 +192,8 @@
         }
     }
     
-    // #region agent log
-    console.log('[DEBUG auth-guard] final check - hasSession:', !!session, 'hasError:', !!error, 'isReceiptTemplate:', isReceiptTemplate);
-    __appendLs({ loc:'auth-guard:final', msg:'final decision', data:{ hasSession:!!session, hasError:!!error, errorMsg:error?.message||null, isReceiptTemplate, bootstrap: sp?.get('bootstrap')==='1' } });
-    // #endregion
     if (!session || error) {
         // Not authenticated - redirect to login
-        __appendLs({ loc:'auth-guard:redirect', msg:'redirect to login', data:{ isReceiptTemplate, path:String(window.location.pathname||''), search:String(window.location.search||''), bootstrap: sp?.get('bootstrap') } });
         window.location.href = '/spendnote-login.html';
     }
 })();

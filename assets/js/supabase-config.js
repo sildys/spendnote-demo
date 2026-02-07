@@ -36,40 +36,6 @@ var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KE
     }
 });
 
-// Lightweight cross-tab debug logger (localStorage). No secrets/PII.
-try {
-    const KEY = 'spendnote.debug.ndjson.v1';
-    const MAX_CHARS = 50000; // keep small
-
-    const append = (entry) => {
-        try {
-            const safe = {
-                ts: Date.now(),
-                page: String(window.location.pathname || ''),
-                ...entry
-            };
-            const line = JSON.stringify(safe);
-            const prev = localStorage.getItem(KEY) || '';
-            let next = prev ? (prev + '\n' + line) : line;
-            if (next.length > MAX_CHARS) {
-                next = next.slice(next.length - MAX_CHARS);
-                const idx = next.indexOf('\n');
-                if (idx !== -1) next = next.slice(idx + 1);
-            }
-            localStorage.setItem(KEY, next);
-        } catch (_) {}
-    };
-
-    window.SpendNoteDebugLog = window.SpendNoteDebugLog || {};
-    window.SpendNoteDebugLog.append = append;
-    window.SpendNoteDebugLog.read = () => {
-        try { return localStorage.getItem(KEY) || ''; } catch (_) { return ''; }
-    };
-    window.SpendNoteDebugLog.clear = () => {
-        try { localStorage.removeItem(KEY); } catch (_) {}
-    };
-} catch (_) {}
-
 // Bootstrap session management - allows receipt tabs to restore session from localStorage
 const __spendnoteWriteBootstrapSession = (session) => {
     try {
@@ -98,30 +64,8 @@ window.writeBootstrapSession = async () => {
 
 try {
     supabaseClient.auth.onAuthStateChange((event, session) => {
-        // #region agent log
-        try {
-            window.SpendNoteDebugLog?.append?.({
-                loc: 'supabase:onAuthStateChange',
-                msg: event,
-                data: {
-                    hasSession: !!session,
-                    hasUserId: !!session?.user?.id,
-                    hasBootstrapKey: !!localStorage.getItem('spendnote.session.bootstrap')
-                }
-            });
-        } catch (_) {}
-        // #endregion
         if (event === 'SIGNED_OUT') {
             try {
-                // #region agent log
-                try {
-                    window.SpendNoteDebugLog?.append?.({
-                        loc: 'supabase:onAuthStateChange',
-                        msg: 'SIGNED_OUT removing bootstrap',
-                        data: { hadBootstrapKey: !!localStorage.getItem('spendnote.session.bootstrap') }
-                    });
-                } catch (_) {}
-                // #endregion
                 localStorage.removeItem('spendnote.session.bootstrap');
             } catch (_) {}
             return;

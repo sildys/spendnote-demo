@@ -859,93 +859,11 @@ if (urlParams.get('signatures') === '0') {
 }
   </script>
     
-    <!-- Supabase loader (robust for new tabs) -->
-    <script>
-      // #region agent log
-      (function() {
-        const KEY = 'spendnote.debug.ndjson.v1';
-        const append = (loc, msg, data) => {
-          try {
-            const line = JSON.stringify({ ts: Date.now(), page: String(window.location.pathname || ''), loc, msg, data: data || {} });
-            const prev = localStorage.getItem(KEY) || '';
-            localStorage.setItem(KEY, prev ? (prev + '\n' + line) : line);
-          } catch (_) {}
-        };
-
-        const loadScript = (src) => new Promise((resolve, reject) => {
-          try {
-            const s = document.createElement('script');
-            s.src = src;
-            s.async = false;
-            s.onload = () => resolve(true);
-            s.onerror = () => reject(new Error('Failed to load: ' + src));
-            document.head.appendChild(s);
-          } catch (e) {
-            reject(e);
-          }
-        });
-
-        const boot = async () => {
-          append('receipt-email:loader', 'boot start', { href: String(window.location.href || '') });
-
-          // Capture runtime errors (including inside loaded scripts)
-          try {
-            window.addEventListener('error', (ev) => {
-              try {
-                append('receipt-email:error', 'window error', {
-                  message: String(ev?.message || ''),
-                  filename: String(ev?.filename || ''),
-                  lineno: Number(ev?.lineno) || null,
-                  colno: Number(ev?.colno) || null
-                });
-              } catch (_) {}
-            });
-            window.addEventListener('unhandledrejection', (ev) => {
-              try {
-                const reason = ev?.reason;
-                append('receipt-email:error', 'unhandledrejection', {
-                  message: String(reason?.message || reason || '')
-                });
-              } catch (_) {}
-            });
-          } catch (_) {}
-
-          const sources = [
-            'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
-            'https://unpkg.com/@supabase/supabase-js@2'
-          ];
-
-          let supaOk = Boolean(window.supabase && window.supabase.createClient);
-          for (const src of sources) {
-            if (supaOk) break;
-            try {
-              await loadScript(src);
-              supaOk = Boolean(window.supabase && window.supabase.createClient);
-              append('receipt-email:loader', 'supabase-js loaded', { src, supaOk });
-            } catch (e) {
-              append('receipt-email:loader', 'supabase-js load failed', { src, err: String(e && e.message || e) });
-            }
-          }
-
-          if (!supaOk) {
-            append('receipt-email:loader', 'FATAL supabase-js missing', {});
-            return;
-          }
-
-          append('receipt-email:loader', 'before supabase-config', {});
-          await loadScript('assets/js/supabase-config.js?v=20260207-2245');
-          append('receipt-email:loader', 'supabase-config loaded', { hasClient: !!window.supabaseClient });
-          append('receipt-email:loader', 'before auth-guard', { hasClient: !!window.supabaseClient });
-          await loadScript('assets/js/auth-guard.js?v=20260207-2310');
-          append('receipt-email:loader', 'auth-guard loaded', { hasClient: !!window.supabaseClient });
-          await loadScript('assets/js/main.js?v=20260207-2310');
-          append('receipt-email:loader', 'main loaded', {});
-        };
-
-        boot();
-      })();
-      // #endregion
-    </script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-config.js?v=20260207-2245"></script>
+    <script src="assets/js/auth-guard.js?v=20260207-2310"></script>
+    <script src="assets/js/main.js?v=20260207-2235"></script>
 
     <script>
       (async function () {

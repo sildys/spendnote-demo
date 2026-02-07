@@ -502,10 +502,6 @@ body {
 </div>
 
 <script>
-  // #region agent log
-  console.log('[DEBUG receipt-a4] script start, URL:', window.location.href);
-  try { window.SpendNoteDebugLog?.append?.({ loc:'receipt-a4:start', msg:'script start', data:{ href:String(window.location.href||'') } }); } catch (_) {}
-  // #endregion
   const urlParams = new URLSearchParams(window.location.search);
   const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
   const isItemsSingle = itemsMode === 'single';
@@ -615,13 +611,6 @@ body {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
   };
   const txIdParam = (txIdParamRaw && isUuidParam(txIdParamRaw)) ? String(txIdParamRaw).trim() : '';
-  // #region agent log
-  console.log('[DEBUG receipt-a4] txIdParam', {
-    raw: txIdParamRaw || null,
-    parsed: txIdParam || null
-  });
-  try { window.SpendNoteDebugLog?.append?.({ loc:'receipt-a4:txId', msg:'txIdParam', data:{ hasTxId: !!txIdParam } }); } catch (_) {}
-  // #endregion
   const isDemo = urlParams.get('demo') === '1' && !txIdParam;
   if (isDemo) {
     const safeText = (value, fallback) => {
@@ -820,107 +809,11 @@ body {
   }
 </script>
 
-    <!-- Early debug marker (runs before Supabase/auth scripts) -->
-    <script>
-      // #region agent log
-      (function() {
-        try {
-          const KEY = 'spendnote.debug.ndjson.v1';
-          const line = JSON.stringify({ ts: Date.now(), page: String(window.location.pathname || ''), loc: 'receipt-a4:early', msg: 'html loaded', data: { href: String(window.location.href || '') } });
-          const prev = localStorage.getItem(KEY) || '';
-          localStorage.setItem(KEY, prev ? (prev + '\n' + line) : line);
-        } catch (_) {}
-      })();
-      // #endregion
-    </script>
-
-    <!-- Supabase loader (robust for new tabs) -->
-    <script>
-      // #region agent log
-      (function() {
-        const KEY = 'spendnote.debug.ndjson.v1';
-        const append = (loc, msg, data) => {
-          try {
-            const line = JSON.stringify({ ts: Date.now(), page: String(window.location.pathname || ''), loc, msg, data: data || {} });
-            const prev = localStorage.getItem(KEY) || '';
-            localStorage.setItem(KEY, prev ? (prev + '\n' + line) : line);
-          } catch (_) {}
-        };
-
-        const loadScript = (src) => new Promise((resolve, reject) => {
-          try {
-            const s = document.createElement('script');
-            s.src = src;
-            s.async = false;
-            s.onload = () => resolve(true);
-            s.onerror = () => reject(new Error('Failed to load: ' + src));
-            document.head.appendChild(s);
-          } catch (e) {
-            reject(e);
-          }
-        });
-
-        const boot = async () => {
-          append('receipt-a4:loader', 'boot start', { href: String(window.location.href || '') });
-
-          // Capture runtime errors (including inside loaded scripts)
-          try {
-            window.addEventListener('error', (ev) => {
-              try {
-                append('receipt-a4:error', 'window error', {
-                  message: String(ev?.message || ''),
-                  filename: String(ev?.filename || ''),
-                  lineno: Number(ev?.lineno) || null,
-                  colno: Number(ev?.colno) || null
-                });
-              } catch (_) {}
-            });
-            window.addEventListener('unhandledrejection', (ev) => {
-              try {
-                const reason = ev?.reason;
-                append('receipt-a4:error', 'unhandledrejection', {
-                  message: String(reason?.message || reason || '')
-                });
-              } catch (_) {}
-            });
-          } catch (_) {}
-
-          const sources = [
-            'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
-            'https://unpkg.com/@supabase/supabase-js@2'
-          ];
-
-          let supaOk = Boolean(window.supabase && window.supabase.createClient);
-          for (const src of sources) {
-            if (supaOk) break;
-            try {
-              await loadScript(src);
-              supaOk = Boolean(window.supabase && window.supabase.createClient);
-              append('receipt-a4:loader', 'supabase-js loaded', { src, supaOk });
-            } catch (e) {
-              append('receipt-a4:loader', 'supabase-js load failed', { src, err: String(e && e.message || e) });
-            }
-          }
-
-          if (!supaOk) {
-            append('receipt-a4:loader', 'FATAL supabase-js missing', {});
-            return;
-          }
-
-          append('receipt-a4:loader', 'before supabase-config', {});
-          await loadScript('assets/js/supabase-config.js?v=20260207-2245');
-          append('receipt-a4:loader', 'supabase-config loaded', { hasClient: !!window.supabaseClient });
-          append('receipt-a4:loader', 'before auth-guard', { hasClient: !!window.supabaseClient });
-          await loadScript('assets/js/auth-guard.js?v=20260207-2310');
-          append('receipt-a4:loader', 'auth-guard loaded', { hasClient: !!window.supabaseClient });
-          await loadScript('assets/js/main.js?v=20260207-2310');
-          append('receipt-a4:loader', 'main loaded', {});
-        };
-
-        boot();
-      })();
-      // #endregion
-    </script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-config.js?v=20260207-2245"></script>
+    <script src="assets/js/auth-guard.js?v=20260207-2310"></script>
+    <script src="assets/js/main.js?v=20260207-2235"></script>
 
     <script>
       (async function () {
@@ -931,30 +824,20 @@ body {
 
         const waitForDb = async () => {
           // Wait for db AND authenticated session
-          // #region agent log
-          console.log('[DEBUG receipt-a4] waitForDb start, hasDb:', !!window.db, 'hasSupabase:', !!window.supabaseClient);
-          // #endregion
           for (let i = 0; i < 200; i++) {
             if (window.db?.transactions?.getById) {
               // Also verify we have an auth session
               try {
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
-                // #region agent log
-                if (i % 40 === 0) console.log('[DEBUG receipt-a4] waitLoop i=', i, 'hasSession:', !!session);
-                // #endregion
                 if (session) {
-                  console.log('[DEBUG receipt-a4] session found at iteration', i);
                   return true;
                 }
               } catch (e) {
-                console.log('[DEBUG receipt-a4] session check error:', e?.message);
+                // ignore
               }
             }
             await new Promise((r) => setTimeout(r, 50));
           }
-          // #region agent log
-          console.log('[DEBUG receipt-a4] waitForDb TIMEOUT - no session after 10s');
-          // #endregion
           return false;
         };
 
@@ -1107,12 +990,7 @@ body {
 
         try {
           const ok = await waitForDb();
-          if (!ok) {
-            // #region agent log
-            console.log('[DEBUG receipt-a4] waitForDb failed - no session');
-            // #endregion
-            return;
-          }
+          if (!ok) return;
 
           const tx = await window.db.transactions.getById(txId);
           if (!tx) return;

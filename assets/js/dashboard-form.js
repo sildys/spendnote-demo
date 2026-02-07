@@ -88,13 +88,6 @@ function initTransactionForm() {
 
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        // #region agent log
-        console.log('[DEBUG dashboard-form] submit handler', {
-            hasEvent: !!e,
-            hasCurrentTarget: !!(e && e.currentTarget),
-            hasForm: !!form
-        });
-        // #endregion
         
         if (window.isModalSubmitting) return;
         
@@ -142,28 +135,9 @@ function initTransactionForm() {
 
         if (wantsReceipt) {
             // Write fresh bootstrap session BEFORE opening new tab/iframe
-            // #region agent log
-            try {
-                const host = String(window.location.hostname || '');
-                const isLocal = host === 'localhost' || host === '127.0.0.1';
-                if (isLocal) {
-                    fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'dashboard-form.js:wantsReceipt',message:'writeBootstrapSession check',data:{fnExists:typeof window.writeBootstrapSession === 'function'},timestamp:Date.now(),hypothesisId:'A'})}).catch(()=>{});
-                }
-            } catch (_) {}
-            // #endregion
             try {
                 if (typeof window.writeBootstrapSession === 'function') {
-                    const bootstrapResult = await window.writeBootstrapSession();
-                    // #region agent log
-                    try {
-                        const host = String(window.location.hostname || '');
-                        const isLocal = host === 'localhost' || host === '127.0.0.1';
-                        if (isLocal) {
-                            fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'dashboard-form.js:afterBootstrap',message:'writeBootstrapSession result',data:{result:bootstrapResult,lsKey:!!localStorage.getItem('spendnote.session.bootstrap')},timestamp:Date.now(),hypothesisId:'A,B'})}).catch(()=>{});
-                        }
-                    } catch (_) {}
-                    // #endregion
-                    try { window.SpendNoteDebugLog?.append?.({ loc:'dashboard-form:bootstrap', msg:'writeBootstrapSession', data:{ result: !!bootstrapResult, hasBootstrapKey: !!localStorage.getItem('spendnote.session.bootstrap') } }); } catch (_) {}
+                    await window.writeBootstrapSession();
                 }
             } catch (_) {}
 
@@ -251,9 +225,6 @@ function initTransactionForm() {
         }
 
         const submitContainer = (e && e.currentTarget) ? e.currentTarget : form;
-        // #region agent log
-        if (!submitContainer) console.log('[DEBUG dashboard-form] submitContainer is null');
-        // #endregion
         const submitButtons = submitContainer ? Array.from(submitContainer.querySelectorAll('button[type="submit"]')) : [];
         submitButtons.forEach(function(btn) {
             if (!btn.dataset.originalHtml) btn.dataset.originalHtml = btn.innerHTML;

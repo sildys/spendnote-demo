@@ -103,33 +103,6 @@ function initSpendNoteNav() {
     }
 }
 
-// Dump cross-tab debug logs (receipt/auth issues)
-try {
-    const dump = () => {
-        const raw = window.SpendNoteDebugLog?.read?.() || '';
-        console.log('[SpendNote DebugLog] size', raw.length);
-        if (!raw.trim()) return;
-        console.groupCollapsed('[SpendNote DebugLog] last events');
-        raw.split('\n').slice(-80).forEach((line) => {
-            try {
-                const obj = JSON.parse(line);
-                console.log(obj);
-            } catch (_) {
-                console.log(line);
-            }
-        });
-        console.groupEnd();
-    };
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', dump);
-    } else {
-        dump();
-    }
-
-    // Expose manual dump helper
-    window.dumpSpendNoteDebugLog = dump;
-} catch (_) {}
-
 // Navigation menu functionality
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initSpendNoteNav);
