@@ -582,10 +582,11 @@ window.updateLineItemsTotal = updateLineItemsTotal;
 // CONTACT AUTOCOMPLETE
 // ========================================
 async function loadContactsForAutocomplete() {
-    if (contactsLoaded) { console.log('[ContactAC] Already loaded:', Contacts.length); return; }
-    if (!window.db || !window.db.contacts) { console.warn('[ContactAC] db.contacts not ready, retrying...'); setTimeout(loadContactsForAutocomplete, 300); return; }
+    const DEBUG = Boolean(window.SpendNoteDebug);
+    if (contactsLoaded) { if (DEBUG) console.log('[ContactAC] Already loaded:', Contacts.length); return; }
+    if (!window.db || !window.db.contacts) { if (DEBUG) console.warn('[ContactAC] db.contacts not ready, retrying...'); setTimeout(loadContactsForAutocomplete, 300); return; }
     try {
-        console.log('[ContactAC] Loading contacts from DB...');
+        if (DEBUG) console.log('[ContactAC] Loading contacts from DB...');
         const data = await window.db.contacts.getAll();
         Contacts = (data || []).map(function(c) {
             const displayId = formatContactDisplayId(c && c.sequence_number);
@@ -599,15 +600,16 @@ async function loadContactsForAutocomplete() {
             };
         });
         contactsLoaded = true;
-        console.log('[ContactAC] Loaded', Contacts.length, 'contacts');
-    } catch (e) { console.error('[ContactAC] Failed to load contacts:', e); }
+        if (DEBUG) console.log('[ContactAC] Loaded', Contacts.length, 'contacts');
+    } catch (e) { if (DEBUG) console.error('[ContactAC] Failed to load contacts:', e); }
 }
 
 function initContactAutocomplete() {
     const input = getEl('modalContactName');
     const dropdown = getEl('ContactAutocomplete');
-    console.log('[ContactAC] Init called, input:', !!input, 'dropdown:', !!dropdown);
-    if (!input || !dropdown) { console.warn('[ContactAC] input or dropdown not found'); return; }
+    const DEBUG = Boolean(window.SpendNoteDebug);
+    if (DEBUG) console.log('[ContactAC] Init called, input:', !!input, 'dropdown:', !!dropdown);
+    if (!input || !dropdown) { if (DEBUG) console.warn('[ContactAC] input or dropdown not found'); return; }
 
     loadContactsForAutocomplete();
     let selectedIdx = -1;
@@ -678,12 +680,12 @@ function initContactAutocomplete() {
     }
 
     input.addEventListener('input', async function(e) {
-        console.log('[ContactAC] Input event, value:', e.target.value, 'contactsLoaded:', contactsLoaded);
+        if (DEBUG) console.log('[ContactAC] Input event, value:', e.target.value, 'contactsLoaded:', contactsLoaded);
         const idEl = getEl('modalContactId');
         if (idEl) idEl.value = '';
         if (!contactsLoaded) await loadContactsForAutocomplete();
         const results = filter(e.target.value);
-        console.log('[ContactAC] Filter results:', results.length);
+        if (DEBUG) console.log('[ContactAC] Filter results:', results.length);
         show(results);
         selectedIdx = -1;
     });

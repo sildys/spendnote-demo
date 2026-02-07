@@ -247,6 +247,8 @@ function initTransactionForm() {
                 return;
             }
 
+            const DEBUG = Boolean(window.SpendNoteDebug);
+
             const user = await window.auth.getCurrentUser();
             if (!user) {
                 closeReceiptWindow();
@@ -427,12 +429,12 @@ function initTransactionForm() {
             }
 
             // Create transaction
-            console.log('[TxSave] Creating transaction with payload:', payload);
+            if (DEBUG) console.log('[TxSave] Creating transaction with payload:', payload);
             const result = await window.db.transactions.create(payload);
-            console.log('[TxSave] Result:', result);
+            if (DEBUG) console.log('[TxSave] Result:', result);
             
             // Verification: immediately check if transaction exists
-            if (result && result.success && result.data && result.data.id) {
+            if (DEBUG && result && result.success && result.data && result.data.id) {
                 const verifyId = result.data.id;
                 console.log('[TxSave] Verifying transaction exists with ID:', verifyId);
                 const verify = await window.db.transactions.getById(verifyId);
