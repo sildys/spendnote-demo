@@ -508,6 +508,7 @@
   <script>
 // #region agent log
 console.log('[DEBUG receipt-pdf] script start, URL:', window.location.href);
+try { window.SpendNoteDebugLog?.append?.({ loc:'receipt-pdf:start', msg:'script start', data:{ href:String(window.location.href||'') } }); } catch (_) {}
 // #endregion
 const urlParams = new URLSearchParams(window.location.search);
 const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
@@ -707,6 +708,7 @@ console.log('[DEBUG receipt-pdf] txIdParam', {
   raw: txIdParamRaw || null,
   parsed: txIdParam || null
 });
+try { window.SpendNoteDebugLog?.append?.({ loc:'receipt-pdf:txId', msg:'txIdParam', data:{ hasTxId: !!txIdParam } }); } catch (_) {}
 // #endregion
 const isDemo = urlParams.get('demo') === '1' && !txIdParam;
 if (isDemo) {

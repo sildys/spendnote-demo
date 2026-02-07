@@ -143,14 +143,27 @@ function initTransactionForm() {
         if (wantsReceipt) {
             // Write fresh bootstrap session BEFORE opening new tab/iframe
             // #region agent log
-            fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'dashboard-form.js:wantsReceipt',message:'writeBootstrapSession check',data:{fnExists:typeof window.writeBootstrapSession === 'function'},timestamp:Date.now(),hypothesisId:'A'})}).catch(()=>{});
+            try {
+                const host = String(window.location.hostname || '');
+                const isLocal = host === 'localhost' || host === '127.0.0.1';
+                if (isLocal) {
+                    fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'dashboard-form.js:wantsReceipt',message:'writeBootstrapSession check',data:{fnExists:typeof window.writeBootstrapSession === 'function'},timestamp:Date.now(),hypothesisId:'A'})}).catch(()=>{});
+                }
+            } catch (_) {}
             // #endregion
             try {
                 if (typeof window.writeBootstrapSession === 'function') {
                     const bootstrapResult = await window.writeBootstrapSession();
                     // #region agent log
-                    fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'dashboard-form.js:afterBootstrap',message:'writeBootstrapSession result',data:{result:bootstrapResult,lsKey:!!localStorage.getItem('spendnote.session.bootstrap')},timestamp:Date.now(),hypothesisId:'A,B'})}).catch(()=>{});
+                    try {
+                        const host = String(window.location.hostname || '');
+                        const isLocal = host === 'localhost' || host === '127.0.0.1';
+                        if (isLocal) {
+                            fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'dashboard-form.js:afterBootstrap',message:'writeBootstrapSession result',data:{result:bootstrapResult,lsKey:!!localStorage.getItem('spendnote.session.bootstrap')},timestamp:Date.now(),hypothesisId:'A,B'})}).catch(()=>{});
+                        }
+                    } catch (_) {}
                     // #endregion
+                    try { window.SpendNoteDebugLog?.append?.({ loc:'dashboard-form:bootstrap', msg:'writeBootstrapSession', data:{ result: !!bootstrapResult, hasBootstrapKey: !!localStorage.getItem('spendnote.session.bootstrap') } }); } catch (_) {}
                 }
             } catch (_) {}
 

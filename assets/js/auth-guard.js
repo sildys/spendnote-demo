@@ -16,7 +16,16 @@
         isInIframe = true;
     }
     // #region agent log
-    fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:init',message:'auth-guard start',data:{isInIframe,pathname:window.location.pathname,search:window.location.search},timestamp:Date.now(),hypothesisId:'E'})}).catch(()=>{});
+    // Only attempt localhost ingestion when actually on localhost (avoid CORS noise on deployed site)
+    try {
+        const host = String(window.location.hostname || '');
+        const isLocal = host === 'localhost' || host === '127.0.0.1';
+        if (isLocal) {
+            fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:init',message:'auth-guard start',data:{isInIframe,pathname:window.location.pathname,search:window.location.search},timestamp:Date.now(),hypothesisId:'E'})}).catch(()=>{});
+        }
+    } catch (_) {}
+    // Also write to localStorage debug log (works on deployed site too)
+    try { window.SpendNoteDebugLog?.append?.({ loc:'auth-guard:init', msg:'start', data:{ isInIframe, path:String(window.location.pathname||''), search:String(window.location.search||'') } }); } catch (_) {}
     // #endregion
     try {
         const path = String(window.location.pathname || '').toLowerCase();
@@ -44,6 +53,7 @@
             // #region agent log
             console.log('[DEBUG auth-guard] skip auth redirect (public/demo)');
             // #endregion
+            try { window.SpendNoteDebugLog?.append?.({ loc:'auth-guard:skip', msg:'public/demo', data:{ isReceiptTemplate, hasPublicToken, isDemo } }); } catch (_) {}
             return;
         }
         // For iframes with bootstrap=1, try to establish session but don't redirect on failure
@@ -169,6 +179,7 @@
                     len: bootstrapData?.length || 0
                 });
                 // #endregion
+                try { window.SpendNoteDebugLog?.append?.({ loc:'auth-guard:bootstrap', msg:'bootstrap data check', data:{ hasData:!!bootstrapData, len:bootstrapData?.length||0 } }); } catch (_) {}
                 if (!bootstrapData) return false;
 
                 const parsed = JSON.parse(bootstrapData);
@@ -190,6 +201,7 @@
                     error: result?.error?.message || null
                 });
                 // #endregion
+                try { window.SpendNoteDebugLog?.append?.({ loc:'auth-guard:setSession', msg:'setSession', data:{ hasSession:!!result?.data?.session, error: result?.error?.message || null } }); } catch (_) {}
 
                 // Verify session was actually established
                 if (result?.data?.session) {
@@ -207,6 +219,7 @@
                     hasSession: !!check?.data?.session
                 });
                 // #endregion
+                try { window.SpendNoteDebugLog?.append?.({ loc:'auth-guard:recheck', msg:'getSession after setSession', data:{ hasSession:!!check?.data?.session } }); } catch (_) {}
                 return Boolean(check?.data?.session);
             } catch (e) {
                 // #region agent log
@@ -258,10 +271,11 @@
     
     // #region agent log
     console.log('[DEBUG auth-guard] final check - hasSession:', !!session, 'hasError:', !!error, 'isReceiptTemplate:', isReceiptTemplate);
-    fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:finalCheck',message:'final session decision',data:{hasSession:!!session,hasError:!!error,errorMsg:error?.message||null,isReceiptTemplate,wantBootstrap:sp?.get('bootstrap')==='1'},timestamp:Date.now(),hypothesisId:'C,E'})}).catch(()=>{});
+    try { window.SpendNoteDebugLog?.append?.({ loc:'auth-guard:final', msg:'final decision', data:{ hasSession:!!session, hasError:!!error, errorMsg:error?.message||null, isReceiptTemplate, bootstrap: sp?.get('bootstrap')==='1' } }); } catch (_) {}
     // #endregion
     if (!session || error) {
         // Not authenticated - redirect to login
+        try { window.SpendNoteDebugLog?.append?.({ loc:'auth-guard:redirect', msg:'redirect to login', data:{ isReceiptTemplate, path:String(window.location.pathname||''), search:String(window.location.search||''), bootstrap: sp?.get('bootstrap') } }); } catch (_) {}
         window.location.href = '/spendnote-login.html';
     }
 })();
