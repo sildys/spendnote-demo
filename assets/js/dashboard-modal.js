@@ -236,7 +236,8 @@ function initModalCashboxCarousel() {
     });
 
     if (!modalCashBoxes.length) {
-        modalCashBoxes = [{ id: 'default', name: 'Default Cash Box', color: '#059669', rgb: '5, 150, 105', icon: 'fa-cash-register' }];
+        modalCashBoxIndex = 0;
+        return;
     }
 
     let preferredId = '';
@@ -330,6 +331,13 @@ function openModal(preset) {
     const isEvent = preset && typeof preset === 'object' && 'preventDefault' in preset;
     const options = isEvent ? {} : (preset || {});
 
+    initModalCashboxCarousel();
+    if (!modalCashBoxes || !modalCashBoxes.length) {
+        alert('You need to create a Cash Box before recording transactions.');
+        window.location.href = 'spendnote-cash-box-settings.html';
+        return;
+    }
+
     lastModalFocusEl = document.activeElement;
 
     modal.classList.add('active');
@@ -380,8 +388,6 @@ function openModal(preset) {
             }
         }
     }
-
-    initModalCashboxCarousel();
 
     if (options.cashBoxId) {
         const idx = modalCashBoxes.findIndex(function(cb) { return cb.id === options.cashBoxId; });
