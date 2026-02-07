@@ -315,6 +315,17 @@ const QUICK_PRESET = {
         hasInitializedFromTxData = true;
 
         try {
+            const duplicateBtn = document.getElementById('txDuplicateBtn');
+            const id = String(tx?.id || '').trim();
+            if (duplicateBtn) {
+                duplicateBtn.dataset.txId = id;
+                duplicateBtn.disabled = !id;
+            }
+        } catch (_) {
+            // ignore
+        }
+
+        try {
             currentCashBoxId = String(cashBox?.id || tx?.cash_box_id || '').trim();
         } catch (_) {
             currentCashBoxId = '';
@@ -416,10 +427,8 @@ html, body { height: auto !important; overflow: auto !important; }
         const voidNote = document.getElementById('txVoidNote');
 
         if (duplicateBtn) {
-            const idRaw = new URLSearchParams(window.location.search).get('id');
-            const id = isUuid(idRaw) ? String(idRaw).trim() : '';
-            duplicateBtn.dataset.txId = id;
-            if (!id) duplicateBtn.disabled = true;
+            duplicateBtn.dataset.txId = '';
+            duplicateBtn.disabled = true;
         }
 
         const receiptFrame = document.getElementById('receiptFrame');

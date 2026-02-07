@@ -392,15 +392,29 @@ function initTransactionForm() {
             }
 
             // Try to find existing contact by name to link the transaction
-            if (!payload.contact_id && contactName && window.db?.contacts?.getAll) {
+            if (!payload.contact_id && contactName) {
                 try {
-                    const allContacts = await window.db.contacts.getAll();
-                    const match = (allContacts || []).find(c => c.name && c.name.toLowerCase() === contactName.toLowerCase());
-                    if (match && match.id) {
-                        payload.contact_id = match.id;
+                    const nameKey = String(contactName || '').trim().toLowerCase();
+                    const cached = window.__spendnoteContactsByName && typeof window.__spendnoteContactsByName.get === 'function'
+                        ? window.__spendnoteContactsByName.get(nameKey)
+                        : '';
+                    if (cached) {
+                        payload.contact_id = String(cached);
+                    } else if (window.supabaseClient && user && user.id) {
+                        const lookup = await window.supabaseClient
+                            .from('contacts')
+                            .select('id')
+                            .eq('user_id', user.id)
+                            .ilike('name', String(contactName))
+                            .limit(1);
+                        const row = Array.isArray(lookup?.data) ? lookup.data[0] : null;
+                        const id = String(row?.id || '').trim();
+                        if (id) {
+                            payload.contact_id = id;
+                        }
                     }
                 } catch (e) {
-                    console.warn('[TxSave] Could not lookup contact:', e);
+                    if (DEBUG) console.warn('[TxSave] Could not lookup contact:', e);
                 }
             }
 

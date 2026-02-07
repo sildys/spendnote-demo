@@ -600,6 +600,18 @@ async function loadContactsForAutocomplete() {
             };
         });
         contactsLoaded = true;
+        try {
+            window.__spendnoteContactsByName = window.__spendnoteContactsByName || new Map();
+            window.__spendnoteContactsByName.clear();
+            Contacts.forEach(function(c) {
+                const nameKey = String(c && c.name || '').trim().toLowerCase();
+                if (nameKey && c && c.id) {
+                    window.__spendnoteContactsByName.set(nameKey, String(c.id));
+                }
+            });
+        } catch (_) {
+            // ignore
+        }
         if (DEBUG) console.log('[ContactAC] Loaded', Contacts.length, 'contacts');
     } catch (e) { if (DEBUG) console.error('[ContactAC] Failed to load contacts:', e); }
 }
@@ -904,14 +916,15 @@ window.initDashboardModal = initDashboardModal;
 // DUPLICATE TRANSACTION
 // ========================================
 async function duplicateTransaction(txId) {
+    const DEBUG = Boolean(window.SpendNoteDebug);
     if (!txId || !window.db?.transactions?.getById) {
-        console.warn('Cannot duplicate: missing txId or db.transactions.getById');
+        if (DEBUG) console.warn('Cannot duplicate: missing txId or db.transactions.getById');
         return;
     }
 
     try {
         const tx = await window.db.transactions.getById(txId);
-        console.log('[Duplicate] Transaction data:', tx);
+        if (DEBUG) console.log('[Duplicate] Transaction data:', tx);
         if (!tx) {
             alert('Transaction not found.');
             return;
@@ -943,8 +956,8 @@ async function duplicateTransaction(txId) {
             note: tx.notes || tx.note || '',
             lineItems: extraItems
         };
-        console.log('[Duplicate] Preset:', preset);
-        console.log('[Duplicate] Line items:', lineItems);
+        if (DEBUG) console.log('[Duplicate] Preset:', preset);
+        if (DEBUG) console.log('[Duplicate] Line items:', lineItems);
 
         // Navigate to dashboard if not already there
         if (!document.getElementById('createTransactionModal')) {
