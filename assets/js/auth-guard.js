@@ -86,17 +86,44 @@
     let { data: { session }, error } = await getSessionSafe();
 
     if ((!session || error) && isReceiptTemplate && !(hasPublicToken || isDemo)) {
+        // Try to get session from opener window via postMessage
+        let sessionReceived = false;
+        
+        const sessionPromise = new Promise((resolve) => {
+            const timeout = setTimeout(() => resolve(false), 5000);
+            
+            const handler = async (event) => {
+                try {
+                    if (event.origin !== window.location.origin) return;
+                    if (event.data?.type !== 'SPENDNOTE_SESSION') return;
+                    
+                    const accessToken = String(event.data.access_token || '').trim();
+                    const refreshToken = String(event.data.refresh_token || '').trim();
+                    if (!accessToken || !refreshToken) return;
+                    
+                    await window.supabaseClient.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken
+                    });
+                    
+                    sessionReceived = true;
+                    clearTimeout(timeout);
+                    window.removeEventListener('message', handler);
+                    resolve(true);
+                } catch (_) {}
+            };
+            
+            window.addEventListener('message', handler);
+        });
+        
         try {
             if (window.opener && !window.opener.closed) {
                 window.opener.postMessage({ type: 'SPENDNOTE_REQUEST_SESSION' }, window.location.origin);
+                await sessionPromise;
             }
-        } catch (_) {
-            // ignore
-        }
-
-        for (let i = 0; i < 25; i++) {
-            if (session && !error) break;
-            await new Promise((r) => setTimeout(r, 100));
+        } catch (_) {}
+        
+        if (sessionReceived) {
             ({ data: { session }, error } = await getSessionSafe());
         }
     }

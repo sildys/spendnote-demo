@@ -159,10 +159,9 @@
         receiptMode = m;
         try { localStorage.setItem(RECEIPT_MODE_KEY, m); } catch (e) {}
 
-        const quickSummary = document.getElementById('receiptQuickSummary');
+        // Always show toggles in both modes - just with different default values
         const detailedToggles = document.getElementById('receiptDetailedToggles');
-        if (quickSummary) quickSummary.style.display = m === 'quick' ? 'block' : 'none';
-        if (detailedToggles) detailedToggles.style.display = m === 'detailed' ? 'block' : 'none';
+        if (detailedToggles) detailedToggles.style.display = 'block';
 
         document.getElementById('receiptModeQuick').checked = m === 'quick';
         document.getElementById('receiptModeDetailed').checked = m === 'detailed';
