@@ -2,6 +2,9 @@
 // This script should be included on all app pages (not on public pages like index, login, signup)
 
 (async function() {
+    // #region agent log
+    console.log('[DEBUG auth-guard v20260207-2140] loaded', window.location.pathname);
+    // #endregion
     let isReceiptTemplate = false;
     let sp = null;
     let hasPublicToken = false;
@@ -12,6 +15,9 @@
     } catch (_) {
         isInIframe = true;
     }
+    // #region agent log
+    fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:init',message:'auth-guard start',data:{isInIframe,pathname:window.location.pathname,search:window.location.search},timestamp:Date.now(),hypothesisId:'E'})}).catch(()=>{});
+    // #endregion
     try {
         const path = String(window.location.pathname || '').toLowerCase();
         const file = path.split('/').filter(Boolean).pop() || '';
@@ -125,6 +131,9 @@
             try {
                 const bootstrapKey = 'spendnote.session.bootstrap';
                 const bootstrapData = localStorage.getItem(bootstrapKey);
+                // #region agent log
+                fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:tryBootstrap',message:'bootstrap data check',data:{hasData:!!bootstrapData,dataLen:bootstrapData?.length||0},timestamp:Date.now(),hypothesisId:'B,C'})}).catch(()=>{});
+                // #endregion
                 if (!bootstrapData) return false;
 
                 const parsed = JSON.parse(bootstrapData);
@@ -137,6 +146,9 @@
                     access_token: accessToken,
                     refresh_token: refreshToken
                 });
+                // #region agent log
+                fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:afterSetSession',message:'setSession result',data:{hasSession:!!result?.data?.session,error:result?.error?.message||null},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
+                // #endregion
 
                 // Verify session was actually established
                 if (result?.data?.session) {
@@ -146,8 +158,14 @@
                 // If setSession didn't return session, wait and check again
                 await new Promise(r => setTimeout(r, 100));
                 const check = await window.supabaseClient.auth.getSession();
+                // #region agent log
+                fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:afterRecheck',message:'session recheck',data:{hasSession:!!check?.data?.session},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
+                // #endregion
                 return Boolean(check?.data?.session);
-            } catch (_) {
+            } catch (e) {
+                // #region agent log
+                fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:bootstrapError',message:'bootstrap exception',data:{err:e?.message||String(e)},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
+                // #endregion
                 return false;
             }
         };
@@ -192,6 +210,10 @@
         }
     }
     
+    // #region agent log
+    console.log('[DEBUG auth-guard] final check - hasSession:', !!session, 'hasError:', !!error, 'isReceiptTemplate:', isReceiptTemplate);
+    fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:finalCheck',message:'final session decision',data:{hasSession:!!session,hasError:!!error,errorMsg:error?.message||null,isReceiptTemplate,wantBootstrap:sp?.get('bootstrap')==='1'},timestamp:Date.now(),hypothesisId:'C,E'})}).catch(()=>{});
+    // #endregion
     if (!session || error) {
         // Not authenticated - redirect to login
         window.location.href = '/spendnote-login.html';
