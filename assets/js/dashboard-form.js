@@ -437,7 +437,7 @@ function initTransactionForm() {
                     };
 
                     const params = new URLSearchParams();
-                    params.set('v', 'print-20260206-25');
+                    params.set('v', 'print-20260207-05');
                     if (createdId) params.set('txId', createdId);
 
                     params.set('itemsMode', mode === 'quick' ? 'single' : 'full');
@@ -459,6 +459,11 @@ function initTransactionForm() {
 
                     if (format === 'a4') {
                         params.set('autoPrint', '1');
+                        try {
+                            params.set('returnTo', window.location.href);
+                        } catch (_) {
+
+                        }
                     }
 
                     if (format === 'pdf') {

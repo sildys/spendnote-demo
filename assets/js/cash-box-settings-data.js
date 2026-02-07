@@ -6,6 +6,13 @@ let currentCashBoxData = null;
 let hasInitialized = false;
 
 function isUuid(value) {
+    try {
+        if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
+            return window.SpendNoteIds.isUuid(value);
+        }
+    } catch (_) {
+
+    }
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || ''));
 }
 

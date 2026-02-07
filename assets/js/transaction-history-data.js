@@ -13,10 +13,24 @@
     }
 
     function isUuid(value) {
+        try {
+            if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
+                return window.SpendNoteIds.isUuid(value);
+            }
+        } catch (_) {
+
+        }
         return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
     }
 
     function normalizeContactQuery(value) {
+        try {
+            if (window.SpendNoteIds && typeof window.SpendNoteIds.normalizeContactQuery === 'function') {
+                return window.SpendNoteIds.normalizeContactQuery(value);
+            }
+        } catch (_) {
+
+        }
         const v = String(value || '').trim().toLowerCase();
         const m = /^cont-(\d+)$/.exec(v);
         if (!m) return v;
@@ -26,6 +40,13 @@
     }
 
     function normalizeCashBoxQuery(value) {
+        try {
+            if (window.SpendNoteIds && typeof window.SpendNoteIds.normalizeCashBoxQuery === 'function') {
+                return window.SpendNoteIds.normalizeCashBoxQuery(value);
+            }
+        } catch (_) {
+
+        }
         const v = String(value || '').trim().toLowerCase();
         const m = /^(cb|sn)-(\d+)$/.exec(v);
         if (!m) return v;
@@ -35,6 +56,13 @@
     }
 
     function normalizeTxIdQuery(value) {
+        try {
+            if (window.SpendNoteIds && typeof window.SpendNoteIds.normalizeTxIdQuery === 'function') {
+                return window.SpendNoteIds.normalizeTxIdQuery(value);
+            }
+        } catch (_) {
+
+        }
         const v = String(value || '').trim().toLowerCase();
         const m = /^sn(\d+)-(\d+)$/.exec(v);
         if (!m) return v;
@@ -138,7 +166,7 @@
     function getCashBoxDisplayId(cb) {
         const seq = Number(cb?.sequence_number);
         if (Number.isFinite(seq) && seq > 0) {
-            return `CB-${String(seq).padStart(3, '0')}`;
+            return `SN-${String(seq).padStart(3, '0')}`;
         }
         return safeText(cb?.name, '—');
     }
@@ -179,12 +207,11 @@
             if (!box) return;
             const seq = Number(box?.sequence_number);
             const displaySn = Number.isFinite(seq) && seq > 0 ? `SN-${String(seq).padStart(3, '0')}` : '';
-            const displayCb = Number.isFinite(seq) && seq > 0 ? `CB-${String(seq).padStart(3, '0')}` : '';
             const opt = document.createElement('option');
             const name = safeText(box.name, '');
             const id = safeText(box.id, '');
             opt.value = name || id;
-            const labelId = displaySn || displayCb;
+            const labelId = displaySn;
             opt.label = labelId ? `${name || 'Cash Box'} (${labelId})` : (name || 'Cash Box');
             datalistEl.appendChild(opt);
 
@@ -193,13 +220,6 @@
                 optSn.value = displaySn;
                 optSn.label = name || 'Cash Box';
                 datalistEl.appendChild(optSn);
-            }
-
-            if (displayCb) {
-                const optCb = document.createElement('option');
-                optCb.value = displayCb;
-                optCb.label = name || 'Cash Box';
-                datalistEl.appendChild(optCb);
             }
         });
     }

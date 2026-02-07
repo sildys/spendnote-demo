@@ -183,6 +183,17 @@ function syncDashboardCashBoxSelection(cashBoxId, options) {
     const id = String(cashBoxId || '').trim();
     if (!id) return;
 
+    const isUuid = (value) => {
+        try {
+            if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
+                return window.SpendNoteIds.isUuid(value);
+            }
+        } catch (_) {
+
+        }
+        return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
+    };
+
     const cards = Array.from(document.querySelectorAll('.register-card'));
     if (!cards.length) return;
 
@@ -200,7 +211,11 @@ function syncDashboardCashBoxSelection(cashBoxId, options) {
     try {
         if (color) localStorage.setItem('activeCashBoxColor', color);
         if (rgb) localStorage.setItem('activeCashBoxRgb', rgb);
-        localStorage.setItem('activeCashBoxId', id);
+        if (isUuid(id)) {
+            localStorage.setItem('activeCashBoxId', id);
+        } else {
+            localStorage.removeItem('activeCashBoxId');
+        }
     } catch (_) {
         // ignore
     }

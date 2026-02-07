@@ -18,12 +18,26 @@ let Contacts = [];
 let contactsLoaded = false;
 
 function formatContactDisplayId(sequenceNumber) {
+    try {
+        if (window.SpendNoteIds && typeof window.SpendNoteIds.formatContactDisplayId === 'function') {
+            return window.SpendNoteIds.formatContactDisplayId(sequenceNumber) || '';
+        }
+    } catch (_) {
+
+    }
     const n = Number(sequenceNumber);
     if (!Number.isFinite(n) || n <= 0) return '';
     return `CONT-${String(n).padStart(3, '0')}`;
 }
 
 function isUuid(value) {
+    try {
+        if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
+            return window.SpendNoteIds.isUuid(value);
+        }
+    } catch (_) {
+
+    }
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || ''));
 }
 
@@ -224,7 +238,22 @@ function initModalCashboxCarousel() {
     if (!modalCashBoxes.length) {
         modalCashBoxes = [{ id: 'default', name: 'Default Cash Box', color: '#059669', rgb: '5, 150, 105', icon: 'fa-cash-register' }];
     }
-    modalCashBoxIndex = 0;
+
+    let preferredId = '';
+    try {
+        preferredId = String(localStorage.getItem('activeCashBoxId') || '').trim();
+    } catch (_) {
+        preferredId = '';
+    }
+    if (!preferredId) {
+        const activeCard = document.querySelector('.register-card.active');
+        preferredId = activeCard ? String(activeCard.dataset.id || '').trim() : '';
+    }
+
+    const preferredIdx = preferredId
+        ? modalCashBoxes.findIndex(function (cb) { return String(cb.id || '') === preferredId; })
+        : -1;
+    modalCashBoxIndex = preferredIdx >= 0 ? preferredIdx : 0;
     updateModalCashboxDisplay();
 }
 
@@ -268,7 +297,17 @@ function updateModalCashboxDisplay() {
     }
     if (idInput) idInput.value = cashbox.id;
 
-    if (cashbox.color && cashbox.rgb) {
+    let synced = false;
+    try {
+        if (typeof window.syncDashboardCashBoxSelection === 'function') {
+            window.syncDashboardCashBoxSelection(cashbox.id, { scrollPage: false });
+            synced = true;
+        }
+    } catch (_) {
+        synced = false;
+    }
+
+    if (!synced && cashbox.color && cashbox.rgb) {
         document.documentElement.style.setProperty('--active', cashbox.color);
         document.documentElement.style.setProperty('--active-rgb', cashbox.rgb);
         try {
@@ -279,14 +318,6 @@ function updateModalCashboxDisplay() {
             }
         } catch (e) {}
         if (typeof window.updateMenuColors === 'function') window.updateMenuColors(cashbox.color);
-    }
-
-    try {
-        if (typeof window.syncDashboardCashBoxSelection === 'function') {
-            window.syncDashboardCashBoxSelection(cashbox.id, { scrollPage: false });
-        }
-    } catch (_) {
-        // ignore
     }
 }
 

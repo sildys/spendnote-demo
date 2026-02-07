@@ -37,6 +37,13 @@
     let currentCashBoxId = '';
 
     function isUuid(value) {
+        try {
+            if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
+                return window.SpendNoteIds.isUuid(value);
+            }
+        } catch (_) {
+
+        }
         return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
     }
 
@@ -51,7 +58,7 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260206-23');
+        params.append('v', 'receipt-20260207-05');
         if (txId) params.append('txId', txId);
 
         const addrOverride = String(overrideContactAddress || '').trim();
@@ -86,6 +93,14 @@
             for (const [key, value] of Object.entries(extraParams)) {
                 const v = String(value ?? '').trim();
                 if (v) params.append(key, v);
+            }
+        }
+
+        if (format === 'a4' && extraParams && String(extraParams.autoPrint || '') === '1') {
+            try {
+                params.append('returnTo', window.location.href);
+            } catch (_) {
+
             }
         }
 

@@ -89,6 +89,81 @@ function applyContactQueryToTransactionsQuery(query, contactQuery) {
     return query.ilike('contact_name', `%${q}%`);
 }
 
+function formatContactDisplayId(sequenceNumber) {
+    const n = Number(sequenceNumber);
+    if (!Number.isFinite(n) || n <= 0) return '';
+    return `CONT-${String(n).padStart(3, '0')}`;
+}
+
+function parseContactDisplayId(value) {
+    const v = String(value || '').trim();
+    const m = /^cont-(\d+)$/i.exec(v);
+    if (!m) return null;
+    const n = Number(m[1]);
+    if (!Number.isFinite(n) || n <= 0) return null;
+    return n;
+}
+
+function normalizeContactQuery(value) {
+    const v = String(value || '').trim().toLowerCase();
+    const m = /^cont-(\d+)$/.exec(v);
+    if (!m) return v;
+    const n = Number(m[1]);
+    if (!Number.isFinite(n) || n <= 0) return v;
+    return `cont-${String(n).padStart(3, '0')}`;
+}
+
+function formatCashBoxDisplayId(sequenceNumber) {
+    const n = Number(sequenceNumber);
+    if (!Number.isFinite(n) || n <= 0) return '';
+    return `SN-${String(n).padStart(3, '0')}`;
+}
+
+function parseCashBoxDisplayId(value) {
+    const v = String(value || '').trim().toLowerCase();
+    const m = /^(cb|sn)-(\d+)$/.exec(v);
+    if (!m) return null;
+    const n = Number(m[2]);
+    if (!Number.isFinite(n) || n <= 0) return null;
+    return n;
+}
+
+function normalizeCashBoxQuery(value) {
+    const v = String(value || '').trim().toLowerCase();
+    const m = /^(cb|sn)-(\d+)$/.exec(v);
+    if (!m) return v;
+    const n = Number(m[2]);
+    if (!Number.isFinite(n) || n <= 0) return v;
+    return `${m[1]}-${String(n).padStart(3, '0')}`;
+}
+
+function normalizeTxIdQuery(value) {
+    const v = String(value || '').trim().toLowerCase();
+    const m = /^sn(\d+)-(\d+)$/.exec(v);
+    if (!m) return v;
+    const cb = Number(m[1]);
+    const seq = Number(m[2]);
+    if (!Number.isFinite(cb) || cb <= 0 || !Number.isFinite(seq) || seq <= 0) return v;
+    return `sn${String(cb)}-${String(seq).padStart(3, '0')}`;
+}
+
+try {
+    window.SpendNoteIds = window.SpendNoteIds || {};
+    Object.assign(window.SpendNoteIds, {
+        isUuid,
+        parseSnDisplayId,
+        formatContactDisplayId,
+        parseContactDisplayId,
+        normalizeContactQuery,
+        formatCashBoxDisplayId,
+        parseCashBoxDisplayId,
+        normalizeCashBoxQuery,
+        normalizeTxIdQuery
+    });
+} catch (_) {
+
+}
+
 // Auth helper functions
 var auth = {
     // Get current user
