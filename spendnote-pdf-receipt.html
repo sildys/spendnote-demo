@@ -506,6 +506,9 @@
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script>
+// #region agent log
+console.log('[DEBUG receipt-pdf] script start, URL:', window.location.href);
+// #endregion
 const urlParams = new URLSearchParams(window.location.search);
 const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
 const isItemsSingle = itemsMode === 'single';
@@ -699,6 +702,12 @@ const isUuid = (value) => {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
 };
 const txIdParam = (txIdParamRaw && isUuid(txIdParamRaw)) ? String(txIdParamRaw).trim() : '';
+// #region agent log
+console.log('[DEBUG receipt-pdf] txIdParam', {
+  raw: txIdParamRaw || null,
+  parsed: txIdParam || null
+});
+// #endregion
 const isDemo = urlParams.get('demo') === '1' && !txIdParam;
 if (isDemo) {
   function safeText(value, fallback) {
@@ -908,8 +917,8 @@ if (urlParams.get('signatures') === '0') {
   
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/supabase-config.js?v=28"></script>
-  <script src="assets/js/auth-guard.js?v=7"></script>
+  <script src="assets/js/supabase-config.js?v=20260207-2200"></script>
+  <script src="assets/js/auth-guard.js?v=20260207-2210"></script>
   
   <script src="assets/js/main.js"></script>
 
@@ -1055,22 +1064,41 @@ if (urlParams.get('signatures') === '0') {
       }
 
       const waitForDb = async () => {
+        // #region agent log
+        console.log('[DEBUG receipt-pdf] waitForDb start, hasDb:', !!window.db, 'hasSupabase:', !!window.supabaseClient);
+        // #endregion
         for (let i = 0; i < 200; i++) {
           if (window.db?.transactions?.getById) {
             // Also verify we have an auth session
             try {
               const { data: { session } } = await window.supabaseClient.auth.getSession();
-              if (session) return true;
-            } catch (_) {}
+              // #region agent log
+              if (i % 40 === 0) console.log('[DEBUG receipt-pdf] waitLoop i=', i, 'hasSession:', !!session);
+              // #endregion
+              if (session) {
+                console.log('[DEBUG receipt-pdf] session found at iteration', i);
+                return true;
+              }
+            } catch (e) {
+              console.log('[DEBUG receipt-pdf] session check error:', e?.message);
+            }
           }
           await new Promise((r) => setTimeout(r, 50));
         }
+        // #region agent log
+        console.log('[DEBUG receipt-pdf] waitForDb TIMEOUT - no session after 10s');
+        // #endregion
         return false;
       };
 
       try {
         const ok = await waitForDb();
-        if (!ok) return;
+        if (!ok) {
+          // #region agent log
+          console.log('[DEBUG receipt-pdf] waitForDb failed - no session');
+          // #endregion
+          return;
+        }
 
         const tx = await window.db.transactions.getById(txId);
         if (!tx) return;

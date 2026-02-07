@@ -3,7 +3,7 @@
 
 (async function() {
     // #region agent log
-    console.log('[DEBUG auth-guard v20260207-2140] loaded', window.location.pathname);
+    console.log('[DEBUG auth-guard v20260207-2210] loaded', window.location.pathname);
     // #endregion
     let isReceiptTemplate = false;
     let sp = null;
@@ -26,10 +26,24 @@
             file.includes('receipt') &&
             (file.includes('pdf') || file.includes('email') || file.includes('a4'));
         sp = new URLSearchParams(window.location.search);
+        // #region agent log
+        console.log('[DEBUG auth-guard] detect', {
+            path,
+            file,
+            isReceiptTemplate,
+            isInIframe,
+            bootstrap: sp.get('bootstrap'),
+            isDemo: sp.get('demo') === '1',
+            hasPublicToken: sp.has('publicToken')
+        });
+        // #endregion
         hasPublicToken = sp.has('publicToken');
         isDemo = sp.get('demo') === '1';
         // Skip auth redirect for receipt templates with public tokens or demo mode
         if (isReceiptTemplate && (hasPublicToken || isDemo)) {
+            // #region agent log
+            console.log('[DEBUG auth-guard] skip auth redirect (public/demo)');
+            // #endregion
             return;
         }
         // For iframes with bootstrap=1, try to establish session but don't redirect on failure
@@ -39,6 +53,12 @@
                 try {
                     const bootstrapKey = 'spendnote.session.bootstrap';
                     const bootstrapData = localStorage.getItem(bootstrapKey);
+                    // #region agent log
+                    console.log('[DEBUG auth-guard] iframe bootstrap key', {
+                        hasData: !!bootstrapData,
+                        len: bootstrapData?.length || 0
+                    });
+                    // #endregion
                     if (!bootstrapData) return;
 
                     const parsed = JSON.parse(bootstrapData);
@@ -46,10 +66,16 @@
                     const refreshToken = String(parsed?.refresh_token || '').trim();
                     if (!accessToken || !refreshToken) return;
 
-                    await window.supabaseClient.auth.setSession({
+                    const setRes = await window.supabaseClient.auth.setSession({
                         access_token: accessToken,
                         refresh_token: refreshToken
                     });
+                    // #region agent log
+                    console.log('[DEBUG auth-guard] iframe setSession', {
+                        hasSession: !!setRes?.data?.session,
+                        error: setRes?.error?.message || null
+                    });
+                    // #endregion
                 } catch (_) {}
             };
             await tryBootstrapForIframe();
@@ -57,6 +83,9 @@
         }
         // Skip redirect for iframes entirely (but session bootstrap above will help)
         if (isReceiptTemplate && isInIframe) {
+            // #region agent log
+            console.log('[DEBUG auth-guard] skip auth redirect (iframe)');
+            // #endregion
             return;
         }
     } catch (_) {
@@ -134,6 +163,12 @@
                 // #region agent log
                 fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:tryBootstrap',message:'bootstrap data check',data:{hasData:!!bootstrapData,dataLen:bootstrapData?.length||0},timestamp:Date.now(),hypothesisId:'B,C'})}).catch(()=>{});
                 // #endregion
+                // #region agent log
+                console.log('[DEBUG auth-guard] bootstrap data check', {
+                    hasData: !!bootstrapData,
+                    len: bootstrapData?.length || 0
+                });
+                // #endregion
                 if (!bootstrapData) return false;
 
                 const parsed = JSON.parse(bootstrapData);
@@ -149,6 +184,12 @@
                 // #region agent log
                 fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:afterSetSession',message:'setSession result',data:{hasSession:!!result?.data?.session,error:result?.error?.message||null},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
                 // #endregion
+                // #region agent log
+                console.log('[DEBUG auth-guard] setSession result', {
+                    hasSession: !!result?.data?.session,
+                    error: result?.error?.message || null
+                });
+                // #endregion
 
                 // Verify session was actually established
                 if (result?.data?.session) {
@@ -160,6 +201,11 @@
                 const check = await window.supabaseClient.auth.getSession();
                 // #region agent log
                 fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'auth-guard.js:afterRecheck',message:'session recheck',data:{hasSession:!!check?.data?.session},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
+                // #endregion
+                // #region agent log
+                console.log('[DEBUG auth-guard] session recheck', {
+                    hasSession: !!check?.data?.session
+                });
                 // #endregion
                 return Boolean(check?.data?.session);
             } catch (e) {

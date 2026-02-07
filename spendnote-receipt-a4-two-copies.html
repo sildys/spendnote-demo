@@ -614,6 +614,12 @@ body {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
   };
   const txIdParam = (txIdParamRaw && isUuid(txIdParamRaw)) ? String(txIdParamRaw).trim() : '';
+  // #region agent log
+  console.log('[DEBUG receipt-a4] txIdParam', {
+    raw: txIdParamRaw || null,
+    parsed: txIdParam || null
+  });
+  // #endregion
   const isDemo = urlParams.get('demo') === '1' && !txIdParam;
   if (isDemo) {
     const safeText = (value, fallback) => {
@@ -815,7 +821,7 @@ body {
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js?v=20260207-2200"></script>
-    <script src="assets/js/auth-guard.js?v=20260207-2150"></script>
+    <script src="assets/js/auth-guard.js?v=20260207-2210"></script>
     
     <script src="assets/js/main.js"></script>
 
@@ -1004,7 +1010,12 @@ body {
 
         try {
           const ok = await waitForDb();
-          if (!ok) return;
+          if (!ok) {
+            // #region agent log
+            console.log('[DEBUG receipt-a4] waitForDb failed - no session');
+            // #endregion
+            return;
+          }
 
           const tx = await window.db.transactions.getById(txId);
           if (!tx) return;
