@@ -502,6 +502,9 @@ body {
 </div>
 
 <script>
+  // #region agent log
+  console.log('[DEBUG receipt-a4] script start, URL:', window.location.href);
+  // #endregion
   const urlParams = new URLSearchParams(window.location.search);
   const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
   const isItemsSingle = itemsMode === 'single';
@@ -811,8 +814,8 @@ body {
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260207-2130"></script>
-    <script src="assets/js/auth-guard.js?v=20260207-2130"></script>
+    <script src="assets/js/supabase-config.js?v=20260207-2150"></script>
+    <script src="assets/js/auth-guard.js?v=20260207-2150"></script>
     
     <script src="assets/js/main.js"></script>
 
@@ -826,7 +829,7 @@ body {
         const waitForDb = async () => {
           // Wait for db AND authenticated session
           // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'receipt-a4.html:waitForDb',message:'waitForDb start',data:{hasDb:!!window.db,hasGetById:!!window.db?.transactions?.getById},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
+          console.log('[DEBUG receipt-a4] waitForDb start, hasDb:', !!window.db, 'hasSupabase:', !!window.supabaseClient);
           // #endregion
           for (let i = 0; i < 200; i++) {
             if (window.db?.transactions?.getById) {
@@ -834,15 +837,20 @@ body {
               try {
                 const { data: { session } } = await window.supabaseClient.auth.getSession();
                 // #region agent log
-                if (i % 20 === 0) fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'receipt-a4.html:waitLoop',message:'session check in loop',data:{iteration:i,hasSession:!!session},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
+                if (i % 40 === 0) console.log('[DEBUG receipt-a4] waitLoop i=', i, 'hasSession:', !!session);
                 // #endregion
-                if (session) return true;
-              } catch (_) {}
+                if (session) {
+                  console.log('[DEBUG receipt-a4] session found at iteration', i);
+                  return true;
+                }
+              } catch (e) {
+                console.log('[DEBUG receipt-a4] session check error:', e?.message);
+              }
             }
             await new Promise((r) => setTimeout(r, 50));
           }
           // #region agent log
-          fetch('http://127.0.0.1:7243/ingest/67fbcfb9-05d9-4fc4-9d50-823ee0474032',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'receipt-a4.html:waitForDbFail',message:'waitForDb timeout',data:{},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
+          console.log('[DEBUG receipt-a4] waitForDb TIMEOUT - no session after 10s');
           // #endregion
           return false;
         };
