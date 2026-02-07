@@ -286,7 +286,7 @@ function initTransactionForm() {
                 alert('Contact Name is required.');
                 return;
             }
-            const contactOtherId = String(document.getElementById('modalContactCompanyId')?.value || '').trim() || null;
+            let contactOtherId = String(document.getElementById('modalContactCompanyId')?.value || '').trim() || null;
 
             const dateCandidate = String(formData.date || '').trim();
             const transactionDate = /^\d{4}-\d{2}-\d{2}$/.test(dateCandidate)
@@ -340,6 +340,34 @@ function initTransactionForm() {
                 created_by_user_id: user.id,
                 created_by_user_name: profile?.full_name || user.user_metadata?.full_name || user.email || null
             };
+
+            // If user selected a contact from autocomplete, link by UUID.
+            try {
+                const selectedIdRaw = String(document.getElementById('modalContactId')?.value || '').trim();
+                if (isUuid(selectedIdRaw)) {
+                    payload.contact_id = selectedIdRaw;
+                }
+            } catch (_) {
+                // ignore
+            }
+
+            // If contact is linked and user didn't type an Other ID, pull from saved contact.
+            if (payload.contact_id && !contactOtherId && window.db?.contacts?.getById) {
+                try {
+                    const saved = await window.db.contacts.getById(payload.contact_id);
+                    const fromSaved = String(saved?.phone || '').trim();
+                    if (fromSaved) {
+                        contactOtherId = fromSaved;
+                        payload.contact_custom_field_1 = fromSaved;
+                        const otherIdEl = document.getElementById('modalContactCompanyId');
+                        if (otherIdEl && !String(otherIdEl.value || '').trim()) {
+                            otherIdEl.value = fromSaved;
+                        }
+                    }
+                } catch (_) {
+                    // ignore
+                }
+            }
 
             if (payload.type === 'expense') {
                 const cb = payload.cash_box_id && window.db?.cashBoxes?.getById

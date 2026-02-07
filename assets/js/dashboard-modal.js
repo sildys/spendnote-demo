@@ -589,7 +589,14 @@ async function loadContactsForAutocomplete() {
         const data = await window.db.contacts.getAll();
         Contacts = (data || []).map(function(c) {
             const displayId = formatContactDisplayId(c && c.sequence_number);
-            return { id: c.id, name: c.name || '', address: c.address || '', contact: c.email || '', displayId: displayId };
+            return {
+                id: c.id,
+                name: c.name || '',
+                address: c.address || '',
+                contact: c.email || '',
+                phone: c.phone || '',
+                displayId: displayId
+            };
         });
         contactsLoaded = true;
         console.log('[ContactAC] Loaded', Contacts.length, 'contacts');
