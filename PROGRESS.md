@@ -12,18 +12,19 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Avoid long explanations, hedging, or repetitive confirmations.
 - Be professional and forward-looking (anticipate edge cases, choose robust solutions).
 
-## Current state (last updated: 2026-02-07 22:23)
+## Current state (last updated: 2026-02-07 23:48)
 - **Dashboard** ✅
   - Transaction modal fully wired to Supabase:
     - **Transaction create** via `db.transactions.create()` with full payload
     - **Robust error handling** (INSUFFICIENT_BALANCE, RLS, profile missing, session expired)
     - **Balance validation** (UI-side check prevents negative balance on expense)
-    - **Contact linking** (auto-lookup existing contact by name)
+    - **Contact linking** (uses selected contact UUID when available; otherwise lightweight lookup)
     - **Save to Contacts** (creates new contact if checkbox enabled)
-    - **Verification** (checks transaction exists after insert)
+    - **Verification** (debug-only: checks transaction exists after insert)
     - **Dashboard reload** after successful save
     - **Receipt flow** ("Done & Print" opens receipt in selected format)
   - Cash box cards display **`SN-###`** from `cash_boxes.sequence_number` (not derived index).
+  - Hash deep-link open supports `cashBoxId=SN-###` and resolves to UUID.
 - **Contacts**
   - Contacts list + detail are wired to Supabase.
   - UI shows **Contact ID as `CONT-###`** using `sequence_number`.
@@ -32,7 +33,8 @@ If a chat thread freezes / context is lost: in the new thread say:
     - `#` (active tx count)
     - `Boxes` dot list
     - `Last Tx` (ID + date)
-  - Verification: Contacts List logs stats source (`rpc` vs `scan`) and stores it in `window.__spendnoteContactsStatsSource`.
+  - Verification: Contacts List stores stats source (`rpc` vs `scan`) in `window.__spendnoteContactsStatsSource` (logs only with `SpendNoteDebug`).
+  - Contact "Other ID" is stored in `contacts.phone` and is snapshot-stored onto transactions as `contact_custom_field_1` for receipts.
 - **Transaction History** ✅
   - Loads from Supabase (server-side pagination + filters).
   - Does **not** auto-filter by the previously selected Cash Box (dashboard active cash box).
@@ -78,6 +80,7 @@ If a chat thread freezes / context is lost: in the new thread say:
     - receipt previews include a diagonal grey **VOID** watermark (A4/PDF/Email)
   - Pro badge styling unified across the app (consistent orange badge with crown icon).
   - URL hardening: invalid/missing `txId` redirects to Transaction History.
+  - Duplicate button works even when opened via `SNx-yyy` (uses loaded transaction UUID).
 
 - **Receipt print flow (new tab)** ✅
   - Print/receipt templates can open in a new tab/window (`bootstrap=1`).
@@ -128,8 +131,8 @@ If a chat thread freezes / context is lost: in the new thread say:
     - Contact ID: `CONT-{seq}` format
   - PDF overlay uses brand colors only (green for IN, gray for OUT, black text)
 - **Cash Box pages**
-  - Cash Box Detail: validates URL `id`/`cashBoxId` as UUID, displays `SN-###` code.
-  - Cash Box Settings: validates URL `id`/`cashBoxId` as UUID, displays `SN-###` in subtitle.
+  - Cash Box Detail: accepts `id`/`cashBoxId` as UUID or `SN-###` and resolves to UUID; displays `SN-###` code.
+  - Cash Box Settings: accepts `id`/`cashBoxId` as UUID or `SN-###` and resolves to UUID; displays `SN-###` in subtitle.
   - Cash Box Settings: receipt preview uses demo data (A4/PDF/Email) and respects quick/detailed + toggles.
   - Cash Box Settings: receipt preview layout/height + zoom behavior matches Transaction Detail.
   - Cash Box Settings: removed inline `onclick` handlers (bindings live in JS).
@@ -160,6 +163,12 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **Duplicate transaction** ✅
   - Duplicate always uses the **current date** (today), not the original transaction date.
   - Duplicate clears receipt/transaction identifier so a **new** one is generated.
+
+- **ID stabilization (display IDs)** ✅
+  - Cash Boxes: accept `SN-###` for deep links/filters; resolve to UUID internally.
+  - Contacts: accept `CONT-###` for deep links/filters; resolve to UUID internally.
+  - Transactions: Transaction Detail accepts `SNx-yyy` and resolves to UUID.
+  - Legacy `CB-###` prefix support removed.
 
 ## Key decisions / invariants
 - **“Unsaved contact” indicator**: keep it minimal in Transaction History.

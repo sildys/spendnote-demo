@@ -95,7 +95,7 @@ Mode is stored as `data-mode="quick|detailed"` and persisted via `localStorage` 
 
 #### Required fields (both modes)
 
-- cash box (must be a valid UUID)
+- cash box (resolves to a valid UUID internally)
 - direction (IN/OUT)
 - contact name (required to produce a receipt)
 - description (required)
@@ -104,6 +104,7 @@ Mode is stored as `data-mode="quick|detailed"` and persisted via `localStorage` 
 #### Optional fields
 
 - contact address (optional; if provided it is stored on the transaction snapshot)
+- contact other id (optional; stored on the transaction snapshot as `contact_custom_field_1` and used on receipts)
 - save to contacts (optional, via the "Save to Contacts" checkbox)
 - note (detailed mode)
 
@@ -209,6 +210,11 @@ This enables localization and per-cash-box personalization.
 - Transaction content stays historically accurate via snapshot fields (contact snapshot + stored line items).
 - Possible future enhancement: store a snapshot of receipt settings on the transaction at creation time to preserve the exact historical look.
 
+Quick defaults:
+
+- Quick receipt mode hides the logo by default.
+- Quick receipt mode hides additional identifiers by default (toggles remain available).
+
 #### Mandatory legal disclaimer (immutable)
 
 - Every receipt must include a mandatory legal disclaimer stating it is **cash handoff documentation only** and **not a tax/accounting document**.
@@ -282,7 +288,7 @@ The Contacts List avoids loading thousands of transactions on page load by using
 
 If the RPC is not available yet in a given Supabase project, the UI falls back to a client-side scan.
 
-Verification note: the Contacts List logs the stats source to the console (`rpc` vs `scan`) and stores it in `window.__spendnoteContactsStatsSource`.
+Verification note: the Contacts List stores the stats source in `window.__spendnoteContactsStatsSource` (and logs it only when `window.SpendNoteDebug` is enabled).
 
 ### Current gaps / not implemented yet
 
@@ -514,6 +520,7 @@ To avoid a login redirect/flicker, the app uses a lightweight bootstrap mechanis
 
 - Contacts: `contacts.sequence_number` -> `CONT-###`
 - Transactions: receipts are expected to have a stable receipt identifier (for example `transactions.receipt_number`, and/or sequence fields like `cash_box_sequence`, `tx_sequence_in_box`).
+- Cash Boxes: `cash_boxes.sequence_number` -> `SN-###`
 
 ### Receipt regeneration (store snapshots)
 
