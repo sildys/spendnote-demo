@@ -48,11 +48,11 @@
 
         }
         const v = String(value || '').trim().toLowerCase();
-        const m = /^(cb|sn)-(\d+)$/.exec(v);
+        const m = /^sn-(\d+)$/.exec(v);
         if (!m) return v;
-        const n = Number(m[2]);
+        const n = Number(m[1]);
         if (!Number.isFinite(n) || n <= 0) return v;
-        return `${m[1]}-${String(n).padStart(3, '0')}`;
+        return `sn-${String(n).padStart(3, '0')}`;
     }
 
     function normalizeTxIdQuery(value) {
