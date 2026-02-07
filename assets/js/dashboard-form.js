@@ -134,6 +134,13 @@ function initTransactionForm() {
         };
 
         if (wantsReceipt) {
+            // Write fresh bootstrap session BEFORE opening new tab/iframe
+            try {
+                if (typeof window.writeBootstrapSession === 'function') {
+                    await window.writeBootstrapSession();
+                }
+            } catch (_) {}
+
             let intendedFormat = 'a4';
             try {
                 const cbId = String(document.getElementById('modalCashBoxId')?.value || '').trim();
@@ -437,7 +444,7 @@ function initTransactionForm() {
                     };
 
                     const params = new URLSearchParams();
-                    params.set('v', 'print-20260207-06');
+                    params.set('v', 'print-20260207-07');
                     if (createdId) params.set('txId', createdId);
                     params.set('bootstrap', '1');
 

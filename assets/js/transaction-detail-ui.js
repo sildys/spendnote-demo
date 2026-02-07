@@ -1,4 +1,4 @@
-﻿const QUICK_PRESET = {
+const QUICK_PRESET = {
         logo: '1',
         addresses: '1',
         tracking: '1',
@@ -67,7 +67,7 @@
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260207-06');
+        params.append('v', 'receipt-20260207-07');
         if (txId) params.append('txId', txId);
         params.append('bootstrap', '1');
 
@@ -147,8 +147,14 @@
             reloadTimer = null;
         }
 
-        reloadTimer = setTimeout(() => {
+        reloadTimer = setTimeout(async () => {
             reloadTimer = null;
+            // Ensure bootstrap session is fresh before loading iframe
+            try {
+                if (typeof window.writeBootstrapSession === 'function') {
+                    await window.writeBootstrapSession();
+                }
+            } catch (_) {}
             const extra = currentFormat === 'pdf' ? { preview: '1', download: '0' } : null;
             applyReceiptUrlIfChanged(buildReceiptUrl(currentFormat, extra));
         }, delay);
@@ -464,7 +470,14 @@ html, body { height: auto !important; overflow: auto !important; }
         };
 
         if (printBtn) {
-            printBtn.addEventListener('click', () => {
+            printBtn.addEventListener('click', async () => {
+                // Write fresh bootstrap session before opening new tab
+                try {
+                    if (typeof window.writeBootstrapSession === 'function') {
+                        await window.writeBootstrapSession();
+                    }
+                } catch (_) {}
+
                 const url = buildReceiptUrl('a4', { autoPrint: '1' });
                 const opened = window.open(url, '_blank');
                 if (!opened) {
@@ -473,7 +486,14 @@ html, body { height: auto !important; overflow: auto !important; }
             });
         }
         if (pdfBtn) {
-            pdfBtn.addEventListener('click', () => {
+            pdfBtn.addEventListener('click', async () => {
+                // Write fresh bootstrap session before triggering PDF download
+                try {
+                    if (typeof window.writeBootstrapSession === 'function') {
+                        await window.writeBootstrapSession();
+                    }
+                } catch (_) {}
+
                 const url = buildReceiptUrl('pdf', { download: '1' });
                 triggerHiddenPdfDownload(url);
             });

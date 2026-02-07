@@ -2,8 +2,8 @@
 const SUPABASE_URL = 'https://zrnnharudlgxuvewqryj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5oYXJ1ZGxneHV2ZXdxcnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyOTkxMDgsImV4cCI6MjA4Mjg3NTEwOH0.kQLRMVrl_uYYzZwX387uFs_BAXc9c5v7EhcvGhPR7v4';
 
-if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260207-1920');
-window.__spendnoteSupabaseConfigBuild = '20260207-1920';
+if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260207-2100');
+window.__spendnoteSupabaseConfigBuild = '20260207-2100';
 
 // If you previously used localStorage persistence, clean it up so tab-close logout works immediately.
 // Supabase stores sessions under a project-specific key like: sb-<project-ref>-auth-token
@@ -36,18 +36,33 @@ var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KE
     }
 });
 
-try {
-    const __spendnoteWriteBootstrapSession = (session) => {
-        try {
-            if (session?.access_token && session?.refresh_token) {
-                localStorage.setItem('spendnote.session.bootstrap', JSON.stringify({
-                    access_token: session.access_token,
-                    refresh_token: session.refresh_token
-                }));
-            }
-        } catch (_) {}
-    };
+// Bootstrap session management - allows receipt tabs to restore session from localStorage
+const __spendnoteWriteBootstrapSession = (session) => {
+    try {
+        if (session?.access_token && session?.refresh_token) {
+            localStorage.setItem('spendnote.session.bootstrap', JSON.stringify({
+                access_token: session.access_token,
+                refresh_token: session.refresh_token,
+                ts: Date.now()
+            }));
+            return true;
+        }
+    } catch (_) {}
+    return false;
+};
 
+// Exposed function to write fresh bootstrap before opening receipt tabs
+window.writeBootstrapSession = async () => {
+    try {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) {
+            return __spendnoteWriteBootstrapSession(session);
+        }
+    } catch (_) {}
+    return false;
+};
+
+try {
     supabaseClient.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_OUT') {
             try {

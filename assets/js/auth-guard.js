@@ -22,8 +22,35 @@
         sp = new URLSearchParams(window.location.search);
         hasPublicToken = sp.has('publicToken');
         isDemo = sp.get('demo') === '1';
-        // Skip auth redirect for receipt templates in iframes, public tokens, or demo mode
-        if (isReceiptTemplate && (hasPublicToken || isDemo || isInIframe)) {
+        // Skip auth redirect for receipt templates with public tokens or demo mode
+        if (isReceiptTemplate && (hasPublicToken || isDemo)) {
+            return;
+        }
+        // For iframes with bootstrap=1, try to establish session but don't redirect on failure
+        if (isReceiptTemplate && isInIframe && sp.get('bootstrap') === '1') {
+            // Try to bootstrap session for iframe
+            const tryBootstrapForIframe = async () => {
+                try {
+                    const bootstrapKey = 'spendnote.session.bootstrap';
+                    const bootstrapData = localStorage.getItem(bootstrapKey);
+                    if (!bootstrapData) return;
+
+                    const parsed = JSON.parse(bootstrapData);
+                    const accessToken = String(parsed?.access_token || '').trim();
+                    const refreshToken = String(parsed?.refresh_token || '').trim();
+                    if (!accessToken || !refreshToken) return;
+
+                    await window.supabaseClient.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken
+                    });
+                } catch (_) {}
+            };
+            await tryBootstrapForIframe();
+            return; // Don't redirect iframe on auth failure
+        }
+        // Skip redirect for iframes entirely (but session bootstrap above will help)
+        if (isReceiptTemplate && isInIframe) {
             return;
         }
     } catch (_) {
@@ -105,11 +132,21 @@
                 const refreshToken = String(parsed?.refresh_token || '').trim();
                 if (!accessToken || !refreshToken) return false;
 
-                await window.supabaseClient.auth.setSession({
+                // Set the session
+                const result = await window.supabaseClient.auth.setSession({
                     access_token: accessToken,
                     refresh_token: refreshToken
                 });
-                return true;
+
+                // Verify session was actually established
+                if (result?.data?.session) {
+                    return true;
+                }
+
+                // If setSession didn't return session, wait and check again
+                await new Promise(r => setTimeout(r, 100));
+                const check = await window.supabaseClient.auth.getSession();
+                return Boolean(check?.data?.session);
             } catch (_) {
                 return false;
             }
@@ -133,12 +170,24 @@
         }
 
         if (wantBootstrapWait) {
-            const deadline = Date.now() + 6000;
+            const deadline = Date.now() + 8000;
+            let attempts = 0;
             while (Date.now() < deadline) {
+                attempts++;
                 ({ data: { session }, error } = await getSessionSafe());
                 if (session && !error) break;
-                await new Promise((r) => setTimeout(r, 120));
-                await tryBootstrapFromLocalStorage();
+                
+                // Wait with exponential backoff (100ms, 150ms, 200ms, 250ms... capped at 500ms)
+                const delay = Math.min(100 + (attempts * 50), 500);
+                await new Promise((r) => setTimeout(r, delay));
+                
+                // Try bootstrap again
+                const bootstrapped = await tryBootstrapFromLocalStorage();
+                if (bootstrapped) {
+                    // Double-check session after successful bootstrap
+                    ({ data: { session }, error } = await getSessionSafe());
+                    if (session && !error) break;
+                }
             }
         }
     }

@@ -1009,7 +1009,13 @@ if (urlParams.get('signatures') === '0') {
 
         const waitForDb = async () => {
           for (let i = 0; i < 200; i++) {
-            if (window.db?.transactions?.getById) return true;
+            if (window.db?.transactions?.getById) {
+              // Also verify we have an auth session
+              try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (session) return true;
+              } catch (_) {}
+            }
             await new Promise((r) => setTimeout(r, 50));
           }
           return false;
