@@ -230,6 +230,16 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **High**
 - **High (next)**
   - Contacts list: require 2 clicks to open Contact Detail (match transaction tables).
+- **High (upcoming)**
+  - Permissions & roles (owner/admin/user) + org/team model:
+    - Add `orgs` table (explicit org/team).
+    - Add per-cash-box memberships (`cash_box_memberships`) with role per cash box.
+    - Contacts are org-level (shared across cash boxes).
+    - Implement real invite flow (token/link) and acceptance.
+    - Enforce access via RLS for cash_boxes / transactions / contacts.
+    - Owner-only: subscription + account/cash box delete.
+    - Admin: create cash boxes, invite/add users, void transactions.
+    - User: record only in cash boxes they are a member of.
 - **Medium**
   - Table column widths need adjustment.
   - Navigation underline styling is still inconsistent.
