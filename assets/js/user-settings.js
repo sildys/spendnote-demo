@@ -148,6 +148,7 @@ const computeAndApplyRole = async () => {
 
         currentRole = role;
         applyRoleBadge(currentRole);
+        renderTeamTable();
     } catch (_) {
         // ignore
     }
@@ -157,6 +158,17 @@ const computeAndApplyRole = async () => {
 const renderTeamTable = () => {
     const tbody = document.getElementById('teamTableBody');
     if (!tbody) return;
+
+    const canManageTeam = currentRole === 'owner' || currentRole === 'admin';
+
+    try {
+        const inviteBtn = document.getElementById('inviteMemberBtn');
+        if (inviteBtn) {
+            inviteBtn.style.display = canManageTeam ? '' : 'none';
+        }
+    } catch (_) {
+
+    }
 
     const total = teamMembers.length;
     const active = teamMembers.filter(m => m.status === 'active').length;
@@ -180,8 +192,18 @@ const renderTeamTable = () => {
         const isOwner = role === 'owner';
         const color = getMemberColor(idx);
 
-        const roleClass = isOwner ? 'owner' : (role === 'admin' ? 'admin' : 'member');
-        const roleLabel = isOwner ? '<i class="fas fa-crown"></i> Owner' : (role === 'admin' ? 'Admin' : 'User');
+        const roleBadgeClass = isOwner ? 'owner' : (role === 'admin' ? 'admin' : 'member');
+        const roleCellHtml = isOwner
+            ? `<span class="role-badge owner"><i class="fas fa-crown"></i> Owner</span>`
+            : (canManageTeam
+                ? `
+                    <select class="team-role-select role-badge ${roleBadgeClass}" data-action="set-role" data-id="${m.id}" data-status="${status}" ${status === 'active' || status === 'pending' ? '' : 'disabled'}>
+                        <option value="user" ${role !== 'admin' ? 'selected' : ''}>User</option>
+                        <option value="admin" ${role === 'admin' ? 'selected' : ''}>Admin</option>
+                    </select>
+                `
+                : `<span class="role-badge ${roleBadgeClass}">${role === 'admin' ? 'Admin' : 'User'}</span>`
+            );
         const statusClass = status === 'active' ? 'active' : (status === 'pending' ? 'pending' : 'inactive');
 
         return `
@@ -195,17 +217,20 @@ const renderTeamTable = () => {
                         </div>
                     </div>
                 </td>
-                <td><span class="role-badge ${roleClass}">${roleLabel}</span></td>
+                <td>${roleCellHtml}</td>
                 <td><span class="status-badge ${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
                 <td>
-                    ${isOwner ? '<span style="color:var(--text-muted)">—</span>' : (
-                        status !== 'active'
-                            ? `<button type="button" class="btn btn-secondary btn-small" data-action="remove" data-id="${m.id}" style="color:#dc2626;border-color:rgba(239,68,68,0.3);"><i class="fas fa-trash"></i></button>`
-                            : `
-                                <button type="button" class="btn btn-secondary btn-small" data-action="access" data-id="${m.id}"><i class="fas fa-key"></i> Access</button>
-                                <button type="button" class="btn btn-secondary btn-small" data-action="remove" data-id="${m.id}" style="color:#dc2626;border-color:rgba(239,68,68,0.3);margin-left:4px;"><i class="fas fa-trash"></i></button>
-                            `
-                    )}
+                    ${(!canManageTeam || isOwner)
+                        ? '<span style="color:var(--text-muted)">—</span>'
+                        : (
+                            status !== 'active'
+                                ? `<button type="button" class="btn btn-secondary btn-small" data-action="remove" data-id="${m.id}" style="color:#dc2626;border-color:rgba(239,68,68,0.3);"><i class="fas fa-trash"></i></button>`
+                                : `
+                                    <button type="button" class="btn btn-secondary btn-small" data-action="access" data-id="${m.id}"><i class="fas fa-key"></i> Access</button>
+                                    <button type="button" class="btn btn-secondary btn-small" data-action="remove" data-id="${m.id}" style="color:#dc2626;border-color:rgba(239,68,68,0.3);margin-left:4px;"><i class="fas fa-trash"></i></button>
+                                `
+                        )
+                    }
                 </td>
             </tr>
         `;
@@ -440,10 +465,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Invite modal
     const inviteModal = document.getElementById('inviteModal');
-    document.getElementById('inviteMemberBtn')?.addEventListener('click', () => inviteModal?.classList.add('active'));
+    document.getElementById('inviteMemberBtn')?.addEventListener('click', () => {
+        if (!(currentRole === 'owner' || currentRole === 'admin')) {
+            alert('Only Owner/Admin can invite team members.');
+            return;
+        }
+        inviteModal?.classList.add('active');
+    });
     document.getElementById('inviteModalClose')?.addEventListener('click', () => inviteModal?.classList.remove('active'));
     document.getElementById('inviteModalCancel')?.addEventListener('click', () => inviteModal?.classList.remove('active'));
     document.getElementById('inviteModalSubmit')?.addEventListener('click', async () => {
+        if (!(currentRole === 'owner' || currentRole === 'admin')) {
+            alert('Only Owner/Admin can invite team members.');
+            return;
+        }
         const email = document.getElementById('inviteEmail')?.value?.trim();
         const role = document.getElementById('inviteRole')?.value;
         if (!email) { alert('Email is required.'); return; }
@@ -471,6 +506,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('teamTableBody')?.addEventListener('click', async (e) => {
         const btn = e.target?.closest('button[data-action]');
         if (!btn) return;
+
+        if (!(currentRole === 'owner' || currentRole === 'admin')) {
+            return;
+        }
         const action = btn.dataset.action;
         const id = btn.dataset.id;
         if (action === 'access') {
@@ -482,6 +521,49 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!result?.success) { alert(result?.error || 'Failed to remove.'); return; }
             await loadTeam();
         }
+    });
+
+    document.getElementById('teamTableBody')?.addEventListener('change', async (e) => {
+        const sel = e.target?.closest('select[data-action="set-role"]');
+        if (!sel) return;
+
+        if (!(currentRole === 'owner' || currentRole === 'admin')) {
+            await loadTeam();
+            return;
+        }
+
+        const id = sel.dataset.id;
+        const status = sel.dataset.status;
+        const role = sel.value;
+
+        sel.disabled = true;
+        try {
+            if (status === 'pending') {
+                if (!window.db?.teamMembers?.updateInviteRole) {
+                    alert('Invite role update is not available.');
+                } else {
+                    const result = await window.db.teamMembers.updateInviteRole(id, role);
+                    if (!result?.success) {
+                        alert(result?.error || 'Failed to update role.');
+                    }
+                }
+            } else {
+                if (!window.db?.teamMembers?.updateRole) {
+                    alert('Role update is not available.');
+                } else {
+                    const result = await window.db.teamMembers.updateRole(id, role);
+                    if (!result?.success) {
+                        alert(result?.error || 'Failed to update role.');
+                    }
+                }
+            }
+        } catch (err) {
+            alert(err?.message || 'Failed to update role.');
+        } finally {
+            sel.disabled = false;
+        }
+
+        await loadTeam();
     });
 
     // Access modal

@@ -1374,7 +1374,46 @@ var db = {
             }
 
             const row = Array.isArray(data) ? data[0] : data;
+
+            try {
+                const token = row?.token;
+                if (token && supabaseClient?.functions?.invoke) {
+                    const link = `${window.location.origin}/spendnote-signup.html?inviteToken=${encodeURIComponent(token)}`;
+                    await supabaseClient.functions.invoke('send-invite-email', {
+                        body: {
+                            invitedEmail: email,
+                            inviteLink: link,
+                            role: row?.role || role || 'user',
+                            inviteToken: token
+                        }
+                    });
+                }
+            } catch (_) {
+
+            }
+
             return { success: true, data: row };
+        },
+
+        async updateInviteRole(inviteId, role) {
+            const ctx = await getMyOrgContext();
+            if (!ctx?.orgId) return { success: false, error: 'No org' };
+
+            const nextRole = String(role || '').toLowerCase() === 'admin' ? 'admin' : 'user';
+            const { data, error } = await supabaseClient
+                .from('invites')
+                .update({ role: nextRole })
+                .eq('org_id', ctx.orgId)
+                .eq('id', inviteId)
+                .select('id,role,status,invited_email')
+                .single();
+
+            if (error) {
+                console.error('Error updating invite role:', error);
+                return { success: false, error: error.message };
+            }
+
+            return { success: true, data };
         },
 
         async updateRole(memberId, role) {
