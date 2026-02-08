@@ -1016,7 +1016,7 @@
                     const display = String(displayId || '').trim();
                     const useDisplay = display && display !== '—';
                     const idParam = useDisplay ? display : contactUuid;
-                    return `spendnote-contact-detail.html?id=${encodeURIComponent(idParam)}`;
+                    return `spendnote-contact-detail.html?contactId=${encodeURIComponent(idParam)}`;
                 })();
 
                 const tr = document.createElement('tr');

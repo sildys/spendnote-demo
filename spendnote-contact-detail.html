@@ -966,7 +966,7 @@
                             alert(res?.error || 'Failed to create contact.');
                             return;
                         }
-                        window.location.href = `spendnote-contact-detail.html?id=${encodeURIComponent(String(res.data.id))}`;
+                        window.location.href = `spendnote-contact-detail.html?contactId=${encodeURIComponent(String(res.data.id))}`;
                         return;
                     }
 
