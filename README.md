@@ -24,7 +24,14 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - Modal: reduced first-open layout shift/flicker via scrollbar compensation.
 - Row open UX: transaction tables require 2 clicks to open detail (with an armed-row state) to prevent accidental navigation.
 
-## Permissions model (planned / decided)
+- Supabase permissions model implemented:
+  - Org/team model: `orgs` + `org_memberships` (roles: `owner`/`admin`/`user`).
+  - Cash box access: `cash_box_memberships` (enforced by RLS).
+  - Contacts: org-scoped (shared across the org).
+  - Invites: token/link flow via `invites` + RPCs; frontend accepts `inviteToken` on login/signup.
+  - Frontend data layer removed client-side `user_id` filters and relies on RLS.
+
+## Permissions model (implemented)
 
 - Multi-location (e.g. multiple restaurants) is handled as **multiple orgs** (team accounts).
 - Contacts are **org-level** (shared across cash boxes in the org).
@@ -42,6 +49,11 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - Append-only (immutable) in v1
 - Notifications:
   - No extra notifications for access changes (users simply see access appear/disappear in UI).
+
+### Notes on RLS (important)
+
+- Membership-based policies must avoid policy recursion (e.g. `cash_boxes` <-> `cash_box_memberships`).
+- Where needed, policies use `SECURITY DEFINER` helper functions (with `row_security = off`) to avoid infinite recursion.
 
 ## What the app does (product)
 
@@ -550,7 +562,7 @@ To avoid a login redirect/flicker, the app uses a lightweight bootstrap mechanis
 ### RLS
 
 - RLS is enabled.
-- Policies typically enforce ownership via `auth.uid() = user_id`.
+- Policies enforce access via org + membership tables (not client-side filters).
 
 ### Stable display IDs
 

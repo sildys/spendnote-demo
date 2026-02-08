@@ -195,6 +195,31 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Transactions: Transaction Detail accepts `SNx-yyy` and resolves to UUID.
   - Legacy `CB-###` prefix support removed.
 
+- **Permissions / org model (Supabase)** ✅
+  - Tables: `orgs`, `org_memberships`, `cash_box_memberships`, `invites`, `audit_log`.
+  - Roles: `owner` / `admin` / `user`.
+  - Cash box access is enforced via `cash_box_memberships` (admins default to all cash boxes via auto-memberships).
+  - Contacts are org-scoped (shared across cash boxes).
+  - Invite flow:
+    - Create invite via RPC `spendnote_create_invite`.
+    - Accept invite via RPC `spendnote_accept_invite`.
+    - Frontend accepts `inviteToken` on login/signup and calls accept RPC.
+    - User Settings shows pending invites + provides an invite link to copy.
+
+- **Frontend data layer migration** ✅
+  - `assets/js/supabase-config.js` updated to rely on RLS (removed client-side `user_id` filtering).
+  - `teamMembers` wrapper now reads `org_memberships` + `invites`.
+  - `cashBoxAccess` wrapper now reads/writes `cash_box_memberships`.
+  - Cache-busting bumped across app pages.
+
+- **RLS recursion hotfix (critical)** ✅
+  - Resolved `infinite recursion detected in policy` errors for:
+    - `cash_box_memberships`
+    - `org_memberships`
+  - Fix approach:
+    - Drop recursive policies.
+    - Recreate policies using `SECURITY DEFINER` helper functions with `row_security = off` to avoid policy loops.
+
 ## Key decisions / invariants
 - **“Unsaved contact” indicator**: keep it minimal in Transaction History.
   - If there is no saved contact/sequence, show **`—`** (no extra `CONT-*` placeholder marker).
