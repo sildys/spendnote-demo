@@ -1386,20 +1386,36 @@ var db = {
                     const accessToken = sessionRes?.data?.session?.access_token;
                     if (!accessToken) throw new Error('Not authenticated');
 
-                    const resp = await fetch(`${SUPABASE_URL}/functions/v1/send-invite-email`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${accessToken}`,
-                            'apikey': SUPABASE_ANON_KEY
-                        },
-                        body: JSON.stringify({
-                            invitedEmail: email,
-                            inviteLink: link,
-                            role: row?.role || role || 'user',
-                            inviteToken: token
-                        })
-                    });
+                    const doRequest = async (jwt) => {
+                        return await fetch(`${SUPABASE_URL}/functions/v1/send-invite-email`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${jwt}`,
+                                'apikey': SUPABASE_ANON_KEY
+                            },
+                            body: JSON.stringify({
+                                invitedEmail: email,
+                                inviteLink: link,
+                                role: row?.role || role || 'user',
+                                inviteToken: token
+                            })
+                        });
+                    };
+
+                    let resp = await doRequest(accessToken);
+
+                    if (resp.status === 401) {
+                        try {
+                            const refreshRes = await supabaseClient.auth.refreshSession();
+                            const nextToken = refreshRes?.data?.session?.access_token;
+                            if (nextToken) {
+                                resp = await doRequest(nextToken);
+                            }
+                        } catch (_) {
+                            // ignore
+                        }
+                    }
 
                     const text = await resp.text();
                     let payload = null;
