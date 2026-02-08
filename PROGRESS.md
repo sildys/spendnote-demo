@@ -14,6 +14,9 @@ If a chat thread freezes / context is lost: in the new thread say:
 
 ## Launch roadmap (ordered checklist)
 
+- [ ] **DEC-L1** Decide onboarding structure:
+  - Signup success: in-page vs new `spendnote-welcome.html`
+  - Next steps: success only vs success + dismissable dashboard panel
 - [ ] **L1** Onboarding UI: registration success state + post-login next steps (Cash Box → Transaction → Receipt), invite explanation, role-based messaging
 - [ ] **L2** Email pack (4 only): define copy + triggers + recipients (Welcome/Account created; Email confirmation; You’ve been invited; Invite accepted/user activated → admin)
 - [ ] **L3** Email delivery implementation: Resend + Edge Functions/hooks + templates
@@ -25,6 +28,19 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **S3** Stripe integration: checkout, customer portal, webhooks, live mode rollout + enforcement activation
 - [ ] **O1** Google OAuth (later): Supabase OAuth + account linking rules + UX
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
+
+## Weekly cadence (time budget)
+
+- **Mon–Thu:** evenings only (2–3 hours when possible; not every day)
+- **Fri–Sun:** long-form sprint blocks (as much as sustainable)
+
+## 5-week launch schedule (milestones)
+
+- **Week 1:** L1 + L2, start L3 (Resend + skeleton sending)
+- **Week 2:** finish L3, L4, L5
+- **Week 3:** S1, S2, Mobile sprint #1 (Create Transaction + Receipt mobile-usable)
+- **Week 4:** Mobile sprint #2 (History + Contacts + filters), stabilization
+- **Week 5:** Stripe integration (S3) + stabilization + polish (P3-1)
 
 ## Current state (last updated: 2026-02-08 06:00)
 - **Dashboard** ✅
