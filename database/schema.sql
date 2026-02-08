@@ -4,7 +4,15 @@
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto" WITH SCHEMA extensions;
+
+CREATE OR REPLACE FUNCTION public.gen_random_bytes(integer)
+RETURNS bytea
+LANGUAGE sql
+IMMUTABLE
+AS $$
+  SELECT extensions.gen_random_bytes($1);
+$$;
 
 -- =====================================================
 -- USERS TABLE (extends Supabase Auth)
