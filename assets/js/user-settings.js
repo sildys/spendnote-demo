@@ -490,6 +490,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadTeam();
 
         const token = result?.data?.token;
+        const emailSent = Boolean(result?.emailSent);
+
+        if (emailSent) {
+            alert('Invitation sent.');
+            return;
+        }
+
         if (token) {
             const link = `${window.location.origin}/spendnote-signup.html?inviteToken=${encodeURIComponent(token)}`;
             try {
@@ -497,9 +504,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             } catch (_) {
                 alert(link);
             }
-        } else {
-            alert('Invitation sent.');
+            return;
         }
+
+        alert(result?.emailError || 'Invitation sent.');
     });
 
     // Team table actions

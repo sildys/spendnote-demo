@@ -1375,11 +1375,14 @@ var db = {
 
             const row = Array.isArray(data) ? data[0] : data;
 
+            let emailSent = false;
+            let emailError = null;
+
             try {
                 const token = row?.token;
                 if (token && supabaseClient?.functions?.invoke) {
                     const link = `${window.location.origin}/spendnote-signup.html?inviteToken=${encodeURIComponent(token)}`;
-                    await supabaseClient.functions.invoke('send-invite-email', {
+                    const invokeRes = await supabaseClient.functions.invoke('send-invite-email', {
                         body: {
                             invitedEmail: email,
                             inviteLink: link,
@@ -1387,12 +1390,19 @@ var db = {
                             inviteToken: token
                         }
                     });
+
+                    if (invokeRes?.error) {
+                        emailSent = false;
+                        emailError = invokeRes.error?.message || invokeRes.error;
+                    } else {
+                        emailSent = true;
+                    }
                 }
             } catch (_) {
-
+                emailSent = false;
             }
 
-            return { success: true, data: row };
+            return { success: true, data: row, emailSent, emailError };
         },
 
         async updateInviteRole(inviteId, role) {
