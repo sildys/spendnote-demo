@@ -137,19 +137,13 @@ const computeAndApplyRole = async () => {
         const user = await window.auth?.getCurrentUser?.();
         if (!user) return;
 
-        // Default: owner (solo account)
         let role = 'owner';
-
-        // If teamMembers are available and user is listed as member, downgrade to admin/user
-        const asMember = (Array.isArray(teamMembers) ? teamMembers : []).find((tm) => {
-            const memberId = String(tm?.member_id || tm?.member?.id || '').trim();
-            const ownerId = String(tm?.owner_id || '').trim();
-            return memberId === String(user.id) && ownerId && ownerId !== String(user.id);
-        });
-
-        if (asMember) {
-            const tmRole = String(asMember?.role || 'member').toLowerCase();
-            role = tmRole === 'admin' ? 'admin' : 'user';
+        if (window.db?.orgMemberships?.getMyRole) {
+            const dbRole = await window.db.orgMemberships.getMyRole();
+            const normalized = String(dbRole || '').toLowerCase();
+            if (normalized === 'owner' || normalized === 'admin' || normalized === 'user') {
+                role = normalized;
+            }
         }
 
         currentRole = role;
@@ -181,13 +175,13 @@ const renderTeamTable = () => {
     tbody.innerHTML = teamMembers.map((m, idx) => {
         const name = m.member?.full_name || m.invited_email || '—';
         const email = m.member?.email || m.invited_email || '—';
-        const role = m.role || 'member';
+        const role = String(m.role || 'user').toLowerCase();
         const status = m.status || 'active';
-        const isOwner = m.is_owner || (idx === 0 && role === 'admin');
+        const isOwner = role === 'owner';
         const color = getMemberColor(idx);
 
-        const roleClass = isOwner ? 'owner' : role;
-        const roleLabel = isOwner ? '<i class="fas fa-crown"></i> Owner' : (role === 'admin' ? 'Admin' : 'Member');
+        const roleClass = isOwner ? 'owner' : (role === 'admin' ? 'admin' : 'member');
+        const roleLabel = isOwner ? '<i class="fas fa-crown"></i> Owner' : (role === 'admin' ? 'Admin' : 'User');
         const statusClass = status === 'active' ? 'active' : (status === 'pending' ? 'pending' : 'inactive');
 
         return `
@@ -204,10 +198,14 @@ const renderTeamTable = () => {
                 <td><span class="role-badge ${roleClass}">${roleLabel}</span></td>
                 <td><span class="status-badge ${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
                 <td>
-                    ${isOwner ? '<span style="color:var(--text-muted)">—</span>' : `
-                        <button type="button" class="btn btn-secondary btn-small" data-action="access" data-id="${m.id}"><i class="fas fa-key"></i> Access</button>
-                        <button type="button" class="btn btn-secondary btn-small" data-action="remove" data-id="${m.id}" style="color:#dc2626;border-color:rgba(239,68,68,0.3);margin-left:4px;"><i class="fas fa-trash"></i></button>
-                    `}
+                    ${isOwner ? '<span style="color:var(--text-muted)">—</span>' : (
+                        status !== 'active'
+                            ? `<button type="button" class="btn btn-secondary btn-small" data-action="remove" data-id="${m.id}" style="color:#dc2626;border-color:rgba(239,68,68,0.3);"><i class="fas fa-trash"></i></button>`
+                            : `
+                                <button type="button" class="btn btn-secondary btn-small" data-action="access" data-id="${m.id}"><i class="fas fa-key"></i> Access</button>
+                                <button type="button" class="btn btn-secondary btn-small" data-action="remove" data-id="${m.id}" style="color:#dc2626;border-color:rgba(239,68,68,0.3);margin-left:4px;"><i class="fas fa-trash"></i></button>
+                            `
+                    )}
                 </td>
             </tr>
         `;
@@ -245,6 +243,10 @@ const openAccessModal = async (memberId) => {
     // Get current access for this member
     let memberAccess = [];
     const userId = member.member_id || member.member?.id;
+    if (!userId) {
+        list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">Access can be set after the user accepts the invite.</div>';
+        return;
+    }
     if (userId && window.db?.cashBoxAccess?.getForUser) {
         memberAccess = await window.db.cashBoxAccess.getForUser(userId) || [];
     }
@@ -451,7 +453,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         inviteModal?.classList.remove('active');
         document.getElementById('inviteEmail').value = '';
         await loadTeam();
-        alert('Invitation sent.');
+
+        const token = result?.data?.token;
+        if (token) {
+            const link = `${window.location.origin}/spendnote-signup.html?inviteToken=${encodeURIComponent(token)}`;
+            try {
+                window.prompt('Copy invite link:', link);
+            } catch (_) {
+                alert(link);
+            }
+        } else {
+            alert('Invitation sent.');
+        }
     });
 
     // Team table actions

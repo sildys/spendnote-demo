@@ -355,9 +355,73 @@ try {
         auth.__userCache.user = session?.user || null;
         auth.__userCache.ts = Date.now();
         auth.__userCache.promise = null;
+
+        if (__orgContextCache) {
+            __orgContextCache.orgId = null;
+            __orgContextCache.ownerUserId = null;
+            __orgContextCache.ts = 0;
+            __orgContextCache.promise = null;
+        }
     });
 } catch (e) {
 
+}
+
+var __orgContextCache = { orgId: null, ownerUserId: null, ts: 0, promise: null };
+
+async function getMyOrgContext() {
+    const user = await auth.getCurrentUser();
+    if (!user) return { orgId: null, ownerUserId: null };
+
+    const now = Date.now();
+    if (__orgContextCache.orgId && (now - (__orgContextCache.ts || 0)) < 30_000) {
+        return { orgId: __orgContextCache.orgId, ownerUserId: __orgContextCache.ownerUserId };
+    }
+
+    if (__orgContextCache.promise) {
+        return await __orgContextCache.promise;
+    }
+
+    __orgContextCache.promise = (async () => {
+        const { data: memberships, error: memError } = await supabaseClient
+            .from('org_memberships')
+            .select('org_id,role,created_at')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: true });
+
+        if (memError) {
+            __orgContextCache.orgId = null;
+            __orgContextCache.ownerUserId = null;
+            __orgContextCache.ts = Date.now();
+            __orgContextCache.promise = null;
+            return { orgId: null, ownerUserId: null };
+        }
+
+        const list = Array.isArray(memberships) ? memberships : [];
+        const pick = (role) => list.find((m) => String(m?.role || '').toLowerCase() === role);
+        const chosen = pick('owner') || pick('admin') || list[0] || null;
+        const orgId = chosen?.org_id || null;
+        let ownerUserId = null;
+
+        if (orgId) {
+            const { data: orgRow, error: orgError } = await supabaseClient
+                .from('orgs')
+                .select('owner_user_id')
+                .eq('id', orgId)
+                .single();
+            if (!orgError) {
+                ownerUserId = orgRow?.owner_user_id || null;
+            }
+        }
+
+        __orgContextCache.orgId = orgId;
+        __orgContextCache.ownerUserId = ownerUserId;
+        __orgContextCache.ts = Date.now();
+        __orgContextCache.promise = null;
+        return { orgId, ownerUserId };
+    })();
+
+    return await __orgContextCache.promise;
 }
 
 // Database helper functions
@@ -379,7 +443,6 @@ var db = {
             const primaryQuery = await supabaseClient
                 .from('cash_boxes')
                 .select(select)
-                .eq('user_id', user.id)
                 .order('sort_order', { ascending: true, nullsFirst: false })
                 .order('created_at', { ascending: true });
 
@@ -392,7 +455,6 @@ var db = {
             const fallbackQuery = await supabaseClient
                 .from('cash_boxes')
                 .select(select)
-                .eq('user_id', user.id)
                 .order('created_at', { ascending: true });
 
             if (fallbackQuery.error) {
@@ -413,7 +475,6 @@ var db = {
             const { data, error } = await supabaseClient
                 .from('cash_boxes')
                 .select('sort_order')
-                .eq('user_id', user.id)
                 .order('sort_order', { ascending: false, nullsFirst: false })
                 .limit(1);
 
@@ -452,12 +513,18 @@ var db = {
                 return null;
             }
 
-            const { data, error } = await supabaseClient
+            const ctx = await getMyOrgContext();
+
+            let query = supabaseClient
                 .from('cash_boxes')
                 .select('*')
-                .eq('user_id', user.id)
-                .eq('sequence_number', seq)
-                .single();
+                .eq('sequence_number', seq);
+
+            if (ctx?.orgId) {
+                query = query.eq('org_id', ctx.orgId);
+            }
+
+            const { data, error } = await query.single();
 
             if (error) {
                 return null;
@@ -468,16 +535,18 @@ var db = {
 
         async create(cashBox) {
             if (window.SpendNoteDebug) console.log('Creating cash box via RPC:', cashBox);
-            
+
             // Use RPC function to bypass schema cache issue
+            const ctx = await getMyOrgContext();
             const { data, error } = await supabaseClient.rpc('create_cash_box', {
                 p_name: cashBox.name,
-                p_user_id: cashBox.user_id,
+                p_user_id: ctx?.ownerUserId || cashBox.user_id,
                 p_currency: cashBox.currency || 'USD',
                 p_color: cashBox.color || '#059669',
                 p_icon: cashBox.icon || 'building',
                 p_current_balance: cashBox.current_balance || 0
             });
+
             
             if (window.SpendNoteDebug) console.log('RPC result:', { data, error });
             
@@ -514,7 +583,6 @@ var db = {
                 const txDelete = await supabaseClient
                     .from('transactions')
                     .delete()
-                    .eq('user_id', user.id)
                     .eq('cash_box_id', id);
 
                 if (txDelete.error) {
@@ -523,14 +591,25 @@ var db = {
                 }
 
                 // 2) Delete related access rows
-                const accessDelete = await supabaseClient
-                    .from('cash_box_access')
+                const membershipDelete = await supabaseClient
+                    .from('cash_box_memberships')
                     .delete()
                     .eq('cash_box_id', id);
 
-                if (accessDelete.error) {
-                    console.error('Error deleting cash box access:', accessDelete.error);
-                    return { success: false, error: accessDelete.error.message };
+                if (membershipDelete.error) {
+                    console.error('Error deleting cash box memberships:', membershipDelete.error);
+                    return { success: false, error: membershipDelete.error.message };
+                }
+
+                try {
+                    const legacyDelete = await supabaseClient
+                        .from('cash_box_access')
+                        .delete()
+                        .eq('cash_box_id', id);
+
+                    void legacyDelete;
+                } catch (_) {
+
                 }
 
                 // 3) Delete the cash box itself
@@ -564,7 +643,6 @@ var db = {
             const { data, error } = await supabaseClient
                 .from('contacts')
                 .select('*')
-                .eq('user_id', user.id)
                 .order('name', { ascending: true });
             if (error) {
                 console.error('Error fetching contacts:', error);
@@ -598,12 +676,18 @@ var db = {
                 return null;
             }
 
-            const { data, error } = await supabaseClient
+            const ctx = await getMyOrgContext();
+
+            let query = supabaseClient
                 .from('contacts')
                 .select('*')
-                .eq('user_id', user.id)
-                .eq('sequence_number', seq)
-                .single();
+                .eq('sequence_number', seq);
+
+            if (ctx?.orgId) {
+                query = query.eq('org_id', ctx.orgId);
+            }
+
+            const { data, error } = await query.single();
 
             if (error) {
                 return null;
@@ -613,9 +697,21 @@ var db = {
         },
 
         async create(contact) {
+            let payload = contact ? { ...contact } : {};
+            try {
+                const user = await auth.getCurrentUser();
+                if (user) {
+                    const ctx = await getMyOrgContext();
+                    if (ctx?.orgId && !payload.org_id) payload.org_id = ctx.orgId;
+                    if (!payload.user_id) payload.user_id = ctx?.ownerUserId || user.id;
+                }
+            } catch (_) {
+                // ignore
+            }
+
             const { data, error } = await supabaseClient
                 .from('contacts')
-                .insert([contact])
+                .insert([payload])
                 .select()
                 .single();
             if (error) {
@@ -631,6 +727,8 @@ var db = {
                 return { success: false, error: 'Not authenticated' };
             }
 
+            const ctx = await getMyOrgContext();
+
             const name = (contact?.name || '').trim();
             if (!name) {
                 return { success: false, error: 'Contact name is required' };
@@ -641,8 +739,11 @@ var db = {
             let lookup = supabaseClient
                 .from('contacts')
                 .select('*')
-                .eq('user_id', user.id)
                 .eq('name', name);
+
+            if (ctx?.orgId) {
+                lookup = lookup.eq('org_id', ctx.orgId);
+            }
 
             if (email) {
                 lookup = lookup.eq('email', email);
@@ -657,7 +758,8 @@ var db = {
             }
 
             const createPayload = {
-                user_id: user.id,
+                user_id: ctx?.ownerUserId || user.id,
+                org_id: ctx?.orgId || null,
                 name,
                 email,
                 phone: (contact?.phone || '').trim() || null,
@@ -723,7 +825,6 @@ var db = {
                 let query = supabaseClient
                     .from('transactions')
                     .select(select)
-                    .eq('user_id', user.id)
                     .order('created_at', { ascending: false })
                     .order('transaction_date', { ascending: false });
 
@@ -790,7 +891,7 @@ var db = {
                 let query = supabaseClient
                     .from('transactions')
                     .select(sel, { count: 'exact' })
-                    .eq('user_id', user.id);
+                    ;
 
                 if (!options.includeSystem) {
                     query = query.or('is_system.is.null,is_system.eq.false');
@@ -905,37 +1006,9 @@ var db = {
                 return { count: 0, totalIn: null, totalOut: null };
             }
 
-            try {
-                const { data: rpcData, error: rpcError } = await supabaseClient.rpc('spendnote_transactions_stats', {
-                    p_user_id: user.id,
-                    p_cash_box_ids: (options.cashBoxIds && Array.isArray(options.cashBoxIds) && options.cashBoxIds.length) ? options.cashBoxIds : null,
-                    p_type: options.type || null,
-                    p_created_by_user_id: options.createdByUserId || null,
-                    p_start_date: options.startDate || null,
-                    p_end_date: options.endDate || null,
-                    p_amount_min: (options.amountMin !== undefined && options.amountMin !== null && options.amountMin !== '') ? options.amountMin : null,
-                    p_amount_max: (options.amountMax !== undefined && options.amountMax !== null && options.amountMax !== '') ? options.amountMax : null,
-                    p_tx_id_query: options.txIdQuery || null,
-                    p_contact_query: options.contactQuery || null,
-                    p_status: options.status || null
-                });
-
-                if (!rpcError && rpcData) {
-                    const row = Array.isArray(rpcData) ? rpcData[0] : rpcData;
-                    return {
-                        count: Number(row?.count) || 0,
-                        totalIn: Number(row?.total_in ?? row?.totalIn) || 0,
-                        totalOut: Number(row?.total_out ?? row?.totalOut) || 0
-                    };
-                }
-            } catch (_) {
-                // ignore rpc failures
-            }
-
             let query = supabaseClient
                 .from('transactions')
                 .select('id,type,amount,status,is_system', { count: 'exact' })
-                .eq('user_id', user.id)
                 .or('is_system.is.null,is_system.eq.false');
 
             // Fallback stats should ignore voided transactions (the reversal handles balance)
@@ -1202,67 +1275,162 @@ var db = {
         }
     },
 
+    orgMemberships: {
+        async getMyOrgId() {
+            const ctx = await getMyOrgContext();
+            return ctx?.orgId || null;
+        },
+
+        async getMyRole() {
+            const user = await auth.getCurrentUser();
+            if (!user) return null;
+            const ctx = await getMyOrgContext();
+            if (!ctx?.orgId) return null;
+
+            const { data, error } = await supabaseClient
+                .from('org_memberships')
+                .select('role')
+                .eq('org_id', ctx.orgId)
+                .eq('user_id', user.id)
+                .single();
+            if (error) return null;
+            return data?.role || null;
+        },
+
+        async getOrgOwnerUserId() {
+            const ctx = await getMyOrgContext();
+            return ctx?.ownerUserId || null;
+        }
+    },
+
     // Team Members (Pro feature)
     teamMembers: {
         async getAll() {
-            const { data, error } = await supabaseClient
-                .from('team_members')
-                .select(`
-                    *,
-                    member:profiles!member_id(id, full_name, email)
-                `)
-                .order('created_at', { ascending: false });
-            if (error) {
-                console.error('Error fetching team members:', error);
+            const ctx = await getMyOrgContext();
+            const orgId = ctx?.orgId;
+            if (!orgId) return [];
+
+            const [membersRes, invitesRes] = await Promise.all([
+                supabaseClient
+                    .from('org_memberships')
+                    .select('org_id,user_id,role,created_at,user:profiles!user_id(id, full_name, email)')
+                    .eq('org_id', orgId)
+                    .order('created_at', { ascending: true }),
+                supabaseClient
+                    .from('invites')
+                    .select('id,invited_email,role,status,created_at')
+                    .eq('org_id', orgId)
+                    .eq('status', 'pending')
+                    .order('created_at', { ascending: false })
+            ]);
+
+            if (membersRes.error) {
+                console.error('Error fetching org members:', membersRes.error);
                 return [];
             }
-            return data;
+
+            const members = (membersRes.data || []).map((m) => {
+                return {
+                    id: m?.user_id || '',
+                    org_id: m?.org_id || orgId,
+                    member_id: m?.user_id || '',
+                    member: m?.user || null,
+                    role: m?.role || 'user',
+                    status: 'active'
+                };
+            });
+
+            const invites = invitesRes?.error
+                ? []
+                : (invitesRes.data || []).map((i) => {
+                    return {
+                        id: i?.id || '',
+                        org_id: orgId,
+                        invited_email: i?.invited_email || null,
+                        role: i?.role || 'user',
+                        status: i?.status || 'pending',
+                        member: null,
+                        member_id: null
+                    };
+                });
+
+            return [...members, ...invites];
         },
 
         async invite(email, role) {
-            const user = await auth.getCurrentUser();
-            if (!user) return { success: false, error: 'Not authenticated' };
+            const ctx = await getMyOrgContext();
+            if (!ctx?.orgId) return { success: false, error: 'No org' };
 
-            const { data, error } = await supabaseClient
-                .from('team_members')
-                .insert([{
-                    owner_id: user.id,
-                    invited_email: email,
-                    role: role,
-                    status: 'pending'
-                }])
-                .select()
-                .single();
+            const { data, error } = await supabaseClient.rpc('spendnote_create_invite', {
+                p_org_id: ctx.orgId,
+                p_invited_email: email,
+                p_role: role || 'user',
+                p_expires_at: null
+            });
+
             if (error) {
-                console.error('Error inviting team member:', error);
+                console.error('Error creating invite:', error);
                 return { success: false, error: error.message };
             }
-            return { success: true, data };
+
+            const row = Array.isArray(data) ? data[0] : data;
+            return { success: true, data: row };
         },
 
         async updateRole(memberId, role) {
+            const ctx = await getMyOrgContext();
+            if (!ctx?.orgId) return { success: false, error: 'No org' };
+
+            const nextRole = String(role || '').toLowerCase() === 'admin' ? 'admin' : 'user';
             const { data, error } = await supabaseClient
-                .from('team_members')
-                .update({ role })
-                .eq('id', memberId)
-                .select()
+                .from('org_memberships')
+                .update({ role: nextRole })
+                .eq('org_id', ctx.orgId)
+                .eq('user_id', memberId)
+                .select('org_id,user_id,role')
                 .single();
+
             if (error) {
-                console.error('Error updating team member role:', error);
+                console.error('Error updating org member role:', error);
                 return { success: false, error: error.message };
             }
+
             return { success: true, data };
         },
 
         async remove(memberId) {
-            const { error } = await supabaseClient
-                .from('team_members')
+            const ctx = await getMyOrgContext();
+            if (!ctx?.orgId) return { success: false, error: 'No org' };
+
+            const membershipDelete = await supabaseClient
+                .from('org_memberships')
                 .delete()
-                .eq('id', memberId);
-            if (error) {
-                console.error('Error removing team member:', error);
-                return { success: false, error: error.message };
+                .eq('org_id', ctx.orgId)
+                .eq('user_id', memberId)
+                .select('user_id');
+
+            if (membershipDelete.error) {
+                console.error('Error removing org membership:', membershipDelete.error);
+                return { success: false, error: membershipDelete.error.message };
             }
+
+            if (Array.isArray(membershipDelete.data) && membershipDelete.data.length) {
+                return { success: true };
+            }
+
+            const inviteUpdate = await supabaseClient
+                .from('invites')
+                .update({ status: 'revoked' })
+                .eq('org_id', ctx.orgId)
+                .eq('id', memberId)
+                .select('id')
+                .single();
+
+            if (inviteUpdate.error) {
+                console.error('Error revoking invite:', inviteUpdate.error);
+                return { success: false, error: inviteUpdate.error.message };
+            }
+
             return { success: true };
         }
     },
@@ -1274,11 +1442,11 @@ var db = {
             if (!user) return { success: false, error: 'Not authenticated' };
 
             const { data, error } = await supabaseClient
-                .from('cash_box_access')
+                .from('cash_box_memberships')
                 .insert([{
                     cash_box_id: cashBoxId,
                     user_id: userId,
-                    granted_by: user.id
+                    role_in_box: 'user'
                 }])
                 .select()
                 .single();
@@ -1291,7 +1459,7 @@ var db = {
 
         async revoke(cashBoxId, userId) {
             const { error } = await supabaseClient
-                .from('cash_box_access')
+                .from('cash_box_memberships')
                 .delete()
                 .eq('cash_box_id', cashBoxId)
                 .eq('user_id', userId);
@@ -1304,7 +1472,7 @@ var db = {
 
         async getForCashBox(cashBoxId) {
             const { data, error } = await supabaseClient
-                .from('cash_box_access')
+                .from('cash_box_memberships')
                 .select(`
                     *,
                     user:profiles!user_id(id, full_name, email)
@@ -1319,7 +1487,7 @@ var db = {
 
         async getForUser(userId) {
             const { data, error } = await supabaseClient
-                .from('cash_box_access')
+                .from('cash_box_memberships')
                 .select(`
                     *,
                     cash_box:cash_boxes!cash_box_id(id, name, color)

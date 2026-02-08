@@ -391,13 +391,22 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260208-0318"></script>
+    <script src="assets/js/supabase-config.js?v=20260208-1529"></script>
     <script>
         // Check if already logged in
         (async () => {
             try {
                 const user = await window.auth.getCurrentUser();
                 if (user) {
+                    try {
+                        const sp = new URLSearchParams(window.location.search);
+                        const inviteToken = sp.get('inviteToken');
+                        if (inviteToken && window.supabaseClient?.rpc) {
+                            await window.supabaseClient.rpc('spendnote_accept_invite', { p_token: inviteToken });
+                        }
+                    } catch (_) {
+
+                    }
                     window.location.href = 'dashboard.html';
                 }
             } catch (_) {
@@ -431,6 +440,16 @@
                 const result = await auth.signIn(email, password);
                 
                 if (result.success) {
+                    try {
+                        const sp = new URLSearchParams(window.location.search);
+                        const inviteToken = sp.get('inviteToken');
+                        if (inviteToken && window.supabaseClient?.rpc) {
+                            await window.supabaseClient.rpc('spendnote_accept_invite', { p_token: inviteToken });
+                        }
+                    } catch (_) {
+
+                    }
+
                     // Success
                     successMessage.classList.add('show');
                     successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Logged in! Redirecting to dashboard...';
