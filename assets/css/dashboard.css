@@ -2269,14 +2269,19 @@ tr:hover [data-category-tag] {
      overflow: hidden;
      padding-right: var(--spendnote-scrollbar-comp, 0px);
  }
-
- body.modal-open > *:not(#createTransactionModal) {
+ 
+ body.modal-open > *:not(#createTransactionModal):not(.sn-dialog-overlay) {
      pointer-events: none;
      user-select: none;
  }
-
+ 
  body.modal-open #createTransactionModal {
      pointer-events: auto;
+ }
+
+ body.modal-open > .sn-dialog-overlay {
+     pointer-events: auto;
+     user-select: auto;
  }
 
  .modal-overlay.active {
