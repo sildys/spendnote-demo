@@ -529,6 +529,24 @@ To avoid a login redirect/flicker, the app uses a lightweight bootstrap mechanis
 - Browser code must only use the **anon/public key**.
 - Never put a Supabase **service role key** into this repo.
 
+### Edge Functions deployment (GitHub Actions)
+
+This repo deploys Supabase Edge Functions via GitHub Actions on push to `main` (only when `supabase/functions/**` changes).
+
+- Workflow: `.github/workflows/deploy-supabase-functions.yml`
+- Current functions:
+  - `send-invite-email` (team invite email delivery)
+
+Required GitHub Secrets:
+
+- `SUPABASE_ACCESS_TOKEN` (Supabase personal access token)
+- `SUPABASE_PROJECT_REF` (Supabase project ref)
+- `SUPABASE_SERVICE_ROLE_KEY` (used only inside the Edge Function runtime)
+- `RESEND_API_KEY`
+- `SPENDNOTE_EMAIL_FROM` (e.g. `SpendNote <no-reply@yourdomain.com>`)
+- `SPENDNOTE_APP_URL` (public app base URL used in invite links)
+- `SPENDNOTE_INVITE_SUBJECT`
+
 ## Code structure (important entry points)
 
 ### Shared CSS

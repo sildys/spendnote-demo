@@ -220,6 +220,19 @@ If a chat thread freezes / context is lost: in the new thread say:
     - Drop recursive policies.
     - Recreate policies using `SECURITY DEFINER` helper functions with `row_security = off` to avoid policy loops.
 
+- **Invite email delivery (Edge Function)** 🟡
+  - Edge Function scaffold added: `send-invite-email`.
+  - Deployment is handled via GitHub Actions:
+    - Workflow: `.github/workflows/deploy-supabase-functions.yml`
+  - Required GitHub Secrets:
+    - `SUPABASE_ACCESS_TOKEN`
+    - `SUPABASE_PROJECT_REF`
+    - `SUPABASE_SERVICE_ROLE_KEY`
+    - `RESEND_API_KEY`
+    - `SPENDNOTE_EMAIL_FROM`
+    - `SPENDNOTE_APP_URL`
+    - `SPENDNOTE_INVITE_SUBJECT`
+
 ## Key decisions / invariants
 - **“Unsaved contact” indicator**: keep it minimal in Transaction History.
   - If there is no saved contact/sequence, show **`—`** (no extra `CONT-*` placeholder marker).
