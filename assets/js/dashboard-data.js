@@ -60,9 +60,6 @@ function createDashboardTransactionsController(ctx) {
 
     const tableWrapper = document.getElementById('tableWrapper');
     const headerRow = document.getElementById('transactionTableHeader');
-    const perPageSelect = document.getElementById('dashboardTxPerPageSelect');
-    const paginationText = document.getElementById('dashboardTxPaginationText');
-    const paginationControls = document.getElementById('dashboardTxPaginationControls');
 
     const { hexToRgb, formatCurrency, getInitials, normalizeHexColor } = getSpendNoteHelpers();
 
@@ -70,21 +67,8 @@ function createDashboardTransactionsController(ctx) {
 
     const state = {
         sort: { key: 'date', direction: 'desc' },
-        pagination: { page: 1, perPage: 5 },
-        count: 0
+        latestRows: []
     };
-
-    try {
-        const stored = localStorage.getItem('spendnote.dashboard.tx.perPage.v1');
-        const n = Number(stored);
-        if (Number.isFinite(n) && n > 0) state.pagination.perPage = n;
-    } catch (_) {
-        // ignore
-    }
-
-    if (perPageSelect) {
-        perPageSelect.value = String(state.pagination.perPage);
-    }
 
     const getCreatedByAvatarUrl = (createdByName) => {
         try {
@@ -123,74 +107,30 @@ function createDashboardTransactionsController(ctx) {
         tableWrapper.appendChild(row);
     };
 
-    const renderPagination = () => {
-        const totalCount = Number(state.count) || 0;
-        const perPage = Number(state.pagination.perPage) || 5;
-        const page = Number(state.pagination.page) || 1;
-        const from = totalCount === 0 ? 0 : (page - 1) * perPage + 1;
-        const to = Math.min(totalCount, page * perPage);
-        if (paginationText) {
-            paginationText.textContent = `Showing ${from}-${to} of ${totalCount}`;
-        }
-        if (!paginationControls) return;
-        paginationControls.innerHTML = '';
+    const sortRows = (rows, sort) => {
+        const list = Array.isArray(rows) ? [...rows] : [];
+        const dir = sort?.direction === 'asc' ? 1 : -1;
+        const key = String(sort?.key || 'date');
 
-        const totalPages = Math.max(1, Math.ceil(totalCount / perPage));
-        const mkBtn = (label, nextPage, opts) => {
-            const btn = document.createElement('button');
-            btn.className = 'pagination-btn';
-            if (label === '<') {
-                btn.innerHTML = '<i class="fas fa-chevron-left"></i>';
-            } else if (label === '>') {
-                btn.innerHTML = '<i class="fas fa-chevron-right"></i>';
-            } else {
-                btn.textContent = label;
-            }
-            if (opts?.active) btn.classList.add('active');
-            if (opts?.disabled) btn.disabled = true;
-            btn.addEventListener('click', () => {
-                if (btn.disabled) return;
-                state.pagination.page = nextPage;
-                render();
-            });
-            return btn;
+        const getVal = (tx) => {
+            if (key === 'type') return String(tx?.type || '').toLowerCase();
+            if (key === 'date') return Date.parse(tx?.created_at || tx?.transaction_date || '') || 0;
+            if (key === 'amount') return Number(tx?.amount) || 0;
+            if (key === 'cash_box') return String(tx?.cash_box?.name || '').toLowerCase();
+            if (key === 'contact') return String(tx?.contact?.name || tx?.contact_name || '').toLowerCase();
+            if (key === 'created_by') return String(tx?.created_by_user_name || tx?.created_by || '').toLowerCase();
+            return '';
         };
 
-        paginationControls.appendChild(mkBtn('<', Math.max(1, page - 1), { disabled: page <= 1 }));
+        list.sort((a, b) => {
+            const av = getVal(a);
+            const bv = getVal(b);
+            if (av < bv) return -1 * dir;
+            if (av > bv) return 1 * dir;
+            return String(a?.id || '').localeCompare(String(b?.id || '')) * dir;
+        });
 
-        const windowSize = 5;
-        const half = Math.floor(windowSize / 2);
-        let start = Math.max(1, page - half);
-        let end = Math.min(totalPages, start + windowSize - 1);
-        start = Math.max(1, end - windowSize + 1);
-
-        if (start > 1) {
-            paginationControls.appendChild(mkBtn('1', 1, { active: page === 1 }));
-            if (start > 2) {
-                const dots = document.createElement('button');
-                dots.className = 'pagination-btn';
-                dots.textContent = '...';
-                dots.disabled = true;
-                paginationControls.appendChild(dots);
-            }
-        }
-
-        for (let p = start; p <= end; p += 1) {
-            paginationControls.appendChild(mkBtn(String(p), p, { active: page === p }));
-        }
-
-        if (end < totalPages) {
-            if (end < totalPages - 1) {
-                const dots = document.createElement('button');
-                dots.className = 'pagination-btn';
-                dots.textContent = '...';
-                dots.disabled = true;
-                paginationControls.appendChild(dots);
-            }
-            paginationControls.appendChild(mkBtn(String(totalPages), totalPages, { active: page === totalPages }));
-        }
-
-        paginationControls.appendChild(mkBtn('>', Math.min(totalPages, page + 1), { disabled: page >= totalPages }));
+        return list;
     };
 
     const updateSortHeaderClasses = () => {
@@ -223,8 +163,9 @@ function createDashboardTransactionsController(ctx) {
                 }
 
                 updateSortHeaderClasses();
-                state.pagination.page = 1;
-                render();
+
+                // Sort only within the already-fetched latest 5 rows.
+                renderRows(sortRows(state.latestRows, state.sort));
             });
 
             headerRow.addEventListener('keydown', (e) => {
@@ -235,21 +176,6 @@ function createDashboardTransactionsController(ctx) {
                 if (!target) return;
                 e.preventDefault();
                 target.click();
-            });
-        }
-
-        if (perPageSelect && perPageSelect.dataset.dashboardPerPageBound !== '1') {
-            perPageSelect.dataset.dashboardPerPageBound = '1';
-            perPageSelect.addEventListener('change', () => {
-                const next = Number(perPageSelect.value) || 5;
-                state.pagination.perPage = next;
-                state.pagination.page = 1;
-                try {
-                    localStorage.setItem('spendnote.dashboard.tx.perPage.v1', String(next));
-                } catch (_) {
-                    // ignore
-                }
-                render();
             });
         }
 
@@ -337,11 +263,12 @@ function createDashboardTransactionsController(ctx) {
         ].join(', ');
 
         const baseOpts = {
-            page: state.pagination.page,
-            perPage: state.pagination.perPage,
+            page: 1,
+            perPage: 5,
             includeSystem: false,
-            sortKey: state.sort.key,
-            sortDir: state.sort.direction
+            // IMPORTANT: Always fetch the latest 5 by date/time (dashboard invariant)
+            sortKey: 'date',
+            sortDir: 'desc'
         };
 
         const first = await window.db.transactions.getPage({
@@ -463,14 +390,11 @@ function createDashboardTransactionsController(ctx) {
         const res = await fetchPage();
         if (res && res.error) {
             renderMessageRow(String(res.error || 'Failed to load transactions.'));
-            state.count = 0;
-            renderPagination();
             return;
         }
 
-        state.count = Number(res?.count) || 0;
-        renderRows(res?.data || []);
-        renderPagination();
+        state.latestRows = Array.isArray(res?.data) ? res.data : [];
+        renderRows(sortRows(state.latestRows, state.sort));
     }
 
     return {
