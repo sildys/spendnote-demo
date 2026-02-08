@@ -51,195 +51,194 @@ function getSpendNoteHelpers() {
     };
 }
 
+let dashboardLoadPromise = null;
+
 async function loadDashboardData() {
-    try {
-        const swiperWrapper = document.querySelector('.registers-swiper .swiper-wrapper');
-        if (!swiperWrapper) return;
+    if (dashboardLoadPromise) {
+        return await dashboardLoadPromise;
+    }
 
-        const debug = Boolean(window.SpendNoteDebug);
+    dashboardLoadPromise = (async () => {
+        try {
+            const swiperWrapper = document.querySelector('.registers-swiper .swiper-wrapper');
+            if (!swiperWrapper) return;
 
-        const { hexToRgb, getIconClass, formatCurrency } = getSpendNoteHelpers();
+            const debug = Boolean(window.SpendNoteDebug);
 
-        const cashBoxesPromise = db.cashBoxes.getAll({
-            select: 'id, name, color, currency, icon, current_balance, created_at, sort_order, sequence_number'
-        });
+            const { hexToRgb, getIconClass, formatCurrency } = getSpendNoteHelpers();
 
-        const transactionsPromise = db.transactions.getAll({ limit: 5, select: '*' });
+            const cashBoxesPromise = db.cashBoxes.getAll({
+                select: 'id, name, color, currency, icon, current_balance, created_at, sort_order, sequence_number'
+            });
 
-        const [cashBoxes, transactions] = await Promise.all([cashBoxesPromise, transactionsPromise]);
-        
-        if (cashBoxes && cashBoxes.length > 0) {
-            const savedActiveId = localStorage.getItem('activeCashBoxId');
-            const defaultActiveId = savedActiveId || cashBoxes[cashBoxes.length - 1]?.id;
+            const transactionsPromise = db.transactions.getAll({ limit: 5, select: '*' });
+
+            const [cashBoxes, transactions] = await Promise.all([cashBoxesPromise, transactionsPromise]);
             
-            // Remove loading indicator
-            const loadingSlide = swiperWrapper.querySelector('.loading-slide');
-            if (loadingSlide) loadingSlide.remove();
-            
-            // Remove only register-card slides, keep the add-cash-box-card slide
-            const allSlides = Array.from(swiperWrapper.querySelectorAll('.swiper-slide'));
-            const registerSlides = allSlides.filter(slide => slide.querySelector('.register-card'));
-            registerSlides.forEach(slide => slide.remove());
-            
-            // Generate HTML for all cash boxes
-            let allSlidesHTML = '';
-            cashBoxes.forEach((box, index) => {
-                const color = box.color || '#059669';
-                const rgb = hexToRgb(color);
-                const iconClass = getIconClass(box.icon);
-                const isActive = (defaultActiveId && box.id === defaultActiveId) ? 'active' : '';
-
-                const seq = Number(box.sequence_number);
-                const displayCode = Number.isFinite(seq) && seq > 0
-                    ? `SN-${String(seq).padStart(3, '0')}`
-                    : '—';
+            if (cashBoxes && cashBoxes.length > 0) {
+                const savedActiveId = localStorage.getItem('activeCashBoxId');
+                const defaultActiveId = savedActiveId || cashBoxes[cashBoxes.length - 1]?.id;
                 
-                // Format currency (locale + cash box currency)
-                const formattedBalance = formatCurrency(box.current_balance || 0, box.currency || 'USD');
+                // Remove loading indicator
+                const loadingSlide = swiperWrapper.querySelector('.loading-slide');
+                if (loadingSlide) loadingSlide.remove();
                 
-                // Create slide HTML
-                allSlidesHTML += `
-                    <div class="swiper-slide">
-                        <div class="register-card ${isActive}" 
-                             data-id="${box.id}" 
-                             data-name="${box.name}" 
-                             data-color="${color}" 
-                              data-rgb="${rgb}"
-                             data-display-code="${displayCode}"
-                             data-sequence-number="${Number.isFinite(seq) ? seq : ''}"
-                             style="--card-color: ${color}; --card-rgb: ${rgb};"
-                             role="button" 
-                             tabindex="0">
-                            <div class="register-top">
-                                <div class="register-header-left">
-                                    <a href="spendnote-cash-box-detail.html?cashBoxId=${box.id}" class="register-icon register-icon-link" aria-label="Cash Box detail">
-                                        <i class="fas ${iconClass}"></i>
-                                    </a>
-                                    <div class="register-info">
-                                        <div class="register-name" style="font-size:24px;font-weight:900;line-height:1.1;">${box.name}</div>
-                                        <div class="register-id">${displayCode}</div>
+                // Remove only register-card slides, keep the add-cash-box-card slide
+                const allSlides = Array.from(swiperWrapper.querySelectorAll('.swiper-slide'));
+                const registerSlides = allSlides.filter(slide => slide.querySelector('.register-card'));
+                registerSlides.forEach(slide => slide.remove());
+                
+                // Generate HTML for all cash boxes
+                let allSlidesHTML = '';
+                cashBoxes.forEach((box, index) => {
+                    const color = box.color || '#059669';
+                    const rgb = hexToRgb(color);
+                    const iconClass = getIconClass(box.icon);
+                    const isActive = (defaultActiveId && box.id === defaultActiveId) ? 'active' : '';
+
+                    const seq = Number(box.sequence_number);
+                    const displayCode = Number.isFinite(seq) && seq > 0
+                        ? `SN-${String(seq).padStart(3, '0')}`
+                        : '—';
+                    
+                    // Format currency (locale + cash box currency)
+                    const formattedBalance = formatCurrency(box.current_balance || 0, box.currency || 'USD');
+                    
+                    // Create slide HTML
+                    allSlidesHTML += `
+                        <div class="swiper-slide">
+                            <div class="register-card ${isActive}" 
+                                 data-id="${box.id}" 
+                                 data-name="${box.name}" 
+                                 data-color="${color}" 
+                                  data-rgb="${rgb}"
+                                 data-display-code="${displayCode}"
+                                 data-sequence-number="${Number.isFinite(seq) ? seq : ''}"
+                                 style="--card-color: ${color}; --card-rgb: ${rgb};"
+                                 role="button" 
+                                 tabindex="0">
+                                <div class="register-top">
+                                    <div class="register-header-left">
+                                        <a href="spendnote-cash-box-detail.html?cashBoxId=${box.id}" class="register-icon register-icon-link" aria-label="Cash Box detail">
+                                            <i class="fas ${iconClass}"></i>
+                                        </a>
+                                        <div class="register-info">
+                                            <div class="register-name" style="font-size:24px;font-weight:900;line-height:1.1;">${box.name}</div>
+                                            <div class="register-id">${displayCode}</div>
+                                        </div>
+                                    </div>
+                                    <div class="register-actions">
+                                        <a class="register-kebab" href="spendnote-cash-box-settings.html?cashBoxId=${box.id}" aria-label="Cash Box settings" title="Cash Box settings">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
                                     </div>
                                 </div>
-                                <div class="register-actions">
-                                    <a class="register-kebab" href="spendnote-cash-box-settings.html?cashBoxId=${box.id}" aria-label="Cash Box settings" title="Cash Box settings">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            
-                            <div class="register-balance">${formattedBalance}</div>
+                                
+                                <div class="register-balance">${formattedBalance}</div>
 
-                            <div class="register-quick-actions">
-                                <button type="button" class="register-quick-btn in" data-quick="in">
-                                    <span class="quick-icon" aria-hidden="true">
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8 3V12" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                            <path d="M4.5 8.8L8 12.3L11.5 8.8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </span>
-                                    <span class="quick-label">IN</span>
-                                </button>
-                                <button type="button" class="register-quick-btn out" data-quick="out">
-                                    <span class="quick-icon" aria-hidden="true">
-                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M8 13V4" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                                            <path d="M4.5 7.2L8 3.7L11.5 7.2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                        </svg>
-                                    </span>
-                                    <span class="quick-label">OUT</span>
-                                </button>
-                            </div>
-                            
-                            <div class="register-stats">
-                                <div class="stat-item">
-                                    <div class="tooltip">Loading...</div>
-                                    <div class="stat-label">Today In</div>
-                                    <div class="stat-value in">+$0</div>
+                                <div class="register-quick-actions">
+                                    <button type="button" class="register-quick-btn in" data-quick="in">
+                                        <span class="quick-icon" aria-hidden="true">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M8 3V12" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                                <path d="M4.5 8.8L8 12.3L11.5 8.8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </span>
+                                        <span class="quick-label">IN</span>
+                                    </button>
+                                    <button type="button" class="register-quick-btn out" data-quick="out">
+                                        <span class="quick-icon" aria-hidden="true">
+                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M8 13V4" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                                <path d="M4.5 7.2L8 3.7L11.5 7.2" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                            </svg>
+                                        </span>
+                                        <span class="quick-label">OUT</span>
+                                    </button>
                                 </div>
-                                <div class="stat-item">
-                                    <div class="tooltip">Loading...</div>
-                                    <div class="stat-label">Today Out</div>
-                                    <div class="stat-value out">-$0</div>
+                                
+                                <div class="register-stats">
+                                    <div class="stat-item">
+                                        <div class="tooltip">Loading...</div>
+                                        <div class="stat-label">Today In</div>
+                                        <div class="stat-value in">+$0</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="tooltip">Loading...</div>
+                                        <div class="stat-label">Today Out</div>
+                                        <div class="stat-value out">-$0</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `;
-            });
-            
-            // Insert all cash boxes before the add-cash-box-card slide
-            const allCurrentSlides = Array.from(swiperWrapper.querySelectorAll('.swiper-slide'));
-            const addCashBoxSlide = allCurrentSlides.find(slide => slide.querySelector('.add-cash-box-card'));
-            if (addCashBoxSlide) {
-                addCashBoxSlide.insertAdjacentHTML('beforebegin', allSlidesHTML);
-            } else {
-                swiperWrapper.insertAdjacentHTML('beforeend', allSlidesHTML);
-            }
-            
-            if (debug) console.log('✅ Inserted', cashBoxes.length, 'cash boxes before Add Cash Box card');
-            
-            // Reinitialize Swiper after adding slides
-            if (window.registersSwiper) {
-                window.registersSwiper.update();
-
-                if (typeof window.initCashBoxCards === 'function') {
-                    window.initCashBoxCards();
-                }
-
-                if (defaultActiveId) {
-                    const slides = Array.from(window.registersSwiper.slides || []);
-                    const targetIndex = slides.findIndex(slide => {
-                        const card = slide.querySelector('.register-card');
-                        return card && card.dataset.id === defaultActiveId;
-                    });
-                    if (targetIndex >= 0) {
-                        window.registersSwiper.slideTo(targetIndex, 0);
+                    `;
+                });
+                
+                // Insert all cash boxes before the "Add Cash Box" card
+                if (window.registersSwiper && window.registersSwiper.params && window.registersSwiper.el) {
+                    // Use Swiper's API to add slides
+                    const slides = swiperWrapper.querySelectorAll('.swiper-slide');
+                    const addCardIndex = Array.from(slides).findIndex(slide => slide.querySelector('.add-cash-box-card'));
+                    
+                    if (addCardIndex !== -1) {
+                        // Insert slides before add card
+                        swiperWrapper.insertAdjacentHTML('beforeend', allSlidesHTML);
                     }
+                } else {
+                    // Fallback: direct DOM insertion
+                    swiperWrapper.insertAdjacentHTML('beforeend', allSlidesHTML);
                 }
                 
-                // Set initial active card color
-                const activeCard = document.querySelector('.register-card.active');
-                if (activeCard) {
-                    document.documentElement.style.setProperty('--active', activeCard.dataset.color);
-                    document.documentElement.style.setProperty('--active-rgb', activeCard.dataset.rgb);
+                if (debug) console.log('✅ Inserted', cashBoxes.length, 'cash boxes before Add Cash Box card');
+                
+                // Reinitialize Swiper after adding slides
+                if (window.registersSwiper) {
+                    window.registersSwiper.update();
+                    window.registersSwiper.slideTo(cashBoxes.findIndex(box => box.id === defaultActiveId), 0);
                     
-                    // Update menu colors and table header
-                    if (typeof updateMenuColors === 'function') {
-                        updateMenuColors(activeCard.dataset.color);
-                    }
-                    if (typeof updateTableHeaderColor === 'function') {
-                        updateTableHeaderColor(activeCard.dataset.rgb);
-                    }
+                    // Set active class on current slide
+                    const slides = swiperWrapper.querySelectorAll('.register-card');
+                    slides.forEach(card => {
+                        if (card.dataset.id === defaultActiveId) {
+                            card.classList.add('active');
+                        }
+                    });
+                } else if (debug) {
+                    console.log('⚠️ Swiper not initialized yet');
                 }
+                
+                if (debug) console.log('✅ Dashboard loaded with real cash boxes:', cashBoxes.length);
+                
+                // Update modal cash box dropdown
+                updateModalCashBoxDropdown(cashBoxes);
             } else if (debug) {
-                console.log('⚠️ Swiper not initialized yet');
+                console.log('ℹ️ No cash boxes found in database');
             }
+
+            const cashBoxById = new Map((cashBoxes || []).map((b) => [b.id, b]));
+            const enrichedTransactions = (transactions || []).map((tx) => {
+                if (tx && tx.cash_box) return tx;
+                const cashBox = tx ? cashBoxById.get(tx.cash_box_id) : null;
+                return { ...tx, cash_box: cashBox || null };
+            });
+            loadRecentTransactionsSync(enrichedTransactions);
+
+            window.__spendnoteDashboardDataLoaded = true;
+            document.documentElement.classList.remove('dashboard-loading');
+            document.documentElement.classList.add('dashboard-ready');
+            window.dispatchEvent(new Event('SpendNoteDashboardDataLoaded'));
             
-            if (debug) console.log('✅ Dashboard loaded with real cash boxes:', cashBoxes.length);
-            
-            // Update modal cash box dropdown
-            updateModalCashBoxDropdown(cashBoxes);
-        } else if (debug) {
-            console.log('ℹ️ No cash boxes found in database');
+        } catch (error) {
+            console.error('❌ Error loading dashboard data:', error);
+            document.documentElement.classList.remove('dashboard-loading');
+            document.documentElement.classList.add('dashboard-ready');
         }
+    })();
 
-        const cashBoxById = new Map((cashBoxes || []).map((b) => [b.id, b]));
-        const enrichedTransactions = (transactions || []).map((tx) => {
-            if (tx && tx.cash_box) return tx;
-            const cashBox = tx ? cashBoxById.get(tx.cash_box_id) : null;
-            return { ...tx, cash_box: cashBox || null };
-        });
-        loadRecentTransactionsSync(enrichedTransactions);
-
-        window.__spendnoteDashboardDataLoaded = true;
-        document.documentElement.classList.remove('dashboard-loading');
-        document.documentElement.classList.add('dashboard-ready');
-        window.dispatchEvent(new Event('SpendNoteDashboardDataLoaded'));
-        
-    } catch (error) {
-        console.error('❌ Error loading dashboard data:', error);
-        document.documentElement.classList.remove('dashboard-loading');
-        document.documentElement.classList.add('dashboard-ready');
+    try {
+        return await dashboardLoadPromise;
+    } finally {
+        dashboardLoadPromise = null;
     }
 }
 

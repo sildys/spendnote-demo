@@ -16,6 +16,7 @@ let modalCashBoxes = [];
 let modalCashBoxIndex = 0;
 let Contacts = [];
 let contactsLoaded = false;
+let contactsLoadPromise = null;
 
 function formatContactDisplayId(sequenceNumber) {
     try {
@@ -585,6 +586,13 @@ async function loadContactsForAutocomplete() {
     const DEBUG = Boolean(window.SpendNoteDebug);
     if (contactsLoaded) { if (DEBUG) console.log('[ContactAC] Already loaded:', Contacts.length); return; }
     if (!window.db || !window.db.contacts) { if (DEBUG) console.warn('[ContactAC] db.contacts not ready, retrying...'); setTimeout(loadContactsForAutocomplete, 300); return; }
+
+    if (contactsLoadPromise) {
+        try { await contactsLoadPromise; } catch (_) {}
+        return;
+    }
+
+    contactsLoadPromise = (async () => {
     try {
         if (DEBUG) console.log('[ContactAC] Loading contacts from DB...');
         const data = await window.db.contacts.getAll();
@@ -614,6 +622,13 @@ async function loadContactsForAutocomplete() {
         }
         if (DEBUG) console.log('[ContactAC] Loaded', Contacts.length, 'contacts');
     } catch (e) { if (DEBUG) console.error('[ContactAC] Failed to load contacts:', e); }
+    })();
+
+    try {
+        await contactsLoadPromise;
+    } finally {
+        contactsLoadPromise = null;
+    }
 }
 
 function initContactAutocomplete() {
