@@ -924,12 +924,12 @@
         }
 
         th.col-amount,
-        #transactionsTable td:nth-child(8) {
+        #transactionsTable td:nth-child(7) {
             text-align: right;
         }
 
-        #transactionsTable thead th:nth-child(9),
-        #transactionsTable tbody td:nth-child(9) {
+        #transactionsTable thead th:nth-child(8),
+        #transactionsTable tbody td:nth-child(8) {
             text-align: center;
         }
 
@@ -939,7 +939,6 @@
         }
 
         th.col-action { width: 110px; }
-        th.col-checkbox { width: 40px; }
         th.col-amount { width: 130px; }
 
         .table-grid {

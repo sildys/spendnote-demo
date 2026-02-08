@@ -131,7 +131,7 @@ function createDashboardTransactionsController(ctx) {
         if (!txTbody) return;
         clearTbody();
         const tr = document.createElement('tr');
-        tr.innerHTML = `<td colspan="10" style="padding: 24px 10px; text-align: center; color: var(--text-muted); font-weight: 700;">${safeText(message, '')}</td>`;
+        tr.innerHTML = `<td colspan="9" style="padding: 24px 10px; text-align: center; color: var(--text-muted); font-weight: 700;">${safeText(message, '')}</td>`;
         txTbody.appendChild(tr);
     };
 
@@ -265,7 +265,6 @@ function createDashboardTransactionsController(ctx) {
             tr.style.setProperty('--cashbox-rgb', cashBoxRgb);
             tr.style.setProperty('--cashbox-color', cashBoxColor);
             tr.innerHTML = `
-                <td><input type="checkbox" class="row-checkbox" data-tx-id="${safeText(tx?.id, '')}" disabled></td>
                 <td>
                     <div class="tx-type-pill ${pillClass}">
                         <span class="quick-icon"><i class="fas ${pillIcon}"></i></span>
