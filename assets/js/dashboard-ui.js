@@ -191,7 +191,7 @@ function syncDashboardCashBoxSelection(cashBoxId, options) {
         } catch (_) {
 
         }
-        return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
+        return false;
     };
 
     const cards = Array.from(document.querySelectorAll('.register-card'));

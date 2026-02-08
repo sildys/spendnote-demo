@@ -53,7 +53,7 @@ const QUICK_PRESET = {
         } catch (_) {
 
         }
-        return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(value || '').trim());
+        return false;
     }
 
     const spTx = new URLSearchParams(window.location.search);

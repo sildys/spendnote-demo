@@ -194,7 +194,7 @@
                     return window.SpendNoteIds.isUuid(v);
                 }
             } catch (_) {}
-            return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
+            return false;
         };
 
         const resolveTxId = async () => {
