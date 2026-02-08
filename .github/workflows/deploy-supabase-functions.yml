@@ -35,13 +35,21 @@ jobs:
           SPENDNOTE_APP_URL: ${{ secrets.SPENDNOTE_APP_URL }}
           SPENDNOTE_INVITE_SUBJECT: ${{ secrets.SPENDNOTE_INVITE_SUBJECT }}
         run: |
-          supabase secrets set \
-            RESEND_API_KEY="$RESEND_API_KEY" \
-            SUPABASE_SERVICE_ROLE_KEY="$SUPABASE_SERVICE_ROLE_KEY" \
-            SPENDNOTE_EMAIL_FROM="$SPENDNOTE_EMAIL_FROM" \
-            SPENDNOTE_APP_URL="$SPENDNOTE_APP_URL" \
-            SPENDNOTE_INVITE_SUBJECT="$SPENDNOTE_INVITE_SUBJECT" \
-            --project-ref "$SUPABASE_PROJECT_REF"
+          set -euo pipefail
+          missing=""
+          [ -z "${SUPABASE_ACCESS_TOKEN:-}" ] && missing="$missing SUPABASE_ACCESS_TOKEN"
+          [ -z "${SUPABASE_PROJECT_REF:-}" ] && missing="$missing SUPABASE_PROJECT_REF"
+          [ -z "${RESEND_API_KEY:-}" ] && missing="$missing RESEND_API_KEY"
+          [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ] && missing="$missing SUPABASE_SERVICE_ROLE_KEY"
+          [ -z "${SPENDNOTE_EMAIL_FROM:-}" ] && missing="$missing SPENDNOTE_EMAIL_FROM"
+          [ -z "${SPENDNOTE_APP_URL:-}" ] && missing="$missing SPENDNOTE_APP_URL"
+          [ -z "${SPENDNOTE_INVITE_SUBJECT:-}" ] && missing="$missing SPENDNOTE_INVITE_SUBJECT"
+          if [ -n "$missing" ]; then
+            echo "Missing required GitHub Secrets:$missing"
+            exit 1
+          fi
+
+          supabase secrets set RESEND_API_KEY="$RESEND_API_KEY" SUPABASE_SERVICE_ROLE_KEY="$SUPABASE_SERVICE_ROLE_KEY" SPENDNOTE_EMAIL_FROM="$SPENDNOTE_EMAIL_FROM" SPENDNOTE_APP_URL="$SPENDNOTE_APP_URL" SPENDNOTE_INVITE_SUBJECT="$SPENDNOTE_INVITE_SUBJECT" --project-ref "$SUPABASE_PROJECT_REF"
 
       - name: Deploy send-invite-email
         env:
