@@ -2,8 +2,8 @@
 const SUPABASE_URL = 'https://zrnnharudlgxuvewqryj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5oYXJ1ZGxneHV2ZXdxcnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyOTkxMDgsImV4cCI6MjA4Mjg3NTEwOH0.kQLRMVrl_uYYzZwX387uFs_BAXc9c5v7EhcvGhPR7v4';
 
-if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260207-2100');
-window.__spendnoteSupabaseConfigBuild = '20260207-2100';
+if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260208-0318');
+window.__spendnoteSupabaseConfigBuild = '20260208-0318';
 
 // If you previously used localStorage persistence, clean it up so tab-close logout works immediately.
 // Supabase stores sessions under a project-specific key like: sb-<project-ref>-auth-token
@@ -274,7 +274,7 @@ var auth = {
             }
         });
         if (error) {
-            console.error('Error signing up:', error);
+            if (window.SpendNoteDebug) console.error('Error signing up:', error);
             return { success: false, error: error.message };
         }
         if (auth.__userCache) {
@@ -292,7 +292,7 @@ var auth = {
             password
         });
         if (error) {
-            console.error('Error signing in:', error);
+            if (window.SpendNoteDebug) console.error('Error signing in:', error);
             return { success: false, error: error.message };
         }
         if (auth.__userCache) {
@@ -307,7 +307,7 @@ var auth = {
     async signOut() {
         const { error } = await supabaseClient.auth.signOut();
         if (error) {
-            console.error('Error signing out:', error);
+            if (window.SpendNoteDebug) console.error('Error signing out:', error);
             return { success: false, error: error.message };
         }
         if (auth.__userCache) {
@@ -324,7 +324,7 @@ var auth = {
             redirectTo: `${window.location.origin}/spendnote-login.html`
         });
         if (error) {
-            console.error('Error resetting password:', error);
+            if (window.SpendNoteDebug) console.error('Error resetting password:', error);
             return { success: false, error: error.message };
         }
         return { success: true };
