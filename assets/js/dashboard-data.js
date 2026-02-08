@@ -69,8 +69,6 @@ function createDashboardTransactionsController(ctx) {
         latestRows: []
     };
 
-    let joinSupported = true;
-
     const safeText = (value, fallback) => {
         const s = value === undefined || value === null ? '' : String(value);
         const trimmed = s.trim();
@@ -169,46 +167,14 @@ function createDashboardTransactionsController(ctx) {
         }
     };
 
-    const normalizeJoinError = (err) => {
-        const msg = String(err?.message || err || '');
-        const detail = String(err?.details || '');
-        const code = String(err?.code || '');
-        const joined = `${msg} ${detail} ${code}`.toLowerCase();
-        return (
-            joined.includes('could not find a relationship') ||
-            joined.includes('schema cache') ||
-            joined.includes('pgrst200') ||
-            joined.includes('embedded')
-        );
-    };
-
     const fetchPage = async () => {
         if (!window.db?.transactions?.getPage) {
             return { data: [], count: 0, error: 'Transactions API not ready.' };
         }
 
-        const joinedSelect = [
-            'id',
-            'cash_box_id',
-            'type',
-            'amount',
-            'description',
-            'transaction_date',
-            'created_at',
-            'contact_id',
-            'contact_name',
-            'created_by_user_id',
-            'created_by_user_name',
-            'cash_box_sequence',
-            'tx_sequence_in_box',
-            'status',
-            'voided_at',
-            'cash_box:cash_boxes(id, name, color, currency, icon, sequence_number)',
-            'contact:contacts(id, name, sequence_number)'
-        ].join(', ');
-
         const plainSelect = [
             'id',
+            'receipt_number',
             'cash_box_id',
             'type',
             'amount',
@@ -234,38 +200,19 @@ function createDashboardTransactionsController(ctx) {
             sortDir: 'desc'
         };
 
-        const runPlain = async () => {
-            const fallback = await window.db.transactions.getPage({
-                select: plainSelect,
-                ...baseOpts
-            });
-            if (fallback && Array.isArray(fallback.data)) {
-                fallback.data = fallback.data.map((tx) => {
-                    if (tx && !tx.cash_box && tx.cash_box_id) {
-                        tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
-                    }
-                    return tx;
-                });
-            }
-            return fallback;
-        };
-
-        if (!joinSupported) {
-            return await runPlain();
-        }
-
-        const first = await window.db.transactions.getPage({
-            select: joinedSelect,
+        const res = await window.db.transactions.getPage({
+            select: plainSelect,
             ...baseOpts
         });
-
-        if (!first?.error) return first;
-
-        if (!normalizeJoinError(first.error)) return first;
-
-        joinSupported = false;
-        if (debug) console.warn('[DashboardTx] Join select failed (schema cache), falling back to plain select:', first.error);
-        return await runPlain();
+        if (res && Array.isArray(res.data)) {
+            res.data = res.data.map((tx) => {
+                if (tx && !tx.cash_box && tx.cash_box_id) {
+                    tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
+                }
+                return tx;
+            });
+        }
+        return res;
     };
 
     const renderRows = (rows) => {
