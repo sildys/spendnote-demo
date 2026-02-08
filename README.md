@@ -24,6 +24,25 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - Modal: reduced first-open layout shift/flicker via scrollbar compensation.
 - Row open UX: transaction tables require 2 clicks to open detail (with an armed-row state) to prevent accidental navigation.
 
+## Permissions model (planned / decided)
+
+- Multi-location (e.g. multiple restaurants) is handled as **multiple orgs** (team accounts).
+- Contacts are **org-level** (shared across cash boxes in the org).
+- Roles:
+  - `owner`: subscription + account/org delete + cash box delete
+  - `admin`: create cash boxes, invite/add users, void transactions
+  - `user`: can record only in cash boxes they have access to
+- Access enforcement:
+  - Cash box access is enforced via `cash_box_memberships`.
+  - Admins default to having access to **all cash boxes** in the org via auto-created memberships (can be restricted later).
+- Invites:
+  - Real invite flow via token/link (membership created on accept/signup).
+- Audit log:
+  - Owner-only visibility
+  - Append-only (immutable) in v1
+- Notifications:
+  - No extra notifications for access changes (users simply see access appear/disappear in UI).
+
 ## What the app does (product)
 
 - Track multiple **Cash Boxes** (registers) with balances

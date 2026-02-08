@@ -233,9 +233,13 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **High (upcoming)**
   - Permissions & roles (owner/admin/user) + org/team model:
     - Add `orgs` table (explicit org/team).
+    - Multi-location (e.g. multiple restaurants) is handled as **multiple orgs**.
     - Add per-cash-box memberships (`cash_box_memberships`) with role per cash box.
+    - Admins default to access for **all** cash boxes via auto-created memberships (still enforced via `cash_box_memberships` so it can be restricted later).
     - Contacts are org-level (shared across cash boxes).
     - Implement real invite flow (token/link) and acceptance.
+    - No extra notifications for access changes (user sees access appear/disappear in UI).
+    - Audit log: owner-only visibility, append-only (immutable) in v1.
     - Enforce access via RLS for cash_boxes / transactions / contacts.
     - Owner-only: subscription + account/cash box delete.
     - Admin: create cash boxes, invite/add users, void transactions.
