@@ -535,7 +535,9 @@ This repo deploys Supabase Edge Functions via GitHub Actions on push to `main` (
 
 - Workflow: `.github/workflows/deploy-supabase-functions.yml`
 - Current functions:
-  - `send-invite-email` (team invite email delivery)
+  - `send-invite-email` — team invite email delivery (deployed with `--no-verify-jwt`; auth handled internally)
+  - `send-receipt-email` — receipt email delivery
+- Both use Resend API with the verified `spendnote.app` domain.
 
 Required GitHub Secrets:
 
@@ -546,9 +548,15 @@ Required Supabase Edge Functions Secrets (set in Supabase Dashboard):
 
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RESEND_API_KEY`
-- `SPENDNOTE_EMAIL_FROM` (e.g. `SpendNote <no-reply@yourdomain.com>`)
+- `SPENDNOTE_EMAIL_FROM` (e.g. `invite@spendnote.app` — domain must be verified in Resend)
 - `SPENDNOTE_APP_URL` (public app base URL used in invite links)
 - `SPENDNOTE_INVITE_SUBJECT`
+
+### Invite token security
+
+- The `invites` table stores only a SHA-256 hash of the invite token (`token_hash` column), not the plaintext token.
+- The `spendnote_create_invite` RPC generates a random token, stores the hash, and returns the plaintext token in a `jsonb` response.
+- The `send-invite-email` Edge Function hashes the incoming plaintext token with `crypto.subtle.digest('SHA-256', ...)` before looking up by `token_hash`.
 
 ## Code structure (important entry points)
 

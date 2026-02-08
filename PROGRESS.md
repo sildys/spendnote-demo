@@ -220,19 +220,21 @@ If a chat thread freezes / context is lost: in the new thread say:
     - Drop recursive policies.
     - Recreate policies using `SECURITY DEFINER` helper functions with `row_security = off` to avoid policy loops.
 
-- **Invite email delivery (Edge Function)** 🟡
-  - Edge Function scaffold added: `send-invite-email`.
-  - Deployment is handled via GitHub Actions:
-    - Workflow: `.github/workflows/deploy-supabase-functions.yml`
-  - Uses Resend for delivery.
-  - Client now surfaces Edge Function error details (not just generic non-2xx) and falls back to showing the invite link when email delivery fails.
+- **Invite email delivery (Edge Function)** ✅
+  - Edge Function: `send-invite-email` — fully working, deployed via GitHub Actions.
+  - Workflow: `.github/workflows/deploy-supabase-functions.yml`
+  - Deployed with `--no-verify-jwt` (function handles auth internally via `auth.getUser()`).
+  - Uses Resend API for delivery; FROM address: `invite@spendnote.app` (domain verified in Resend).
+  - Invite token security: DB stores only `token_hash` (SHA-256); Edge Function hashes incoming plaintext token before lookup.
+  - Client calls Edge Function via manual `fetch` (not `functions.invoke`) to surface concrete error messages from Resend/Edge Function.
+  - On email failure, falls back to showing the invite link for manual copy.
   - Required GitHub Secrets:
     - `SUPABASE_ACCESS_TOKEN`
     - `SUPABASE_PROJECT_REF`
   - Required Supabase Edge Functions Secrets:
     - `SUPABASE_SERVICE_ROLE_KEY`
     - `RESEND_API_KEY`
-    - `SPENDNOTE_EMAIL_FROM`
+    - `SPENDNOTE_EMAIL_FROM` (e.g. `invite@spendnote.app`)
     - `SPENDNOTE_APP_URL`
     - `SPENDNOTE_INVITE_SUBJECT`
 
@@ -240,12 +242,13 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Some Supabase projects have `pgcrypto` installed under schema `extensions`, which breaks unqualified calls like `gen_random_bytes(...)` / `digest(text, ...)`.
   - Fixed by enabling `pgcrypto` and adding `public.gen_random_bytes(int)` + `public.digest(text,text)` wrappers.
 
-- **Invite token uniqueness / collision fix** 🟡
+- **Invite token uniqueness / collision fix** ✅
   - Symptom: `duplicate key value violates unique constraint "invites_org_token_unique"`.
-  - Fix approach:
-    - `spendnote_create_invite` must generate **random** tokens.
-    - If a pending invite already exists for the same `org_id + invited_email`, return/update that invite instead of inserting a duplicate.
-    - On the rare case of a token collision, retry token generation.
+  - Fix: `spendnote_create_invite` RPC rewritten:
+    - Generates random token via `gen_random_bytes(24)`, stores `token_hash` (SHA-256 hex), returns plaintext token in `jsonb` response.
+    - If pending invite exists for same `org_id + invited_email`, regenerates token and updates existing row.
+    - Retries up to 5× on token hash collision.
+  - `invites` table columns: `id`, `org_id`, `invited_email`, `role`, `token_hash`, `status`, `created_by`, `accepted_by`, `created_at`, `expires_at`.
 
 ## Key decisions / invariants
 - **“Unsaved contact” indicator**: keep it minimal in Transaction History.
