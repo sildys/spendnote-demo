@@ -94,14 +94,6 @@ function createDashboardTransactionsController(ctx) {
         return '—';
     };
 
-    const getContactDisplayId = (tx) => {
-        const seq = Number(tx?.contact?.sequence_number);
-        if (Number.isFinite(seq) && seq > 0) {
-            return `CONT-${String(seq).padStart(3, '0')}`;
-        }
-        return '—';
-    };
-
     const getCreatedByAvatarUrl = (createdByName) => {
         try {
             const storedAvatar = localStorage.getItem('spendnote.user.avatar.v1');
@@ -249,11 +241,11 @@ function createDashboardTransactionsController(ctx) {
 
             const displayId = getDisplayId(tx);
             const contactName = safeText(tx?.contact?.name || tx?.contact_name, '—');
-            const contactDisplayId = getContactDisplayId(tx);
             const contactId = tx?.contact_id || tx?.contact?.id || '';
             const cashBoxId = tx?.cash_box_id || tx?.cash_box?.id || '';
             const descEnc = encodeURIComponent(safeText(tx?.description, ''));
             const contactEnc = encodeURIComponent(safeText(contactName, ''));
+            const descriptionText = safeText(tx?.description, '—');
 
             const pillClass = isVoided ? 'void' : (isIncome ? 'in' : 'out');
             const pillIcon = isVoided ? 'fa-ban' : (isIncome ? 'fa-arrow-down' : 'fa-arrow-up');
@@ -275,7 +267,7 @@ function createDashboardTransactionsController(ctx) {
                 <td><span class="tx-date">${formatDateShort(tx?.transaction_date || tx?.created_at)}</span></td>
                 <td><span class="cashbox-badge" style="--cb-color: ${cashBoxColor};">${safeText(tx?.cash_box?.name, 'Unknown')}</span></td>
                 <td><span class="tx-contact">${contactName}</span></td>
-                <td><span class="tx-contact-id">${safeText(contactDisplayId, '—')}</span></td>
+                <td><span class="tx-desc">${descriptionText}</span></td>
                 <td><span class="tx-amount ${isIncome ? 'in' : 'out'} ${isVoided ? 'voided' : ''}">${formattedAmount}</span></td>
                 <td><div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarUrl}" alt="${safeText(createdByName, '—')}"></div></div></td>
                 <td>
