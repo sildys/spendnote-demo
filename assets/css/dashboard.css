@@ -911,6 +911,11 @@
             background: rgba(var(--cashbox-rgb, 5, 150, 105), 0.06);
         }
 
+        #transactionsTable tbody tr.is-armed {
+            background: rgba(var(--cashbox-rgb, 5, 150, 105), 0.10);
+            box-shadow: inset 0 0 0 2px rgba(var(--cashbox-rgb, 5, 150, 105), 0.20);
+        }
+
         #transactionsTable tbody tr:focus {
             background: rgba(var(--cashbox-rgb, 5, 150, 105), 0.10);
             outline: 2px solid var(--cashbox-color, #059669);

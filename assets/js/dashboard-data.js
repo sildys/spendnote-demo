@@ -140,6 +140,38 @@ function createDashboardTransactionsController(ctx) {
         if (txTbody && txTbody.dataset.dashboardRowNavBound !== '1') {
             txTbody.dataset.dashboardRowNavBound = '1';
 
+            let armedTxId = '';
+            let armedUntil = 0;
+            let armedRow = null;
+            let armTimer = null;
+
+            const clearArmed = () => {
+                if (armTimer) {
+                    clearTimeout(armTimer);
+                    armTimer = null;
+                }
+                if (armedRow && armedRow.classList) {
+                    armedRow.classList.remove('is-armed');
+                }
+                armedTxId = '';
+                armedUntil = 0;
+                armedRow = null;
+            };
+
+            const armRow = (row, txId) => {
+                clearArmed();
+                armedRow = row;
+                armedTxId = txId;
+                armedUntil = Date.now() + 1500;
+                try {
+                    row.classList.add('is-armed');
+                    if (typeof row.focus === 'function') row.focus({ preventScroll: true });
+                } catch (_) {
+                    // ignore
+                }
+                armTimer = setTimeout(clearArmed, 1500);
+            };
+
             const shouldIgnoreRowNav = (ev) => {
                 const t = ev?.target;
                 if (!t || !t.closest) return false;
@@ -152,7 +184,14 @@ function createDashboardTransactionsController(ctx) {
                 if (!row) return;
                 const txId = String(row.getAttribute('data-tx-id') || '').trim();
                 if (!txId) return;
-                window.location.href = `spendnote-transaction-detail.html?txId=${encodeURIComponent(txId)}`;
+
+                if (txId === armedTxId && Date.now() <= armedUntil) {
+                    clearArmed();
+                    window.location.href = `spendnote-transaction-detail.html?txId=${encodeURIComponent(txId)}`;
+                    return;
+                }
+
+                armRow(row, txId);
             });
 
             txTbody.addEventListener('keydown', (e) => {
@@ -163,7 +202,24 @@ function createDashboardTransactionsController(ctx) {
                 const txId = String(row.getAttribute('data-tx-id') || '').trim();
                 if (!txId) return;
                 e.preventDefault();
-                window.location.href = `spendnote-transaction-detail.html?txId=${encodeURIComponent(txId)}`;
+
+                if (txId === armedTxId && Date.now() <= armedUntil) {
+                    clearArmed();
+                    window.location.href = `spendnote-transaction-detail.html?txId=${encodeURIComponent(txId)}`;
+                    return;
+                }
+
+                armRow(row, txId);
+            });
+
+            txTbody.addEventListener('focusin', (e) => {
+                const row = e.target && e.target.closest ? e.target.closest('tr[data-tx-id]') : null;
+                if (!row) return;
+                const txId = String(row.getAttribute('data-tx-id') || '').trim();
+                if (!txId) return;
+                if (txId !== armedTxId) {
+                    clearArmed();
+                }
             });
         }
     };

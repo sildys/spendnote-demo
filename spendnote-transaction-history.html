@@ -414,6 +414,11 @@
             background: rgba(var(--cashbox-rgb, 5, 150, 105), 0.06);
         }
 
+        tbody tr.is-armed {
+            background: rgba(var(--cashbox-rgb, 5, 150, 105), 0.10);
+            box-shadow: inset 0 0 0 2px rgba(var(--cashbox-rgb, 5, 150, 105), 0.20);
+        }
+
         tbody tr:focus {
             background: rgba(var(--cashbox-rgb, 5, 150, 105), 0.10);
             outline: 2px solid var(--cashbox-color, #059669);
@@ -1046,7 +1051,7 @@
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260208-0318"></script>
+    <script src="assets/js/supabase-config.js?v=20260208-0818"></script>
     <script src="assets/js/auth-guard.js"></script>
     <script src="assets/js/nav-loader.js?v=8"></script>
     <script>loadNav();</script>

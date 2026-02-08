@@ -478,6 +478,7 @@
             tr.style.setProperty('--cashbox-rgb', cashBoxRgb);
             tr.style.setProperty('--cashbox-color', cashBoxColor);
             tr.tabIndex = 0;
+            tr.setAttribute('data-tx-id', safeText(tx.id, ''));
 
             const displayId = getDisplayId(tx);
             const contactName = safeText(tx.contact?.name || tx.contact_name, '—');
@@ -666,6 +667,95 @@
         if (tbody && !window.__txHistoryInitialLoadingRendered) {
             window.__txHistoryInitialLoadingRendered = true;
             renderLoadingRow(tbody);
+        }
+
+        if (tbody && tbody.dataset.twoClickNavBound !== '1') {
+            tbody.dataset.twoClickNavBound = '1';
+
+            let armedTxId = '';
+            let armedUntil = 0;
+            let armedRow = null;
+            let armTimer = null;
+
+            const clearArmed = () => {
+                if (armTimer) {
+                    clearTimeout(armTimer);
+                    armTimer = null;
+                }
+                if (armedRow && armedRow.classList) {
+                    armedRow.classList.remove('is-armed');
+                }
+                armedTxId = '';
+                armedUntil = 0;
+                armedRow = null;
+            };
+
+            const armRow = (row, txId) => {
+                clearArmed();
+                armedRow = row;
+                armedTxId = txId;
+                armedUntil = Date.now() + 1500;
+                try {
+                    row.classList.add('is-armed');
+                    if (typeof row.focus === 'function') row.focus({ preventScroll: true });
+                } catch (_) {
+                    // ignore
+                }
+                armTimer = setTimeout(clearArmed, 1500);
+            };
+
+            const shouldIgnoreRowNav = (ev) => {
+                const t = ev?.target;
+                if (!t || !t.closest) return false;
+                if (t.closest('a, button, input, .tx-action, .tx-actions')) return true;
+                const cell = t.closest('td');
+                if (cell && cell.querySelector && cell.querySelector('input.row-checkbox')) return true;
+                return false;
+            };
+
+            tbody.addEventListener('click', (e) => {
+                if (shouldIgnoreRowNav(e)) return;
+                const row = e.target && e.target.closest ? e.target.closest('tr[data-tx-id]') : null;
+                if (!row) return;
+                const txId = safeText(row.getAttribute('data-tx-id'), '').trim();
+                if (!txId) return;
+
+                if (txId === armedTxId && Date.now() <= armedUntil) {
+                    clearArmed();
+                    window.location.href = `spendnote-transaction-detail.html?txId=${encodeURIComponent(txId)}`;
+                    return;
+                }
+
+                armRow(row, txId);
+            });
+
+            tbody.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter') return;
+                if (shouldIgnoreRowNav(e)) return;
+                const row = e.target && e.target.closest ? e.target.closest('tr[data-tx-id]') : null;
+                if (!row) return;
+                const txId = safeText(row.getAttribute('data-tx-id'), '').trim();
+                if (!txId) return;
+                e.preventDefault();
+
+                if (txId === armedTxId && Date.now() <= armedUntil) {
+                    clearArmed();
+                    window.location.href = `spendnote-transaction-detail.html?txId=${encodeURIComponent(txId)}`;
+                    return;
+                }
+
+                armRow(row, txId);
+            }, true);
+
+            tbody.addEventListener('focusin', (e) => {
+                const row = e.target && e.target.closest ? e.target.closest('tr[data-tx-id]') : null;
+                if (!row) return;
+                const txId = safeText(row.getAttribute('data-tx-id'), '').trim();
+                if (!txId) return;
+                if (txId !== armedTxId) {
+                    clearArmed();
+                }
+            });
         }
         if (!window.db || !window.db.transactions || !window.db.cashBoxes) {
             const tries = (window.__txHistoryInitTries || 0) + 1;
