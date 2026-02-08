@@ -69,6 +69,8 @@ function createDashboardTransactionsController(ctx) {
         latestRows: []
     };
 
+    let joinSupported = true;
+
     const safeText = (value, fallback) => {
         const s = value === undefined || value === null ? '' : String(value);
         const trimmed = s.trim();
@@ -168,12 +170,16 @@ function createDashboardTransactionsController(ctx) {
     };
 
     const normalizeJoinError = (err) => {
-        const raw = String(err || '');
-        const lower = raw.toLowerCase();
-        if (lower.includes('pgrst200') || lower.includes('relationship') || lower.includes('embedded')) {
-            return true;
-        }
-        return false;
+        const msg = String(err?.message || err || '');
+        const detail = String(err?.details || '');
+        const code = String(err?.code || '');
+        const joined = `${msg} ${detail} ${code}`.toLowerCase();
+        return (
+            joined.includes('could not find a relationship') ||
+            joined.includes('schema cache') ||
+            joined.includes('pgrst200') ||
+            joined.includes('embedded')
+        );
     };
 
     const fetchPage = async () => {
@@ -228,29 +234,38 @@ function createDashboardTransactionsController(ctx) {
             sortDir: 'desc'
         };
 
+        const runPlain = async () => {
+            const fallback = await window.db.transactions.getPage({
+                select: plainSelect,
+                ...baseOpts
+            });
+            if (fallback && Array.isArray(fallback.data)) {
+                fallback.data = fallback.data.map((tx) => {
+                    if (tx && !tx.cash_box && tx.cash_box_id) {
+                        tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
+                    }
+                    return tx;
+                });
+            }
+            return fallback;
+        };
+
+        if (!joinSupported) {
+            return await runPlain();
+        }
+
         const first = await window.db.transactions.getPage({
             select: joinedSelect,
             ...baseOpts
         });
 
         if (!first?.error) return first;
+
         if (!normalizeJoinError(first.error)) return first;
 
-        if (debug) console.warn('[DashboardTx] Join select failed, falling back to plain select:', first.error);
-
-        const fallback = await window.db.transactions.getPage({
-            select: plainSelect,
-            ...baseOpts
-        });
-        if (fallback && Array.isArray(fallback.data)) {
-            fallback.data = fallback.data.map((tx) => {
-                if (tx && !tx.cash_box && tx.cash_box_id) {
-                    tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
-                }
-                return tx;
-            });
-        }
-        return fallback;
+        joinSupported = false;
+        if (debug) console.warn('[DashboardTx] Join select failed (schema cache), falling back to plain select:', first.error);
+        return await runPlain();
     };
 
     const renderRows = (rows) => {
