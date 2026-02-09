@@ -72,6 +72,25 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - **Week 4:** Mobile sprint #2 (History + Contacts + filters), start Cloudflare migration work (DEPLOY-1/2/3)
 - **Week 5:** Cloudflare cutover (DEPLOY-4) + Stripe integration (S3) + stabilization + cleanup (CLEAN-1) + polish (P3-1)
 
+### Google Search starter keywords (USA, long-tail, ~$300/mo)
+
+- **Match types:** Phrase + Exact only (no Broad for first 4–6 weeks)
+- **Ad groups:**
+  - **A:** Petty cash log / tracking (core buyer intent)
+  - **B:** Cash handoff / cash handling log (buyer intent)
+  - **C:** Receipt log / cash receipt app (buyer intent)
+  - **D (optional):** Template alternative (separate ad group/campaign with lower bid)
+
+**Ad group A (Exact):** `[petty cash log app]`, `[petty cash tracking software]`, `[petty cash management software]`, `[petty cash log software]`  
+**Ad group A (Phrase):** "petty cash log", "petty cash tracking", "petty cash software", "petty cash management"  
+**Ad group B (Exact):** `[cash handoff receipt]`, `[cash handling log]`, `[cash transfer log]`, `[cash handoff log]`  
+**Ad group B (Phrase):** "cash handoff", "cash handover", "cash handling log", "cash transfer receipt"  
+**Ad group C (Exact):** `[cash receipt app]`, `[cash receipt log]`, `[receipt log app]`, `[digital cash receipt]`  
+**Ad group C (Phrase):** "cash receipt log", "digital receipt for cash", "replace handwritten receipts"  
+**Ad group D (Phrase):** "petty cash template alternative", "petty cash spreadsheet alternative", "cash receipt template alternative"
+
+**Negative keywords (campaign-level starter list):** `free`, `template`, `printable`, `pdf`, `word`, `doc`, `excel`, `spreadsheet`, `download`, `form`, `fillable`, `sample`, `example`, `blank`, `worksheet`, `canva`
+
 - Supabase permissions model implemented:
   - Org/team model: `orgs` + `org_memberships` (roles: `owner`/`admin`/`user`).
   - Cash box access: `cash_box_memberships` (enforced by RLS).
