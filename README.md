@@ -101,6 +101,13 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - Link to SpendNote with UTM tags (e.g. `utm_source=template&utm_medium=download&utm_campaign=petty_cash_log`)
   - Optional: 1 screenshot/GIF of the tool right below the bridge + “No card required.”
 
+### Admin-side “invite pressure” (workflow nudge, not referral)
+
+- **Intent:** this is not a referral program (no rewards/discounts). It’s a workflow reality nudge for B2B teams.
+- **Example trigger:** after an admin creates a receipt/transaction, show a small note:
+  - `This usually works better if the other person is also here.`
+  - Then offer a one-click path to invite/add the other person.
+
 - Supabase permissions model implemented:
   - Org/team model: `orgs` + `org_memberships` (roles: `owner`/`admin`/`user`).
   - Cash box access: `cash_box_memberships` (enforced by RLS).
