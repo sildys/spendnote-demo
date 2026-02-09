@@ -33,6 +33,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - [ ] **DEC-L1** Decide onboarding structure:
   - Signup success: in-page vs new `spendnote-welcome.html`
   - Next steps: success only vs success + dismissable dashboard panel
+- [ ] **DEC-TRIAL** Trial without card upfront: confirm trial model (14 days and/or 20 receipts) + what happens at limit (read-only vs lock)
 - [ ] **L1** Onboarding UI: registration success state + post-login next steps (Cash Box → Transaction → Receipt), invite explanation, role-based messaging
 - [ ] **L2** Email pack (4 only): define copy + triggers + recipients (Welcome/Account created; Email confirmation; You’ve been invited; Invite accepted/user activated → admin)
 - [ ] **L3** Email delivery implementation: Resend + Edge Functions/hooks + templates
@@ -59,7 +60,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 
 ### 5-week launch schedule (milestones)
 
-- **Week 1:** L1 + L2, start L3 (Resend + skeleton sending), start MKT-1
+- **Week 1:** DEC-TRIAL, L1 + L2, start L3 (Resend + skeleton sending), start MKT-1
 - **Week 2:** finish L3, L4, L5, MKT-2 (SEO outlines + keyword landing structure)
 - **Week 3:** S1, S2, Mobile sprint #1 (Create Transaction + Receipt mobile-usable)
 - **Week 4:** Mobile sprint #2 (History + Contacts + filters), start Cloudflare migration work (DEPLOY-1/2/3)
