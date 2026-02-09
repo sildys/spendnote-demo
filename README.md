@@ -82,7 +82,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - **D (optional):** Template alternative (separate ad group/campaign with lower bid)
 
 **Ad group A (Exact):** `[petty cash log app]`, `[petty cash tracking software]`, `[petty cash management software]`, `[petty cash log software]`  
-**Ad group A (Phrase):** "petty cash log", "petty cash tracking", "petty cash software", "petty cash management"  
+**Ad group A (Phrase):** "petty cash log", "petty cash tracking", "petty cash software", "petty cash management", "petty cash online", "online petty cash log", "petty cash log online"  
 **Ad group B (Exact):** `[cash handoff receipt]`, `[cash handling log]`, `[cash transfer log]`, `[cash handoff log]`  
 **Ad group B (Phrase):** "cash handoff", "cash handover", "cash handling log", "cash transfer receipt"  
 **Ad group C (Exact):** `[cash receipt app]`, `[cash receipt log]`, `[receipt log app]`, `[digital cash receipt]`  
