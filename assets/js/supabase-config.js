@@ -36,6 +36,92 @@ var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KE
     }
 });
 
+try {
+    if (!window.__spendnoteClientErrorLoggingInstalled) {
+        window.__spendnoteClientErrorLoggingInstalled = true;
+
+        window.__spendnoteClientErrorLogState = window.__spendnoteClientErrorLogState || {
+            lastTs: 0,
+            inProgress: false
+        };
+
+        const __spendnoteInsertClientErrorLog = async (payload) => {
+            try {
+                const st = window.__spendnoteClientErrorLogState;
+                const now = Date.now();
+                if (st.inProgress) return;
+                if (now - (st.lastTs || 0) < 2000) return;
+                st.lastTs = now;
+                st.inProgress = true;
+
+                const { data: { user }, error } = await supabaseClient.auth.getUser();
+                if (error) {
+                    if (String(error.message || '').toLowerCase().includes('session')) return;
+                    return;
+                }
+                if (!user) return;
+
+                const baseRow = {
+                    user_id: user.id,
+                    page_url: String(window.location.href || ''),
+                    user_agent: String(navigator.userAgent || ''),
+                    metadata: {
+                        build: String(window.__spendnoteSupabaseConfigBuild || '')
+                    }
+                };
+
+                const row = Object.assign({}, baseRow, payload || {});
+                row.metadata = Object.assign({}, baseRow.metadata || {}, (payload && payload.metadata) ? payload.metadata : {});
+
+                await supabaseClient.from('client_error_logs').insert(row);
+            } catch (_) {
+                // ignore
+            } finally {
+                try { window.__spendnoteClientErrorLogState.inProgress = false; } catch (_) {}
+            }
+        };
+
+        window.addEventListener('error', (event) => {
+            try {
+                const msg = String(event?.message || 'Unknown error');
+                const err = event?.error;
+                __spendnoteInsertClientErrorLog({
+                    message: msg,
+                    source: String(event?.filename || ''),
+                    lineno: Number.isFinite(event?.lineno) ? Number(event.lineno) : null,
+                    colno: Number.isFinite(event?.colno) ? Number(event.colno) : null,
+                    stack: err?.stack ? String(err.stack) : null,
+                    metadata: {
+                        type: 'window.error',
+                        name: err?.name ? String(err.name) : null
+                    }
+                });
+            } catch (_) {
+                // ignore
+            }
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            try {
+                const reason = event?.reason;
+                const msg = String(reason?.message || reason || 'Unhandled promise rejection');
+                __spendnoteInsertClientErrorLog({
+                    message: msg,
+                    stack: reason?.stack ? String(reason.stack) : null,
+                    metadata: {
+                        type: 'unhandledrejection',
+                        name: reason?.name ? String(reason.name) : null
+                    }
+                });
+            } catch (_) {
+                // ignore
+            }
+        });
+    }
+} catch (_) {
+    // ignore
+}
+
 const __spendnoteInviteTokenKey = 'spendnote.inviteToken.pending';
 
 const __spendnotePersistInviteTokenFromUrl = () => {

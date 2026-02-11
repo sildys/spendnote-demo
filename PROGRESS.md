@@ -55,6 +55,18 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **Open questions (decisions)**
   - **Q1:** Include **Google OAuth signup/login** in the beta scope? (Yes/No)
 
+- **Beta Definition of Done (ship criteria)**
+  - [ ] Cloudflare Pages deploy from `main` is green
+  - [ ] Custom domain is live with SSL, canonical host decided and working
+  - [ ] Supabase Auth URL Configuration updated for the final domain (Site URL + Redirect URLs)
+  - [ ] Landing is public + indexable, and links to Terms + Privacy
+  - [ ] Signup/login works on production domain (email-confirm flow included)
+  - [ ] Beta disclaimer is visible and is explicitly accepted during signup
+  - [ ] Beta is clearly communicated as **desktop-only** on landing + signup
+  - [ ] Free beta mode active (unlimited during beta; 1 user + 1 cash box)
+  - [ ] Minimal client error logging is live (JS errors captured for signed-in users)
+  - [ ] Smoke test passes on production domain: auth, create transaction, receipt
+
 - **Week 1 (ship infrastructure + surfaces)**
   - Cloudflare Pages: connect GitHub repo, production deploy on `main`
   - Custom domain: `spendnote.app` (canonical host decision + DNS/SSL)
