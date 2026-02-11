@@ -36,6 +36,48 @@ var supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KE
     }
 });
 
+const __spendnoteInviteTokenKey = 'spendnote.inviteToken.pending';
+
+const __spendnotePersistInviteTokenFromUrl = () => {
+    try {
+        const sp = new URLSearchParams(window.location.search);
+        const inviteToken = sp.get('inviteToken');
+        if (!inviteToken) return;
+        localStorage.setItem(__spendnoteInviteTokenKey, String(inviteToken));
+    } catch (_) {
+        // ignore
+    }
+};
+
+const __spendnoteTryAcceptPendingInviteToken = async () => {
+    let token = '';
+    try {
+        token = String(localStorage.getItem(__spendnoteInviteTokenKey) || '').trim();
+    } catch (_) {
+        token = '';
+    }
+    if (!token) return;
+
+    try {
+        const r = await supabaseClient.rpc('spendnote_accept_invite_v2', { p_token: token });
+        if (r?.error) throw r.error;
+        try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
+        return;
+    } catch (e1) {
+        try {
+            const r2 = await supabaseClient.rpc('spendnote_accept_invite', { p_token: token });
+            if (r2?.error) throw r2.error;
+            try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
+        } catch (e2) {
+            try {
+                console.error('Invite accept failed:', e2 || e1);
+            } catch (_) {}
+        }
+    }
+};
+
+__spendnotePersistInviteTokenFromUrl();
+
 // Bootstrap session management - allows receipt tabs to restore session from localStorage
 const __spendnoteWriteBootstrapSession = (session) => {
     try {
@@ -73,6 +115,9 @@ try {
 
         if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
             __spendnoteWriteBootstrapSession(session);
+            try {
+                __spendnoteTryAcceptPendingInviteToken();
+            } catch (_) {}
         }
     });
 
@@ -80,6 +125,9 @@ try {
         try {
             const { data: { session } } = await supabaseClient.auth.getSession();
             __spendnoteWriteBootstrapSession(session);
+            if (session) {
+                await __spendnoteTryAcceptPendingInviteToken();
+            }
         } catch (_) {}
     })();
 } catch (_) {}
