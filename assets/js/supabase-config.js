@@ -1779,6 +1779,22 @@ var db = {
                 return { success: true };
             }
 
+            // Pending invite removal: prefer SECURITY DEFINER RPC (RLS-safe)
+            try {
+                const { data, error } = await supabaseClient.rpc('spendnote_delete_invite', {
+                    p_invite_id: memberId
+                });
+
+                if (!error) {
+                    const payload = Array.isArray(data) ? data[0] : data;
+                    if (payload?.success) {
+                        return { success: true };
+                    }
+                }
+            } catch (_) {
+                // ignore
+            }
+
             const inviteDelete = await supabaseClient
                 .from('invites')
                 .delete()
