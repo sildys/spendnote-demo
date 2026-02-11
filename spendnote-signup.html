@@ -444,7 +444,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260211-2016"></script>
+    <script src="assets/js/supabase-config.js?v=20260211-2110"></script>
     <script>
         const acceptInviteToken = async (inviteToken) => {
             if (!inviteToken || !window.supabaseClient?.rpc) return;
@@ -576,7 +576,43 @@
                 if (result.success) {
                     if (result.needsEmailConfirmation || !result.session) {
                         successMessage.classList.add('show');
+                        const emailSafe = String(email || '').trim();
                         successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Account created. Please check your email to confirm your address, then come back to log in.';
+
+                        const wrap = document.createElement('div');
+                        wrap.style.marginTop = '10px';
+                        wrap.style.display = 'flex';
+                        wrap.style.gap = '10px';
+                        wrap.style.alignItems = 'center';
+                        wrap.style.justifyContent = 'center';
+                        wrap.style.flexWrap = 'wrap';
+
+                        const resendBtn = document.createElement('button');
+                        resendBtn.type = 'button';
+                        resendBtn.className = 'btn btn-secondary';
+                        resendBtn.textContent = 'Resend confirmation email';
+                        resendBtn.addEventListener('click', async () => {
+                            try {
+                                const sp = new URLSearchParams(window.location.search);
+                                const inviteToken = sp.get('inviteToken');
+                                const redirectBase = `${window.location.origin}/spendnote-login.html`;
+                                const emailRedirectTo = inviteToken
+                                    ? `${redirectBase}?inviteToken=${encodeURIComponent(inviteToken)}`
+                                    : redirectBase;
+                                const r = await auth.resendSignupConfirmation(emailSafe, { emailRedirectTo });
+                                if (!r?.success) {
+                                    showError(r?.error || 'Failed to resend confirmation email.');
+                                    return;
+                                }
+                                successMessage.classList.add('show');
+                                successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Confirmation email sent. Please check your inbox.';
+                            } catch (_) {
+                                showError('Failed to resend confirmation email.');
+                            }
+                        });
+
+                        wrap.appendChild(resendBtn);
+                        successMessage.appendChild(wrap);
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Create account';
                         return;

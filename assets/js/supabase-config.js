@@ -380,6 +380,28 @@ var auth = {
         return { success: true };
     },
 
+    async resendSignupConfirmation(email, options = {}) {
+        const emailRedirectTo = options?.emailRedirectTo ? String(options.emailRedirectTo) : null;
+        try {
+            const { error } = await supabaseClient.auth.resend({
+                type: 'signup',
+                email,
+                options: {
+                    ...(emailRedirectTo ? { emailRedirectTo } : {})
+                }
+            });
+            if (error) {
+                if (window.SpendNoteDebug) console.error('Error resending confirmation:', error);
+                return { success: false, error: error.message };
+            }
+            return { success: true };
+        } catch (e) {
+            const msg = String(e?.message || 'Failed to resend confirmation.');
+            if (window.SpendNoteDebug) console.error('Error resending confirmation (exception):', e);
+            return { success: false, error: msg };
+        }
+    },
+
     // Check if user is authenticated
     async isAuthenticated() {
         const user = await this.getCurrentUser();

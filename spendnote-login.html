@@ -317,6 +317,13 @@
                 <i class="fas fa-exclamation-circle"></i> Error message will appear here
             </div>
 
+            <div class="success-message" id="resendWrap" style="display:none; margin-top: 10px;">
+                <i class="fas fa-envelope"></i> Please confirm your email to continue.
+                <div style="margin-top:10px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
+                    <button type="button" class="btn btn-secondary" id="resendBtn">Resend confirmation email</button>
+                </div>
+            </div>
+
             <!-- Success Message -->
             <div class="success-message" id="successMessage">
                 <i class="fas fa-check-circle"></i> Logged in! Redirecting...
@@ -391,7 +398,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260211-2016"></script>
+    <script src="assets/js/supabase-config.js?v=20260211-2110"></script>
     <script>
         const acceptInviteToken = async (inviteToken) => {
             if (!inviteToken || !window.supabaseClient?.rpc) return;
@@ -430,6 +437,41 @@
         const loginForm = document.getElementById('loginForm');
         const errorMessage = document.getElementById('errorMessage');
         const successMessage = document.getElementById('successMessage');
+        const resendWrap = document.getElementById('resendWrap');
+        const resendBtn = document.getElementById('resendBtn');
+
+        let lastAttemptEmail = '';
+
+        const isUnconfirmedEmailError = (msg) => {
+            const s = String(msg || '').toLowerCase();
+            return s.includes('email not confirmed') || (s.includes('confirm') && s.includes('email'));
+        };
+
+        if (resendBtn) {
+            resendBtn.addEventListener('click', async () => {
+                const email = String(lastAttemptEmail || document.getElementById('email')?.value || '').trim();
+                if (!email) { showError('Please enter your email first.'); return; }
+                try {
+                    const sp = new URLSearchParams(window.location.search);
+                    const inviteToken = sp.get('inviteToken');
+                    const redirectBase = `${window.location.origin}/spendnote-login.html`;
+                    const emailRedirectTo = inviteToken
+                        ? `${redirectBase}?inviteToken=${encodeURIComponent(inviteToken)}`
+                        : redirectBase;
+
+                    const r = await auth.resendSignupConfirmation(email, { emailRedirectTo });
+                    if (!r?.success) {
+                        showError(r?.error || 'Failed to resend confirmation email.');
+                        return;
+                    }
+                    if (resendWrap) resendWrap.style.display = 'block';
+                    successMessage.classList.add('show');
+                    successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Confirmation email sent. Please check your inbox.';
+                } catch (_) {
+                    showError('Failed to resend confirmation email.');
+                }
+            });
+        }
 
         loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -437,10 +479,12 @@
             // Hide messages
             errorMessage.classList.remove('show');
             successMessage.classList.remove('show');
+            if (resendWrap) resendWrap.style.display = 'none';
 
             // Get form data
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            lastAttemptEmail = String(email || '').trim();
 
             // Disable button
             const submitBtn = this.querySelector('button[type="submit"]');
@@ -469,7 +513,13 @@
                     }, 1000);
                 } else {
                     // Error
-                    showError(result.error || 'Invalid email or password');
+                    const msg = result.error || 'Invalid email or password';
+                    if (isUnconfirmedEmailError(msg)) {
+                        showError('Please confirm your email address, then try again.');
+                        if (resendWrap) resendWrap.style.display = 'block';
+                        return;
+                    }
+                    showError(msg);
                 }
             } catch (error) {
                 showError('Network error. Please try again.');
