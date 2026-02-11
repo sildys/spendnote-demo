@@ -446,6 +446,20 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js?v=20260211-1635"></script>
     <script>
+        const acceptInviteToken = async (inviteToken) => {
+            if (!inviteToken || !window.supabaseClient?.rpc) return;
+            try {
+                const r = await window.supabaseClient.rpc('spendnote_accept_invite_v2', { p_token: inviteToken });
+                if (r?.error) throw r.error;
+            } catch (_) {
+                try {
+                    await window.supabaseClient.rpc('spendnote_accept_invite', { p_token: inviteToken });
+                } catch (_) {
+
+                }
+            }
+        };
+
         // Wait for DOM and scripts to load
         document.addEventListener('DOMContentLoaded', async function() {
             // Check if already logged in
@@ -454,9 +468,7 @@
                 try {
                     const sp = new URLSearchParams(window.location.search);
                     const inviteToken = sp.get('inviteToken');
-                    if (inviteToken && window.supabaseClient?.rpc) {
-                        await window.supabaseClient.rpc('spendnote_accept_invite', { p_token: inviteToken });
-                    }
+                    await acceptInviteToken(inviteToken);
                 } catch (_) {
 
                 }
@@ -558,9 +570,7 @@
                     try {
                         const sp = new URLSearchParams(window.location.search);
                         const inviteToken = sp.get('inviteToken');
-                        if (inviteToken && window.supabaseClient?.rpc) {
-                            await window.supabaseClient.rpc('spendnote_accept_invite', { p_token: inviteToken });
-                        }
+                        await acceptInviteToken(inviteToken);
                     } catch (_) {
 
                     }
