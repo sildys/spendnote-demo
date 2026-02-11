@@ -311,14 +311,16 @@ var auth = {
     },
 
     // Sign up new user
-    async signUp(email, password, fullName) {
+    async signUp(email, password, fullName, options = {}) {
+        const emailRedirectTo = options?.emailRedirectTo ? String(options.emailRedirectTo) : null;
         const { data, error } = await supabaseClient.auth.signUp({
             email,
             password,
             options: {
                 data: {
                     full_name: fullName
-                }
+                },
+                ...(emailRedirectTo ? { emailRedirectTo } : {})
             }
         });
         if (error) {
@@ -330,7 +332,7 @@ var auth = {
             auth.__userCache.ts = 0;
             auth.__userCache.promise = null;
         }
-        return { success: true, user: data.user };
+        return { success: true, user: data.user, session: data.session || null, needsEmailConfirmation: !data.session };
     },
 
     // Sign in user

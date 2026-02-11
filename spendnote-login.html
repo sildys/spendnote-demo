@@ -391,7 +391,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260211-2006"></script>
+    <script src="assets/js/supabase-config.js?v=20260211-2016"></script>
     <script>
         const acceptInviteToken = async (inviteToken) => {
             if (!inviteToken || !window.supabaseClient?.rpc) return;
@@ -488,10 +488,15 @@
         // Google login
         document.getElementById('googleBtn').addEventListener('click', async function() {
             try {
+                const sp = new URLSearchParams(window.location.search);
+                const inviteToken = sp.get('inviteToken');
+                const redirectTo = inviteToken
+                    ? `${window.location.origin}/dashboard.html?inviteToken=${encodeURIComponent(inviteToken)}`
+                    : `${window.location.origin}/dashboard.html`;
                 const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: `${window.location.origin}/dashboard.html`
+                        redirectTo
                     }
                 });
                 

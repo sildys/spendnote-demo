@@ -444,7 +444,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260211-2006"></script>
+    <script src="assets/js/supabase-config.js?v=20260211-2016"></script>
     <script>
         const acceptInviteToken = async (inviteToken) => {
             if (!inviteToken || !window.supabaseClient?.rpc) return;
@@ -564,12 +564,25 @@
 
             try {
                 // Sign up with Supabase
-                const result = await auth.signUp(email, password, fullName);
+                const sp = new URLSearchParams(window.location.search);
+                const inviteToken = sp.get('inviteToken');
+                const redirectBase = `${window.location.origin}/spendnote-login.html`;
+                const emailRedirectTo = inviteToken
+                    ? `${redirectBase}?inviteToken=${encodeURIComponent(inviteToken)}`
+                    : redirectBase;
+
+                const result = await auth.signUp(email, password, fullName, { emailRedirectTo });
                 
                 if (result.success) {
+                    if (result.needsEmailConfirmation || !result.session) {
+                        successMessage.classList.add('show');
+                        successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Account created. Please check your email to confirm your address, then come back to log in.';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Create account';
+                        return;
+                    }
+
                     try {
-                        const sp = new URLSearchParams(window.location.search);
-                        const inviteToken = sp.get('inviteToken');
                         await acceptInviteToken(inviteToken);
                     } catch (_) {
 
@@ -603,10 +616,15 @@
         // Google sign up
         document.getElementById('googleBtn').addEventListener('click', async function() {
             try {
+                const sp = new URLSearchParams(window.location.search);
+                const inviteToken = sp.get('inviteToken');
+                const redirectTo = inviteToken
+                    ? `${window.location.origin}/spendnote-user-settings.html?inviteToken=${encodeURIComponent(inviteToken)}`
+                    : `${window.location.origin}/spendnote-user-settings.html`;
                 const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: `${window.location.origin}/spendnote-user-settings.html`
+                        redirectTo
                     }
                 });
                 
