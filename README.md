@@ -63,7 +63,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - [x] **DEC-L1** Decide onboarding structure (chosen: 1=A, 2=B)
   - Signup success: in-page vs new `spendnote-welcome.html`
   - Next steps: success only vs success + dismissable dashboard panel
-- [ ] **DEC-TRIAL** Trial without card upfront: confirm trial model (14 days and/or 20 receipts) + what happens at limit (read-only vs lock)
+- [x] **DEC-TRIAL** Trial without card upfront (decision): **14 days OR 20 transactions** (whichever comes first). At limit: **view-only**, **no export**. Invites: **Pro only**.
 - [ ] **P0** Production-ready acceptance criteria (baseline)
   - [ ] Client error tracking (e.g. Sentry)
   - [ ] Edge Function logging + surfacing non-2xx errors clearly

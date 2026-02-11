@@ -17,7 +17,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [x] **DEC-L1** Decide onboarding structure (chosen: 1=A, 2=B)
   - Signup success: in-page vs new `spendnote-welcome.html`
   - Next steps: success only vs success + dismissable dashboard panel
-- [ ] **DEC-TRIAL** Trial without card upfront: confirm trial model (14 days and/or 20 receipts) + what happens at limit (read-only vs lock)
+- [x] **DEC-TRIAL** Trial without card upfront (decision): **14 days OR 20 transactions** (whichever comes first). At limit: **view-only**, **no export**. Invites: **Pro only**.
 - [ ] **P0** Production-ready acceptance criteria (baseline)
   - [ ] Client error tracking (e.g. Sentry)
   - [ ] Edge Function logging + surfacing non-2xx errors clearly
@@ -267,6 +267,11 @@ If a chat thread freezes / context is lost: in the new thread say:
     - `/spendnote-signup.html`
     - `/dashboard.html`
     - `/spendnote-user-settings.html`
+
+### DEC-TRIAL — COMPLETED (decision)
+- Trial ends at **14 days OR 20 transactions** (whichever comes first).
+- After limit: **view-only**, **no export**.
+- Team invites: **Pro only** (no invites on Free/Standard).
 
 ### Team/invites — PARTIAL
 - Pending invite UI revoke now hard-deletes invites via RPC (RLS-safe):
