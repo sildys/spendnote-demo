@@ -291,10 +291,11 @@ const openAccessModal = async (memberId, options = {}) => {
     const pickerSelect = document.getElementById('accessMemberSelect');
 
     const eligibleMembers = teamMembers
-        .filter((m) => String(m?.status || '').toLowerCase() === 'active')
         .filter((m) => {
+            const status = String(m?.status || '').toLowerCase();
             const r = String(m?.role || '').toLowerCase();
-            return r !== 'owner' && r !== 'admin';
+            if (r === 'owner' || r === 'admin') return false;
+            return status === 'active' || status === 'pending';
         });
 
     if (pickerWrap && pickerSelect) {
@@ -307,7 +308,7 @@ const openAccessModal = async (memberId, options = {}) => {
                 document.getElementById('accessMemberEmail').textContent = '—';
                 const list = document.getElementById('accessCashBoxList');
                 if (list) {
-                    list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">No Users available to configure.</div>';
+                    list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">No Users available to configure. Pending invites must be accepted before access can be set.</div>';
                 }
                 document.getElementById('accessModal').classList.add('active');
                 pickerSelect.innerHTML = '';
@@ -318,8 +319,9 @@ const openAccessModal = async (memberId, options = {}) => {
             pickerSelect.innerHTML = eligibleMembers.map((m) => {
                 const name = m.member?.full_name || m.invited_email || '—';
                 const email = m.member?.email || m.invited_email || '';
+                const status = String(m?.status || '').toLowerCase();
                 const label = email ? `${name} (${email})` : String(name);
-                return `<option value="${escapeHtml(m.id)}">${escapeHtml(label)}</option>`;
+                return `<option value="${escapeHtml(m.id)}">${escapeHtml(label)}${status === 'pending' ? ' — Pending invite' : ''}</option>`;
             }).join('');
 
             if (!memberId) {
