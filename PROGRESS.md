@@ -74,7 +74,7 @@ If a chat thread freezes / context is lost: in the new thread say:
     - Constraints remain: **1 user + 1 cash box**
   - Smoke test checklist on `spendnote.app` (auth + create transaction + receipt)
 
-- **Deferred until after beta ship:** team management / invites / role management
+- **Deferred until after beta ship:** team management / invites / role management / responsive & mobile view (M1)
 
 ## Current state (last updated: 2026-02-11)
 - **Dashboard** ✅
