@@ -214,6 +214,11 @@
             background: rgba(var(--active-rgb), 0.06);
         }
 
+        .Contacts-table tbody tr.is-armed {
+            background: rgba(var(--active-rgb), 0.10);
+            box-shadow: inset 0 0 0 2px rgba(var(--active-rgb), 0.20);
+        }
+
         .Contacts-table td {
             padding: 8px 10px;
             font-size: 13px;
@@ -1020,6 +1025,8 @@
                 })();
 
                 const tr = document.createElement('tr');
+                tr.tabIndex = 0;
+                tr.setAttribute('data-contact-href', href);
                 tr.dataset.cashBoxIds = cashBoxIds.join(',');
                 tr.dataset.txCount = String(txCount || 0);
                 tr.dataset.lastTxTs = String(Number.isFinite(lastTxTs) ? lastTxTs : 0);
@@ -1066,6 +1073,116 @@
             checkboxes.forEach(cb => cb.checked = this.checked);
             updateBulkActions();
         });
+
+        if (document.documentElement && document.documentElement.dataset.contactsTwoClickNavBound !== '1') {
+            document.documentElement.dataset.contactsTwoClickNavBound = '1';
+
+            let armedHref = '';
+            let armedUntil = 0;
+            let armedRow = null;
+            let armTimer = null;
+
+            const clearArmed = () => {
+                if (armTimer) {
+                    clearTimeout(armTimer);
+                    armTimer = null;
+                }
+                if (armedRow && armedRow.classList) {
+                    armedRow.classList.remove('is-armed');
+                }
+                armedHref = '';
+                armedUntil = 0;
+                armedRow = null;
+            };
+
+            const armRow = (row, href) => {
+                clearArmed();
+                armedRow = row;
+                armedHref = href;
+                armedUntil = Date.now() + 2500;
+                try {
+                    row.classList.add('is-armed');
+                    if (typeof row.focus === 'function') row.focus({ preventScroll: true });
+                } catch (_) {
+                    // ignore
+                }
+                armTimer = setTimeout(clearArmed, 2500);
+            };
+
+            const shouldIgnoreRowNav = (ev) => {
+                const t = ev?.target;
+                if (!t || !t.closest) return false;
+                if (t.closest('a, button, input, .tx-action, .tx-actions')) return true;
+                const cell = t.closest('td');
+                if (cell && cell.querySelector && cell.querySelector('input.row-checkbox')) return true;
+                return false;
+            };
+
+            const getRowFromEvent = (ev) => {
+                const t = ev?.target;
+                if (!t || !t.closest) return null;
+                const row = t.closest('#ContactsTableBody tr[data-contact-href]');
+                return row || null;
+            };
+
+            const openContact = (href) => {
+                window.location.href = href;
+            };
+
+            document.addEventListener('click', (e) => {
+                if (shouldIgnoreRowNav(e)) return;
+                const row = getRowFromEvent(e);
+                if (!row) return;
+                const href = String(row.getAttribute('data-contact-href') || '').trim();
+                if (!href) return;
+
+                if (href === armedHref && Date.now() <= armedUntil) {
+                    clearArmed();
+                    openContact(href);
+                    return;
+                }
+
+                armRow(row, href);
+            }, true);
+
+            document.addEventListener('dblclick', (e) => {
+                if (shouldIgnoreRowNav(e)) return;
+                const row = getRowFromEvent(e);
+                if (!row) return;
+                const href = String(row.getAttribute('data-contact-href') || '').trim();
+                if (!href) return;
+                clearArmed();
+                openContact(href);
+            }, true);
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key !== 'Enter') return;
+                if (shouldIgnoreRowNav(e)) return;
+                const row = getRowFromEvent(e);
+                if (!row) return;
+                const href = String(row.getAttribute('data-contact-href') || '').trim();
+                if (!href) return;
+                e.preventDefault();
+
+                if (href === armedHref && Date.now() <= armedUntil) {
+                    clearArmed();
+                    openContact(href);
+                    return;
+                }
+
+                armRow(row, href);
+            }, true);
+
+            document.addEventListener('focusin', (e) => {
+                const row = getRowFromEvent(e);
+                if (!row) return;
+                const href = String(row.getAttribute('data-contact-href') || '').trim();
+                if (!href) return;
+                if (href !== armedHref) {
+                    clearArmed();
+                }
+            }, true);
+        }
 
         function bindRowCheckboxHandlers() {
             document.querySelectorAll('.row-checkbox').forEach(checkbox => {
