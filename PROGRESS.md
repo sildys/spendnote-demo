@@ -48,9 +48,26 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **Mon–Thu:** evenings only (2–3 hours when possible; not every day)
 - **Fri–Sun:** long-form sprint blocks (as much as sustainable)
 
+## This weekend (priority override)
+
+- **P0 (must ship): Cloudflare + public landing + waitlist**
+  - Cloudflare Pages: connect GitHub repo, production deploy on `main`
+  - Custom domain: `spendnote.app` (canonical host decision + DNS/SSL)
+  - Landing SEO baseline:
+    - `robots.txt`
+    - `sitemap.xml`
+    - Canonical + OG/Twitter meta
+    - Fix pricing copy: **14 days OR 20 transactions** (not "receipts")
+  - Waitlist:
+    - Add subscription CTA + storage (external provider or Cloudflare Worker)
+    - Basic anti-spam (rate limit / Turnstile)
+  - App isolation (recommended): host app under `app.spendnote.app` behind Cloudflare Access
+
+- **Only after P0 ships**: continue Week 1 roadmap (L1/L2/start L3/start MKT-1)
+
 ## 5-week launch schedule (milestones)
 
-- **Week 1:** DEC-TRIAL, L1 + L2, start L3 (Resend + skeleton sending), start MKT-1
+- **Week 1:** **P0 Cloudflare + public landing + waitlist first**, then L1 + L2, start L3 (Resend + skeleton sending), start MKT-1
 - **Week 2:** finish L3, L4, L5, MKT-2 (SEO outlines + keyword landing structure)
 - **Week 3:** S1, S2, Mobile sprint #1 (Create Transaction + Receipt mobile-usable)
 - **Week 4:** Mobile sprint #2 (History + Contacts + filters), start Cloudflare migration work (DEPLOY-1/2/3)
