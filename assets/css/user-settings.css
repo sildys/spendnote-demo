@@ -355,6 +355,14 @@
     text-align: right;
 }
 
+.team-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
 .team-actions {
     display: inline-flex;
     align-items: center;

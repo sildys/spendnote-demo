@@ -148,6 +148,12 @@ const computeAndApplyRole = async () => {
 
         currentRole = role;
         applyRoleBadge(currentRole);
+        try {
+            const manageAccessBtn = document.getElementById('manageAccessBtn');
+            if (manageAccessBtn) {
+                manageAccessBtn.style.display = (currentRole === 'owner' || currentRole === 'admin') ? '' : 'none';
+            }
+        } catch (_) {}
         renderTeamTable();
     } catch (_) {
         // ignore
@@ -223,9 +229,20 @@ const renderTeamTable = () => {
                     </div>
                 `;
             }
+
+            const isAdminLikeMember = role === 'admin' || role === 'owner';
+            if (isAdminLikeMember) {
+                return `
+                    <div class="team-actions">
+                        <span style="color:var(--text-muted);font-size:12px;">All Cash Boxes</span>
+                        <button type="button" class="btn btn-danger btn-small" data-action="remove" data-id="${m.id}"><i class="fas fa-trash"></i> Remove</button>
+                    </div>
+                `;
+            }
+
             return `
                 <div class="team-actions">
-                    <button type="button" class="btn btn-secondary btn-small" data-action="access" data-id="${m.id}"><i class="fas fa-key"></i> Access</button>
+                    <button type="button" class="btn btn-secondary btn-small" data-action="access" data-id="${m.id}"><i class="fas fa-key"></i> Cash Boxes</button>
                     <button type="button" class="btn btn-danger btn-small" data-action="remove" data-id="${m.id}"><i class="fas fa-trash"></i> Remove</button>
                 </div>
             `;
@@ -268,7 +285,58 @@ const loadCashBoxes = async () => {
     cashBoxes = await window.db.cashBoxes.getAll() || [];
 };
 
-const openAccessModal = async (memberId) => {
+const openAccessModal = async (memberId, options = {}) => {
+    const forcePicker = Boolean(options && options.forcePicker);
+    const pickerWrap = document.getElementById('accessMemberPickerWrap');
+    const pickerSelect = document.getElementById('accessMemberSelect');
+
+    const eligibleMembers = teamMembers
+        .filter((m) => String(m?.status || '').toLowerCase() === 'active')
+        .filter((m) => {
+            const r = String(m?.role || '').toLowerCase();
+            return r !== 'owner' && r !== 'admin';
+        });
+
+    if (pickerWrap && pickerSelect) {
+        if (forcePicker) {
+            pickerWrap.style.display = '';
+
+            if (!eligibleMembers.length) {
+                selectedMemberForAccess = null;
+                document.getElementById('accessMemberName').textContent = '—';
+                document.getElementById('accessMemberEmail').textContent = '—';
+                const list = document.getElementById('accessCashBoxList');
+                if (list) {
+                    list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">No Users available to configure.</div>';
+                }
+                document.getElementById('accessModal').classList.add('active');
+                pickerSelect.innerHTML = '';
+                pickerSelect.onchange = null;
+                return;
+            }
+
+            pickerSelect.innerHTML = eligibleMembers.map((m) => {
+                const name = m.member?.full_name || m.invited_email || '—';
+                const email = m.member?.email || m.invited_email || '';
+                const label = email ? `${name} (${email})` : String(name);
+                return `<option value="${escapeHtml(m.id)}">${escapeHtml(label)}</option>`;
+            }).join('');
+
+            if (!memberId) {
+                memberId = pickerSelect.value || null;
+            } else {
+                pickerSelect.value = memberId;
+            }
+
+            pickerSelect.onchange = async () => {
+                await openAccessModal(pickerSelect.value, { forcePicker: true });
+            };
+        } else {
+            pickerWrap.style.display = 'none';
+            pickerSelect.onchange = null;
+        }
+    }
+
     const member = teamMembers.find(m => m.id === memberId);
     if (!member) return;
     selectedMemberForAccess = member;
@@ -279,6 +347,13 @@ const openAccessModal = async (memberId) => {
     const list = document.getElementById('accessCashBoxList');
     list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
     document.getElementById('accessModal').classList.add('active');
+
+    const memberRole = String(member?.role || '').toLowerCase();
+    const isAdminLikeMember = memberRole === 'owner' || memberRole === 'admin';
+    if (isAdminLikeMember) {
+        list.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;">Admins can access all Cash Boxes. No per-cash-box changes are needed.</div>';
+        return;
+    }
 
     // Get current access for this member
     let memberAccess = [];
@@ -487,6 +562,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         inviteModal?.classList.add('active');
     });
+
+    document.getElementById('manageAccessBtn')?.addEventListener('click', async () => {
+        if (!(currentRole === 'owner' || currentRole === 'admin')) return;
+        await openAccessModal(null, { forcePicker: true });
+    });
     document.getElementById('inviteModalClose')?.addEventListener('click', () => inviteModal?.classList.remove('active'));
     document.getElementById('inviteModalCancel')?.addEventListener('click', () => inviteModal?.classList.remove('active'));
     document.getElementById('inviteModalSubmit')?.addEventListener('click', async () => {
@@ -656,6 +736,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('accessCashBoxList')?.addEventListener('click', async (e) => {
         const btn = e.target?.closest('button[data-cb-id]');
         if (!btn || !selectedMemberForAccess) return;
+
+        const memberRole = String(selectedMemberForAccess?.role || '').toLowerCase();
+        if (memberRole === 'owner' || memberRole === 'admin') {
+            return;
+        }
         const cbId = btn.dataset.cbId;
         const hasAccess = btn.dataset.hasAccess === 'true';
         const userId = selectedMemberForAccess.member_id || selectedMemberForAccess.member?.id;
@@ -668,7 +753,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!window.db?.cashBoxAccess?.grant) return;
             await window.db.cashBoxAccess.grant(cbId, userId);
         }
-        await openAccessModal(selectedMemberForAccess.id);
+        const pickerWrap = document.getElementById('accessMemberPickerWrap');
+        const keepPicker = Boolean(pickerWrap && pickerWrap.style.display !== 'none');
+        await openAccessModal(selectedMemberForAccess.id, { forcePicker: keepPicker });
     });
 
     // Billing toggle
