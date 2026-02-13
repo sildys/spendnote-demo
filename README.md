@@ -18,6 +18,27 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
     - `assets/js/auth-guard.js`
     - `assets/js/supabase-config.js`
 
+## Recent engineering updates (2026-02-13 PM hotfixes)
+
+- Invites / team management (production fixes):
+  - Fixed DB constraint: `invites_status_check` now allows `pending|active|accepted|expired|cancelled`.
+  - Added RLS policies for `profiles` so org members can read each other’s minimal profile (name/email). Team table now shows invited member details.
+  - Frontend hardening:
+    - `teamMembers.getAll()` fetches `profiles` separately and falls back to the accepted invite’s email when a profile is missing.
+    - Signup page “Log in” link preserves `inviteToken`/`invitedEmail` when navigating to Login.
+    - Added auto-accept-by-email fallback: if token-based accept fails or there is no token, attempt accept by the authenticated user’s email.
+    - Cache-bust updated for `assets/js/supabase-config.js` across app pages.
+- Deliverability:
+  - Resend domain verified for `spendnote.app`.
+  - Edge Function `send-invite-email` updated with `reply_to` and personalized subject (deploy pending).
+- SQL migrations added:
+  - `014_fix_invites_status_check.sql`
+  - `015_accept_invite_ensure_profile.sql` (recommended)
+  - `016_profiles_read_policy.sql` (applied)
+- Follow-ups:
+  - Apply 015 migration (ensure profile on invite accept) and optionally backfill profiles for legacy members.
+  - Deploy updated `send-invite-email`; monitor inbox placement for 48h; trim invite debug logs afterwards.
+
 ## Recent engineering updates (2026-02-11)
 
 - Auth (launch readiness):

@@ -1846,35 +1846,78 @@ var db = {
             const orgId = ctx?.orgId;
             if (!orgId) return [];
 
-            const [membersRes, invitesRes] = await Promise.all([
-                supabaseClient
-                    .from('org_memberships')
-                    .select('org_id,user_id,role,created_at,user:profiles!user_id(id, full_name, email)')
-                    .eq('org_id', orgId)
-                    .order('created_at', { ascending: true }),
-                supabaseClient
-                    .from('invites')
-                    .select('id,invited_email,role,status,created_at')
-                    .eq('org_id', orgId)
-                    .eq('status', 'pending')
-                    .order('created_at', { ascending: false })
-            ]);
+            const membersRes = await supabaseClient
+                .from('org_memberships')
+                .select('org_id,user_id,role,created_at')
+                .eq('org_id', orgId)
+                .order('created_at', { ascending: true });
 
             if (membersRes.error) {
                 console.error('Error fetching org members:', membersRes.error);
                 return [];
             }
 
-            const members = (membersRes.data || []).map((m) => {
+            const rows = membersRes.data || [];
+            const userIds = Array.from(new Set(rows.map((m) => m?.user_id).filter(Boolean)));
+
+            let profilesById = new Map();
+            if (userIds.length) {
+                const profRes = await supabaseClient
+                    .from('profiles')
+                    .select('id,full_name,email')
+                    .in('id', userIds);
+                if (!profRes.error) {
+                    profilesById = new Map((profRes.data || []).map((p) => [p.id, p]));
+                }
+            }
+
+            let acceptedEmailByUserId = new Map();
+            const acceptedInvRes = await supabaseClient
+                .from('invites')
+                .select('accepted_by,invited_email,status')
+                .eq('org_id', orgId)
+                .eq('status', 'active');
+            if (!acceptedInvRes.error) {
+                for (const it of acceptedInvRes.data || []) {
+                    const uid = it?.accepted_by || null;
+                    const em = String(it?.invited_email || '').trim();
+                    if (uid && em) acceptedEmailByUserId.set(uid, em);
+                }
+            }
+
+            const members = rows.map((m) => {
+                const uid = m?.user_id || '';
+                let memberObj = profilesById.get(uid) || null;
+                if (!memberObj) {
+                    const invitedEmail = acceptedEmailByUserId.get(uid) || '';
+                    let synthName = '';
+                    if (invitedEmail) {
+                        try {
+                            synthName = invitedEmail.split('@')[0] || '';
+                            synthName = synthName.replace(/[._-]+/g, ' ').trim();
+                            synthName = synthName ? (synthName.charAt(0).toUpperCase() + synthName.slice(1)) : '';
+                        } catch (_) {}
+                    }
+                    if (invitedEmail) {
+                        memberObj = { id: uid, full_name: synthName || invitedEmail, email: invitedEmail };
+                    }
+                }
                 return {
-                    id: m?.user_id || '',
+                    id: uid,
                     org_id: m?.org_id || orgId,
-                    member_id: m?.user_id || '',
-                    member: m?.user || null,
+                    member_id: uid,
+                    member: memberObj,
                     role: m?.role || 'user',
                     status: 'active'
                 };
             });
+
+            const invitesRes = await supabaseClient
+                .from('invites')
+                .select('id,invited_email,role,status,created_at')
+                .eq('org_id', orgId)
+                .eq('status', 'pending')
+                .order('created_at', { ascending: false });
 
             const memberEmails = new Set(
                 members

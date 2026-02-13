@@ -52,6 +52,15 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
 ## Where we are now (last updated: 2026-02-13)
+
+- Invites/Team hotfixes (PM):
+  - Fixed DB check constraint so invite acceptance can set status to `active` (`invites_status_check`).
+  - RLS policies added on `profiles` so org members can read each other's minimal profile (name/email).
+  - Frontend hardened: `teamMembers.getAll()` fetches `profiles` separately and falls back to accepted invite email if profile missing; signup → login link preserves `inviteToken`.
+  - Auto-accept-by-email fallback implemented (runs when no token or token-RPC fails).
+  - Resend domain verified for spendnote.app; Edge Function updated with `reply_to` and personalized subject (deploy pending).
+  - Go-live smoke: invite accept → inviter sees Active / no Pending — PASSED.
+  - README updated with 2026-02-13 PM hotfixes summary.
  
  - GitHub repo is now: `https://github.com/sildys/spendnote` ✅
  - Local git `origin` points to the new repo ✅
@@ -496,7 +505,10 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Destructive confirms use red danger styling; prompts for email, void reason, delete confirmation
 
 ## Next focus (pick one)
-- Invite resend/revoke actions in UI
+- Deploy updated `send-invite-email` Edge Function (reply_to + personalized subject) and monitor inbox placement for 48h.
+- Apply migration 015 (ensure profile is created/updated on invite accept + auto-accept).
+- Optional one-time backfill: create/update `profiles` for existing org members missing a row.
+- Trim debug console logs for invite flow after validation.
 
 ## Backlog (UX + bugs)
 - **High**
