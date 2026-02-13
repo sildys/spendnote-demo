@@ -1344,6 +1344,43 @@
     <i class="fas fa-arrow-up"></i>
 </button>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js?v=20260213-1910"></script>
+<script>
+    (async () => {
+        try {
+            const sp = new URLSearchParams(window.location.search);
+            const hp = new URLSearchParams(String(window.location.hash || '').replace(/^#/, ''));
+
+            const code = String(sp.get('code') || '').trim();
+            const tokenHash = String(sp.get('token_hash') || '').trim();
+            const type = String(sp.get('type') || hp.get('type') || '').trim();
+            const accessToken = String(hp.get('access_token') || '').trim();
+            const looksLikeAuthCallback = Boolean(code || (tokenHash && type) || accessToken);
+            if (!looksLikeAuthCallback) return;
+
+            let handled = null;
+            try {
+                handled = await (window.__spendnoteAuthCallbackPromise || Promise.resolve(null));
+            } catch (_) {
+                handled = null;
+            }
+
+            const isSignup = String(handled?.type || type || '').toLowerCase() === 'signup';
+            const ok = Boolean(handled?.handled) && Boolean(handled?.success);
+            if (!ok || !isSignup) return;
+
+            try {
+                localStorage.setItem('spendnote.auth.confirmed.v1', String(Date.now()));
+            } catch (_) {}
+
+            try {
+                window.location.href = 'spendnote-user-settings.html';
+            } catch (_) {}
+        } catch (_) {}
+    })();
+</script>
+
 <script>
     (function() {
         try {
