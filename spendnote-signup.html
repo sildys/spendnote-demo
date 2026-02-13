@@ -472,7 +472,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260213-1910"></script>
+    <script src="assets/js/supabase-config.js?v=20260213-2125"></script>
     <script>
         const ensureProfile = async () => {
             try {
@@ -501,18 +501,30 @@
         };
 
         const acceptInviteToken = async (inviteToken) => {
-            if (!inviteToken || !window.supabaseClient?.rpc) return;
+            if (!inviteToken || !window.supabaseClient?.rpc) {
+                console.warn('[signup-invite] skip: no token or no rpc');
+                return;
+            }
+            console.warn('[signup-invite] acceptInviteToken called, token length=' + inviteToken.length);
             try {
                 await ensureProfile();
-            } catch (_) {}
+                console.warn('[signup-invite] ensureProfile done');
+            } catch (ep) { console.warn('[signup-invite] ensureProfile err:', ep); }
             try {
+                console.warn('[signup-invite] calling v2...');
                 const r = await window.supabaseClient.rpc('spendnote_accept_invite_v2', { p_token: inviteToken });
+                console.warn('[signup-invite] v2 result:', JSON.stringify({ data: r?.data, error: r?.error }));
                 if (r?.error) throw r.error;
-            } catch (_) {
+                console.warn('[signup-invite] SUCCESS v2');
+            } catch (e1) {
+                console.error('[signup-invite] v2 failed:', e1?.message || e1);
                 try {
-                    await window.supabaseClient.rpc('spendnote_accept_invite', { p_token: inviteToken });
-                } catch (_) {
-
+                    const r2 = await window.supabaseClient.rpc('spendnote_accept_invite', { p_token: inviteToken });
+                    console.warn('[signup-invite] fallback result:', JSON.stringify({ data: r2?.data, error: r2?.error }));
+                    if (r2?.error) throw r2.error;
+                    console.warn('[signup-invite] SUCCESS fallback');
+                } catch (e2) {
+                    console.error('[signup-invite] BOTH FAILED v2:', e1?.message || e1, 'fb:', e2?.message || e2);
                 }
             }
         };

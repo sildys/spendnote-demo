@@ -185,28 +185,38 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
     } catch (_) {
         token = '';
     }
-    if (!token) return;
+    if (!token) {
+        console.warn('[invite-accept] No invite token in localStorage, skipping.');
+        return;
+    }
+    console.warn('[invite-accept] Found token in localStorage, length=' + token.length);
 
     try {
         await __spendnoteEnsureProfileForCurrentUser();
-    } catch (_) {
-        // ignore
+        console.warn('[invite-accept] ensureProfile done');
+    } catch (ep) {
+        console.warn('[invite-accept] ensureProfile error (non-fatal):', ep);
     }
 
     try {
+        console.warn('[invite-accept] Calling spendnote_accept_invite_v2...');
         const r = await supabaseClient.rpc('spendnote_accept_invite_v2', { p_token: token });
+        console.warn('[invite-accept] v2 result:', JSON.stringify({ data: r?.data, error: r?.error }));
         if (r?.error) throw r.error;
         try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
+        console.warn('[invite-accept] SUCCESS via v2');
         return;
     } catch (e1) {
+        console.error('[invite-accept] v2 failed:', e1?.message || e1);
         try {
+            console.warn('[invite-accept] Trying fallback spendnote_accept_invite...');
             const r2 = await supabaseClient.rpc('spendnote_accept_invite', { p_token: token });
+            console.warn('[invite-accept] fallback result:', JSON.stringify({ data: r2?.data, error: r2?.error }));
             if (r2?.error) throw r2.error;
             try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
+            console.warn('[invite-accept] SUCCESS via fallback');
         } catch (e2) {
-            try {
-                console.error('Invite accept failed:', e2 || e1);
-            } catch (_) {}
+            console.error('[invite-accept] BOTH RPCs FAILED. v2:', e1?.message || e1, 'fallback:', e2?.message || e2);
         }
     }
 };
