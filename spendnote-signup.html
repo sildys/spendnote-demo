@@ -488,8 +488,32 @@
             }
         };
 
+        const __spendnoteTryCloseSignupTab = () => {
+            try { window.close(); } catch (_) {}
+            try { window.location.href = 'index.html'; } catch (_) {}
+        };
+
+        const __spendnoteHandleAuthConfirmedSignal = (value) => {
+            const ts = Number(value);
+            if (!Number.isFinite(ts) || ts <= 0) return;
+            if (Date.now() - ts > 10 * 60 * 1000) return;
+            try { localStorage.removeItem('spendnote.auth.confirmed.v1'); } catch (_) {}
+            __spendnoteTryCloseSignupTab();
+        };
+
         // Wait for DOM and scripts to load
         document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                __spendnoteHandleAuthConfirmedSignal(localStorage.getItem('spendnote.auth.confirmed.v1'));
+            } catch (_) {}
+            try {
+                window.addEventListener('storage', (e) => {
+                    try {
+                        if (!e || e.key !== 'spendnote.auth.confirmed.v1') return;
+                        __spendnoteHandleAuthConfirmedSignal(e.newValue);
+                    } catch (_) {}
+                });
+            } catch (_) {}
             // Check if already logged in
             try {
                 await (window.__spendnoteAuthCallbackPromise || Promise.resolve());

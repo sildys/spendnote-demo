@@ -469,6 +469,9 @@
                     try {
                         const sp = new URLSearchParams(window.location.search);
                         if (sp.get('confirmed') === '1') {
+                            try {
+                                localStorage.setItem('spendnote.auth.confirmed.v1', String(Date.now()));
+                            } catch (_) {}
                             window.location.href = 'spendnote-user-settings.html';
                             return;
                         }
