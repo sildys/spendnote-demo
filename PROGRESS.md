@@ -14,7 +14,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 
 ## Launch roadmap (ordered checklist)
 
-- [ ] **REPO-1** Rename GitHub repo: `spendnote-demo` → `spendnote` (then update local `git remote`, verify Vercel still auto-deploys, and confirm GitHub Actions (Supabase functions deploy) still runs)
+- [x] **REPO-1** Rename GitHub repo: `spendnote-demo` → `spendnote` (update local `git remote`, verify Vercel still auto-deploys, confirm GitHub Actions still runs)
 - [x] **DEC-L1** Decide onboarding structure (chosen: 1=A, 2=B)
   - Signup success: in-page vs new `spendnote-welcome.html`
   - Next steps: success only vs success + dismissable dashboard panel
@@ -44,6 +44,58 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **MKT-2** SEO content plan: 3 landing pages (petty cash misspellings/alternatives) + “cash handoff receipt” positioning + CTA alignment to onboarding (L1/L2)
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
+
+## Where we are now (last updated: 2026-02-13)
+ 
+ - GitHub repo is now: `https://github.com/sildys/spendnote` ✅
+ - Local git `origin` points to the new repo ✅
+ - GitHub Actions: green ✅
+ - Vercel:
+   - Project renamed to `spendnote` ✅
+   - Deploy triggers still work from `main` ✅
+   - Verified by a post-rename deploy trigger commit: `91eab90` ✅
+ - Cloudflare Pages config committed:
+   - `_redirects` (clean URLs like `/login`, `/signup`) ✅
+   - `_headers` (immutable caching for `/assets/*`) ✅
+
+## Immediate next steps (Cloudflare Pages + spendnote.app)
+
+1) **Local folder rename (optional but recommended)**
+   - Rename folder on disk:
+     - from: `c:\SpendNote projekt\spendnote-demo`
+     - to: `c:\SpendNote projekt\spendnote-git`
+   - Close IDE before rename (prevents file locks), then re-open the new folder.
+   - Quick sanity checks in terminal:
+     - `git status`
+     - `git remote -v`
+
+2) **Create Cloudflare Pages project (from GitHub)**
+   - Cloudflare Dashboard → **Pages** → **Create a project** → **Connect to Git**
+   - Select repo: `sildys/spendnote`
+   - Build settings (static):
+     - Framework preset: **None**
+     - Build command: *(empty / none)*
+     - Output directory: `/`
+     - Production branch: `main`
+   - Deploy and open the generated `*.pages.dev` URL.
+   - Smoke: `/<login|signup|dashboard>` should load (via `_redirects`).
+
+3) **Attach the real domain**
+   - Cloudflare Pages → project → **Custom domains** → add: `spendnote.app`
+   - Decide canonical host:
+     - Option A: `spendnote.app` (recommended)
+     - Option B: `www.spendnote.app`
+   - Ensure SSL is active.
+
+4) **Supabase Auth URL config update for the new domain**
+   - Supabase → Auth → URL Configuration
+     - Site URL: `https://spendnote.app`
+     - Additional Redirect URLs: include `https://spendnote.app` and the `*.pages.dev` URL during rollout
+   - Smoke test on `spendnote.app`: login/signup + invite accept.
+
+5) **Keep Vercel as fallback briefly, then remove it**
+   - Keep Vercel alive for 1–2 days after cutover.
+   - After Cloudflare is stable: archive/disable Vercel project and set any legacy subdomain redirects if needed.
 
 ## Weekly cadence (time budget)
 
