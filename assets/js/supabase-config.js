@@ -146,6 +146,38 @@ const __spendnotePersistInviteTokenFromUrl = () => {
     }
 };
 
+const __spendnoteEnsureProfileForCurrentUser = async () => {
+    try {
+        const { data: { user }, error } = await supabaseClient.auth.getUser();
+        if (error || !user) return;
+
+        try {
+            const { data: existing, error: selErr } = await supabaseClient
+                .from('profiles')
+                .select('id')
+                .eq('id', user.id)
+                .single();
+            if (!selErr && existing?.id) return;
+        } catch (_) {
+            // ignore
+        }
+
+        const email = String(user.email || '').trim();
+        const fullName = String(user.user_metadata?.full_name || '').trim() || (email ? email.split('@')[0] : 'User');
+        if (!email) return;
+
+        try {
+            await supabaseClient
+                .from('profiles')
+                .insert([{ id: user.id, email, full_name: fullName }]);
+        } catch (_) {
+            // ignore
+        }
+    } catch (_) {
+        // ignore
+    }
+};
+
 const __spendnoteTryAcceptPendingInviteToken = async () => {
     let token = '';
     try {
@@ -154,6 +186,12 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
         token = '';
     }
     if (!token) return;
+
+    try {
+        await __spendnoteEnsureProfileForCurrentUser();
+    } catch (_) {
+        // ignore
+    }
 
     try {
         const r = await supabaseClient.rpc('spendnote_accept_invite_v2', { p_token: token });

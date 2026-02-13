@@ -426,10 +426,39 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260213-1825"></script>
+    <script src="assets/js/supabase-config.js?v=20260213-1915"></script>
     <script>
+        const ensureProfile = async () => {
+            try {
+                const { data: { user }, error } = await window.supabaseClient.auth.getUser();
+                if (error || !user) return;
+
+                try {
+                    const { data: existing, error: selErr } = await window.supabaseClient
+                        .from('profiles')
+                        .select('id')
+                        .eq('id', user.id)
+                        .single();
+                    if (!selErr && existing?.id) return;
+                } catch (_) {}
+
+                const email = String(user.email || '').trim();
+                const fullName = String(user.user_metadata?.full_name || '').trim() || (email ? email.split('@')[0] : 'User');
+                if (!email) return;
+
+                try {
+                    await window.supabaseClient
+                        .from('profiles')
+                        .insert([{ id: user.id, email, full_name: fullName }]);
+                } catch (_) {}
+            } catch (_) {}
+        };
+
         const acceptInviteToken = async (inviteToken) => {
             if (!inviteToken || !window.supabaseClient?.rpc) return;
+            try {
+                await ensureProfile();
+            } catch (_) {}
             try {
                 const r = await window.supabaseClient.rpc('spendnote_accept_invite_v2', { p_token: inviteToken });
                 if (r?.error) throw r.error;
@@ -454,6 +483,14 @@
         (async () => {
             try {
                 try {
+                    const sp0 = new URLSearchParams(window.location.search);
+                    if (sp0.get('confirmed') === '1') {
+                        try {
+                            localStorage.setItem('spendnote.auth.confirmed.v1', String(Date.now()));
+                        } catch (_) {}
+                    }
+                } catch (_) {}
+                try {
                     await (window.__spendnoteAuthCallbackPromise || Promise.resolve());
                 } catch (_) {
                 }
@@ -469,9 +506,6 @@
                     try {
                         const sp = new URLSearchParams(window.location.search);
                         if (sp.get('confirmed') === '1') {
-                            try {
-                                localStorage.setItem('spendnote.auth.confirmed.v1', String(Date.now()));
-                            } catch (_) {}
                             window.location.href = 'spendnote-user-settings.html';
                             return;
                         }
