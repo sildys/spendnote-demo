@@ -13,8 +13,8 @@ try {
     // ignore
 }
 
-if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260208-0318');
-window.__spendnoteSupabaseConfigBuild = '20260208-0318';
+if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260213-1825');
+window.__spendnoteSupabaseConfigBuild = '20260213-1825';
 
 // If you previously used localStorage persistence, clean it up so tab-close logout works immediately.
 // Supabase stores sessions under a project-specific key like: sb-<project-ref>-auth-token
@@ -200,6 +200,109 @@ window.writeBootstrapSession = async () => {
     } catch (_) {}
     return false;
 };
+
+try {
+    if (!window.__spendnoteAuthCallbackPromise) {
+        window.__spendnoteAuthCallbackPromise = (async () => {
+            try {
+                const url = new URL(String(window.location.href || ''));
+                const sp = url.searchParams;
+                const hp = new URLSearchParams(String(url.hash || '').replace(/^#/, ''));
+
+                const code = String(sp.get('code') || '').trim();
+                const token_hash = String(sp.get('token_hash') || hp.get('token_hash') || '').trim();
+                const type = String(sp.get('type') || hp.get('type') || '').trim();
+                const accessToken = String(hp.get('access_token') || '').trim();
+
+                if (!code && !(token_hash && type) && !accessToken) {
+                    return { handled: false, success: false, type: null, error: null };
+                }
+
+                const cleanupUrl = () => {
+                    try {
+                        const cleaned = new URL(url.toString());
+                        cleaned.searchParams.delete('code');
+                        cleaned.searchParams.delete('token_hash');
+                        cleaned.searchParams.delete('type');
+                        cleaned.searchParams.delete('next');
+                        cleaned.hash = '';
+                        const qs = cleaned.searchParams.toString();
+                        const nextUrl = `${cleaned.pathname}${qs ? `?${qs}` : ''}`;
+                        window.history.replaceState({}, '', nextUrl);
+                    } catch (_) {}
+                };
+
+                const afterSession = async (session) => {
+                    try {
+                        __spendnoteWriteBootstrapSession(session);
+                    } catch (_) {}
+                    try {
+                        const u = session?.user || null;
+                        const displayName = String(u?.user_metadata?.full_name || u?.email || '').trim();
+                        if (displayName) {
+                            localStorage.setItem('spendnote.user.fullName.v1', displayName);
+                        }
+                    } catch (_) {}
+                    try {
+                        await __spendnoteTryAcceptPendingInviteToken();
+                    } catch (_) {}
+                };
+
+                if (code) {
+                    try {
+                        await new Promise((r) => setTimeout(r, 0));
+                    } catch (_) {}
+
+                    const { data: preData } = await supabaseClient.auth.getSession();
+                    if (preData?.session) {
+                        cleanupUrl();
+                        await afterSession(preData.session);
+                        return { handled: true, success: true, type: type || null, error: null };
+                    }
+
+                    const { data, error } = await supabaseClient.auth.exchangeCodeForSession(code);
+                    if (error) {
+                        return { handled: true, success: false, type: type || null, error: String(error.message || error) };
+                    }
+                    cleanupUrl();
+                    if (data?.session) {
+                        await afterSession(data.session);
+                    }
+                    return { handled: true, success: true, type: type || null, error: null };
+                }
+
+                if (token_hash && type) {
+                    if (type !== 'signup') {
+                        return { handled: false, success: false, type, error: null };
+                    }
+                    const { data, error } = await supabaseClient.auth.verifyOtp({ token_hash, type });
+                    if (error) {
+                        return { handled: true, success: false, type, error: String(error.message || error) };
+                    }
+                    cleanupUrl();
+                    if (data?.session) {
+                        await afterSession(data.session);
+                    }
+                    return { handled: true, success: true, type, error: null };
+                }
+
+                try {
+                    await new Promise((r) => setTimeout(r, 0));
+                } catch (_) {}
+
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                cleanupUrl();
+                if (session) {
+                    await afterSession(session);
+                }
+                return { handled: true, success: Boolean(session), type: type || null, error: null };
+            } catch (e) {
+                try { console.error('Auth callback failed:', e); } catch (_) {}
+                return { handled: true, success: false, type: null, error: String(e?.message || e || 'Auth callback failed') };
+            }
+        })();
+    }
+} catch (_) {}
 
 try {
     supabaseClient.auth.onAuthStateChange((event, session) => {

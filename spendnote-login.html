@@ -398,7 +398,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260211-2110"></script>
+    <script src="assets/js/supabase-config.js?v=20260213-1825"></script>
     <script>
         const acceptInviteToken = async (inviteToken) => {
             if (!inviteToken || !window.supabaseClient?.rpc) return;
@@ -414,9 +414,21 @@
             }
         };
 
-        // Check if already logged in
+        // Form submission
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const resendWrap = document.getElementById('resendWrap');
+        const resendBtn = document.getElementById('resendBtn');
+
+        let lastAttemptEmail = '';
+
         (async () => {
             try {
+                try {
+                    await (window.__spendnoteAuthCallbackPromise || Promise.resolve());
+                } catch (_) {
+                }
                 const user = await window.auth.getCurrentUser();
                 if (user) {
                     try {
@@ -432,15 +444,6 @@
 
             }
         })();
-
-        // Form submission
-        const loginForm = document.getElementById('loginForm');
-        const errorMessage = document.getElementById('errorMessage');
-        const successMessage = document.getElementById('successMessage');
-        const resendWrap = document.getElementById('resendWrap');
-        const resendBtn = document.getElementById('resendBtn');
-
-        let lastAttemptEmail = '';
 
         const isUnconfirmedEmailError = (msg) => {
             const s = String(msg || '').toLowerCase();
