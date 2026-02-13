@@ -206,12 +206,20 @@ try {
         if (event === 'SIGNED_OUT') {
             try {
                 localStorage.removeItem('spendnote.session.bootstrap');
+                localStorage.removeItem('spendnote.user.fullName.v1');
             } catch (_) {}
             return;
         }
 
         if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
             __spendnoteWriteBootstrapSession(session);
+            try {
+                const u = session?.user || null;
+                const displayName = String(u?.user_metadata?.full_name || u?.email || '').trim();
+                if (displayName) {
+                    localStorage.setItem('spendnote.user.fullName.v1', displayName);
+                }
+            } catch (_) {}
             try {
                 __spendnoteTryAcceptPendingInviteToken();
             } catch (_) {}

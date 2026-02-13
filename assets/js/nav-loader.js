@@ -158,6 +158,9 @@ function initNavEvents() {
         }
 
         e.preventDefault();
+        if (typeof e.stopImmediatePropagation === 'function') {
+            e.stopImmediatePropagation();
+        }
 
         try {
             if (window.auth && typeof window.auth.signOut === 'function') {
@@ -171,7 +174,7 @@ function initNavEvents() {
             } catch (_) {
                 // ignore
             }
-            window.location.href = 'spendnote-login.html';
+            window.location.href = 'index.html';
         }
     });
 
