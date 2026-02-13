@@ -1,11 +1,11 @@
 /favicon.ico /favicon.svg 200
 
-/login /spendnote-login.html 200
-/signup /spendnote-signup.html 200
-/settings /spendnote-user-settings.html 200
-/dashboard /dashboard.html 200
-/transactions /spendnote-transaction-history.html 200
-/contacts /spendnote-contact-list.html 200
-/cash-boxes /spendnote-cash-box-list.html 200
-/privacy /spendnote-privacy.html 200
-/terms /spendnote-terms.html 200
+/login /spendnote-login 200
+/signup /spendnote-signup 200
+/settings /spendnote-user-settings 200
+/dashboard /dashboard 200
+/transactions /spendnote-transaction-history 200
+/contacts /spendnote-contact-list 200
+/cash-boxes /spendnote-cash-box-list 200
+/privacy /spendnote-privacy 200
+/terms /spendnote-terms 200
