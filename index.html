@@ -923,6 +923,72 @@
                 gap: 0.75rem;
             }
         }
+
+        .account-confirmed-banner {
+            max-width: var(--max-width-page);
+            margin: 1.25rem auto -0.5rem;
+            padding: 0 3rem;
+        }
+
+        .account-confirmed-banner-inner {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(5, 150, 105, 0.25);
+            background: rgba(5, 150, 105, 0.06);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 24px rgba(5, 150, 105, 0.08);
+        }
+
+        .account-confirmed-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 16px rgba(5, 150, 105, 0.2);
+        }
+
+        .account-confirmed-title {
+            font-weight: 900;
+            margin: 0;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .account-confirmed-text {
+            margin: 0.35rem 0 0.75rem;
+            color: #000000;
+            font-weight: 600;
+            line-height: 1.5;
+        }
+
+        .account-confirmed-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .account-confirmed-close-note {
+            margin-top: 0.6rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .account-confirmed-banner {
+                padding: 0 1.25rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -959,6 +1025,21 @@
         </ul>
     </div>
 </nav>
+
+<div class="account-confirmed-banner" id="accountConfirmedBanner" style="display:none;">
+    <div class="account-confirmed-banner-inner">
+        <div class="account-confirmed-icon"><i class="fas fa-check"></i></div>
+        <div>
+            <h2 class="account-confirmed-title">Your SpendNote account is ready</h2>
+            <p class="account-confirmed-text">You can safely close this tab. Your app is open in another tab (Settings) so you can finish setup and start tracking.</p>
+            <div class="account-confirmed-actions">
+                <a href="spendnote-login.html" class="btn btn-primary">Log in</a>
+                <button type="button" class="btn btn-secondary" id="confirmedCloseTabBtn">Close this tab</button>
+            </div>
+            <div class="account-confirmed-close-note" id="confirmedCloseTabNote">If this tab did not close, you can close it manually now.</div>
+        </div>
+    </div>
+</div>
 
 <main>
 <!-- HERO -->
@@ -1264,6 +1345,47 @@
 </button>
 
 <script>
+    (function() {
+        try {
+            const sp = new URLSearchParams(window.location.search);
+            const confirmedParam = sp.get('confirmed');
+            let ts = null;
+            try {
+                ts = Number(localStorage.getItem('spendnote.auth.confirmed.v1'));
+            } catch (_) {}
+            const isRecentSignal = Number.isFinite(ts) && ts > 0 && (Date.now() - ts) < 10 * 60 * 1000;
+
+            if (confirmedParam === '1' || isRecentSignal) {
+                try { localStorage.removeItem('spendnote.auth.confirmed.v1'); } catch (_) {}
+
+                const banner = document.getElementById('accountConfirmedBanner');
+                if (banner) {
+                    banner.style.display = '';
+                }
+
+                try {
+                    sp.delete('confirmed');
+                    const qs = sp.toString();
+                    const newUrl = window.location.pathname + (qs ? ('?' + qs) : '') + window.location.hash;
+                    window.history.replaceState({}, document.title, newUrl);
+                } catch (_) {}
+
+                const closeBtn = document.getElementById('confirmedCloseTabBtn');
+                const closeNote = document.getElementById('confirmedCloseTabNote');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        try { window.close(); } catch (_) {}
+                        try {
+                            setTimeout(() => {
+                                if (closeNote) closeNote.style.display = 'block';
+                            }, 250);
+                        } catch (_) {}
+                    });
+                }
+            }
+        } catch (_) {}
+    })();
+
     // CAROUSEL
     let currentSlide = 0;
     const slides = document.querySelectorAll('.carousel-slide');

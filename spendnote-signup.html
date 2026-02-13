@@ -490,7 +490,7 @@
 
         const __spendnoteTryCloseSignupTab = () => {
             try { window.close(); } catch (_) {}
-            try { window.location.href = 'index.html'; } catch (_) {}
+            try { window.location.href = 'index.html?confirmed=1'; } catch (_) {}
         };
 
         const __spendnoteHandleAuthConfirmedSignal = (value) => {
