@@ -50,10 +50,15 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
     - `cash-handoff-receipt-app` intent page
 - SEO/Indexing rollout:
   - Keep `noindex` while landing is being finalized.
-  - After landing is ready: enable indexing for landing + the 2 SEO pages only; internal/app pages remain `noindex`.
+  - During beta: enable indexing for landing + the 2 SEO pages only; internal/app pages remain `noindex`.
 - Analytics:
   - Add GA4 baseline on landing (`page_view` + signup CTA click event).
   - Connect Google Search Console and verify indexing/sitemap flow.
+
+- Beta/Launch timeline (working plan):
+  - Beta/preview: ships in the next few days.
+  - Launch target: ~6 weeks (pricing + company setup + Stripe, mobile view, final polish).
+  - Onboarding: after signup/first valid session, auto-create a default USD Cash Box (starting balance: 0) so the first receipt can be created in ~30 seconds.
 
 ## Recent engineering updates (2026-02-11)
 

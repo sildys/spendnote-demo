@@ -51,7 +51,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
-## Where we are now (last updated: 2026-02-13)
+## Where we are now (last updated: 2026-02-14)
 
 - Invites/Team hotfixes (PM):
   - Fixed DB check constraint so invite acceptance can set status to `active` (`invites_status_check`).
@@ -63,6 +63,15 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Migration 015 applied + verified in SQL Editor (`spendnote_accept_invite_v2`, `spendnote_auto_accept_my_invites` present; orphan membership check returned 0 rows).
   - README updated with 2026-02-13 PM hotfixes summary.
   - SEO safety lock for preview prep: `noindex` enabled across pages (including landing) until landing polish is finished.
+  - Timeline update:
+    - Beta/preview ships in the next few days.
+    - Launch target is ~6 weeks: pricing + company setup + Stripe, mobile view, and final polish.
+  - Indexing plan during beta:
+    - Only the landing page + 2 SEO pages should be indexable.
+    - Keep all internal/app pages `noindex`.
+  - Onboarding decision:
+    - After signup/first valid session, auto-create a default USD Cash Box (starting balance: 0).
+    - Goal: first receipt can be created in ~30 seconds with a ready-to-use USD cash box.
   - Tomorrow plan: landing polish + preview disclaimer UX + GA4 baseline + Google Search Console setup.
  
  - GitHub repo is now: `https://github.com/sildys/spendnote` ✅
@@ -512,6 +521,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Add visible contact email on landing (footer + clear `mailto:`) for inbound questions.
 - Preview disclaimer UX on landing + signup (signup explicit acceptance).
 - GA4 baseline on landing (`page_view` + signup CTA click event) + Search Console setup.
+- Onboarding: auto-create a default USD Cash Box (starting balance 0) after signup/first session.
 - Build SEO page #1: `petty-cash-log-software` intent page (angle: replace handwritten/duplicate receipt book with searchable digital cash handoff receipts; US keywords: "receipt book", "duplicate receipt book", "carbonless receipt book"; copy + layout + meta + canonical + internal links).
 - Build SEO page #2: `cash-handoff-receipt-app` intent page (copy + layout + meta + canonical + internal links).
 - After landing is ready: enable indexing for landing + these 2 SEO pages only; keep internal/app pages `noindex`.
