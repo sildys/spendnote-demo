@@ -101,6 +101,30 @@ function initSpendNoteNav() {
             window.location.href = 'dashboard.html#new-transaction';
         });
     }
+
+    highlightMarketingNav();
+}
+
+function highlightMarketingNav() {
+    const links = Array.from(document.querySelectorAll('.nav-links a'));
+    if (!links.length) return;
+    const hasDataPage = links.some((link) => link?.dataset?.page);
+    if (hasDataPage) return;
+
+    const rawPath = window.location.pathname || '';
+    let currentFile = rawPath.split('/').filter(Boolean).pop() || 'index.html';
+    if (!currentFile.includes('.')) currentFile = `${currentFile}.html`;
+    const currentNormalized = currentFile.toLowerCase();
+
+    links.forEach((link) => link.classList.remove('active'));
+    links.forEach((link) => {
+        const href = String(link.getAttribute('href') || '').trim();
+        if (!href || href.startsWith('#') || href.startsWith('http')) return;
+        const hrefFile = href.split('?')[0].split('#')[0].split('/').filter(Boolean).pop();
+        if (hrefFile && hrefFile.toLowerCase() === currentNormalized) {
+            link.classList.add('active');
+        }
+    });
 }
 
 // Navigation menu functionality
