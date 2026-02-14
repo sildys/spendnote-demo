@@ -240,8 +240,8 @@ body {
     left: 0;
     right: 0;
     bottom: -10px;
-    height: 3px;
-    border-radius: 999px;
+    height: 2px;
+    border-radius: 0;
     background: var(--active);
 }
 
