@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=18">
     <style>
-        /* FAQ PAGE STYLES */
         body {
             background: var(--bg);
             min-height: 100vh;
@@ -20,336 +19,375 @@
             flex-direction: column;
         }
 
-        /* HERO */
+        /* HERO - Large, impactful */
         .faq-hero {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            padding: 2.5rem 0;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0f766e 100%);
+            padding: 4rem 0 5rem;
             text-align: center;
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .faq-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+        }
+
+        .faq-hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 var(--page-gutter);
         }
 
         .faq-hero h1 {
-            font-size: clamp(2rem, 5vw, 2.5rem);
+            font-size: clamp(2.5rem, 6vw, 3.5rem);
             font-weight: 900;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.5rem;
+            letter-spacing: -0.04em;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
 
         .faq-hero p {
-            font-size: 1.1rem;
-            opacity: 0.95;
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2.5rem;
+            font-weight: 500;
         }
 
-        /* CONTAINER */
-        .faq-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 3rem var(--page-gutter);
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 3rem;
-            flex: 1;
-        }
-
-        /* SIDEBAR */
-        .faq-sidebar {
-            position: sticky;
-            top: 2rem;
-            height: fit-content;
-        }
-
-        .sidebar-section {
-            margin-bottom: 2rem;
-        }
-
-        .sidebar-title {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-        }
-
-        .search-box {
+        /* Central Search */
+        .hero-search {
             position: relative;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .search-box i {
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-
-        .search-box input {
+        .hero-search input {
             width: 100%;
-            padding: 0.625rem 0.75rem 0.625rem 2.25rem;
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            font-size: 0.875rem;
-            background: var(--surface);
-            transition: all 0.2s;
+            padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
+            font-size: 1.125rem;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--text);
+            font-weight: 500;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
-        .search-box input:focus {
+        .hero-search input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(var(--active-rgb), 0.1);
+            background: white;
+            box-shadow: 0 10px 60px rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-        }
-
-        .stat-item {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 0.75rem;
-            text-align: center;
-        }
-
-        .stat-number {
-            display: block;
-            font-size: 1.5rem;
-            font-weight: 900;
+        .hero-search i {
+            position: absolute;
+            left: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
             color: var(--primary);
-            line-height: 1;
-            margin-bottom: 0.25rem;
         }
 
-        .stat-label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .nav-menu-item {
-            margin-bottom: 0.25rem;
-        }
-
-        .nav-menu-link {
+        .popular-tags {
             display: flex;
-            align-items: center;
             gap: 0.75rem;
-            padding: 0.625rem 0.75rem;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 600;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .popular-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
             font-size: 0.875rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
             transition: all 0.2s;
+            backdrop-filter: blur(10px);
         }
 
-        .nav-menu-link:hover {
+        .popular-tag:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
             background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
         }
 
-        .nav-menu-link.active {
-            background: rgba(var(--active-rgb), 0.1);
-            color: var(--primary);
-        }
-
-        .nav-menu-icon {
-            width: 32px;
-            height: 32px;
+        .stats-bar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--page-gutter);
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--surface);
-            border-radius: var(--radius-sm);
-            font-size: 0.875rem;
-            flex-shrink: 0;
+            gap: 3rem;
         }
 
-        .nav-menu-link.active .nav-menu-icon {
-            background: var(--primary);
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stat-badge-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-md);
             color: white;
+            font-size: 1rem;
         }
 
-        .nav-menu-text {
-            flex: 1;
+        .stat-badge-text {
+            display: flex;
+            flex-direction: column;
         }
 
-        .nav-menu-count {
-            font-size: 0.75rem;
-            font-weight: 700;
+        .stat-badge-number {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text);
+            line-height: 1;
+        }
+
+        .stat-badge-label {
+            font-size: 0.875rem;
             color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Category Tabs */
+        .category-tabs {
             background: var(--surface);
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .category-tabs-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--page-gutter);
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .category-tabs-content::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-tab:hover {
+            color: var(--text);
+            background: rgba(var(--active-rgb), 0.05);
+        }
+
+        .category-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .category-tab-icon {
+            font-size: 1rem;
+        }
+
+        .category-tab-count {
+            font-size: 0.75rem;
+            background: var(--bg);
             padding: 0.125rem 0.5rem;
             border-radius: 999px;
+            font-weight: 800;
         }
 
-        .nav-menu-link.active .nav-menu-count {
+        .category-tab.active .category-tab-count {
             background: rgba(var(--active-rgb), 0.15);
             color: var(--primary);
         }
 
-        .help-cta {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            padding: 1.5rem;
-            border-radius: var(--radius-lg);
+        /* Content Container */
+        .faq-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem var(--page-gutter);
+            flex: 1;
+        }
+
+        /* Category Section */
+        .category-section {
+            display: none;
+        }
+
+        .category-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .category-header {
             text-align: center;
-            color: white;
-        }
-
-        .help-cta i {
-            font-size: 2rem;
-            margin-bottom: 0.75rem;
-            opacity: 0.9;
-        }
-
-        .help-cta h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .help-cta p {
-            font-size: 0.875rem;
-            opacity: 0.9;
-            margin-bottom: 1rem;
-        }
-
-        .help-cta .btn {
-            background: white;
-            color: var(--primary);
-            font-weight: 700;
-            width: 100%;
-        }
-
-        .help-cta .btn:hover {
-            background: rgba(255, 255, 255, 0.95);
-            transform: translateY(-1px);
-        }
-
-        /* CONTENT */
-        .faq-content {
-            min-width: 0;
-        }
-
-        .faq-section {
             margin-bottom: 3rem;
         }
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+        .category-header h2 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
         }
 
-        .section-icon {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: var(--radius-md);
-            font-size: 1.25rem;
-            flex-shrink: 0;
-        }
-
-        .section-icon.green {
-            background: rgba(5, 150, 105, 0.1);
-            color: var(--primary);
-        }
-
-        .section-icon.orange {
-            background: rgba(249, 115, 22, 0.1);
-            color: var(--orange);
-        }
-
-        .section-icon.blue {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--blue);
-        }
-
-        .section-icon.purple {
-            background: rgba(139, 92, 246, 0.1);
-            color: var(--purple);
-        }
-
-        .section-icon.red {
-            background: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-        }
-
-        .section-icon.gray {
-            background: rgba(100, 116, 139, 0.1);
-            color: #64748b;
-        }
-
-        .section-info h2 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 0.25rem;
-        }
-
-        .section-info p {
-            font-size: 0.875rem;
+        .category-header p {
+            font-size: 1.125rem;
             color: var(--text-muted);
         }
 
-        .question-count {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-left: 0.5rem;
+        /* FAQ Grid */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 1.5rem;
         }
 
-        .faq-items {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
+        /* FAQ Card - Modern, elevated */
         .faq-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             overflow: hidden;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .faq-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
         .faq-card:hover {
             border-color: rgba(var(--active-rgb), 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
         }
 
-        .faq-header {
+        .faq-card:hover::before {
+            opacity: 1;
+        }
+
+        .faq-card.open {
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(var(--active-rgb), 0.15);
+        }
+
+        .faq-card.open::before {
+            opacity: 1;
+        }
+
+        .faq-card-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .faq-icon {
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
-            gap: 1rem;
-            padding: 1.25rem 1.5rem;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .faq-number {
-            font-size: 0.875rem;
-            font-weight: 900;
-            color: var(--text-muted);
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(var(--active-rgb), 0.1), rgba(var(--active-rgb), 0.05));
+            border-radius: var(--radius-md);
+            color: var(--primary);
+            font-size: 1.125rem;
             flex-shrink: 0;
-            width: 32px;
+            transition: all 0.3s;
         }
 
-        .faq-question-text {
+        .faq-card:hover .faq-icon {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .faq-card-title {
             flex: 1;
-            font-size: 1rem;
+        }
+
+        .faq-question {
+            font-size: 1.0625rem;
             font-weight: 700;
             color: var(--text);
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .faq-preview {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .faq-card.open .faq-preview {
+            display: none;
         }
 
         .faq-toggle {
@@ -362,7 +400,12 @@
             border-radius: var(--radius-sm);
             color: var(--text-muted);
             flex-shrink: 0;
-            transition: all 0.2s;
+            transition: all 0.3s;
+        }
+
+        .faq-card:hover .faq-toggle {
+            background: rgba(var(--active-rgb), 0.1);
+            color: var(--primary);
         }
 
         .faq-card.open .faq-toggle {
@@ -371,18 +414,18 @@
             transform: rotate(180deg);
         }
 
-        .faq-body {
+        .faq-card-body {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .faq-card.open .faq-body {
+        .faq-card.open .faq-card-body {
             max-height: 1000px;
         }
 
         .faq-answer {
-            padding: 0 1.5rem 1.5rem 4.5rem;
+            padding: 0 1.5rem 1.5rem 1.5rem;
             font-size: 0.9375rem;
             line-height: 1.7;
             color: var(--text);
@@ -391,15 +434,6 @@
         .faq-answer strong {
             color: var(--text);
             font-weight: 700;
-        }
-
-        .faq-answer a {
-            color: var(--primary);
-            text-decoration: underline;
-        }
-
-        .faq-answer a:hover {
-            color: var(--primary-dark);
         }
 
         .faq-answer ul {
@@ -411,42 +445,125 @@
             margin-bottom: 0.5rem;
         }
 
-        /* RESPONSIVE */
+        /* Help CTA - Bottom */
+        .help-section {
+            margin-top: 4rem;
+            padding: 3rem;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+            border-radius: var(--radius-xl);
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .help-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+        }
+
+        .help-section h3 {
+            font-size: 1.75rem;
+            font-weight: 900;
+            margin-bottom: 0.75rem;
+        }
+
+        .help-section p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .help-section .btn {
+            background: white;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+        }
+
+        .help-section .btn:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
         @media (max-width: 1024px) {
-            .faq-container {
-                grid-template-columns: 1fr;
+            .faq-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .faq-hero {
+                padding: 3rem 0 4rem;
+            }
+
+            .faq-hero h1 {
+                font-size: 2rem;
+            }
+
+            .stats-bar-content {
                 gap: 2rem;
             }
 
-            .faq-sidebar {
-                position: static;
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            .category-tabs-content {
+                gap: 0.25rem;
+            }
+
+            .category-tab {
+                padding: 0.875rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
                 gap: 1rem;
             }
 
-            .help-cta {
-                grid-column: 1 / -1;
+            .help-section {
+                padding: 2rem 1.5rem;
             }
         }
 
         @media (max-width: 640px) {
-            .faq-container {
-                padding: 2rem var(--page-gutter);
-            }
-
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.75rem;
-            }
-
-            .faq-answer {
-                padding: 0 1rem 1.25rem 1rem;
-            }
-
-            .faq-number {
+            .popular-tags {
                 display: none;
+            }
+
+            .stat-badge {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.5rem;
             }
         }
     </style>
@@ -484,546 +601,587 @@
         </div>
     </nav>
 
+    <!-- HERO -->
     <section class="faq-hero">
-        <h1>Frequently Asked Questions</h1>
-        <p>Everything you need to know about SpendNote</p>
+        <div class="faq-hero-content">
+            <h1>How can we help?</h1>
+            <p>Search our knowledge base or browse by category</p>
+            
+            <div class="hero-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for answers..." id="heroSearchInput">
+            </div>
+
+            <div class="popular-tags">
+                <div class="popular-tag" data-search="receipt">Receipt layouts</div>
+                <div class="popular-tag" data-search="cash box">Cash Boxes</div>
+                <div class="popular-tag" data-search="team">Team invites</div>
+                <div class="popular-tag" data-search="export">Export data</div>
+            </div>
+        </div>
     </section>
 
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stats-bar-content">
+            <div class="stat-badge">
+                <div class="stat-badge-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="stat-badge-text">
+                    <span class="stat-badge-number">22</span>
+                    <span class="stat-badge-label">Questions</span>
+                </div>
+            </div>
+            <div class="stat-badge">
+                <div class="stat-badge-icon">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div class="stat-badge-text">
+                    <span class="stat-badge-number">6</span>
+                    <span class="stat-badge-label">Categories</span>
+                </div>
+            </div>
+            <div class="stat-badge">
+                <div class="stat-badge-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-badge-text">
+                    <span class="stat-badge-number">&lt;2min</span>
+                    <span class="stat-badge-label">Avg. read time</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORY TABS -->
+    <div class="category-tabs">
+        <div class="category-tabs-content">
+            <button class="category-tab active" data-category="getting-started">
+                <span class="category-tab-icon"><i class="fas fa-rocket"></i></span>
+                <span>Getting Started</span>
+                <span class="category-tab-count">4</span>
+            </button>
+            <button class="category-tab" data-category="cash-boxes">
+                <span class="category-tab-icon"><i class="fas fa-wallet"></i></span>
+                <span>Cash Boxes</span>
+                <span class="category-tab-count">4</span>
+            </button>
+            <button class="category-tab" data-category="receipts">
+                <span class="category-tab-icon"><i class="fas fa-receipt"></i></span>
+                <span>Receipts</span>
+                <span class="category-tab-count">4</span>
+            </button>
+            <button class="category-tab" data-category="team">
+                <span class="category-tab-icon"><i class="fas fa-users"></i></span>
+                <span>Team</span>
+                <span class="category-tab-count">3</span>
+            </button>
+            <button class="category-tab" data-category="billing">
+                <span class="category-tab-icon"><i class="fas fa-credit-card"></i></span>
+                <span>Billing</span>
+                <span class="category-tab-count">4</span>
+            </button>
+            <button class="category-tab" data-category="security">
+                <span class="category-tab-icon"><i class="fas fa-shield-alt"></i></span>
+                <span>Security</span>
+                <span class="category-tab-count">3</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
     <div class="faq-container">
-        <!-- SIDEBAR -->
-        <aside class="faq-sidebar">
-            <!-- Search -->
-            <div class="sidebar-section">
-                <div class="sidebar-title">Search</div>
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search questions..." id="searchInput">
+        <!-- Getting Started -->
+        <div class="category-section active" id="getting-started">
+            <div class="category-header">
+                <h2>Getting Started</h2>
+                <p>Learn the basics of SpendNote</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-info-circle"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">What is SpendNote?</div>
+                            <div class="faq-preview">SpendNote is a cash tracking and receipt generation tool designed for teams...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            SpendNote is a <strong>cash tracking and receipt generation tool</strong> designed for teams. It helps you document internal cash movements (like petty cash, employee advances, or cash handoffs), create printable receipts instantly, and maintain complete visibility across your team. Think of it as a digital receipt book with search, export, and team collaboration built in.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-play-circle"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">How do I get started?</div>
+                            <div class="faq-preview">Getting started takes less than 2 minutes: Sign up, create a Cash Box, record a transaction...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            Getting started takes less than 2 minutes:
+                            <ul>
+                                <li><strong>Sign up</strong> with your email (no credit card required during preview)</li>
+                                <li><strong>Create your first Cash Box</strong> (e.g., "Main Office" or "Petty Cash")</li>
+                                <li><strong>Record your first transaction</strong> using the "New Transaction" button</li>
+                                <li><strong>Generate a receipt</strong> instantly (print, PDF, or email)</li>
+                            </ul>
+                            During the preview period, you get <strong>100 free transactions</strong> to test everything out.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-calculator"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Is SpendNote an accounting tool?</div>
+                            <div class="faq-preview">No. SpendNote is specifically designed for internal cash handoff documentation...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>No.</strong> SpendNote is specifically designed for <strong>internal cash handoff documentation</strong>, not accounting or tax purposes. The receipts you create are proof of cash transfer between people or departments — they're not invoices and shouldn't be used for tax filing. Every receipt includes a mandatory disclaimer clarifying this. If you need accounting software, consider tools like QuickBooks or Xero.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Quick vs Detailed mode?</div>
+                            <div class="faq-preview">When creating a transaction, you can choose between two modes...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            When creating a transaction, you can choose between two modes:
+                            <ul>
+                                <li><strong>Quick mode:</strong> Minimal fields for fast receipt creation (~30 seconds). Perfect for simple cash handoffs.</li>
+                                <li><strong>Detailed mode:</strong> Additional fields like notes, multiple line items (up to 5 total), and extra contact details. Great for complex transactions.</li>
+                            </ul>
+                            Your mode preference is saved, so you don't have to choose every time.
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Stats -->
-            <div class="sidebar-section">
-                <div class="sidebar-title">Overview</div>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-number">22</span>
-                        <span class="stat-label">Questions</span>
+        <!-- Cash Boxes -->
+        <div class="category-section" id="cash-boxes">
+            <div class="category-header">
+                <h2>Cash Boxes & Transactions</h2>
+                <p>Managing your cash and transactions</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-wallet"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">What is a Cash Box?</div>
+                            <div class="faq-preview">A Cash Box is a container for tracking cash at a specific location, event, or purpose...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-number">6</span>
-                        <span class="stat-label">Categories</span>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            A <strong>Cash Box</strong> is a container for tracking cash at a specific location, event, or purpose. Each Cash Box has its own balance, transaction history, and settings. Examples: "Main Office Petty Cash", "Event Fund", "Department A". You can customize each Cash Box with a unique color, icon, and currency.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-layer-group"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">How many Cash Boxes can I have?</div>
+                            <div class="faq-preview">It depends on your plan: Free Trial (1), Standard (2), Pro (Unlimited)...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            It depends on your plan:
+                            <ul>
+                                <li><strong>Free Trial:</strong> 1 Cash Box</li>
+                                <li><strong>Standard:</strong> 2 Cash Boxes</li>
+                                <li><strong>Pro:</strong> Unlimited Cash Boxes</li>
+                            </ul>
+                            During the preview period, you can test with multiple Cash Boxes regardless of plan.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-ban"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Can I delete or void a transaction?</div>
+                            <div class="faq-preview">Transactions cannot be deleted — they can only be voided (admin-only)...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            Transactions <strong>cannot be deleted</strong> — they can only be <strong>voided</strong> (admin-only). When you void a transaction:
+                            <ul>
+                                <li>The original transaction remains visible with a "VOID" badge</li>
+                                <li>The cash box balance is automatically corrected</li>
+                                <li>The receipt shows a void watermark if regenerated</li>
+                                <li>The transaction still appears in history for audit purposes</li>
+                            </ul>
+                            This ensures complete transparency and prevents accidental data loss.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-hashtag"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">What is a transaction ID?</div>
+                            <div class="faq-preview">Every transaction gets a unique ID in the format SN###-### (e.g., SN3-007)...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            Every transaction gets a unique ID in the format <strong>SN###-###</strong> (e.g., SN3-007). The first number is your Cash Box sequence, the second is the transaction sequence within that Cash Box. This ID appears on receipts, in transaction history, and in exports. <strong>Pro users</strong> can customize the "SN" prefix to match their branding (e.g., "ABC-007").
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Navigation -->
-            <div class="sidebar-section">
-                <div class="sidebar-title">Categories</div>
-                <ul class="nav-menu">
-                    <li class="nav-menu-item">
-                        <a href="#getting-started" class="nav-menu-link active">
-                            <div class="nav-menu-icon"><i class="fas fa-rocket"></i></div>
-                            <span class="nav-menu-text">Getting Started</span>
-                            <span class="nav-menu-count">4</span>
-                        </a>
-                    </li>
-                    <li class="nav-menu-item">
-                        <a href="#cash-boxes" class="nav-menu-link">
-                            <div class="nav-menu-icon"><i class="fas fa-wallet"></i></div>
-                            <span class="nav-menu-text">Cash Boxes</span>
-                            <span class="nav-menu-count">4</span>
-                        </a>
-                    </li>
-                    <li class="nav-menu-item">
-                        <a href="#receipts" class="nav-menu-link">
-                            <div class="nav-menu-icon"><i class="fas fa-receipt"></i></div>
-                            <span class="nav-menu-text">Receipts & Export</span>
-                            <span class="nav-menu-count">4</span>
-                        </a>
-                    </li>
-                    <li class="nav-menu-item">
-                        <a href="#team" class="nav-menu-link">
-                            <div class="nav-menu-icon"><i class="fas fa-users"></i></div>
-                            <span class="nav-menu-text">Team & Access</span>
-                            <span class="nav-menu-count">3</span>
-                        </a>
-                    </li>
-                    <li class="nav-menu-item">
-                        <a href="#billing" class="nav-menu-link">
-                            <div class="nav-menu-icon"><i class="fas fa-credit-card"></i></div>
-                            <span class="nav-menu-text">Billing & Plans</span>
-                            <span class="nav-menu-count">4</span>
-                        </a>
-                    </li>
-                    <li class="nav-menu-item">
-                        <a href="#security" class="nav-menu-link">
-                            <div class="nav-menu-icon"><i class="fas fa-shield-alt"></i></div>
-                            <span class="nav-menu-text">Security & Data</span>
-                            <span class="nav-menu-count">3</span>
-                        </a>
-                    </li>
-                </ul>
+        <!-- Receipts -->
+        <div class="category-section" id="receipts">
+            <div class="category-header">
+                <h2>Receipts & Export</h2>
+                <p>Generating and sharing receipts</p>
             </div>
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-palette"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Can I customize receipt layouts?</div>
+                            <div class="faq-preview">Yes! SpendNote offers customizable receipt layouts with logo upload, field toggles...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>Yes!</strong> SpendNote offers customizable receipt layouts:
+                            <ul>
+                                <li><strong>Standard & Pro:</strong> Upload your company logo, choose Quick or Detailed layout, toggle fields (addresses, tracking details, signatures)</li>
+                                <li><strong>Pro only:</strong> Customize all text and labels (localization support) — perfect for non-English receipts or specific terminology</li>
+                            </ul>
+                            The only element you cannot change is the mandatory legal disclaimer (required on all receipts).
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Help CTA -->
-            <div class="help-cta">
-                <i class="fas fa-headset"></i>
-                <h3>Still need help?</h3>
-                <p>We're here to answer your questions</p>
-                <a href="mailto:support@spendnote.app" class="btn">Contact Support</a>
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-share-alt"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">How do I share receipts?</div>
+                            <div class="faq-preview">You can share receipts in multiple ways: Print, PDF, Email, or Bulk Export...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            You can share receipts in multiple ways:
+                            <ul>
+                                <li><strong>Print:</strong> Opens a print-ready A4 page with 2 copies</li>
+                                <li><strong>PDF:</strong> Downloads a Letter-size PDF (filename: SpendNote_SN3-007.pdf)</li>
+                                <li><strong>Email:</strong> Sends the receipt directly from Transaction Detail (includes a public PDF link for the recipient)</li>
+                                <li><strong>Bulk Export:</strong> Export multiple transactions as CSV or PDF from Transaction History</li>
+                            </ul>
+                            All team members with access can view and regenerate receipts anytime.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-file-export"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Can I export transaction data?</div>
+                            <div class="faq-preview">Yes. SpendNote supports CSV and PDF export formats with user-facing IDs only...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>Yes.</strong> SpendNote supports multiple export formats:
+                            <ul>
+                                <li><strong>CSV:</strong> Export selected transactions or all filtered results (max 500 rows) with user-facing IDs only (no UUIDs)</li>
+                                <li><strong>PDF:</strong> Professional branded export with filters displayed, transaction table, and net balance summary per currency</li>
+                                <li><strong>Bulk actions:</strong> Select multiple transactions and export or void them at once</li>
+                            </ul>
+                            Exports are available on all plans.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-wifi-slash"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Does SpendNote work offline?</div>
+                            <div class="faq-preview">SpendNote is a web-based application that requires an internet connection...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            SpendNote is a <strong>web-based application</strong> that requires an internet connection to create and sync transactions. However, once a receipt is generated, you can download it as a PDF for offline access. We're exploring offline capabilities for future updates.
+                        </div>
+                    </div>
+                </div>
             </div>
-        </aside>
+        </div>
 
-        <!-- CONTENT -->
-        <main class="faq-content">
-            <!-- Getting Started -->
-            <section class="faq-section" id="getting-started">
-                <div class="section-header">
-                    <div class="section-icon green">
-                        <i class="fas fa-rocket"></i>
+        <!-- Team -->
+        <div class="category-section" id="team">
+            <div class="category-header">
+                <h2>Team & Access</h2>
+                <p>Collaborating with your team</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">How do team invites work?</div>
+                            <div class="faq-preview">Pro plan only. Team invites allow you to add members to your organization...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                     </div>
-                    <div class="section-info">
-                        <h2>Getting Started <span class="question-count">4 Questions</span></h2>
-                        <p>Learn the basics of SpendNote</p>
-                    </div>
-                </div>
-                <div class="faq-items">
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">01</div>
-                            <div class="faq-question-text">What is SpendNote?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                SpendNote is a <strong>cash tracking and receipt generation tool</strong> designed for teams. It helps you document internal cash movements (like petty cash, employee advances, or cash handoffs), create printable receipts instantly, and maintain complete visibility across your team. Think of it as a digital receipt book with search, export, and team collaboration built in.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">02</div>
-                            <div class="faq-question-text">How do I get started?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                Getting started takes less than 2 minutes:
-                                <ul>
-                                    <li><strong>Sign up</strong> with your email (no credit card required during preview)</li>
-                                    <li><strong>Create your first Cash Box</strong> (e.g., "Main Office" or "Petty Cash")</li>
-                                    <li><strong>Record your first transaction</strong> using the "New Transaction" button</li>
-                                    <li><strong>Generate a receipt</strong> instantly (print, PDF, or email)</li>
-                                </ul>
-                                During the preview period, you get <strong>100 free transactions</strong> to test everything out.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">03</div>
-                            <div class="faq-question-text">Is SpendNote an accounting tool?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>No.</strong> SpendNote is specifically designed for <strong>internal cash handoff documentation</strong>, not accounting or tax purposes. The receipts you create are proof of cash transfer between people or departments — they're not invoices and shouldn't be used for tax filing. Every receipt includes a mandatory disclaimer clarifying this. If you need accounting software, consider tools like QuickBooks or Xero.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">04</div>
-                            <div class="faq-question-text">What's the difference between Quick and Detailed mode?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                When creating a transaction, you can choose between two modes:
-                                <ul>
-                                    <li><strong>Quick mode:</strong> Minimal fields for fast receipt creation (~30 seconds). Perfect for simple cash handoffs.</li>
-                                    <li><strong>Detailed mode:</strong> Additional fields like notes, multiple line items (up to 5 total), and extra contact details. Great for complex transactions.</li>
-                                </ul>
-                                Your mode preference is saved, so you don't have to choose every time.
-                            </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>Pro plan only.</strong> Team invites allow you to add members to your organization:
+                            <ul>
+                                <li><strong>Send invite:</strong> Enter their email and choose a role (Admin or User)</li>
+                                <li><strong>They accept:</strong> They receive an email with a secure invite link</li>
+                                <li><strong>Access granted:</strong> Admins get access to all Cash Boxes; Users get access to the first Cash Box (you can adjust this later)</li>
+                            </ul>
+                            During the preview period, team features are limited to testing only.
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Cash Boxes & Transactions -->
-            <section class="faq-section" id="cash-boxes">
-                <div class="section-header">
-                    <div class="section-icon orange">
-                        <i class="fas fa-wallet"></i>
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-user-shield"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Admin vs User roles?</div>
+                            <div class="faq-preview">Admin: Can create Cash Boxes, invite team members, void transactions...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                     </div>
-                    <div class="section-info">
-                        <h2>Cash Boxes & Transactions <span class="question-count">4 Questions</span></h2>
-                        <p>Managing your cash and transactions</p>
-                    </div>
-                </div>
-                <div class="faq-items">
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">05</div>
-                            <div class="faq-question-text">What is a Cash Box?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                A <strong>Cash Box</strong> is a container for tracking cash at a specific location, event, or purpose. Each Cash Box has its own balance, transaction history, and settings. Examples: "Main Office Petty Cash", "Event Fund", "Department A". You can customize each Cash Box with a unique color, icon, and currency.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">06</div>
-                            <div class="faq-question-text">How many Cash Boxes can I have?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                It depends on your plan:
-                                <ul>
-                                    <li><strong>Free Trial:</strong> 1 Cash Box</li>
-                                    <li><strong>Standard:</strong> 2 Cash Boxes</li>
-                                    <li><strong>Pro:</strong> Unlimited Cash Boxes</li>
-                                </ul>
-                                During the preview period, you can test with multiple Cash Boxes regardless of plan.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">07</div>
-                            <div class="faq-question-text">Can I delete or void a transaction?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                Transactions <strong>cannot be deleted</strong> — they can only be <strong>voided</strong> (admin-only). When you void a transaction:
-                                <ul>
-                                    <li>The original transaction remains visible with a "VOID" badge</li>
-                                    <li>The cash box balance is automatically corrected</li>
-                                    <li>The receipt shows a void watermark if regenerated</li>
-                                    <li>The transaction still appears in history for audit purposes</li>
-                                </ul>
-                                This ensures complete transparency and prevents accidental data loss.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">08</div>
-                            <div class="faq-question-text">What is a transaction ID (receipt number)?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                Every transaction gets a unique ID in the format <strong>SN###-###</strong> (e.g., SN3-007). The first number is your Cash Box sequence, the second is the transaction sequence within that Cash Box. This ID appears on receipts, in transaction history, and in exports. <strong>Pro users</strong> can customize the "SN" prefix to match their branding (e.g., "ABC-007").
-                            </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>Admin:</strong> Can create Cash Boxes, invite team members, void transactions, and access all Cash Boxes by default.<br><br>
+                            <strong>User:</strong> Can record transactions and generate receipts, but only in Cash Boxes they have access to. Cannot invite others or void transactions.<br><br>
+                            <strong>Owner:</strong> The account creator. Has all Admin permissions plus subscription management and account deletion rights.
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Receipts & Export -->
-            <section class="faq-section" id="receipts">
-                <div class="section-header">
-                    <div class="section-icon blue">
-                        <i class="fas fa-receipt"></i>
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-key"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Control Cash Box access?</div>
+                            <div class="faq-preview">Yes (Pro plan). Admins can assign or revoke Cash Box access for individual team members...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                     </div>
-                    <div class="section-info">
-                        <h2>Receipts & Export <span class="question-count">4 Questions</span></h2>
-                        <p>Generating and sharing receipts</p>
-                    </div>
-                </div>
-                <div class="faq-items">
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">09</div>
-                            <div class="faq-question-text">Can I customize receipt layouts?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>Yes!</strong> SpendNote offers customizable receipt layouts:
-                                <ul>
-                                    <li><strong>Standard & Pro:</strong> Upload your company logo, choose Quick or Detailed layout, toggle fields (addresses, tracking details, signatures)</li>
-                                    <li><strong>Pro only:</strong> Customize all text and labels (localization support) — perfect for non-English receipts or specific terminology</li>
-                                </ul>
-                                The only element you cannot change is the mandatory legal disclaimer (required on all receipts).
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">10</div>
-                            <div class="faq-question-text">How do I share receipts?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                You can share receipts in multiple ways:
-                                <ul>
-                                    <li><strong>Print:</strong> Opens a print-ready A4 page with 2 copies</li>
-                                    <li><strong>PDF:</strong> Downloads a Letter-size PDF (filename: SpendNote_SN3-007.pdf)</li>
-                                    <li><strong>Email:</strong> Sends the receipt directly from Transaction Detail (includes a public PDF link for the recipient)</li>
-                                    <li><strong>Bulk Export:</strong> Export multiple transactions as CSV or PDF from Transaction History</li>
-                                </ul>
-                                All team members with access can view and regenerate receipts anytime.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">11</div>
-                            <div class="faq-question-text">Can I export transaction data?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>Yes.</strong> SpendNote supports multiple export formats:
-                                <ul>
-                                    <li><strong>CSV:</strong> Export selected transactions or all filtered results (max 500 rows) with user-facing IDs only (no UUIDs)</li>
-                                    <li><strong>PDF:</strong> Professional branded export with filters displayed, transaction table, and net balance summary per currency</li>
-                                    <li><strong>Bulk actions:</strong> Select multiple transactions and export or void them at once</li>
-                                </ul>
-                                Exports are available on all plans.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">12</div>
-                            <div class="faq-question-text">Does SpendNote work offline?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                SpendNote is a <strong>web-based application</strong> that requires an internet connection to create and sync transactions. However, once a receipt is generated, you can download it as a PDF for offline access. We're exploring offline capabilities for future updates.
-                            </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>Yes</strong> (Pro plan). Admins can assign or revoke Cash Box access for individual team members via the Team Management section in User Settings. By default, Admins have access to all Cash Boxes, and Users have access to the first Cash Box. You can customize this per person.
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
 
-            <!-- Team & Access -->
-            <section class="faq-section" id="team">
-                <div class="section-header">
-                    <div class="section-icon purple">
-                        <i class="fas fa-users"></i>
+        <!-- Billing -->
+        <div class="category-section" id="billing">
+            <div class="category-header">
+                <h2>Billing & Plans</h2>
+                <p>Pricing and payment information</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-gift"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">What's in the preview period?</div>
+                            <div class="faq-preview">During early access preview, you get 100 free transactions, all features, priority support...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                     </div>
-                    <div class="section-info">
-                        <h2>Team & Access <span class="question-count">3 Questions</span></h2>
-                        <p>Collaborating with your team</p>
-                    </div>
-                </div>
-                <div class="faq-items">
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">13</div>
-                            <div class="faq-question-text">How do team invites work?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>Pro plan only.</strong> Team invites allow you to add members to your organization:
-                                <ul>
-                                    <li><strong>Send invite:</strong> Enter their email and choose a role (Admin or User)</li>
-                                    <li><strong>They accept:</strong> They receive an email with a secure invite link</li>
-                                    <li><strong>Access granted:</strong> Admins get access to all Cash Boxes; Users get access to the first Cash Box (you can adjust this later)</li>
-                                </ul>
-                                During the preview period, team features are limited to testing only.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">14</div>
-                            <div class="faq-question-text">What's the difference between Admin and User roles?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>Admin:</strong> Can create Cash Boxes, invite team members, void transactions, and access all Cash Boxes by default.<br><br>
-                                <strong>User:</strong> Can record transactions and generate receipts, but only in Cash Boxes they have access to. Cannot invite others or void transactions.<br><br>
-                                <strong>Owner:</strong> The account creator. Has all Admin permissions plus subscription management and account deletion rights.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">15</div>
-                            <div class="faq-question-text">Can I control which Cash Boxes team members access?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>Yes</strong> (Pro plan). Admins can assign or revoke Cash Box access for individual team members via the Team Management section in User Settings. By default, Admins have access to all Cash Boxes, and Users have access to the first Cash Box. You can customize this per person.
-                            </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            During the early access preview, you get:
+                            <ul>
+                                <li><strong>100 free transactions</strong> (vs. 20 in the standard Free plan)</li>
+                                <li><strong>Access to all currently available features</strong></li>
+                                <li><strong>Priority support</strong> as an early adopter</li>
+                                <li><strong>Exclusive launch benefit:</strong> 30% discount coupon for 2 years on any paid plan when we launch</li>
+                            </ul>
+                            At launch, your account converts to the Free plan (20 transactions), but you'll receive your discount coupon automatically.
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Billing & Plans -->
-            <section class="faq-section" id="billing">
-                <div class="section-header">
-                    <div class="section-icon red">
-                        <i class="fas fa-credit-card"></i>
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Can I change plans anytime?</div>
+                            <div class="faq-preview">Yes! You can upgrade or downgrade your plan at any time from User Settings...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                     </div>
-                    <div class="section-info">
-                        <h2>Billing & Plans <span class="question-count">4 Questions</span></h2>
-                        <p>Pricing and payment information</p>
-                    </div>
-                </div>
-                <div class="faq-items">
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">16</div>
-                            <div class="faq-question-text">What's included in the preview period?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                During the early access preview, you get:
-                                <ul>
-                                    <li><strong>100 free transactions</strong> (vs. 20 in the standard Free plan)</li>
-                                    <li><strong>Access to all currently available features</strong></li>
-                                    <li><strong>Priority support</strong> as an early adopter</li>
-                                    <li><strong>Exclusive launch benefit:</strong> 30% discount coupon for 2 years on any paid plan when we launch</li>
-                                </ul>
-                                At launch, your account converts to the Free plan (20 transactions), but you'll receive your discount coupon automatically.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">17</div>
-                            <div class="faq-question-text">Can I change plans anytime?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>Yes!</strong> You can upgrade or downgrade your plan at any time from User Settings. Changes take effect immediately, and we prorate your billing. If you downgrade, you keep access to your current plan until the end of your billing period, then features adjust to match your new plan.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">18</div>
-                            <div class="faq-question-text">What happens when my trial ends?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                The Free trial ends after <strong>14 days OR 20 transactions</strong> (whichever comes first). When it ends:
-                                <ul>
-                                    <li>Your account becomes <strong>view-only</strong></li>
-                                    <li>You can still view all your data and receipts</li>
-                                    <li>You cannot create new transactions or export data</li>
-                                    <li>To continue, upgrade to Standard or Pro</li>
-                                </ul>
-                                During the preview period, limits are more generous (100 transactions).
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">19</div>
-                            <div class="faq-question-text">Do you offer a money-back guarantee?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>Yes.</strong> We offer a <strong>30-day money-back guarantee</strong> on all paid plans, as long as you've recorded 20 transactions or fewer. If you're not satisfied, contact us within 30 days for a full refund, no questions asked.
-                            </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>Yes!</strong> You can upgrade or downgrade your plan at any time from User Settings. Changes take effect immediately, and we prorate your billing. If you downgrade, you keep access to your current plan until the end of your billing period, then features adjust to match your new plan.
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Security & Data -->
-            <section class="faq-section" id="security">
-                <div class="section-header">
-                    <div class="section-icon gray">
-                        <i class="fas fa-shield-alt"></i>
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-hourglass-end"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">What happens when trial ends?</div>
+                            <div class="faq-preview">The Free trial ends after 14 days OR 20 transactions (whichever comes first)...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
                     </div>
-                    <div class="section-info">
-                        <h2>Security & Data <span class="question-count">3 Questions</span></h2>
-                        <p>Keeping your data safe</p>
-                    </div>
-                </div>
-                <div class="faq-items">
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">20</div>
-                            <div class="faq-question-text">Is my data secure?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>Yes.</strong> SpendNote uses industry-standard security practices:
-                                <ul>
-                                    <li><strong>Encryption:</strong> All data is encrypted in transit (HTTPS) and at rest</li>
-                                    <li><strong>Authentication:</strong> Powered by Supabase Auth with secure session management</li>
-                                    <li><strong>Access control:</strong> Row-level security (RLS) ensures users only see their own organization's data</li>
-                                    <li><strong>Infrastructure:</strong> Hosted on Cloudflare Pages with Supabase backend (both enterprise-grade platforms)</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">21</div>
-                            <div class="faq-question-text">What happens to my data if I cancel?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                If you cancel your subscription:
-                                <ul>
-                                    <li>Your account becomes <strong>view-only</strong> (you can still access and export your data)</li>
-                                    <li>Your data is <strong>retained for 90 days</strong> after cancellation</li>
-                                    <li>After 90 days, your data is permanently deleted</li>
-                                    <li>You can <strong>export all your data</strong> (CSV/PDF) before canceling</li>
-                                </ul>
-                                If you delete your account manually, data is deleted immediately and cannot be recovered.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="faq-card">
-                        <div class="faq-header">
-                            <div class="faq-number">22</div>
-                            <div class="faq-question-text">Do you back up my data?</div>
-                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
-                        </div>
-                        <div class="faq-body">
-                            <div class="faq-answer">
-                                <strong>Yes.</strong> Supabase (our database provider) performs automatic daily backups with point-in-time recovery. However, we strongly recommend <strong>exporting your data regularly</strong> (CSV or PDF) as an additional safeguard. During the preview period, please note that data structures may change, so frequent exports are especially important.
-                            </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            The Free trial ends after <strong>14 days OR 20 transactions</strong> (whichever comes first). When it ends:
+                            <ul>
+                                <li>Your account becomes <strong>view-only</strong></li>
+                                <li>You can still view all your data and receipts</li>
+                                <li>You cannot create new transactions or export data</li>
+                                <li>To continue, upgrade to Standard or Pro</li>
+                            </ul>
+                            During the preview period, limits are more generous (100 transactions).
                         </div>
                     </div>
                 </div>
-            </section>
-        </main>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-undo"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Money-back guarantee?</div>
+                            <div class="faq-preview">Yes. We offer a 30-day money-back guarantee on all paid plans...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>Yes.</strong> We offer a <strong>30-day money-back guarantee</strong> on all paid plans, as long as you've recorded 20 transactions or fewer. If you're not satisfied, contact us within 30 days for a full refund, no questions asked.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security -->
+        <div class="category-section" id="security">
+            <div class="category-header">
+                <h2>Security & Data</h2>
+                <p>Keeping your data safe</p>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-lock"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Is my data secure?</div>
+                            <div class="faq-preview">Yes. SpendNote uses industry-standard security practices: encryption, authentication...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>Yes.</strong> SpendNote uses industry-standard security practices:
+                            <ul>
+                                <li><strong>Encryption:</strong> All data is encrypted in transit (HTTPS) and at rest</li>
+                                <li><strong>Authentication:</strong> Powered by Supabase Auth with secure session management</li>
+                                <li><strong>Access control:</strong> Row-level security (RLS) ensures users only see their own organization's data</li>
+                                <li><strong>Infrastructure:</strong> Hosted on Cloudflare Pages with Supabase backend (both enterprise-grade platforms)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-trash-alt"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">What if I cancel?</div>
+                            <div class="faq-preview">If you cancel your subscription, your account becomes view-only and data is retained for 90 days...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            If you cancel your subscription:
+                            <ul>
+                                <li>Your account becomes <strong>view-only</strong> (you can still access and export your data)</li>
+                                <li>Your data is <strong>retained for 90 days</strong> after cancellation</li>
+                                <li>After 90 days, your data is permanently deleted</li>
+                                <li>You can <strong>export all your data</strong> (CSV/PDF) before canceling</li>
+                            </ul>
+                            If you delete your account manually, data is deleted immediately and cannot be recovered.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-card">
+                    <div class="faq-card-header">
+                        <div class="faq-icon"><i class="fas fa-database"></i></div>
+                        <div class="faq-card-title">
+                            <div class="faq-question">Do you back up my data?</div>
+                            <div class="faq-preview">Yes. Supabase performs automatic daily backups with point-in-time recovery...</div>
+                        </div>
+                        <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                    </div>
+                    <div class="faq-card-body">
+                        <div class="faq-answer">
+                            <strong>Yes.</strong> Supabase (our database provider) performs automatic daily backups with point-in-time recovery. However, we strongly recommend <strong>exporting your data regularly</strong> (CSV or PDF) as an additional safeguard. During the preview period, please note that data structures may change, so frequent exports are especially important.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="help-section">
+            <h3>Still have questions?</h3>
+            <p>Can't find what you're looking for? Our support team is here to help.</p>
+            <a href="mailto:support@spendnote.app" class="btn">Contact Support</a>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -1080,53 +1238,80 @@
 
     <script src="assets/js/main.js?v=11"></script>
     <script>
-        // FAQ accordion toggle
-        document.querySelectorAll('.faq-header').forEach(header => {
-            header.addEventListener('click', () => {
-                const card = header.closest('.faq-card');
-                const wasOpen = card.classList.contains('open');
+        // Category tab switching
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const category = tab.dataset.category;
                 
-                // Close all cards
-                document.querySelectorAll('.faq-card').forEach(c => c.classList.remove('open'));
+                // Update active tab
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
                 
-                // Open clicked card if it wasn't open
-                if (!wasOpen) {
-                    card.classList.add('open');
-                }
+                // Show corresponding section
+                document.querySelectorAll('.category-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(category).classList.add('active');
+                
+                // Scroll to top of content
+                document.querySelector('.faq-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
 
-        // Category navigation
-        document.querySelectorAll('.nav-menu-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                // Update active state
-                document.querySelectorAll('.nav-menu-link').forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
+        // FAQ card toggle
+        document.querySelectorAll('.faq-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('open');
             });
         });
 
-        // Search functionality
-        const searchInput = document.getElementById('searchInput');
-        searchInput.addEventListener('input', (e) => {
+        // Hero search
+        const heroSearch = document.getElementById('heroSearchInput');
+        heroSearch.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase();
+            performSearch(query);
+        });
+
+        // Popular tags
+        document.querySelectorAll('.popular-tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                const searchTerm = tag.dataset.search;
+                heroSearch.value = searchTerm;
+                performSearch(searchTerm);
+            });
+        });
+
+        function performSearch(query) {
+            if (!query) {
+                // Show all cards
+                document.querySelectorAll('.faq-card').forEach(card => card.style.display = 'block');
+                return;
+            }
+
+            let hasResults = false;
             
             document.querySelectorAll('.faq-card').forEach(card => {
-                const question = card.querySelector('.faq-question-text').textContent.toLowerCase();
+                const question = card.querySelector('.faq-question').textContent.toLowerCase();
                 const answer = card.querySelector('.faq-answer').textContent.toLowerCase();
                 
                 if (question.includes(query) || answer.includes(query)) {
                     card.style.display = 'block';
+                    hasResults = true;
                 } else {
                     card.style.display = 'none';
                 }
             });
 
-            // Hide empty sections
-            document.querySelectorAll('.faq-section').forEach(section => {
-                const visibleCards = section.querySelectorAll('.faq-card[style="display: block;"], .faq-card:not([style])');
-                section.style.display = visibleCards.length > 0 ? 'block' : 'none';
-            });
-        });
+            // Show all sections when searching
+            if (query) {
+                document.querySelectorAll('.category-section').forEach(section => {
+                    section.classList.add('active');
+                });
+                document.querySelectorAll('.category-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+            }
+        }
     </script>
 </body>
 </html>
