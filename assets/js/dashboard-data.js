@@ -399,8 +399,7 @@ async function loadDashboardData() {
             const [cashBoxes] = await Promise.all([cashBoxesPromise]);
             
             if (cashBoxes && cashBoxes.length > 0) {
-                const savedActiveId = localStorage.getItem('activeCashBoxId');
-                const defaultActiveId = savedActiveId || cashBoxes[cashBoxes.length - 1]?.id;
+                const defaultActiveId = String(cashBoxes[0]?.id || '').trim();
                 
                 // Remove loading indicator
                 const loadingSlide = swiperWrapper.querySelector('.loading-slide');
@@ -519,7 +518,10 @@ async function loadDashboardData() {
                 // Reinitialize Swiper after adding slides
                 if (window.registersSwiper) {
                     window.registersSwiper.update();
-                    window.registersSwiper.slideTo(cashBoxes.findIndex(box => box.id === defaultActiveId), 0);
+                    const activeSlideIndex = cashBoxes.findIndex((box) => String(box?.id || '').trim() === defaultActiveId);
+                    if (activeSlideIndex >= 0) {
+                        window.registersSwiper.slideTo(activeSlideIndex, 0);
+                    }
                     
                     // Set active class on current slide
                     const slides = swiperWrapper.querySelectorAll('.register-card');
@@ -595,8 +597,7 @@ function updateModalCashBoxDropdown(cashBoxes) {
 
     const { getIconClass, hexToRgb } = getSpendNoteHelpers();
 
-    const savedActiveId = localStorage.getItem('activeCashBoxId');
-    const defaultActiveId = savedActiveId || cashBoxes[cashBoxes.length - 1]?.id;
+    const defaultActiveId = String(cashBoxes[0]?.id || '').trim();
     
     // Clear existing options
     modalRegisterSelect.innerHTML = '';

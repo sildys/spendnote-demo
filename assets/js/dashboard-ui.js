@@ -290,8 +290,8 @@ function initCashBoxCards() {
         });
     });
 
-    const savedCard = Array.from(cards).find(c => c.dataset.id === localStorage.getItem('activeCashBoxId'));
-    if (savedCard) activateCard(savedCard);
+    const firstCard = cards[0] || null;
+    if (firstCard) activateCard(firstCard);
 
     if (addCashBoxCard) {
         requestAnimationFrame(() => {

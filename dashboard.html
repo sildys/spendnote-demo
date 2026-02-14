@@ -1596,7 +1596,7 @@
     <script src="assets/js/dashboard-ui.js?v=8"></script>
     <script src="assets/js/dashboard-modal.js?v=20260208-0502"></script>
     <script src="assets/js/dashboard-form.js?v=20260208-0349"></script>
-    <script src="assets/js/dashboard-data.js?v=20260208-0542"></script>
+    <script src="assets/js/dashboard-data.js?v=20260214-1948"></script>
 
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -1666,11 +1666,10 @@
                 });
             });
             
-            // Load saved active cash box from localStorage
-            const savedId = localStorage.getItem('activeCashBoxId');
-            const savedCard = savedId ? Array.from(cards).find(card => card.dataset.id === savedId) : null;
-            if (savedCard) {
-                activateCard(savedCard);
+            // Always default to the first cash box on dashboard open
+            const firstCard = cards[0] || null;
+            if (firstCard) {
+                activateCard(firstCard);
             }
 
             if (addCashBoxCard) {

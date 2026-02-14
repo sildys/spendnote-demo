@@ -187,6 +187,11 @@ function normalizeFaIcon(icon) {
     return raw.startsWith('fa') ? raw : `fa-${raw}`;
 }
 
+function normalizeIconForStorage(icon) {
+    const normalized = normalizeFaIcon(icon);
+    return normalized.replace(/^fa-/, '') || 'building';
+}
+
 function getCashBoxDisplayCode(cashBox) {
     const seq = Number(cashBox?.sequence_number);
     return Number.isFinite(seq) && seq > 0 ? `SN-${String(seq).padStart(3, '0')}` : '—';
@@ -573,8 +578,8 @@ async function handleSave(e) {
             currencyInput.dataset.originalCurrency = currencyInput.dataset.originalCurrency || currency;
         }
 
-        const color = selectedColor || '#059669';
-        const icon = selectedIcon || 'fa-building';
+        const color = selectedColor || currentCashBoxData?.color || '#059669';
+        const icon = normalizeIconForStorage(selectedIcon || currentCashBoxData?.icon || 'building');
 
         const safeText = (v) => {
             const s = String(v || '').trim();
