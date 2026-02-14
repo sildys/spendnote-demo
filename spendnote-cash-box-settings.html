@@ -674,7 +674,6 @@ document.querySelectorAll('input[name="receiptMode"]').forEach(radio => {
 // ===== TOGGLE SWITCHES =====
 document.querySelectorAll('.toggle-list input[type="checkbox"]').forEach(toggle => {
     toggle.addEventListener('change', function() {
-        if (receiptMode !== 'detailed') return;
         const field = this.dataset.field;
         if (field) {
             displayOptions[field] = this.checked ? '1' : '0';
@@ -779,6 +778,6 @@ window.addEventListener('DOMContentLoaded', function() {
 <script src="assets/js/nav-loader.js?v=8"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/cash-box-settings-data.js?v=31"></script>
+<script src="assets/js/cash-box-settings-data.js?v=32"></script>
 </body>
 </html>
