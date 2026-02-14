@@ -512,7 +512,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Add visible contact email on landing (footer + clear `mailto:`) for inbound questions.
 - Preview disclaimer UX on landing + signup (signup explicit acceptance).
 - GA4 baseline on landing (`page_view` + signup CTA click event) + Search Console setup.
-- Build SEO page #1: `petty-cash-log-software` intent page (copy + layout + meta + canonical + internal links).
+- Build SEO page #1: `petty-cash-log-software` intent page (angle: replace handwritten/duplicate receipt book with searchable digital cash handoff receipts; US keywords: "receipt book", "duplicate receipt book", "carbonless receipt book"; copy + layout + meta + canonical + internal links).
 - Build SEO page #2: `cash-handoff-receipt-app` intent page (copy + layout + meta + canonical + internal links).
 - After landing is ready: enable indexing for landing + these 2 SEO pages only; keep internal/app pages `noindex`.
 - Deploy updated `send-invite-email` Edge Function (reply_to + personalized subject), then monitor inbox placement for 48h.
