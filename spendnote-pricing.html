@@ -428,26 +428,27 @@
             flex-shrink: 0;
         }
 
-        .btn-upgrade {
+        .btn-get-started {
             background: var(--primary);
             color: white;
         }
 
-        .btn-upgrade:hover {
+        .btn-get-started:hover {
             background: var(--primary-dark);
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(var(--active-rgb), 0.3);
         }
 
-        .btn-downgrade {
+        .btn-start-free {
             background: var(--surface);
-            color: var(--orange);
-            border: 2px solid var(--orange);
+            color: var(--text);
+            border: 2px solid var(--border);
         }
 
-        .btn-downgrade:hover {
-            background: var(--orange);
+        .btn-start-free:hover {
+            background: var(--primary);
             color: white;
+            border-color: var(--primary);
             transform: translateY(-1px);
         }
 
@@ -974,23 +975,18 @@ function togglePreviewDetails() {
         let isYearly = true;
 
         function getButtonHTML(planKey) {
-            const planOrder = ['free', 'standard', 'pro'];
-            const currentIndex = planOrder.indexOf(currentPlan);
-            const targetIndex = planOrder.indexOf(planKey);
-
-            if (currentIndex === targetIndex) {
-                return '<a href="#" class="btn btn-current">Current Plan</a>';
-            } else if (targetIndex > currentIndex) {
-                return `<a href="/upgrade?plan=${planKey}" class="btn btn-upgrade">Upgrade</a>`;
-            } else {
-                return `<a href="/downgrade?plan=${planKey}" class="btn btn-downgrade">Downgrade</a>`;
+            if (planKey === 'free') {
+                return '<a href="spendnote-signup.html" class="btn btn-start-free">Start Free</a>';
+            } else if (planKey === 'standard') {
+                return '<a href="spendnote-signup.html" class="btn btn-get-started">Get Started</a>';
+            } else if (planKey === 'pro') {
+                return '<a href="spendnote-signup.html" class="btn btn-get-started">Get Started</a>';
             }
+            return '<a href="spendnote-signup.html" class="btn btn-get-started">Get Started</a>';
         }
 
         function getBadgeHTML(planKey, data) {
-            if (currentPlan === planKey) {
-                return '<div class="current-plan-badge">✓ Current Plan</div>';
-            } else if (data.popular) {
+            if (data.popular) {
                 return '<div class="popular-badge">Most Popular</div>';
             }
             return '';
