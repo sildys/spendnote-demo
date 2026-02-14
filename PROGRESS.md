@@ -51,7 +51,24 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
-## Where we are now (last updated: 2026-02-14)
+## Where we are now (last updated: 2026-02-14 evening)
+
+- Marketing polish (evening session):
+  - Footer redesigned with dark gradient background (matching early access banner style):
+    - Gradient: `linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%)`
+    - Logo updated with green gradient fill + drop-shadow glow
+    - Modern pill-style disclaimer with green accent
+    - Link hover effects with animated underline
+    - Footer description updated: "Complete cash visibility for your team. Instant receipts, full history."
+  - Pricing page improvements:
+    - Replaced internal app buttons (Upgrade/Downgrade/Current Plan) with marketing CTAs (Get Started/Start Free)
+    - All pricing buttons now link to signup page
+    - "2 receipt templates" → "Customizable receipt layouts" across all pricing displays
+  - Pro plan feature refinements:
+    - "Custom receipt wording" → "Customizable text & labels (localization)" (now first feature)
+    - Feature order optimized: localization first, then user count, then unlimited features
+  - User Settings page pricing features synchronized with landing/pricing pages
+  - Commits: `df73941`, `751d531`, `8eee347`, `b84cad2`, `c7b2c9a`, `450e4ac`, `1596956`, `68a8f51`
 
 - Invites/Team hotfixes (PM):
   - Fixed DB check constraint so invite acceptance can set status to `active` (`invites_status_check`).
