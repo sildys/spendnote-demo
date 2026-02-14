@@ -34,7 +34,16 @@
         }
 
         body {
-            background: linear-gradient(90deg, #ffffff 0%, #ffffff 55%, #eef8f3 100%);
+            position: relative;
+            background: #ffffff;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(90deg, #ffffff 0%, #ffffff 55%, #e7f4ef 100%);
+            z-index: -2;
         }
 
         .preview-banner {
