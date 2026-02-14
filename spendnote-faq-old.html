@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Get answers about SpendNote - cash tracking, receipt generation, team management, and more.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <title>FAQ - SpendNote</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css?v=18">
+    <style>
+        /* ===== FAQ PAGE SPECIFIC STYLES ===== */
+        
+        /* SCROLL PROGRESS BAR */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            z-index: 10000;
+            transition: width 0.1s ease-out, background 0.3s;
+        }
+
+        .scroll-progress.orange {
+            background: linear-gradient(90deg, var(--orange), #fbbf24);
+        }
+
+        .scroll-progress.blue {
+            background: linear-gradient(90deg, var(--blue), #60a5fa);
+        }
+
+        .scroll-progress.purple {
+            background: linear-gradient(90deg, var(--purple), #a78bfa);
+        }
+
+        *:focus {
+            outline: 3px solid var(--active);
+            outline-offset: 2px;
+        }
+        
+        /* HERO */
+        .faq-hero {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            padding: 3rem 0 3rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .faq-hero h1,
+        .faq-hero p {
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+
+        .breadcrumb {
+            max-width: 1400px;
+            margin: 0 auto 1.5rem;
+            text-align: left;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .breadcrumb i {
+            font-size: 0.75rem;
+            margin: 0 0.5rem;
+        }
+
+        .faq-hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            color: white;
+        }
+
+        .faq-hero p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+            color: white;
+        }
+
+        /* MAIN CONTAINER */
+        .faq-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 3rem;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        /* LEFT SIDEBAR */
+        .faq-sidebar {
+            position: sticky;
+            top: 100px;
+        }
+
+        .sidebar-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 16px var(--shadow);
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        /* SEARCH */
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: var(--surface);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        /* STATS */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.05), rgba(16, 185, 129, 0.05));
+            border-radius: 12px;
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        /* NAVIGATION MENU */
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu-item {
+            margin-bottom: 6px;
+        }
+
+        .nav-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--text);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .nav-menu-link:hover {
+            background: var(--surface-elevated);
+            transform: translateX(4px);
+        }
+
+        .nav-menu-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            background: var(--surface-elevated);
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .nav-menu-link:hover .nav-menu-icon,
+        .nav-menu-link.active .nav-menu-icon {
+            color: white;
+        }
+
+        /* Category-specific colors for navigation */
+        .nav-menu-link[href="#getting-started"]:hover {
+            color: var(--primary);
+        }
+        
+        .nav-menu-link[href="#getting-started"].active {
+            color: white;
+        }
+
+        .nav-menu-link[href="#getting-started"]:hover {
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
+        }
+
+        .nav-menu-link[href="#getting-started"]:hover .nav-menu-icon,
+        .nav-menu-link[href="#getting-started"].active .nav-menu-icon {
+            background: var(--primary);
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+        }
+
+        .nav-menu-link[href="#getting-started"].active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        .nav-menu-link[href="#features"]:hover {
+            color: var(--orange);
+        }
+        
+        .nav-menu-link[href="#features"].active {
+            color: white;
+        }
+
+        .nav-menu-link[href="#features"]:hover {
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+        }
+
+        .nav-menu-link[href="#features"]:hover .nav-menu-icon,
+        .nav-menu-link[href="#features"].active .nav-menu-icon {
+            background: var(--orange);
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .nav-menu-link[href="#features"].active {
+            background: linear-gradient(135deg, var(--orange), #fbbf24);
+        }
+
+        .nav-menu-link[href="#billing"]:hover {
+            color: var(--blue);
+        }
+        
+        .nav-menu-link[href="#billing"].active {
+            color: white;
+        }
+
+        .nav-menu-link[href="#billing"]:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+        }
+
+        .nav-menu-link[href="#billing"]:hover .nav-menu-icon,
+        .nav-menu-link[href="#billing"].active .nav-menu-icon {
+            background: var(--blue);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .nav-menu-link[href="#billing"].active {
+            background: linear-gradient(135deg, var(--blue), #60a5fa);
+        }
+
+        .nav-menu-link[href="#security"]:hover {
+            color: var(--purple);
+        }
+        
+        .nav-menu-link[href="#security"].active {
+            color: white;
+        }
+
+        .nav-menu-link[href="#security"]:hover {
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+        }
+
+        .nav-menu-link[href="#security"]:hover .nav-menu-icon,
+        .nav-menu-link[href="#security"].active .nav-menu-icon {
+            background: var(--purple);
+            box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-menu-link[href="#security"].active {
+            background: linear-gradient(135deg, var(--purple), #a78bfa);
+        }
+
+        .nav-menu-text {
+            flex: 1;
+        }
+
+        .nav-menu-count {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        
+        .nav-menu-link.active .nav-menu-count {
+            color: white;
+            opacity: 0.9;
+        }
+
+        /* HELP CTA */
+        .help-cta {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 16px;
+            color: white;
+        }
+
+        .help-cta i {
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .help-cta h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .help-cta p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .help-cta .help-cta .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* RIGHT CONTENT */
+        .faq-content {
+            min-height: 600px;
+        }
+
+        .faq-section {
+            margin-bottom: 3rem;
+            scroll-margin-top: 100px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .section-icon.green {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        .section-icon.orange {
+            background: linear-gradient(135deg, var(--orange), #fbbf24);
+        }
+
+        .section-icon.blue {
+            background: linear-gradient(135deg, var(--blue), #60a5fa);
+        }
+
+        .section-icon.purple {
+            background: linear-gradient(135deg, var(--purple), #a78bfa);
+        }
+
+        .section-info {
+            flex: 1;
+        }
+
+        .section-info h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .question-count {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: var(--surface-elevated);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        #getting-started .question-count {
+            background: rgba(5, 150, 105, 0.1);
+            color: var(--primary);
+        }
+
+        #features .question-count {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--orange);
+        }
+
+        #billing .question-count {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--blue);
+        }
+
+        #security .question-count {
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--purple);
+        }
+
+        /* FAQ ITEMS - CARDS STYLE */
+        .faq-items {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .faq-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .faq-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent
+            );
+            transform: rotate(25deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+
+        .faq-card:hover::after {
+            left: 150%;
+            opacity: 1;
+        }
+
+        .faq-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .faq-card.open {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Category glow colors for open state */
+        #getting-started .faq-card.open {
+            box-shadow: 0 8px 24px rgba(5, 150, 105, 0.15);
+        }
+
+        #features .faq-card.open {
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
+        }
+
+        #billing .faq-card.open {
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+        }
+
+        #security .faq-card.open {
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+        }
+
+        .faq-header {
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+            border-bottom: none;
+        }
+        
+        .faq-header:focus {
+            outline: none;
+        }
+        
+        .faq-card.open .faq-header {
+            border-bottom: none;
+        }
+
+        .faq-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--surface-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .faq-card.open .faq-number,
+        .faq-card.open .faq-toggle {
+            background: var(--primary);
+            color: white;
+        }
+
+        .faq-question-text {
+            flex: 1;
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        .faq-toggle {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--surface-elevated);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.3s;
+            flex-shrink: 0;
+        }
+
+        .faq-card.open .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .faq-card.open .faq-body {
+            max-height: 600px;
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .faq-answer strong {
+            color: var(--text);
+        }
+
+        /* SEARCH HIGHLIGHT */
+        mark.search-highlight {
+            background: #fef08a;
+            color: var(--text);
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* NO RESULTS */
+        .no-results {
+            text-align: center;
+            padding: 4rem 3rem;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        /* BACK TO TOP BUTTON */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 8px 24px rgba(5, 150, 105, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 32px rgba(5, 150, 105, 0.4);
+        }
+
+        .back-to-top.orange {
+            background: var(--orange);
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.3);
+        }
+
+        .back-to-top.orange:hover {
+            box-shadow: 0 12px 32px rgba(245, 158, 11, 0.4);
+        }
+
+        .back-to-top.blue {
+            background: var(--blue);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);
+        }
+
+        .back-to-top.blue:hover {
+            box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
+        }
+
+        .back-to-top.purple {
+            background: var(--purple);
+            box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
+        }
+
+        .back-to-top.purple:hover {
+            box-shadow: 0 12px 32px rgba(139, 92, 246, 0.4);
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            color: var(--text-muted);
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+
+        .no-results h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-results p {
+            color: var(--text-muted);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .faq-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .faq-sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+
+            .sidebar-section {
+                margin-bottom: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            
+            .faq-sidebar {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+    </style></head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <nav class="site-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#nav-logo-gradient)"/>
+                    <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                    <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                    <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                    <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                    <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="nav-logo-gradient" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#059669"/>
+                            <stop offset="100%" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>SpendNote</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="spendnote-pricing.html">Pricing</a></li>
+                <li><a href="spendnote-faq.html" class="active">FAQ</a></li>
+                <li><a href="spendnote-login.html" class="btn btn-secondary">Log in</a></li>
+                <li><a href="spendnote-signup.html" class="btn btn-primary">Sign up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="faq-hero">
+        <h1>Frequently Asked Questions</h1>
+        <p>Everything you need to know about SpendNote</p>
+    </section>
+
+    <div class="faq-container">
+        <!-- LEFT SIDEBAR -->
+        <aside class="faq-sidebar">
+            <!-- Search -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Search</div>
+        <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search questions..." id="searchInput">
+        </div>
+    </div>
+
+            <!-- Stats -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Overview</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number">16</span>
+                        <span class="stat-label">Questions</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                </div>
+        </div>
+
+            <!-- Navigation -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Categories</div>
+                <ul class="nav-menu">
+                    <li class="nav-menu-item">
+                        <a href="#getting-started" class="nav-menu-link active">
+                            <div class="nav-menu-icon"><i class="fas fa-rocket"></i></div>
+                            <span class="nav-menu-text">Getting Started</span>
+                            <span class="nav-menu-count">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-menu-item">
+                        <a href="#features" class="nav-menu-link">
+                            <div class="nav-menu-icon"><i class="fas fa-star"></i></div>
+                            <span class="nav-menu-text">Features</span>
+                            <span class="nav-menu-count">4</span>
+                        </a>
+                    </li>
+                    <li class="nav-menu-item">
+                        <a href="#billing" class="nav-menu-link">
+                            <div class="nav-menu-icon"><i class="fas fa-credit-card"></i></div>
+                            <span class="nav-menu-text">Billing & Plans</span>
+                            <span class="nav-menu-count">5</span>
+                        </a>
+                    </li>
+                    <li class="nav-menu-item">
+                        <a href="#security" class="nav-menu-link">
+                            <div class="nav-menu-icon"><i class="fas fa-shield-alt"></i></div>
+                            <span class="nav-menu-text">Security</span>
+                            <span class="nav-menu-count">4</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Help CTA -->
+            <div class="help-cta">
+                <i class="fas fa-headset"></i>
+                <h3>Still need help?</h3>
+                <p>Our support team is here for you</p>
+                <a href="spendnote-contact.html" class="btn">Contact Support</a>
+            </div>
+        </aside>
+
+        <!-- RIGHT CONTENT -->
+        <main class="faq-content">
+            <!-- Getting Started -->
+            <section class="faq-section" id="getting-started">
+                <div class="section-header">
+                    <div class="section-icon green">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="section-info">
+                        <h2>Getting Started <span class="question-count">3 Questions</span></h2>
+                        <p>Learn the basics of SpendNote</p>
+                    </div>
+                </div>
+                <div class="faq-items">
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">01</div>
+                            <div class="faq-question-text">What is SpendNote?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                SpendNote is a <strong>simple cash receipt management tool</strong> for teams. It helps you track internal cash movements, create printable receipts, and maintain visibility across your team — all without the complexity of accounting software. Perfect for petty cash, employee advances, and team handoffs.
+                    </div>
+                </div>
+            </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">02</div>
+                            <div class="faq-question-text">How do I get started with SpendNote?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                Getting started is easy! <strong>Sign up for a free trial</strong> (no credit card required), create your first Cash Box, and you can start creating receipts immediately. The whole process takes less than 2 minutes. We provide guided tours and templates to help you get up and running quickly.
+                    </div>
+                </div>
+            </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">03</div>
+                            <div class="faq-question-text">Is SpendNote an accounting tool?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                <strong>No</strong>, SpendNote is not an accounting or tax tool. It's designed specifically for internal cash tracking and creating proof of handoff. The receipts you create are for internal documentation purposes — they're not invoices and shouldn't be used for tax purposes. Think of it as a digital receipt book, not a ledger.
+                    </div>
+                </div>
+            </div>
+        </div>
+            </section>
+
+            <!-- Features -->
+            <section class="faq-section" id="features">
+                <div class="section-header">
+                    <div class="section-icon orange">
+                <i class="fas fa-star"></i>
+                    </div>
+                    <div class="section-info">
+                        <h2>Features <span class="question-count">4 Questions</span></h2>
+                        <p>Discover what SpendNote can do</p>
+                    </div>
+                </div>
+                <div class="faq-items">
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">04</div>
+                            <div class="faq-question-text">Can I customize the receipt templates?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                            <div class="faq-answer">
+                                <strong>Yes!</strong> With Starter and Pro plans, you can customize receipt templates including your company logo, custom wording, and even translate to different languages. You can also choose different styles and layouts. The only element that can't be changed is the disclaimer that clarifies this is not a tax document.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">05</div>
+                            <div class="faq-question-text">How do I share receipts with my team?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                You can share receipts in <strong>multiple ways</strong>: email them directly from SpendNote, download as PDF and share via any platform, or print them for physical handoff. All team members with access can also view receipts in real-time from the dashboard. You can also generate shareable links for specific receipts.
+                    </div>
+                </div>
+            </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">06</div>
+                            <div class="faq-question-text">Can I track multiple Cash Boxes?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                <strong>Absolutely!</strong> The Free Trial includes 1 Cash Box, Starter includes 2 Cash Boxes, and Pro gives you unlimited Cash Boxes. This is perfect for tracking cash at different locations, events, or departments. Each Cash Box can have its own color coding and settings for easy organization.
+                    </div>
+                </div>
+            </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">07</div>
+                            <div class="faq-question-text">Does SpendNote work offline?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                SpendNote is a <strong>web-based application</strong> that requires an internet connection to create and sync receipts. However, once a receipt is created, you can download it as a PDF for offline access. We're exploring offline capabilities for future updates.
+                    </div>
+                </div>
+            </div>
+        </div>
+            </section>
+
+            <!-- Billing -->
+            <section class="faq-section" id="billing">
+                <div class="section-header">
+                    <div class="section-icon blue">
+                <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="section-info">
+                        <h2>Billing & Plans <span class="question-count">5 Questions</span></h2>
+                        <p>Pricing and payment information</p>
+                    </div>
+                </div>
+                <div class="faq-items">
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">08</div>
+                            <div class="faq-question-text">What's included in the free trial?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                            <div class="faq-answer">
+                                The free trial gives you <strong>14 days or 20 receipts</strong> (whichever comes first) to try SpendNote. You get 1 Cash Box, 1 user, basic receipt templates, and PDF reports. No credit card required to start. It's a full-featured trial so you can test everything before committing.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">09</div>
+                            <div class="faq-question-text">Can I cancel anytime?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                <strong>Yes!</strong> You can cancel your subscription at any time with no questions asked. We also offer a 30-day money-back guarantee on all paid plans. Your data remains accessible for export even after cancellation, and you can reactivate your account anytime within 90 days.
+                    </div>
+                </div>
+            </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">10</div>
+                            <div class="faq-question-text">What payment methods do you accept?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                We accept all <strong>major credit cards</strong> (Visa, Mastercard, American Express) through our secure payment processor. For annual plans, we can also arrange bank transfers for larger organizations. All payments are processed securely and encrypted.
+                    </div>
+                </div>
+            </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">11</div>
+                            <div class="faq-question-text">Do you offer discounts for annual plans?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                Yes! When you choose an <strong>annual subscription</strong>, you save 20% compared to monthly billing. For example, the Starter plan costs €12/month or €115/year (equivalent to €9.58/month). We also offer custom pricing for teams larger than 10 users.
+                    </div>
+                </div>
+            </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">12</div>
+                            <div class="faq-question-text">What happens if I exceed my plan limits?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+        </div>
+                        <div class="faq-body">
+                            <div class="faq-answer">
+                                If you exceed your plan's receipt limit, we'll <strong>notify you in advance</strong> and give you options: upgrade to a higher plan, purchase additional receipt packs, or wait until your limit resets next month. Your existing receipts remain accessible regardless of your plan status.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Security -->
+            <section class="faq-section" id="security">
+                <div class="section-header">
+                    <div class="section-icon purple">
+                <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="section-info">
+                        <h2>Security & Privacy <span class="question-count">4 Questions</span></h2>
+                        <p>How we protect your data</p>
+                    </div>
+                </div>
+                <div class="faq-items">
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">13</div>
+                            <div class="faq-question-text">Is my data secure?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                            <div class="faq-answer">
+                                <strong>Absolutely!</strong> All data is encrypted in transit (SSL/TLS) and at rest using industry-standard AES-256 encryption. We host on EU servers, are GDPR-ready, and follow industry best practices for data security. Your financial data is never shared with third parties, and we conduct regular security audits.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">14</div>
+                            <div class="faq-question-text">Can I export my data?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                <strong>Absolutely!</strong> You can export all your receipts and transaction history as CSV files at any time. PDFs of individual receipts can also be downloaded in bulk. Your data belongs to you, and we make it easy to take it with you. Exports include all metadata and timestamps.
+                    </div>
+                </div>
+            </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">15</div>
+                            <div class="faq-question-text">Where are your servers located?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                Our servers are located in the <strong>European Union</strong>, ensuring compliance with GDPR and other EU data protection regulations. This provides strong privacy protections for all users. We use redundant data centers for reliability and automated backups for data safety.
+                    </div>
+                </div>
+            </div>
+
+                    <div class="faq-card">
+                        <div class="faq-header">
+                            <div class="faq-number">16</div>
+                            <div class="faq-question-text">Do you offer two-factor authentication?</div>
+                            <div class="faq-toggle"><i class="fas fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-body">
+                <div class="faq-answer">
+                                <strong>Yes!</strong> Two-factor authentication (2FA) is available on all plans to add an extra layer of security to your account. You can enable it using authenticator apps like Google Authenticator or Authy. We also support security keys for Pro plan users.
+                    </div>
+                </div>
+            </div>
+        </div>
+            </section>
+
+            <!-- No Results Message -->
+            <div class="no-results" id="noResults">
+                <i class="fas fa-search"></i>
+                <h3>No results found</h3>
+                <p>Try adjusting your search or browse the categories above</p>
+        </div>
+    </main>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="app-footer-container">
+            <!-- Top Row -->
+            <div class="app-footer-top">
+                <!-- Left: Brand Section -->
+                <div class="app-footer-brand">
+                    <a href="index.html" class="app-footer-brand-logo">
+                        <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#footer-logo-gradient-faq)"/>
+                            <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                            <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                            <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                            <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                            <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                            <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="footer-logo-gradient-faq" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#059669"/>
+                                    <stop offset="100%" stop-color="#10b981"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span>SpendNote</span>
+                    </a>
+                    <p class="app-footer-brand-desc">
+                        Complete cash visibility for your team.<br>Instant receipts, full history.
+                    </p>
+            </div>
+                
+                <!-- Right: Links + Disclaimer -->
+                <div class="app-footer-right">
+                    <div class="app-footer-links-simple">
+                        <a href="index.html#features">Features</a>
+                        <a href="spendnote-pricing.html">Pricing</a>
+                        <a href="spendnote-faq.html">FAQ</a>
+                        <a href="spendnote-terms.html">Legal</a>
+            </div>
+                    
+                    <!-- Disclaimer on right side -->
+                    <div class="app-footer-brand-disclaimer">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Cash handoff documentation only. Not a tax or accounting tool.</span>
+            </div>
+            </div>
+        </div>
+            
+            <!-- Bottom Row -->
+            <div class="app-footer-bottom">
+                <div class="app-footer-copyright">
+                    &copy; 2026 SpendNote. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Accordion
+        document.querySelectorAll('.faq-card').forEach((card, index) => {
+            const header = card.querySelector('.faq-header');
+            header.addEventListener('click', () => {
+                const isOpen = card.classList.contains('open');
+                
+                // Close all cards
+                document.querySelectorAll('.faq-card').forEach(c => c.classList.remove('open'));
+                
+                // Open clicked card if it wasn't open
+                if (!isOpen) {
+                    card.classList.add('open');
+                }
+            });
+
+            // Keyboard navigation for FAQ cards
+            header.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    header.click();
+                }
+            });
+
+            // Make header focusable
+            header.setAttribute('tabindex', '0');
+        });
+
+        // Global Escape key to close all FAQ cards
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.faq-card').forEach(c => c.classList.remove('open'));
+            }
+        });
+
+        // Navigation Menu - Active State
+        const navLinks = document.querySelectorAll('.nav-menu-link');
+        const sections = document.querySelectorAll('.faq-section');
+
+        // Intersection Observer for active section highlighting
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '-100px 0px -50% 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+
+        // Smooth scroll for navigation links
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Search functionality with highlighting
+        const searchInput = document.getElementById('searchInput');
+        const faqCards = document.querySelectorAll('.faq-card');
+        const faqSections = document.querySelectorAll('.faq-section');
+        const noResults = document.getElementById('noResults');
+        
+        // Store original content
+        let originalContent = {};
+        faqCards.forEach((card, index) => {
+            originalContent[index] = {
+                question: card.querySelector('.faq-question-text').innerHTML,
+                answer: card.querySelector('.faq-answer').innerHTML
+            };
+        });
+
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+            let hasResults = false;
+
+            if (query === '') {
+                // Restore original content
+                faqCards.forEach((card, index) => {
+                    card.style.display = 'block';
+                    card.querySelector('.faq-question-text').innerHTML = originalContent[index].question;
+                    card.querySelector('.faq-answer').innerHTML = originalContent[index].answer;
+                });
+                faqSections.forEach(section => section.style.display = 'block');
+                noResults.classList.remove('show');
+                return;
+            }
+
+            faqCards.forEach((card, index) => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = 'block';
+                    hasResults = true;
+
+                    // Highlight matches
+                    const highlightText = (text) => {
+                        const regex = new RegExp(`(${query})`, 'gi');
+                        return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+                    };
+
+                    // Restore and highlight
+                    card.querySelector('.faq-question-text').innerHTML = 
+                        highlightText(originalContent[index].question);
+                    card.querySelector('.faq-answer').innerHTML = 
+                        highlightText(originalContent[index].answer);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Hide sections with no visible cards
+            faqSections.forEach(section => {
+                const visibleCards = section.querySelectorAll('.faq-card[style="display: block;"]');
+                if (visibleCards.length > 0) {
+                        section.style.display = 'block';
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+
+            // Show/hide no results message
+            if (hasResults) {
+                noResults.classList.remove('show');
+            } else {
+                noResults.classList.add('show');
+            }
+        });
+
+        // Scroll Progress Bar & Back to Top
+        const scrollProgress = document.getElementById('scrollProgress');
+        const backToTop = document.getElementById('backToTop');
+
+        function getCurrentSection() {
+            const sections = document.querySelectorAll('.faq-section');
+            let current = 'getting-started';
+            
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 200) {
+                    current = section.id;
+                }
+            });
+            
+            return current;
+        }
+
+        window.addEventListener('scroll', () => {
+            // Progress bar
+            const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (window.scrollY / windowHeight) * 100;
+            scrollProgress.style.width = scrolled + '%';
+
+            // Show/hide back to top button
+            const showButton = window.scrollY > 500;
+            if (showButton) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+
+            // Update colors based on active section
+            const currentSection = getCurrentSection();
+            scrollProgress.className = 'scroll-progress';
+            backToTop.className = 'back-to-top' + (showButton ? ' show' : '');
+            
+            if (currentSection === 'features') {
+                scrollProgress.classList.add('orange');
+                backToTop.classList.add('orange');
+            } else if (currentSection === 'billing') {
+                scrollProgress.classList.add('blue');
+                backToTop.classList.add('blue');
+            } else if (currentSection === 'security') {
+                scrollProgress.classList.add('purple');
+                backToTop.classList.add('purple');
+            }
+        });
+
+        // Back to top click
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+    <script src="assets/js/main.js?v=22"></script>
+</body>
+</html>
