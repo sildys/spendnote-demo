@@ -352,6 +352,67 @@
             color: var(--text);
         }
 
+        /* TOOLTIP */
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(var(--active-rgb), 0.15);
+            color: var(--active);
+            font-size: 11px;
+            cursor: help;
+            transition: all 0.2s;
+        }
+
+        .tooltip-icon:hover {
+            background: var(--active);
+            color: white;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            z-index: 1000;
+            transition: opacity 0.2s, visibility 0.2s;
+            pointer-events: none;
+        }
+
+        .tooltip-text::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .tooltip-wrapper:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
         .trust-badges {
             margin-top: 18px;
             display: flex;
@@ -510,7 +571,15 @@
 
             <div class="pricing-guarantee">
                 <i class="fas fa-shield-check"></i>
-                <p><strong>30-Day Money-Back Guarantee</strong> (≤20 transactions) • Cancel anytime • No questions asked</p>
+                <p>
+                    <strong>
+                        <span class="tooltip-wrapper">
+                            30-Day Money-Back Guarantee
+                            <span class="tooltip-icon">i</span>
+                            <span class="tooltip-text">Valid for accounts with ≤20 transactions</span>
+                        </span>
+                    </strong> • Cancel anytime • No questions asked
+                </p>
             </div>
         </div>
     
