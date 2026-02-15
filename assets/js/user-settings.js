@@ -52,6 +52,8 @@ const persistAvatarColor = async (color) => {
 // Logo localStorage
 const LOGO_KEY = 'spendnote.proLogoDataUrl';
 const LEGACY_LOGO_KEY = 'spendnote.receipt.logo.v1';
+const LOGO_SCALE_KEY = 'spendnote.receipt.logoScale.v1';
+const LOGO_ALIGN_KEY = 'spendnote.receipt.logoAlign.v1';
 const readLogo = () => {
     try {
         return localStorage.getItem(LOGO_KEY) || localStorage.getItem(LEGACY_LOGO_KEY);
@@ -113,12 +115,58 @@ const applyLogo = () => {
     const img = document.getElementById('logoImg');
     if (!wrap || !img) return;
     const stored = readLogo();
+    const scale = clampLogoScale(readLogoScale());
+    const align = readLogoAlign();
+    wrap.style.setProperty('--logo-scale', String(scale));
+    wrap.style.setProperty('--logo-position-x', align === 'left' ? 'left' : (align === 'right' ? 'right' : 'center'));
     if (stored) {
         wrap.classList.add('has-image');
         img.src = stored;
     } else {
         wrap.classList.remove('has-image');
         img.removeAttribute('src');
+    }
+};
+
+const clampLogoScale = (value) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return 1;
+    return Math.min(1.2, Math.max(0.7, n));
+};
+
+const readLogoScale = () => {
+    try { return parseFloat(localStorage.getItem(LOGO_SCALE_KEY) || '1'); } catch { return 1; }
+};
+
+const readLogoAlign = () => {
+    try {
+        const v = String(localStorage.getItem(LOGO_ALIGN_KEY) || '').toLowerCase();
+        if (v === 'left' || v === 'center' || v === 'right') return v;
+    } catch (_) {}
+    return 'center';
+};
+
+const writeLogoScale = (value) => {
+    try { localStorage.setItem(LOGO_SCALE_KEY, String(clampLogoScale(value))); } catch (_) {}
+};
+
+const writeLogoAlign = (value) => {
+    const v = (value === 'left' || value === 'right') ? value : 'center';
+    try { localStorage.setItem(LOGO_ALIGN_KEY, v); } catch (_) {}
+};
+
+const applyLogoControls = () => {
+    const scaleInput = document.getElementById('logoScaleInput');
+    const scaleValue = document.getElementById('logoScaleValue');
+    const alignGroup = document.getElementById('logoAlignGroup');
+    const scale = clampLogoScale(readLogoScale());
+    if (scaleInput) scaleInput.value = String(Math.round(scale * 100));
+    if (scaleValue) scaleValue.textContent = `${Math.round(scale * 100)}%`;
+    if (alignGroup) {
+        const align = readLogoAlign();
+        alignGroup.querySelectorAll('.logo-align-btn').forEach((btn) => {
+            btn.classList.toggle('active', btn.dataset.align === align);
+        });
     }
 };
 
@@ -139,6 +187,7 @@ const fillProfile = (p) => {
 
     applyAvatar(fullName);
     applyLogo();
+    applyLogoControls();
 
     window.refreshUserNav?.();
 };
@@ -520,6 +569,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         writeLogo(null);
         applyLogo();
     });
+
+    const logoScaleInput = document.getElementById('logoScaleInput');
+    if (logoScaleInput) {
+        logoScaleInput.addEventListener('input', () => {
+            const scale = clampLogoScale(Number(logoScaleInput.value) / 100);
+            writeLogoScale(scale);
+            const scaleValue = document.getElementById('logoScaleValue');
+            if (scaleValue) scaleValue.textContent = `${Math.round(scale * 100)}%`;
+            applyLogo();
+        });
+    }
+
+    const logoAlignGroup = document.getElementById('logoAlignGroup');
+    if (logoAlignGroup) {
+        logoAlignGroup.addEventListener('click', (e) => {
+            const btn = e.target?.closest('.logo-align-btn');
+            if (!btn) return;
+            writeLogoAlign(btn.dataset.align);
+            applyLogoControls();
+            applyLogo();
+        });
+    }
 
     // Receipt form
     document.getElementById('receiptResetBtn')?.addEventListener('click', () => fillProfile(currentProfile));

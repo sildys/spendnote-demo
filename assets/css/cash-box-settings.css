@@ -933,24 +933,6 @@
     flex-wrap: wrap;
 }
 
-.pro-range-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.pro-range-row input[type="range"] {
-    flex: 1;
-}
-
-.pro-range-value {
-    min-width: 48px;
-    text-align: right;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-muted);
-}
-
 /* DANGER ZONE */
 /* Cash Box Actions Row (Transaction Detail-like) */
 .cb-actions-row {

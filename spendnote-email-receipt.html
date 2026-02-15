@@ -54,23 +54,23 @@
     }
     
     .logo-container {
-      text-align: center;
+      text-align: var(--logo-align, center);
       padding: 24px 40px 0;
       background: white;
     }
     
     .logo {
       display: inline-block;
-      max-width: 140px;
-      max-height: 64px;
+      max-width: calc(140px * var(--logo-scale, 1));
+      max-height: calc(64px * var(--logo-scale, 1));
       background: white;
       margin-top: -32px;
     }
     
     .logo svg,
     .logo img {
-      max-width: 140px;
-      max-height: 64px;
+      max-width: calc(140px * var(--logo-scale, 1));
+      max-height: calc(64px * var(--logo-scale, 1));
       width: auto;
       height: auto;
       display: block;
@@ -596,6 +596,13 @@ try {
   const scaleParam = parseFloat(urlParams.get('logoScale') || '1');
   if (Number.isFinite(scaleParam)) {
     document.documentElement.style.setProperty('--logo-scale', String(Math.min(1.2, Math.max(0.7, scaleParam))));
+  }
+} catch (_) {}
+
+try {
+  const alignParam = String(urlParams.get('logoAlign') || '').trim().toLowerCase();
+  if (alignParam === 'left' || alignParam === 'center' || alignParam === 'right') {
+    document.documentElement.style.setProperty('--logo-align', alignParam);
   }
 } catch (_) {}
 

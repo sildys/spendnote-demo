@@ -79,7 +79,7 @@ body {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: var(--logo-justify, center);
   font-size: 7pt;
   color: #777;
   text-transform: uppercase;
@@ -92,6 +92,7 @@ body {
   height: calc(18.5mm * var(--logo-scale));
   width: var(--logo-w);
   object-fit: contain;
+  object-position: var(--logo-position-x, center) center;
 }
 
 
@@ -789,6 +790,19 @@ body {
       if (Number.isFinite(scaleParam)) {
         document.documentElement.style.setProperty('--logo-scale', String(Math.min(1.2, Math.max(0.7, scaleParam))));
       }
+    try {
+      const alignParam = String(urlParams.get('logoAlign') || '').trim().toLowerCase();
+      if (alignParam === 'left') {
+        document.documentElement.style.setProperty('--logo-justify', 'flex-start');
+        document.documentElement.style.setProperty('--logo-position-x', 'left');
+      } else if (alignParam === 'right') {
+        document.documentElement.style.setProperty('--logo-justify', 'flex-end');
+        document.documentElement.style.setProperty('--logo-position-x', 'right');
+      } else if (alignParam === 'center') {
+        document.documentElement.style.setProperty('--logo-justify', 'center');
+        document.documentElement.style.setProperty('--logo-position-x', 'center');
+      }
+    } catch (_) {}
     } catch (_) {}
   }
   

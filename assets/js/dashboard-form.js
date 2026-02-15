@@ -563,6 +563,20 @@ function initTransactionForm() {
                         // ignore
                     }
 
+                    try {
+                        const storedScale = parseFloat(localStorage.getItem('spendnote.receipt.logoScale.v1') || '1');
+                        if (Number.isFinite(storedScale) && storedScale > 0) {
+                            params.set('logoScale', String(storedScale));
+                        }
+                    } catch (_) {}
+
+                    try {
+                        const storedAlign = String(localStorage.getItem('spendnote.receipt.logoAlign.v1') || '').trim().toLowerCase();
+                        if (storedAlign === 'left' || storedAlign === 'center' || storedAlign === 'right') {
+                            params.set('logoAlign', storedAlign);
+                        }
+                    } catch (_) {}
+
                     const baseUrl = baseUrls[format] || baseUrls.a4;
                     return {
                         url: `${baseUrl}?${params.toString()}`,
