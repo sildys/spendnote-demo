@@ -406,6 +406,11 @@ const updatePricing = () => {
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize logo editor immediately (must not depend on DB/network)
+    if (window.LogoEditor) {
+        window.LogoEditor.init();
+    }
+
     // Wait for Supabase to be ready
     const waitForDb = () => new Promise(resolve => {
         const check = () => window.db?.profiles ? resolve() : setTimeout(check, 50);
@@ -419,11 +424,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         await computeAndApplyRole();
     } catch (_) {}
     
-    // Initialize logo editor
-    if (window.LogoEditor) {
-        window.LogoEditor.init();
-    }
-
     // Avatar color picker
     document.getElementById('avatarColorSwatches')?.addEventListener('click', (e) => {
         const btn = e.target?.closest('.avatar-color-swatch');

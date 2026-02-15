@@ -22,6 +22,8 @@ const LogoEditor = (() => {
     let dragStartY = 0;
     let imgStartX = 0;
     let imgStartY = 0;
+    let snapshotTimer = null;
+    let hasUserEdited = false;
 
     const clampScale = (value) => {
         const n = Number(value);
@@ -55,6 +57,15 @@ const LogoEditor = (() => {
         } catch (_) {}
     };
 
+    const scheduleSnapshot = () => {
+        try {
+            if (snapshotTimer) clearTimeout(snapshotTimer);
+            snapshotTimer = setTimeout(() => {
+                renderSnapshot();
+            }, 160);
+        } catch (_) {}
+    };
+
     const readScale = () => {
         try {
             return parseFloat(localStorage.getItem(LOGO_SCALE_KEY) || '1');
@@ -68,7 +79,7 @@ const LogoEditor = (() => {
             localStorage.setItem(LOGO_SCALE_KEY, String(clampScale(value)));
         } catch {}
         persistLogoSettings();
-        renderSnapshot();
+        scheduleSnapshot();
     };
 
     const persistLogoSettings = () => {
@@ -125,16 +136,12 @@ const LogoEditor = (() => {
 
     const loadFromProfile = (profile) => {
         if (!profile) return;
+        if (hasUserEdited) return;
         const dbLogo = profile.account_logo_url || '';
         if (dbLogo) {
             try {
                 localStorage.setItem(LOGO_KEY, dbLogo);
                 localStorage.setItem(LEGACY_LOGO_KEY, dbLogo);
-            } catch {}
-        } else {
-            try {
-                localStorage.removeItem(LOGO_KEY);
-                localStorage.removeItem(LEGACY_LOGO_KEY);
             } catch {}
         }
         // Sync scale/position from DB
@@ -161,7 +168,7 @@ const LogoEditor = (() => {
     const writePosition = () => {
         try { localStorage.setItem(LOGO_POSITION_KEY, JSON.stringify({ x: currentX, y: currentY })); } catch {}
         persistLogoSettings();
-        renderSnapshot();
+        scheduleSnapshot();
     };
 
     const applyTransform = () => {
@@ -178,6 +185,7 @@ const LogoEditor = (() => {
     };
 
     const setScale = (value) => {
+        hasUserEdited = true;
         currentScale = clampScale(value);
         writeScale(currentScale);
         updateInfo();
@@ -208,7 +216,8 @@ const LogoEditor = (() => {
         }
     };
 
-    const removeLogo = async () => {
+    const removeLogo = () => {
+        hasUserEdited = true;
         writeLogo(null);
         if (preview) preview.classList.remove('has-logo');
         if (image) image.removeAttribute('src');
@@ -218,15 +227,11 @@ const LogoEditor = (() => {
         writeScale(currentScale);
         writePosition();
         updateInfo();
-        if (window.db?.profiles?.update) {
-            try {
-                await window.db.profiles.update({ account_logo_url: null });
-            } catch (_) {}
-        }
     };
 
     const uploadLogo = (file) => {
         if (!file) return;
+        hasUserEdited = true;
         if (file.size > 2 * 1024 * 1024) {
             if (window.showAlert) {
                 window.showAlert('Max logo size is 2MB.', { iconType: 'warning' });
@@ -243,16 +248,15 @@ const LogoEditor = (() => {
                 }
                 return;
             }
+            writeLogo(dataUrl);
             if (image && preview) {
+                image.onload = () => {
+                    updateInfo();
+                    scheduleSnapshot();
+                    image.onload = null;
+                };
                 image.src = dataUrl;
                 preview.classList.add('has-logo');
-                image.onload = () => {
-                    currentScale = 1.0;
-                    currentX = 0;
-                    currentY = 0;
-                    updateInfo();
-                    renderSnapshot();
-                };
             }
             currentScale = 1.0;
             currentX = 0;
@@ -260,7 +264,6 @@ const LogoEditor = (() => {
             writeScale(currentScale);
             writePosition();
             updateInfo();
-            loadLogo();
         };
         reader.readAsDataURL(file);
     };
@@ -293,6 +296,7 @@ const LogoEditor = (() => {
         document.addEventListener('mouseup', () => {
             if (isDragging) {
                 isDragging = false;
+                hasUserEdited = true;
                 preview.style.cursor = 'grab';
                 writePosition();
             }
@@ -315,7 +319,10 @@ const LogoEditor = (() => {
         const fileInput = document.getElementById('logoFileInput');
 
         if (uploadBtn && fileInput) {
-            uploadBtn.addEventListener('click', () => fileInput.click());
+            uploadBtn.addEventListener('click', () => {
+                try { fileInput.value = ''; } catch (_) {}
+                fileInput.click();
+            });
         }
         if (removeBtn) {
             removeBtn.addEventListener('click', removeLogo);
@@ -324,6 +331,7 @@ const LogoEditor = (() => {
             fileInput.addEventListener('change', (e) => {
                 const file = e.target?.files?.[0];
                 if (file) uploadLogo(file);
+                try { e.target.value = ''; } catch (_) {}
             });
         }
 
