@@ -58,7 +58,7 @@ body {
 .topbar{
   min-height: 18.5mm;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr var(--logo-w);
   column-gap: 4mm;
   align-items: start;
 }
@@ -74,13 +74,16 @@ body {
 }
 
 .logo-box{
+  width: var(--logo-w);
+  height: 18.5mm;
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 .logo-img{
-  height: calc(18.5mm * var(--logo-scale));
-  width: auto;
+  max-height: 100%;
+  max-width: 100%;
   object-fit: contain;
 }
 
