@@ -924,6 +924,11 @@ function togglePreviewDetails() {
 
                 const result = await auth.signUp(email, password, fullName, { emailRedirectTo });
                 
+                if (result.success && Array.isArray(result.user?.identities) && result.user.identities.length === 0) {
+                    showError('Email already registered. Please log in instead.');
+                    return;
+                }
+
                 if (result.success) {
                     if (result.needsEmailConfirmation || !result.session) {
                         successMessage.classList.add('show');
@@ -994,6 +999,7 @@ function togglePreviewDetails() {
         function showError(message) {
             errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message;
             errorMessage.classList.add('show');
+            successMessage.classList.remove('show');
             
             const submitBtn = signupForm.querySelector('button[type="submit"]');
             submitBtn.disabled = false;
