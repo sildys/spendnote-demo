@@ -418,6 +418,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load data
     await Promise.all([loadProfile(), loadTeam(), loadCashBoxes()]);
     await computeAndApplyRole();
+    
+    // Initialize logo editor
+    if (window.LogoEditor) {
+        window.LogoEditor.init();
+    }
 
     // Avatar color picker
     document.getElementById('avatarColorSwatches')?.addEventListener('click', (e) => {

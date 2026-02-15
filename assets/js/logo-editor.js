@@ -286,9 +286,5 @@ const LogoEditor = (() => {
     return { init, loadLogo, removeLogo, uploadLogo };
 })();
 
-// Auto-init when DOM ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => LogoEditor.init());
-} else {
-    LogoEditor.init();
-}
+// Export for manual initialization
+window.LogoEditor = LogoEditor;
