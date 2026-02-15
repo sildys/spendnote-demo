@@ -180,6 +180,8 @@ const __spendnoteEnsureProfileForCurrentUser = async () => {
 
 const __spendnoteAutoAcceptMyInvites = async () => {
     try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return null;
         console.warn('[invite-auto] Calling spendnote_auto_accept_my_invites...');
         const r = await supabaseClient.rpc('spendnote_auto_accept_my_invites');
         console.warn('[invite-auto] result:', JSON.stringify(r?.data || r?.error));
@@ -197,6 +199,14 @@ const __spendnoteAutoAcceptMyInvites = async () => {
 };
 
 const __spendnoteTryAcceptPendingInviteToken = async () => {
+    try {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) {
+            return;
+        }
+    } catch (_) {
+        return;
+    }
     let token = '';
     try {
         token = String(localStorage.getItem(__spendnoteInviteTokenKey) || '').trim();
