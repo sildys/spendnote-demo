@@ -289,18 +289,19 @@ body {
 }
 
 
-/* v12 header layout: identifiers + logo, keep IDs on one line */
+/* v12 header layout: identifiers above logo, aligned right */
 .topbar{
   display:grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr var(--logo-w);
   column-gap: 6mm;
+  row-gap: 2mm;
   align-items:start;
 }
 .right-block{
-  display:flex;
-  flex-direction: column;
-  align-items:flex-end;
-  gap: 2mm;
+  display:grid;
+  grid-template-rows: auto auto;
+  justify-items: end;
+  row-gap: 2mm;
 }
 .identifiers{
   text-align:right;
@@ -315,7 +316,7 @@ body {
 }
 .logo-box{
   width: var(--logo-w);
-  height: 18mm;
+  height: 18.5mm;
 }
 
 
