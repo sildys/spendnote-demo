@@ -277,20 +277,21 @@ const LogoEditor = (() => {
         const removeBtn = document.getElementById('logoRemoveBtn');
         const fileInput = document.getElementById('logoFileInput');
 
-        if (uploadBtn && fileInput) {
-            uploadBtn.addEventListener('click', () => fileInput.click());
-        }
+        // Remove existing listeners to avoid duplicates
+        const newUploadBtn = uploadBtn.cloneNode(true);
+        uploadBtn.parentNode.replaceChild(newUploadBtn, uploadBtn);
+        newUploadBtn.addEventListener('click', () => fileInput.click());
 
-        if (fileInput) {
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target?.files?.[0];
-                if (file) uploadLogo(file);
-            });
-        }
+        const newRemoveBtn = removeBtn.cloneNode(true);
+        removeBtn.parentNode.replaceChild(newRemoveBtn, removeBtn);
+        newRemoveBtn.addEventListener('click', removeLogo);
 
-        if (removeBtn) {
-            removeBtn.addEventListener('click', removeLogo);
-        }
+        const newFileInput = fileInput.cloneNode(true);
+        fileInput.parentNode.replaceChild(newFileInput, fileInput);
+        newFileInput.addEventListener('change', (e) => {
+            const file = e.target?.files?.[0];
+            if (file) uploadLogo(file);
+        });
 
         // Window resize
         window.addEventListener('resize', () => {
