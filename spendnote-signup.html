@@ -925,7 +925,7 @@ function togglePreviewDetails() {
                 const result = await auth.signUp(email, password, fullName, { emailRedirectTo });
                 
                 if (result.success && Array.isArray(result.user?.identities) && result.user.identities.length === 0) {
-                    showError('Email already registered. Please log in instead.');
+                    showExistingEmailError(email);
                     return;
                 }
 
@@ -989,6 +989,10 @@ function togglePreviewDetails() {
                     }, 1000);
                 } else {
                     // Error
+                    if (String(result.error || '').toLowerCase().includes('already registered')) {
+                        showExistingEmailError(email);
+                        return;
+                    }
                     showError(result.error || 'Failed to create account. Please try again.');
                 }
             } catch (error) {
@@ -1001,6 +1005,46 @@ function togglePreviewDetails() {
             errorMessage.classList.add('show');
             successMessage.classList.remove('show');
             
+            const submitBtn = signupForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create account';
+        }
+
+        function showExistingEmailError(email) {
+            const emailSafe = String(email || '').trim();
+            errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Email already registered. Please log in or reset your password.';
+            errorMessage.classList.add('show');
+            successMessage.classList.remove('show');
+
+            const wrap = document.createElement('div');
+            wrap.style.marginTop = '10px';
+            wrap.style.display = 'flex';
+            wrap.style.gap = '10px';
+            wrap.style.alignItems = 'center';
+            wrap.style.justifyContent = 'center';
+            wrap.style.flexWrap = 'wrap';
+
+            const resetBtn = document.createElement('button');
+            resetBtn.type = 'button';
+            resetBtn.className = 'btn btn-secondary';
+            resetBtn.textContent = 'Send password reset';
+            resetBtn.addEventListener('click', async () => {
+                try {
+                    const r = await auth.resetPassword(emailSafe);
+                    if (!r?.success) {
+                        showError(r?.error || 'Failed to send password reset email.');
+                        return;
+                    }
+                    errorMessage.innerHTML = '<i class="fas fa-check-circle"></i> Password reset email sent. Please check your inbox.';
+                    errorMessage.classList.add('show');
+                } catch (_) {
+                    showError('Failed to send password reset email.');
+                }
+            });
+
+            wrap.appendChild(resetBtn);
+            errorMessage.appendChild(wrap);
+
             const submitBtn = signupForm.querySelector('button[type="submit"]');
             submitBtn.disabled = false;
             submitBtn.textContent = 'Create account';
