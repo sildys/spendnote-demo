@@ -561,6 +561,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Build SEO page #1: `petty-cash-log-software` intent page (angle: replace handwritten/duplicate receipt book with searchable digital cash handoff receipts; US keywords: "receipt book", "duplicate receipt book", "carbonless receipt book"; copy + layout + meta + canonical + internal links).
 - Build SEO page #2: `cash-handoff-receipt-app` intent page (copy + layout + meta + canonical + internal links).
 - Create a demo account with typical US cash box names, addresses, and transactions for screenshots (SEO pages + landing).
+- Populate the demo account data in Supabase tables so it is usable for screenshots/videos.
 - After landing is ready: enable indexing for landing + these 2 SEO pages only; keep internal/app pages `noindex`.
 - Deploy updated `send-invite-email` Edge Function (reply_to + personalized subject), then monitor inbox placement for 48h.
 
