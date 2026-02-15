@@ -93,7 +93,7 @@ body {
   height: 18.5mm;
   width: var(--logo-w);
   object-fit: contain;
-  transform: scale(var(--logo-scale, 1)) translate(var(--logo-x, 0), var(--logo-y, 0));
+  transform: translate(var(--logo-x, 0), var(--logo-y, 0)) scale(var(--logo-scale, 1));
   transform-origin: right top;
 }
 
@@ -802,8 +802,8 @@ body {
       const xP = parseFloat(urlParams.get('logoX') || '0');
       const yP = parseFloat(urlParams.get('logoY') || '0');
       if (Number.isFinite(xP) && Number.isFinite(yP)) {
-        document.documentElement.style.setProperty('--logo-x', (xP * 0.25) + 'px');
-        document.documentElement.style.setProperty('--logo-y', (yP * 0.25) + 'px');
+        document.documentElement.style.setProperty('--logo-x', xP + 'px');
+        document.documentElement.style.setProperty('--logo-y', yP + 'px');
       }
     } catch (_) {}
 
