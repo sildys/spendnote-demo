@@ -13,6 +13,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - **FAQ Page Redesign:** Complete rewrite with modern card-based grid layout, central search, category tabs, and expanded content (downgrade/refund/support questions).
   - **SEO Optimization:** Added `meta` tags, Open Graph tags, Canonical URLs, and JSON-LD Structured Data (`SoftwareApplication`, `Product`, `FAQPage`) to `index.html`, `spendnote-pricing.html`, and `spendnote-faq.html`.
   - **Sitemap:** Generated `sitemap.xml` for public pages.
+  - **SEO Landing Pages:** 6 intent pages created (template, generator, handoff, receipt book, small business, carbonless). Copy/layouts are done; only final refinements remain.
 - **UX / Onboarding:**
   - **Auto-create Cash Box:** New users now automatically get a default "Main Cash Box" (USD) upon signup via a new database trigger (`018_auto_create_default_cash_box.sql`).
 - **Fixes:**
@@ -60,6 +61,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - Build 2 indexable SEO pages:
     - `petty-cash-log-software` intent page (angle: replace handwritten/duplicate receipt book with searchable digital cash handoff receipts; US keywords: "receipt book", "duplicate receipt book", "carbonless receipt book")
     - `cash-handoff-receipt-app` intent page
+  - Create a demo account with typical US cash boxes, addresses, and transactions so we can capture screenshots for SEO pages + landing.
 - Data & onboarding:
   - Verify and fix the auto-create Cash Box migration (`018_auto_create_default_cash_box.sql`) and any related code changes (Sonnet edits were incorrect).
 - SEO/Indexing rollout:

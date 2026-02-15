@@ -84,6 +84,8 @@ If a chat thread freezes / context is lost: in the new thread say:
     - `index.html`: Meta tags, Open Graph, Canonical, `SoftwareApplication` schema
     - `spendnote-pricing.html`: H1 fix, `Product` schema with pricing offers
     - `sitemap.xml` generated for public pages
+  - SEO landing pages created (6 intents): template, generator, handoff, receipt book, small business, carbonless
+    - Copy/layouts done; only final refinements remain
   - Commits: `93e0c0f`, `517dcff`, `54c2780`, `f28a501`, `01b41fa`
 
 - Invites/Team hotfixes (PM):
@@ -558,6 +560,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Onboarding: auto-create a default USD Cash Box (starting balance 0) after signup/first session.
 - Build SEO page #1: `petty-cash-log-software` intent page (angle: replace handwritten/duplicate receipt book with searchable digital cash handoff receipts; US keywords: "receipt book", "duplicate receipt book", "carbonless receipt book"; copy + layout + meta + canonical + internal links).
 - Build SEO page #2: `cash-handoff-receipt-app` intent page (copy + layout + meta + canonical + internal links).
+- Create a demo account with typical US cash box names, addresses, and transactions for screenshots (SEO pages + landing).
 - After landing is ready: enable indexing for landing + these 2 SEO pages only; keep internal/app pages `noindex`.
 - Deploy updated `send-invite-email` Edge Function (reply_to + personalized subject), then monitor inbox placement for 48h.
 
