@@ -118,7 +118,7 @@ const applyLogo = () => {
     const scale = clampLogoScale(readLogoScale());
     const align = readLogoAlign();
     wrap.style.setProperty('--logo-scale', String(scale));
-    wrap.style.setProperty('--logo-position-x', align === 'left' ? 'left' : (align === 'right' ? 'right' : 'center'));
+    wrap.style.setProperty('--logo-justify', align === 'left' ? 'flex-start' : (align === 'right' ? 'flex-end' : 'center'));
     if (stored) {
         wrap.classList.add('has-image');
         img.src = stored;

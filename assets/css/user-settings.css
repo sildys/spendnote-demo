@@ -861,16 +861,16 @@
 }
 
 .logo-preview {
-    width: 140px;
-    height: 70px;
+    width: 180px;
+    height: 90px;
     border-radius: 10px;
     background: var(--bg);
     border: 2px dashed var(--border);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: var(--logo-justify, center);
     flex-shrink: 0;
 }
 
@@ -880,14 +880,11 @@
 }
 
 .logo-preview img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    max-width: calc(180px * var(--logo-scale, 1));
+    max-height: calc(90px * var(--logo-scale, 1));
+    width: auto;
+    height: auto;
     object-fit: contain;
-    object-position: var(--logo-position-x, center) center;
-    transform: scale(var(--logo-scale, 1));
-    transform-origin: center;
     display: none;
 }
 
