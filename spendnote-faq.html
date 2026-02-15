@@ -93,6 +93,146 @@
             flex-direction: column;
         }
 
+        /* PREVIEW BANNER */
+        .preview-banner {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            background: linear-gradient(90deg, #0f172a, #1f2937 45%, #0f766e 100%);
+            color: #ffffff;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+        }
+
+        .preview-banner-inner {
+            max-width: var(--max-width-page);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .preview-banner-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.18);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .preview-banner-text {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preview-banner-toggle {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preview-banner-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .preview-banner-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 0;
+        }
+
+        .preview-banner-details.expanded {
+            max-height: 500px;
+            margin-top: 16px;
+        }
+
+        .preview-banner-details-inner {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preview-benefits-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-benefits-section {
+            margin-bottom: 16px;
+        }
+
+        .preview-benefits-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .preview-benefits-section h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .preview-benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .preview-benefits-list li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .preview-benefits-list li::before {
+            content: '•';
+            position: absolute;
+            left: 8px;
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .preview-banner-text strong {
+            color: #fcd34d;
+        }
+
+        @media (max-width: 860px) {
+            .preview-banner-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
         /* HERO - Large, impactful */
         .faq-hero {
             background: linear-gradient(135deg, #059669 0%, #10b981 50%, #14b8a6 100%);
@@ -125,6 +265,7 @@
             letter-spacing: -0.04em;
             margin-bottom: 1rem;
             text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            color: white;
         }
 
         .faq-hero p {
@@ -132,6 +273,7 @@
             opacity: 0.9;
             margin-bottom: 2.5rem;
             font-weight: 500;
+            color: white;
         }
 
         /* Central Search */
@@ -643,6 +785,58 @@
     </style>
 </head>
 <body>
+<div class="preview-banner" role="status" aria-live="polite">
+    <div class="preview-banner-inner">
+        <span class="preview-banner-title"><i class="fas fa-flag"></i> Preview</span>
+        <div class="preview-banner-text">
+            <span>You're using early access. <strong>Things might change</strong> as we improve based on your feedback.</span>
+            <button class="preview-banner-toggle" onclick="togglePreviewDetails()">
+                <span id="previewToggleText">Show preview benefits</span>
+                <i class="fas fa-chevron-down" id="previewToggleIcon"></i>
+            </button>
+        </div>
+    </div>
+    <div class="preview-banner-details" id="previewDetails">
+        <div class="preview-banner-details-inner">
+            <div class="preview-benefits-title">
+                <i class="fas fa-gift"></i> Preview Release Benefits
+            </div>
+            <div class="preview-benefits-section">
+                <h4>During Preview:</h4>
+                <ul class="preview-benefits-list">
+                    <li><strong>100 transactions included</strong> (vs. standard 20 in Free plan)</li>
+                    <li>Access to all currently available features</li>
+                    <li>Help shape the product with your feedback → <a href="mailto:feedback@spendnote.app" style="color: #10b981; text-decoration: underline;">feedback@spendnote.app</a></li>
+                </ul>
+            </div>
+            <div class="preview-benefits-section">
+                <h4>At Launch:</h4>
+                <ul class="preview-benefits-list">
+                    <li>Your account converts to Free plan (20 transactions)</li>
+                    <li><strong>Exclusive: 30% discount coupon for 2 years</strong> on any paid plan</li>
+                    <li>Priority support as an early adopter</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function togglePreviewDetails() {
+    const details = document.getElementById('previewDetails');
+    const icon = document.getElementById('previewToggleIcon');
+    const text = document.getElementById('previewToggleText');
+    
+    if (details.classList.contains('expanded')) {
+        details.classList.remove('expanded');
+        icon.className = 'fas fa-chevron-down';
+        text.textContent = 'Show preview benefits';
+    } else {
+        details.classList.add('expanded');
+        icon.className = 'fas fa-chevron-up';
+        text.textContent = 'Hide details';
+    }
+}
+</script>
     <nav class="site-nav">
         <div class="nav-container">
             <a href="index.html" class="logo">
@@ -666,7 +860,6 @@
             </a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="dashboard.html">Dashboard</a></li>
                 <li><a href="spendnote-pricing.html">Pricing</a></li>
                 <li><a href="spendnote-faq.html" class="active">FAQ</a></li>
                 <li><a href="spendnote-login.html" class="btn btn-secondary">Log in</a></li>
