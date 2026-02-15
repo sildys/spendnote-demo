@@ -536,18 +536,17 @@ body {
     const logoKey = urlParams.get('logoKey');
     const logoUrl = urlParams.get('logoUrl');
     if (logoUrl) return logoUrl;
-    if (logoKey) {
-      try {
+    try {
+      if (logoKey) {
         const fromKey = localStorage.getItem(logoKey) || '';
         if (fromKey) return fromKey;
-        return localStorage.getItem('spendnote.proLogoDataUrl')
-          || localStorage.getItem('spendnote.receipt.logo.v1')
-          || '';
-      } catch (_) {
-        return '';
       }
+      return localStorage.getItem('spendnote.proLogoDataUrl')
+        || localStorage.getItem('spendnote.receipt.logo.v1')
+        || '';
+    } catch (_) {
+      return '';
     }
-    return '';
   };
   
   // Custom text replacements
