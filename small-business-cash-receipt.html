@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Small business cash receipt management. Track every cash transaction, stay audit-ready, and maintain professional records for tax compliance.">
+    <link rel="canonical" href="https://spendnote.app/small-business-cash-receipt">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://spendnote.app/small-business-cash-receipt">
+    <meta property="og:title" content="Small Business Cash Receipt Management | SpendNote">
+    <meta property="og:description" content="Small business cash receipt management. Track every cash transaction, stay audit-ready, and maintain professional records for tax compliance.">
+    <meta property="og:image" content="https://spendnote.app/assets/img/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://spendnote.app/small-business-cash-receipt">
+    <meta property="twitter:title" content="Small Business Cash Receipt Management | SpendNote">
+    <meta property="twitter:description" content="Small business cash receipt management. Track every cash transaction, stay audit-ready, and maintain professional records for tax compliance.">
+    <meta property="twitter:image" content="https://spendnote.app/assets/img/og-image.jpg">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <title>Small Business Cash Receipt Management | SpendNote</title>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Small Business Cash Receipt Management",
+      "description": "Small business cash receipt management. Track every cash transaction, stay audit-ready, and maintain professional records for tax compliance.",
+      "author": {
+        "@type": "Organization",
+        "name": "SpendNote"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SpendNote",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://spendnote.app/assets/img/logo.png"
+        }
+      }
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css?v=18">
+    <style>
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        .preview-banner {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            background: linear-gradient(90deg, #0f172a, #1f2937 45%, #0f766e 100%);
+            color: #ffffff;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+        }
+
+        .preview-banner-inner {
+            max-width: var(--max-width-page);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            font-size: 0.98rem;
+            font-weight: 700;
+        }
+
+        .preview-banner-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.18);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .preview-banner-text {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preview-banner-toggle {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preview-banner-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .preview-banner-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 0;
+        }
+
+        .preview-banner-details.expanded {
+            max-height: 500px;
+            margin-top: 16px;
+        }
+
+        .preview-banner-details-inner {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preview-benefits-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-benefits-section {
+            margin-bottom: 16px;
+        }
+
+        .preview-benefits-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .preview-benefits-section h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .preview-benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .preview-benefits-list li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .preview-benefits-list li::before {
+            content: '•';
+            position: absolute;
+            left: 8px;
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .preview-banner-text strong {
+            color: #fcd34d;
+        }
+
+        @media (max-width: 860px) {
+            .preview-banner-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .seo-hero {
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #14b8a6 100%);
+            padding: 3.5rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .seo-hero-content {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 0 var(--page-gutter);
+        }
+
+        .seo-hero h1 {
+            font-size: clamp(1.875rem, 5vw, 2.875rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            color: white;
+        }
+
+        .seo-hero p {
+            font-size: 1.125rem;
+            opacity: 0.95;
+            margin-bottom: 1.75rem;
+            color: white;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 0.875rem 2.25rem;
+            font-size: 1.0625rem;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+        
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .seo-content {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 2.5rem var(--page-gutter);
+        }
+
+        .seo-content h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .seo-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .seo-content h3 {
+            font-size: 1.375rem;
+            font-weight: 700;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .seo-content p {
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .seo-content ul {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .seo-content li {
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .seo-content strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .seo-content a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .seo-content a:hover {
+            text-decoration: underline;
+        }
+
+        .highlight-box {
+            background: var(--surface);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: var(--radius-lg);
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+        }
+
+        .highlight-box strong {
+            color: var(--text);
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: var(--radius-lg);
+        }
+
+        .warning-box p {
+            margin: 0;
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            color: #78350f;
+        }
+
+        .warning-box strong {
+            color: #78350f;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            border-radius: var(--radius-xl);
+            padding: 2.25rem;
+            text-align: center;
+            margin: 2.5rem 0;
+            color: white;
+        }
+
+        .cta-box h3 {
+            font-size: 1.625rem;
+            font-weight: 800;
+            margin-bottom: 0.875rem;
+            color: white;
+        }
+
+        .cta-box p {
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            opacity: 0.95;
+            color: white;
+        }
+
+        .cta-box .btn {
+            background: white;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 0.875rem 2rem;
+            font-size: 1.0625rem;
+            border-radius: var(--radius-lg);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .cta-box .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .site-footer {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 4rem 0 2rem;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .site-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+        }
+
+        .footer-container {
+            max-width: var(--max-width-page);
+            margin: 0 auto;
+            padding: 0 var(--page-gutter);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            max-width: 450px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo svg {
+            width: 36px;
+            height: 36px;
+            filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.3));
+        }
+
+        .footer-logo span {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-description {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.7;
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .footer-column h4 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 2px;
+            transition: color 0.2s;
+        }
+
+        .footer-column a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #10b981;
+            transition: width 0.2s ease;
+        }
+
+        .footer-column a:hover {
+            color: #10b981;
+        }
+
+        .footer-column a:hover::after {
+            width: 100%;
+        }
+
+        .footer-disclaimer {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 999px;
+            font-size: 0.8125rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0 auto 2rem;
+            max-width: fit-content;
+            display: flex;
+            font-weight: 600;
+        }
+
+        .footer-disclaimer i {
+            color: #10b981;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .seo-hero {
+                padding: 2.5rem 0;
+            }
+
+            .seo-content {
+                padding: 2rem var(--page-gutter);
+            }
+
+            .cta-box {
+                padding: 1.75rem 1.25rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-links {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="preview-banner" role="status" aria-live="polite">
+    <div class="preview-banner-inner">
+        <span class="preview-banner-title"><i class="fas fa-flag"></i> Preview</span>
+        <div class="preview-banner-text">
+            <span>You're using early access. <strong>Things might change</strong> as we improve based on your feedback.</span>
+            <button class="preview-banner-toggle" onclick="togglePreviewDetails()">
+                <span id="previewToggleText">Show preview benefits</span>
+                <i class="fas fa-chevron-down" id="previewToggleIcon"></i>
+            </button>
+        </div>
+    </div>
+    <div class="preview-banner-details" id="previewDetails">
+        <div class="preview-banner-details-inner">
+            <div class="preview-benefits-title">
+                <i class="fas fa-gift"></i> Preview Release Benefits
+            </div>
+            <div class="preview-benefits-section">
+                <h4>During Preview:</h4>
+                <ul class="preview-benefits-list">
+                    <li><strong>100 transactions included</strong> (vs. standard 20 in Free plan)</li>
+                    <li>Access to all currently available features</li>
+                    <li>Help shape the product with your feedback</li>
+                </ul>
+            </div>
+            <div class="preview-benefits-section">
+                <h4>At Launch:</h4>
+                <ul class="preview-benefits-list">
+                    <li>Your account converts to Free plan (20 transactions)</li>
+                    <li><strong>Exclusive: 30% discount coupon for 2 years</strong> on any paid plan</li>
+                    <li>Priority support as an early adopter</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function togglePreviewDetails() {
+    const details = document.getElementById('previewDetails');
+    const icon = document.getElementById('previewToggleIcon');
+    const text = document.getElementById('previewToggleText');
+    
+    if (details.classList.contains('expanded')) {
+        details.classList.remove('expanded');
+        icon.className = 'fas fa-chevron-down';
+        text.textContent = 'Show preview benefits';
+    } else {
+        details.classList.add('expanded');
+        icon.className = 'fas fa-chevron-up';
+        text.textContent = 'Hide details';
+    }
+}
+</script>
+    <nav class="site-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#nav-logo-gradient)"/>
+                    <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                    <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                    <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                    <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                    <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="nav-logo-gradient" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#059669"/>
+                            <stop offset="100%" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>SpendNote</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="spendnote-pricing.html">Pricing</a></li>
+                <li><a href="spendnote-faq.html">FAQ</a></li>
+                <li><a href="spendnote-login.html" class="btn btn-secondary">Log in</a></li>
+                <li><a href="spendnote-signup.html" class="btn btn-primary">Sign up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="seo-hero">
+        <div class="seo-hero-content">
+            <h1>Small Business Cash Receipt Management</h1>
+            <p>Track every cash transaction, stay audit-ready, and maintain professional records for tax compliance.</p>
+            <a href="spendnote-signup.html" class="hero-btn">Start Managing Cash Receipts</a>
+        </div>
+    </section>
+
+    <div class="seo-content">
+        <p>If you run a small business that handles cash, you need a system for tracking receipts. Not just for your own records, but for tax compliance and audit protection.</p>
+
+        <p>Poor cash receipt management creates problems: missing documentation during tax season, disputes with customers or employees, and exposure during audits.</p>
+
+        <h2>Why Cash Receipt Management Matters for Small Businesses</h2>
+
+        <h3>Tax Compliance</h3>
+        <p>The IRS requires documentation for all business expenses. If you can't produce receipts during an audit, those expenses may be disallowed. Cash transactions are especially scrutinized because they're harder to verify.</p>
+
+        <div class="warning-box">
+            <p><strong>Audit risk:</strong> Businesses with poor cash documentation are more likely to face penalties. Missing receipts = disallowed deductions = higher tax liability.</p>
+        </div>
+
+        <h3>Expense Tracking</h3>
+        <p>You can't manage what you don't measure. Without accurate cash receipt records, you don't know where your money is going. This makes budgeting, forecasting, and cost control nearly impossible.</p>
+
+        <h3>Dispute Resolution</h3>
+        <p>A customer claims they paid cash. You have no record. Without a receipt, you have no proof. Professional receipt management protects you from these disputes.</p>
+
+        <div class="cta-box">
+            <h3>Get Your Cash Receipts Under Control</h3>
+            <p>Professional receipt management for small businesses. Free to start.</p>
+            <a href="spendnote-signup.html" class="btn">Try SpendNote Free</a>
+        </div>
+
+        <h2>What Small Businesses Need in a Cash Receipt System</h2>
+
+        <h3>1. Every Transaction Documented</h3>
+        <p>No exceptions. Every cash in, every cash out. If it's not documented, it didn't happen (according to the IRS).</p>
+
+        <h3>2. Sequential Receipt Numbers</h3>
+        <p>Receipts should be numbered sequentially. This prevents tampering and makes it easy to identify missing receipts during an audit.</p>
+
+        <h3>3. Searchable Records</h3>
+        <p>You need to find a specific receipt quickly. Paper filing systems fail here. Digital systems with search functionality save hours during tax prep and audits.</p>
+
+        <h3>4. Backup and Security</h3>
+        <p>Paper receipts fade, get lost, or are destroyed in fires or floods. Digital receipts with cloud backup ensure your records survive any disaster.</p>
+
+        <h3>5. Export for Accounting</h3>
+        <p>Your accountant needs your cash receipt data. Manual entry is error-prone and time-consuming. A good system exports to CSV or integrates with accounting software.</p>
+
+        <div class="highlight-box">
+            <p><strong>SpendNote provides all of this:</strong> Sequential numbering, instant search, automatic cloud backup, and one-click CSV export. Built specifically for small businesses handling cash.</p>
+        </div>
+
+        <h2>Common Cash Receipt Mistakes (and How to Avoid Them)</h2>
+
+        <h3>Mistake 1: No Receipt for Small Transactions</h3>
+        <p>"It's only $10, I don't need a receipt." Wrong. Document everything. Small amounts add up, and auditors look for patterns of undocumented cash.</p>
+
+        <h3>Mistake 2: Handwritten Receipts Without Copies</h3>
+        <p>You write a receipt, hand it to the customer, and keep no copy. If they lose it, you have no record. Always keep a copy (or use digital receipts).</p>
+
+        <h3>Mistake 3: Mixing Personal and Business Cash</h3>
+        <p>Using the same cash box for personal and business expenses creates a documentation nightmare. Separate cash flows = cleaner records = easier audits.</p>
+
+        <h3>Mistake 4: No System for Lost Receipts</h3>
+        <p>Receipts get lost. If you don't have a backup system (digital copies, cloud storage), those records are gone forever.</p>
+
+        <h2>How SpendNote Helps Small Businesses</h2>
+        <ul>
+            <li><strong>Instant receipt generation</strong> – Create professional receipts in seconds</li>
+            <li><strong>Automatic numbering</strong> – Sequential receipt numbers, no gaps</li>
+            <li><strong>Full search and filter</strong> – Find any receipt in seconds</li>
+            <li><strong>Cloud backup</strong> – Your records are safe, even if your computer isn't</li>
+            <li><strong>CSV export</strong> – Send data to your accountant or import to accounting software</li>
+            <li><strong>Multi-user access</strong> – Your team can create receipts, you maintain oversight</li>
+        </ul>
+
+        <p>SpendNote is designed for small businesses that need professional cash receipt management without the complexity of full accounting software.</p>
+
+        <div class="cta-box">
+            <h3>Start Tracking Cash Receipts Properly</h3>
+            <p>Free account. No credit card. Audit-ready records from day one.</p>
+            <a href="spendnote-signup.html" class="btn">Get Started Now</a>
+        </div>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>Do I really need receipts for every cash transaction?</h3>
+        <p>Yes. The IRS requires documentation for all business expenses. Missing receipts = disallowed deductions.</p>
+
+        <h3>How long should I keep cash receipts?</h3>
+        <p>The IRS recommends keeping business records for at least 3 years. Some situations require 7 years. Digital records make long-term storage easy.</p>
+
+        <h3>Can I use SpendNote for both income and expenses?</h3>
+        <p>Yes. SpendNote tracks both cash in (income) and cash out (expenses), giving you complete visibility into your cash flow.</p>
+
+        <p style="margin-top: 2.5rem; text-align: center;">Ready to get started? See our <a href="spendnote-pricing.html">pricing</a> or visit our <a href="spendnote-faq.html">full FAQ</a>.</p>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#footer-logo-gradient)"/>
+                        <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.15"/>
+                        <path d="M32 4 L32 10 L38 10" stroke="#10b981" stroke-width="1.5" stroke-linejoin="round"/>
+                        <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.95"/>
+                        <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                        <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.95"/>
+                        <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+                        <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#10b981" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="footer-logo-gradient" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#059669"/>
+                                <stop offset="50%" stop-color="#10b981"/>
+                                <stop offset="100%" stop-color="#14b8a6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span>SpendNote</span>
+                </div>
+                <p class="footer-description">Complete cash visibility for your team.<br>Instant receipts, full history.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="spendnote-pricing.html">Pricing</a></li>
+                        <li><a href="spendnote-faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="spendnote-terms.html">Terms of Service</a></li>
+                        <li><a href="spendnote-privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="mailto:hello@spendnote.app">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-disclaimer">
+            <i class="fas fa-info-circle"></i>
+            <span>Cash receipt documentation only. Not a substitute for accounting software or tax advice.</span>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SpendNote. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
