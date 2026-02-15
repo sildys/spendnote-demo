@@ -124,19 +124,12 @@
       font-weight: 700;
     }
     
-    .logo-wrapper {
+    .logo {
       width: 180px;
       height: 90px;
-      overflow: hidden;
       margin-left: auto;
-    }
-    .logo {
-      width: 100%;
-      height: 100%;
       object-fit: contain;
       display: block;
-      transform: scale(var(--logo-scale, 1));
-      transform-origin: center center;
     }
     
     /* PARTIES */
@@ -906,14 +899,11 @@ if (urlParams.get('logo') === '0') {
     if (logo) {
         const svgLogo = document.querySelector('svg.logo');
         if (svgLogo && svgLogo.parentNode) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'logo-wrapper';
             const img = document.createElement('img');
             img.className = 'logo';
             img.alt = 'Company logo';
             img.src = logo;
-            wrapper.appendChild(img);
-            svgLogo.parentNode.replaceChild(wrapper, svgLogo);
+            svgLogo.parentNode.replaceChild(img, svgLogo);
         }
     }
 }

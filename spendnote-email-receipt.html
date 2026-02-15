@@ -61,21 +61,20 @@
     
     .logo {
       display: inline-block;
-      width: 200px;
-      height: 100px;
-      overflow: hidden;
+      max-width: 200px;
+      max-height: 100px;
       background: white;
       margin-top: -32px;
     }
     
     .logo svg,
     .logo img {
-      width: 100%;
-      height: 100%;
+      max-width: 200px;
+      max-height: 100px;
+      width: auto;
+      height: auto;
       display: block;
       object-fit: contain;
-      transform: scale(var(--logo-scale, 1));
-      transform-origin: center center;
     }
     
     .header-title {
