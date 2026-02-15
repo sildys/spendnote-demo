@@ -507,9 +507,10 @@ function buildReceiptUrl(format) {
     try {
         const cbLogo = typeof window.getCashBoxLogo === 'function' ? window.getCashBoxLogo() : '';
         if (cbLogo) {
-            // Store in temp localStorage key so we don't bloat the URL with a data URI
-            try { localStorage.setItem('spendnote.cashBoxLogo.temp', cbLogo); } catch (_) {}
-            params.append('logoKey', 'spendnote.cashBoxLogo.temp');
+            const cbId = currentCashBoxData?.id || 'temp';
+            const tempKey = 'spendnote.cbLogo.' + cbId;
+            try { localStorage.setItem(tempKey, cbLogo); } catch (_) {}
+            params.append('logoKey', tempKey);
         } else {
             // Fallback to user settings (global default) logo
             const userLogo = localStorage.getItem('spendnote.proLogoDataUrl')
@@ -826,6 +827,15 @@ window.getCashBoxLogo = function() {
     if (pendingCashBoxLogo !== null) return pendingCashBoxLogo;
     return currentCashBoxData?.cash_box_logo_url || '';
 };
+
+// Cleanup temp logo keys on page leave
+window.addEventListener('beforeunload', () => {
+    try {
+        localStorage.removeItem('spendnote.cashBoxLogo.temp');
+        const cbId = currentCashBoxData?.id;
+        if (cbId) localStorage.removeItem('spendnote.cbLogo.' + cbId);
+    } catch (_) {}
+});
 </script>
 
 <!-- Supabase -->
