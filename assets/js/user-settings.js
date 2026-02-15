@@ -50,9 +50,26 @@ const persistAvatarColor = async (color) => {
 };
 
 // Logo localStorage
-const LOGO_KEY = 'spendnote.receipt.logo.v1';
-const readLogo = () => { try { return localStorage.getItem(LOGO_KEY); } catch { return null; } };
-const writeLogo = (dataUrl) => { try { dataUrl ? localStorage.setItem(LOGO_KEY, dataUrl) : localStorage.removeItem(LOGO_KEY); } catch {} };
+const LOGO_KEY = 'spendnote.proLogoDataUrl';
+const LEGACY_LOGO_KEY = 'spendnote.receipt.logo.v1';
+const readLogo = () => {
+    try {
+        return localStorage.getItem(LOGO_KEY) || localStorage.getItem(LEGACY_LOGO_KEY);
+    } catch {
+        return null;
+    }
+};
+const writeLogo = (dataUrl) => {
+    try {
+        if (dataUrl) {
+            localStorage.setItem(LOGO_KEY, dataUrl);
+            localStorage.setItem(LEGACY_LOGO_KEY, dataUrl);
+        } else {
+            localStorage.removeItem(LOGO_KEY);
+            localStorage.removeItem(LEGACY_LOGO_KEY);
+        }
+    } catch {}
+};
 
 
 // State
