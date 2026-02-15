@@ -1012,7 +1012,7 @@ function togglePreviewDetails() {
 
         function showExistingEmailError(email) {
             const emailSafe = String(email || '').trim();
-            errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> This email is already registered. Please log in instead. If you received an invite for this email, ask to resend it to a different address — the same email can’t be registered twice.';
+            errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> This email is already registered. Please log in instead. (If you received an invite for this email, ask to resend it to a different address — the same email can’t be registered twice.)';
             errorMessage.classList.add('show');
             successMessage.classList.remove('show');
 
