@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=14">
-    <link rel="stylesheet" href="assets/css/user-settings.css?v=20260215-1924">
+    <link rel="stylesheet" href="assets/css/user-settings.css?v=20260215-1928">
 </head>
 <body>
 <div id="nav-container"></div>
@@ -98,35 +98,26 @@
                             <div class="settings-card-subtitle">Information displayed on your receipts</div>
                         </div>
                     </div>
-                    <div class="logo-editor-section">
-                        <div class="logo-editor-header">
-                            <div>
-                                <div class="logo-label">Receipt Logo</div>
-                                <div class="logo-hint">Drag to position, scroll to zoom • Recommended: 1200x600px PNG/JPG</div>
+                    <div class="logo-compact">
+                        <div class="logo-compact-label">Receipt Logo</div>
+                        <div class="logo-compact-row">
+                            <div class="logo-compact-preview" id="logoEditorCanvas">
+                                <div class="logo-compact-placeholder" id="logoEditorPlaceholder"><i class="fas fa-image"></i></div>
+                                <img class="logo-compact-img" id="logoEditorImage" alt="Logo" draggable="false">
                             </div>
-                            <div class="logo-editor-actions">
-                                <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
-                                <button type="button" class="btn btn-secondary btn-small" id="logoUploadBtn"><i class="fas fa-upload"></i> Upload</button>
-                                <button type="button" class="btn btn-secondary btn-small" id="logoRemoveBtn"><i class="fas fa-trash"></i> Remove</button>
-                            </div>
-                        </div>
-                        <div class="logo-editor-canvas" id="logoEditorCanvas">
-                            <div class="logo-editor-viewport" id="logoEditorViewport">
-                                <div class="logo-editor-placeholder" id="logoEditorPlaceholder">
-                                    <i class="fas fa-image"></i>
-                                    <span>Upload a logo to preview</span>
+                            <div class="logo-compact-controls">
+                                <div class="logo-compact-zoom">
+                                    <button type="button" class="logo-compact-btn" id="logoZoomOut" title="Smaller"><i class="fas fa-minus"></i></button>
+                                    <span class="logo-compact-pct" id="logoEditorInfo">100%</span>
+                                    <button type="button" class="logo-compact-btn" id="logoZoomIn" title="Bigger"><i class="fas fa-plus"></i></button>
                                 </div>
-                                <img class="logo-editor-image" id="logoEditorImage" alt="Logo" draggable="false">
+                                <div class="logo-compact-actions">
+                                    <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
+                                    <button type="button" class="btn btn-secondary btn-small" id="logoUploadBtn"><i class="fas fa-upload"></i> Upload</button>
+                                    <button type="button" class="btn btn-secondary btn-small" id="logoRemoveBtn"><i class="fas fa-trash"></i> Remove</button>
+                                </div>
+                                <div class="logo-compact-hint">1200×600px PNG/JPG</div>
                             </div>
-                            <div class="logo-editor-overlay">
-                                <div class="logo-editor-info" id="logoEditorInfo">100%</div>
-                            </div>
-                        </div>
-                        <div class="logo-editor-controls">
-                            <button type="button" class="logo-zoom-btn" id="logoZoomOut" title="Zoom out"><i class="fas fa-search-minus"></i></button>
-                            <input type="range" class="logo-zoom-slider" id="logoZoomSlider" min="50" max="200" step="5" value="100">
-                            <button type="button" class="logo-zoom-btn" id="logoZoomIn" title="Zoom in"><i class="fas fa-search-plus"></i></button>
-                            <button type="button" class="logo-reset-btn" id="logoResetBtn" title="Reset position & zoom"><i class="fas fa-undo"></i> Reset</button>
                         </div>
                     </div>
                     <form id="receiptForm">

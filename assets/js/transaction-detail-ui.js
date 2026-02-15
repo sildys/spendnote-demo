@@ -37,7 +37,6 @@ const QUICK_PRESET = {
     let receiptLogoUrl = '';
     const RECEIPT_LOGO_KEY = 'spendnote.proLogoDataUrl';
     const LOGO_SCALE_KEY = 'spendnote.receipt.logoScale.v1';
-    const LOGO_POSITION_KEY = 'spendnote.receipt.logoPosition.v1';
     const RECEIPT_MODE_KEY = 'spendnote.receiptMode';
 
     let lastReceiptUrl = '';
@@ -105,15 +104,6 @@ const QUICK_PRESET = {
             const storedScale = parseFloat(localStorage.getItem(LOGO_SCALE_KEY) || '1');
             if (Number.isFinite(storedScale) && storedScale > 0) {
                 params.append('logoScale', String(storedScale));
-            }
-        } catch (_) {}
-
-        try {
-            const storedPos = localStorage.getItem(LOGO_POSITION_KEY);
-            if (storedPos) {
-                const p = JSON.parse(storedPos);
-                if (Number.isFinite(p.x)) params.append('logoX', String(p.x));
-                if (Number.isFinite(p.y)) params.append('logoY', String(p.y));
             }
         } catch (_) {}
 
