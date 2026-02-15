@@ -92,7 +92,7 @@ body {
   height: calc(18.5mm * var(--logo-scale));
   width: var(--logo-w);
   object-fit: contain;
-  object-position: var(--logo-position-x, center) center;
+  transform: translate(var(--logo-x, 0), var(--logo-y, 0));
 }
 
 
@@ -790,6 +790,19 @@ body {
       if (Number.isFinite(scaleParam)) {
         document.documentElement.style.setProperty('--logo-scale', String(Math.min(1.2, Math.max(0.7, scaleParam))));
       }
+    } catch (_) {}
+
+    try {
+      const xParam = parseFloat(urlParams.get('logoX') || '0');
+      const yParam = parseFloat(urlParams.get('logoY') || '0');
+      if (Number.isFinite(xParam) && Number.isFinite(yParam)) {
+         // Scale factor: Editor (280px height) vs Receipt (~70px height) => ~0.25
+         document.documentElement.style.setProperty('--logo-x', (xParam * 0.25) + 'px');
+         document.documentElement.style.setProperty('--logo-y', (yParam * 0.25) + 'px');
+      }
+    } catch (_) {}
+
+    /* Legacy align support as fallback? No, simpler to just use X/Y if available. */
     try {
       const alignParam = String(urlParams.get('logoAlign') || '').trim().toLowerCase();
       if (alignParam === 'left') {
@@ -802,7 +815,6 @@ body {
         document.documentElement.style.setProperty('--logo-justify', 'center');
         document.documentElement.style.setProperty('--logo-position-x', 'center');
       }
-    } catch (_) {}
     } catch (_) {}
   }
   

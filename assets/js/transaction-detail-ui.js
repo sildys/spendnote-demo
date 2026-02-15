@@ -37,7 +37,7 @@ const QUICK_PRESET = {
     let receiptLogoUrl = '';
     const RECEIPT_LOGO_KEY = 'spendnote.proLogoDataUrl';
     const LOGO_SCALE_KEY = 'spendnote.receipt.logoScale.v1';
-    const LOGO_ALIGN_KEY = 'spendnote.receipt.logoAlign.v1';
+    const LOGO_POSITION_KEY = 'spendnote.receipt.logoPosition.v1';
     const RECEIPT_MODE_KEY = 'spendnote.receiptMode';
 
     let lastReceiptUrl = '';
@@ -109,9 +109,11 @@ const QUICK_PRESET = {
         } catch (_) {}
 
         try {
-            const storedAlign = String(localStorage.getItem(LOGO_ALIGN_KEY) || '').trim().toLowerCase();
-            if (storedAlign === 'left' || storedAlign === 'center' || storedAlign === 'right') {
-                params.append('logoAlign', storedAlign);
+            const storedPos = localStorage.getItem(LOGO_POSITION_KEY);
+            if (storedPos) {
+                const p = JSON.parse(storedPos);
+                if (Number.isFinite(p.x)) params.append('logoX', String(p.x));
+                if (Number.isFinite(p.y)) params.append('logoY', String(p.y));
             }
         } catch (_) {}
 

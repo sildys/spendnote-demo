@@ -65,6 +65,9 @@
       max-height: calc(64px * var(--logo-scale, 1));
       background: white;
       margin-top: -32px;
+      position: relative;
+      left: var(--logo-x, 0);
+      top: var(--logo-y, 0);
     }
     
     .logo svg,
@@ -596,6 +599,16 @@ try {
   const scaleParam = parseFloat(urlParams.get('logoScale') || '1');
   if (Number.isFinite(scaleParam)) {
     document.documentElement.style.setProperty('--logo-scale', String(Math.min(1.2, Math.max(0.7, scaleParam))));
+  }
+} catch (_) {}
+
+try {
+  const xParam = parseFloat(urlParams.get('logoX') || '0');
+  const yParam = parseFloat(urlParams.get('logoY') || '0');
+  if (Number.isFinite(xParam) && Number.isFinite(yParam)) {
+     // Scale factor for email
+     document.documentElement.style.setProperty('--logo-x', (xParam * 0.25) + 'px');
+     document.documentElement.style.setProperty('--logo-y', (yParam * 0.25) + 'px');
   }
 } catch (_) {}
 
