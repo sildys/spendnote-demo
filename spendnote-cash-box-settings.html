@@ -506,7 +506,9 @@ function buildReceiptUrl(format) {
     try {
         const cbLogo = typeof window.getCashBoxLogo === 'function' ? window.getCashBoxLogo() : '';
         if (cbLogo) {
-            params.append('logoUrl', cbLogo);
+            // Store in temp localStorage key so we don't bloat the URL with a data URI
+            try { localStorage.setItem('spendnote.cashBoxLogo.temp', cbLogo); } catch (_) {}
+            params.append('logoKey', 'spendnote.cashBoxLogo.temp');
         } else {
             // Fallback to user settings (global default) logo
             const userLogo = localStorage.getItem('spendnote.proLogoDataUrl')

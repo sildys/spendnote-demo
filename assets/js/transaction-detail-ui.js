@@ -95,7 +95,8 @@ const QUICK_PRESET = {
 
         // Cash box logo takes priority over user settings (global default) logo
         if (receiptLogoUrl) {
-            params.append('logoUrl', receiptLogoUrl);
+            try { localStorage.setItem('spendnote.cashBoxLogo.temp', receiptLogoUrl); } catch (_) {}
+            params.append('logoKey', 'spendnote.cashBoxLogo.temp');
         } else {
             let storedLogo = '';
             try { storedLogo = localStorage.getItem(RECEIPT_LOGO_KEY) || ''; } catch (_) {}
