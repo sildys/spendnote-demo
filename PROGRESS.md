@@ -106,6 +106,7 @@ If a chat thread freezes / context is lost: in the new thread say:
     - After signup/first valid session, auto-create a default USD Cash Box (starting balance: 0).
     - Goal: first receipt can be created in ~30 seconds with a ready-to-use USD cash box.
   - Tomorrow plan: landing polish + preview disclaimer UX + GA4 baseline + Google Search Console setup.
+- TODO (next session): verify and fix the auto-create Cash Box migration (`018_auto_create_default_cash_box.sql`) and any related code changes (Sonnet edits suspected incorrect).
  
  - GitHub repo is now: `https://github.com/sildys/spendnote` ✅
  - Local git `origin` points to the new repo ✅

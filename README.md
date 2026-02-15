@@ -60,6 +60,8 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - Build 2 indexable SEO pages:
     - `petty-cash-log-software` intent page (angle: replace handwritten/duplicate receipt book with searchable digital cash handoff receipts; US keywords: "receipt book", "duplicate receipt book", "carbonless receipt book")
     - `cash-handoff-receipt-app` intent page
+- Data & onboarding:
+  - Verify and fix the auto-create Cash Box migration (`018_auto_create_default_cash_box.sql`) and any related code changes (Sonnet edits were incorrect).
 - SEO/Indexing rollout:
   - Keep `noindex` while landing is being finalized.
   - During beta: enable indexing for landing + the 2 SEO pages only; internal/app pages remain `noindex`.
