@@ -785,7 +785,11 @@ body {
       });
     }
     try {
-      const scaleParam = parseFloat(urlParams.get('logoScale') || '1');
+      let scaleRaw = urlParams.get('logoScale');
+      if (!scaleRaw) {
+        try { scaleRaw = localStorage.getItem('spendnote.receipt.logoScale.v1'); } catch (_) {}
+      }
+      const scaleParam = parseFloat(scaleRaw || '1');
       if (Number.isFinite(scaleParam)) {
         document.documentElement.style.setProperty('--logo-scale', String(Math.min(3.0, Math.max(0.5, scaleParam))));
       }
