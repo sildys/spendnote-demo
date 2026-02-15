@@ -289,20 +289,18 @@ body {
 }
 
 
-/* v12 header layout: identifiers above logo, aligned right */
+/* v12 header layout: identifiers + logo on the right, single row */
 .topbar{
   display:grid;
-  grid-template-columns: 1fr max-content;
+  grid-template-columns: 1fr auto;
   column-gap: 6mm;
-  row-gap: 2mm;
   align-items:start;
 }
 .right-block{
-  display:grid;
-  grid-template-rows: auto auto;
-  justify-items: end;
-  row-gap: 2mm;
-  min-width: var(--logo-w);
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-end;
+  gap: 4mm;
 }
 .identifiers{
   text-align:right;
