@@ -627,7 +627,11 @@ const resolveLogoUrl = () => {
   if (logoUrl) return logoUrl;
   if (logoKey) {
     try {
-      return localStorage.getItem(logoKey) || '';
+      const fromKey = localStorage.getItem(logoKey) || '';
+      if (fromKey) return fromKey;
+      return localStorage.getItem('spendnote.proLogoDataUrl')
+        || localStorage.getItem('spendnote.receipt.logo.v1')
+        || '';
     } catch (_) {
       return '';
     }

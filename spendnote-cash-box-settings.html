@@ -499,7 +499,17 @@ function buildReceiptUrl(format) {
     params.append('itemsMode', receiptMode === 'quick' ? 'single' : 'full');
     params.append('recordedBy', '0');
 
-    params.append('logoKey', 'spendnote.proLogoDataUrl');
+    try {
+        const storedLogo = localStorage.getItem('spendnote.proLogoDataUrl')
+            || localStorage.getItem('spendnote.receipt.logo.v1')
+            || '';
+        if (storedLogo) {
+            const key = localStorage.getItem('spendnote.proLogoDataUrl')
+                ? 'spendnote.proLogoDataUrl'
+                : 'spendnote.receipt.logo.v1';
+            params.append('logoKey', key);
+        }
+    } catch (e) {}
     
     // Dummy data params
     params.append('demoCompany', DUMMY_PROFILE.company_name);
@@ -728,6 +738,7 @@ logoInput?.addEventListener('change', function(e) {
         removeLogoBtn.style.display = 'inline-flex';
         try {
             localStorage.setItem('spendnote.proLogoDataUrl', event.target.result);
+            localStorage.setItem('spendnote.receipt.logo.v1', event.target.result);
         } catch (e) {}
         reloadIframe();
     };
@@ -741,6 +752,7 @@ removeLogoBtn?.addEventListener('click', () => {
     logoInput.value = '';
     try {
         localStorage.removeItem('spendnote.proLogoDataUrl');
+        localStorage.removeItem('spendnote.receipt.logo.v1');
     } catch (e) {}
     reloadIframe();
 });
@@ -760,7 +772,8 @@ window.addEventListener('DOMContentLoaded', function() {
     
     // Load saved logo
     try {
-        const savedLogo = localStorage.getItem('spendnote.proLogoDataUrl');
+        const savedLogo = localStorage.getItem('spendnote.proLogoDataUrl')
+            || localStorage.getItem('spendnote.receipt.logo.v1');
         if (savedLogo && logoPreviewImg && logoPreview && removeLogoBtn) {
             logoPreviewImg.src = savedLogo;
             logoPreview.classList.add('visible');
