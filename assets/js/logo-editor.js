@@ -68,6 +68,7 @@ const LogoEditor = (() => {
             localStorage.setItem(LOGO_SCALE_KEY, String(clampScale(value)));
         } catch {}
         persistLogoSettings();
+        renderSnapshot();
     };
 
     const persistLogoSettings = () => {
@@ -77,6 +78,36 @@ const LogoEditor = (() => {
                     logo_settings: { scale: currentScale, x: currentX, y: currentY }
                 }).catch(() => {});
             }
+        } catch (_) {}
+    };
+
+    const renderSnapshot = () => {
+        if (!image || !image.src || !image.complete || image.naturalWidth === 0) return;
+        try {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const w = 360;
+            const h = 160;
+            canvas.width = w;
+            canvas.height = h;
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, w, h);
+            const imgW = image.naturalWidth;
+            const imgH = image.naturalHeight;
+            const scale = currentScale;
+            const scaledW = imgW * scale;
+            const scaledH = imgH * scale;
+            const x = (w / 2) - (scaledW / 2) + currentX;
+            const y = (h / 2) - (scaledH / 2) + currentY;
+            ctx.drawImage(image, x, y, scaledW, scaledH);
+            const snapshotUrl = canvas.toDataURL('image/png', 0.92);
+            if (window.db?.profiles?.update) {
+                window.db.profiles.update({ account_logo_url: snapshotUrl }).catch(() => {});
+            }
+            try {
+                localStorage.setItem(LOGO_KEY, snapshotUrl);
+                localStorage.setItem(LEGACY_LOGO_KEY, snapshotUrl);
+            } catch {}
         } catch (_) {}
     };
 
@@ -118,6 +149,7 @@ const LogoEditor = (() => {
     const writePosition = () => {
         try { localStorage.setItem(LOGO_POSITION_KEY, JSON.stringify({ x: currentX, y: currentY })); } catch {}
         persistLogoSettings();
+        renderSnapshot();
     };
 
     const applyTransform = () => {
@@ -194,10 +226,16 @@ const LogoEditor = (() => {
                 }
                 return;
             }
-            writeLogo(dataUrl);
             if (image && preview) {
                 image.src = dataUrl;
                 preview.classList.add('has-logo');
+                image.onload = () => {
+                    currentScale = 1.0;
+                    currentX = 0;
+                    currentY = 0;
+                    updateInfo();
+                    renderSnapshot();
+                };
             }
             currentScale = 1.0;
             currentX = 0;
