@@ -292,7 +292,7 @@ body {
 /* v12 header layout: identifiers above logo, aligned right */
 .topbar{
   display:grid;
-  grid-template-columns: 1fr var(--logo-w);
+  grid-template-columns: 1fr max-content;
   column-gap: 6mm;
   row-gap: 2mm;
   align-items:start;
@@ -302,6 +302,7 @@ body {
   grid-template-rows: auto auto;
   justify-items: end;
   row-gap: 2mm;
+  min-width: var(--logo-w);
 }
 .identifiers{
   text-align:right;
