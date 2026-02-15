@@ -108,6 +108,10 @@ const loadProfile = async () => {
     if (!window.db?.profiles?.getCurrent) return;
     const p = await window.db.profiles.getCurrent();
     fillProfile(p);
+    // Sync DB logo to localStorage so it works on all devices
+    if (window.LogoEditor?.loadFromProfile) {
+        window.LogoEditor.loadFromProfile(p);
+    }
 };
 
 const computeAndApplyRole = async () => {

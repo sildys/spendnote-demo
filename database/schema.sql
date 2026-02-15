@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     phone TEXT,
     address TEXT,
     account_logo_url TEXT,
+    logo_settings JSONB DEFAULT NULL,
     subscription_tier TEXT DEFAULT 'free' CHECK (subscription_tier IN ('free', 'standard', 'pro')),
     stripe_customer_id TEXT,
     stripe_subscription_id TEXT,

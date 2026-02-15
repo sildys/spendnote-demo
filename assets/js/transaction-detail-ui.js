@@ -632,6 +632,21 @@ html, body { height: auto !important; overflow: auto !important; }
                 let profile = null;
                 try {
                     profile = window.db?.profiles?.getCurrent ? await window.db.profiles.getCurrent() : null;
+                    // Sync DB logo + settings to localStorage for receipt preview
+                    if (profile) {
+                        const LOGO_K = 'spendnote.proLogoDataUrl';
+                        const LEGACY_K = 'spendnote.receipt.logo.v1';
+                        const SCALE_K = 'spendnote.receipt.logoScale.v1';
+                        const POS_K = 'spendnote.receipt.logoPosition.v1';
+                        if (profile.account_logo_url) {
+                            try { localStorage.setItem(LOGO_K, profile.account_logo_url); localStorage.setItem(LEGACY_K, profile.account_logo_url); } catch (_) {}
+                        }
+                        const ls = profile.logo_settings;
+                        if (ls && typeof ls === 'object') {
+                            if (ls.scale != null) try { localStorage.setItem(SCALE_K, String(ls.scale)); } catch (_) {}
+                            if (ls.x != null || ls.y != null) try { localStorage.setItem(POS_K, JSON.stringify({ x: Number(ls.x) || 0, y: Number(ls.y) || 0 })); } catch (_) {}
+                        }
+                    }
                 } catch (_) {}
 
                 const currency = cashBox?.currency || 'USD';

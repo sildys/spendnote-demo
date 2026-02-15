@@ -343,6 +343,25 @@ async function initCashBoxSettings() {
             if (deletePanel) deletePanel.style.display = 'none';
         }
         
+        // Sync profile logo from DB to localStorage for receipt preview
+        try {
+            const profile = window.db?.profiles?.getCurrent ? await window.db.profiles.getCurrent() : null;
+            if (profile) {
+                const LOGO_K = 'spendnote.proLogoDataUrl';
+                const LEGACY_K = 'spendnote.receipt.logo.v1';
+                const SCALE_K = 'spendnote.receipt.logoScale.v1';
+                const POS_K = 'spendnote.receipt.logoPosition.v1';
+                if (profile.account_logo_url) {
+                    try { localStorage.setItem(LOGO_K, profile.account_logo_url); localStorage.setItem(LEGACY_K, profile.account_logo_url); } catch (_) {}
+                }
+                const ls = profile.logo_settings;
+                if (ls && typeof ls === 'object') {
+                    if (ls.scale != null) try { localStorage.setItem(SCALE_K, String(ls.scale)); } catch (_) {}
+                    if (ls.x != null || ls.y != null) try { localStorage.setItem(POS_K, JSON.stringify({ x: Number(ls.x) || 0, y: Number(ls.y) || 0 })); } catch (_) {}
+                }
+            }
+        } catch (_) {}
+
         if (DEBUG) console.log('Cash Box Settings initialized', isEditMode ? '(Edit mode)' : '(Create mode)');
         
         const saveBtn = document.getElementById('cashBoxSaveBtn');

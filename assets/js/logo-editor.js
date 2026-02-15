@@ -47,6 +47,12 @@ const LogoEditor = (() => {
                 localStorage.removeItem(LEGACY_LOGO_KEY);
             }
         } catch {}
+        // Persist to DB
+        try {
+            if (window.db?.profiles?.update) {
+                window.db.profiles.update({ account_logo_url: dataUrl || null }).catch(() => {});
+            }
+        } catch (_) {}
     };
 
     const readScale = () => {
@@ -61,6 +67,44 @@ const LogoEditor = (() => {
         try {
             localStorage.setItem(LOGO_SCALE_KEY, String(clampScale(value)));
         } catch {}
+        persistLogoSettings();
+    };
+
+    const persistLogoSettings = () => {
+        try {
+            if (window.db?.profiles?.update) {
+                window.db.profiles.update({
+                    logo_settings: { scale: currentScale, x: currentX, y: currentY }
+                }).catch(() => {});
+            }
+        } catch (_) {}
+    };
+
+    const loadFromProfile = (profile) => {
+        if (!profile) return;
+        const dbLogo = profile.account_logo_url || '';
+        if (dbLogo) {
+            try {
+                localStorage.setItem(LOGO_KEY, dbLogo);
+                localStorage.setItem(LEGACY_LOGO_KEY, dbLogo);
+            } catch {}
+        } else {
+            try {
+                localStorage.removeItem(LOGO_KEY);
+                localStorage.removeItem(LEGACY_LOGO_KEY);
+            } catch {}
+        }
+        // Sync scale/position from DB
+        const ls = profile.logo_settings;
+        if (ls && typeof ls === 'object') {
+            if (ls.scale != null) {
+                try { localStorage.setItem(LOGO_SCALE_KEY, String(clampScale(ls.scale))); } catch {}
+            }
+            if (ls.x != null || ls.y != null) {
+                try { localStorage.setItem(LOGO_POSITION_KEY, JSON.stringify({ x: Number(ls.x) || 0, y: Number(ls.y) || 0 })); } catch {}
+            }
+        }
+        loadLogo();
     };
 
     const readPosition = () => {
@@ -73,6 +117,7 @@ const LogoEditor = (() => {
 
     const writePosition = () => {
         try { localStorage.setItem(LOGO_POSITION_KEY, JSON.stringify({ x: currentX, y: currentY })); } catch {}
+        persistLogoSettings();
     };
 
     const applyTransform = () => {
@@ -226,7 +271,7 @@ const LogoEditor = (() => {
         loadLogo();
     };
 
-    return { init, loadLogo, removeLogo, uploadLogo };
+    return { init, loadLogo, removeLogo, uploadLogo, loadFromProfile };
 })();
 
 // Export for manual initialization
