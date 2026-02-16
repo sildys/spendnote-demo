@@ -54,22 +54,22 @@
     }
     
     .logo-container {
-      text-align: var(--logo-align, center);
-      padding: 24px 40px 0;
+      text-align: center;
+      padding: 8px 40px 0;
       background: white;
     }
     
     .logo {
-      display: block;
-      width: min(100%, 420px);
-      background: white;
-      margin: -44px auto 0;
+      display: inline-block;
+      background: transparent;
+      margin: -24px auto 0;
     }
     
     .logo svg,
     .logo img {
-      width: 100%;
-      max-width: none;
+      max-width: 320px;
+      max-height: 160px;
+      width: auto;
       height: auto;
       display: block;
       object-fit: contain;
@@ -844,10 +844,6 @@ if (urlParams.get('logo') === '0') {
             const img = document.createElement('img');
             img.alt = 'Company logo';
             img.src = logo;
-            img.style.maxWidth = '96px';
-            img.style.maxHeight = '56px';
-            img.style.width = 'auto';
-            img.style.height = 'auto';
             img.style.display = 'block';
             container.appendChild(img);
         }
