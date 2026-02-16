@@ -1195,29 +1195,94 @@ var db = {
         },
 
         async create(cashBox) {
-            if (window.SpendNoteDebug) console.log('Creating cash box via RPC:', cashBox);
-
-            // Use RPC function to bypass schema cache issue
             const ctx = await getMyOrgContext();
-            const { data, error } = await supabaseClient.rpc('create_cash_box', {
+            const ownerUserId = ctx?.ownerUserId || cashBox.user_id;
+            const normalizedPrefix = normalizeCashBoxIdPrefix(cashBox?.id_prefix || 'SN');
+
+            const baseInsertPayload = {
+                name: cashBox?.name,
+                user_id: ownerUserId,
+                currency: cashBox?.currency || 'USD',
+                color: cashBox?.color || '#059669',
+                icon: cashBox?.icon || 'building',
+                current_balance: cashBox?.current_balance || 0,
+                id_prefix: normalizedPrefix || 'SN'
+            };
+
+            // Prefer direct insert so id_prefix is persisted at creation time.
+            try {
+                let payload = { ...baseInsertPayload };
+                for (let attempt = 0; attempt < 2; attempt++) {
+                    const { data, error } = await supabaseClient
+                        .from('cash_boxes')
+                        .insert([payload])
+                        .select('*')
+                        .single();
+
+                    if (!error) {
+                        return { success: true, data };
+                    }
+
+                    const missingIdPrefix =
+                        String(error?.code || '') === '42703' ||
+                        /column\s+"?id_prefix"?\s+does\s+not\s+exist/i.test(String(error?.message || ''));
+
+                    if (missingIdPrefix && Object.prototype.hasOwnProperty.call(payload, 'id_prefix')) {
+                        const nextPayload = { ...payload };
+                        delete nextPayload.id_prefix;
+                        payload = nextPayload;
+                        continue;
+                    }
+
+                    break;
+                }
+            } catch (_) {
+                // ignore and fallback to RPC
+            }
+
+            if (window.SpendNoteDebug) console.log('Creating cash box via RPC fallback:', cashBox);
+
+            // Fallback to legacy RPC path.
+            let rpcResult = await supabaseClient.rpc('create_cash_box', {
                 p_name: cashBox.name,
-                p_user_id: ctx?.ownerUserId || cashBox.user_id,
+                p_user_id: ownerUserId,
                 p_currency: cashBox.currency || 'USD',
                 p_color: cashBox.color || '#059669',
                 p_icon: cashBox.icon || 'building',
-                p_current_balance: cashBox.current_balance || 0
+                p_current_balance: cashBox.current_balance || 0,
+                p_id_prefix: normalizedPrefix || 'SN'
             });
 
-            
-            if (window.SpendNoteDebug) console.log('RPC result:', { data, error });
-            
-            if (error) {
-                console.error('Error creating cash box:', error);
-                return { success: false, error: error.message };
+            const rpcParamError = String(rpcResult?.error?.message || '').toLowerCase();
+            const isUnknownRpcParam =
+                rpcParamError.includes('p_id_prefix') &&
+                (rpcParamError.includes('does not exist') || rpcParamError.includes('unexpected'));
+
+            if (rpcResult?.error && isUnknownRpcParam) {
+                rpcResult = await supabaseClient.rpc('create_cash_box', {
+                    p_name: cashBox.name,
+                    p_user_id: ownerUserId,
+                    p_currency: cashBox.currency || 'USD',
+                    p_color: cashBox.color || '#059669',
+                    p_icon: cashBox.icon || 'building',
+                    p_current_balance: cashBox.current_balance || 0
+                });
             }
-            
-            if (window.SpendNoteDebug) console.log('Cash box created with ID:', data);
-            return { success: true, data: { ...cashBox, id: data } };
+
+            if (window.SpendNoteDebug) console.log('RPC fallback result:', rpcResult);
+
+            if (rpcResult?.error) {
+                console.error('Error creating cash box:', rpcResult.error);
+                return { success: false, error: rpcResult.error.message };
+            }
+
+            const createdId = rpcResult?.data;
+            if (!createdId) {
+                return { success: false, error: 'Cash box created but no id returned.' };
+            }
+
+            if (window.SpendNoteDebug) console.log('Cash box created with ID:', createdId);
+            return { success: true, data: { ...cashBox, id: createdId, id_prefix: normalizedPrefix || 'SN' } };
         },
 
         async update(id, updates) {
