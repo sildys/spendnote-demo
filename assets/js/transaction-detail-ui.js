@@ -313,13 +313,32 @@ const QUICK_PRESET = {
             return fallback;
         };
 
+        const storedVisibility = (() => {
+            try {
+                const keyId = String(cb?.id || currentCashBoxId || '').trim();
+                if (!keyId) return null;
+                const raw = localStorage.getItem(`spendnote.cashBox.${keyId}.receiptVisibility.v1`);
+                if (!raw) return null;
+                const parsed = JSON.parse(raw);
+                return parsed && typeof parsed === 'object' ? parsed : null;
+            } catch (_) {
+                return null;
+            }
+        })();
+
+        const resolveVisibilityBool = (field, dbValue, fallback) => {
+            const fromDb = mapBool(dbValue, null);
+            if (fromDb !== null) return fromDb;
+            return mapBool(storedVisibility?.[field], fallback);
+        };
+
         displayOptions = {
-            logo: mapBool(cb.receipt_show_logo, true) ? '1' : '0',
-            addresses: mapBool(cb.receipt_show_addresses, true) ? '1' : '0',
-            tracking: mapBool(cb.receipt_show_tracking, false) ? '1' : '0',
-            additional: mapBool(cb.receipt_show_additional, false) ? '1' : '0',
-            note: mapBool(cb.receipt_show_note, false) ? '1' : '0',
-            signatures: mapBool(cb.receipt_show_signatures, false) ? '1' : '0'
+            logo: resolveVisibilityBool('logo', cb.receipt_show_logo, true) ? '1' : '0',
+            addresses: resolveVisibilityBool('addresses', cb.receipt_show_addresses, true) ? '1' : '0',
+            tracking: resolveVisibilityBool('tracking', cb.receipt_show_tracking, false) ? '1' : '0',
+            additional: resolveVisibilityBool('additional', cb.receipt_show_additional, false) ? '1' : '0',
+            note: resolveVisibilityBool('note', cb.receipt_show_note, false) ? '1' : '0',
+            signatures: resolveVisibilityBool('signatures', cb.receipt_show_signatures, false) ? '1' : '0'
         };
 
         document.querySelectorAll('.toggle-list input[type="checkbox"]').forEach(toggle => {

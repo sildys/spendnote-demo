@@ -7,6 +7,16 @@ let hasInitialized = false;
 let supportsReceiptLabels = true;
 let supportsCashBoxLogo = true;
 let supportsReceiptVisibility = true;
+const RECEIPT_VISIBILITY_COLUMN_BY_FIELD = Object.freeze({
+    logo: 'receipt_show_logo',
+    addresses: 'receipt_show_addresses',
+    tracking: 'receipt_show_tracking',
+    additional: 'receipt_show_additional',
+    note: 'receipt_show_note',
+    signatures: 'receipt_show_signatures'
+});
+const RECEIPT_VISIBILITY_FIELDS = Object.keys(RECEIPT_VISIBILITY_COLUMN_BY_FIELD);
+let unsupportedReceiptVisibilityFields = new Set();
 
 function isUuid(value) {
     try {
@@ -23,6 +33,35 @@ function getReceiptFormatStorageKey(cashBoxId) {
     const id = String(cashBoxId || '').trim();
     if (!id) return '';
     return `spendnote.cashBox.${id}.defaultReceiptFormat.v1`;
+}
+
+function getReceiptVisibilityStorageKey(cashBoxId) {
+    const id = String(cashBoxId || '').trim();
+    if (!id) return '';
+    return `spendnote.cashBox.${id}.receiptVisibility.v1`;
+}
+
+function readStoredReceiptVisibility(cashBoxId) {
+    try {
+        const key = getReceiptVisibilityStorageKey(cashBoxId);
+        if (!key) return null;
+        const raw = localStorage.getItem(key);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        return parsed && typeof parsed === 'object' ? parsed : null;
+    } catch (_) {
+        return null;
+    }
+}
+
+function writeStoredReceiptVisibility(cashBoxId, visibility) {
+    try {
+        const key = getReceiptVisibilityStorageKey(cashBoxId);
+        if (!key) return;
+        localStorage.setItem(key, JSON.stringify(visibility || {}));
+    } catch (_) {
+        // ignore
+    }
 }
 
 function applyReceiptFormatUi(format) {
@@ -498,6 +537,7 @@ async function loadCashBoxData(id) {
             note: cashBox.receipt_show_note,
             signatures: cashBox.receipt_show_signatures
         };
+        const storedVisibility = readStoredReceiptVisibility(id);
 
         const normalizeVisibility = (value, fallback) => {
             if (typeof value === 'boolean') return value;
@@ -507,14 +547,22 @@ async function loadCashBoxData(id) {
         };
 
         const quickPreset = { logo: true, addresses: true, tracking: true, additional: false, note: false, signatures: true };
-        const resolvedVisibility = {
-            logo: normalizeVisibility(visibilityByField.logo, quickPreset.logo),
-            addresses: normalizeVisibility(visibilityByField.addresses, quickPreset.addresses),
-            tracking: normalizeVisibility(visibilityByField.tracking, quickPreset.tracking),
-            additional: normalizeVisibility(visibilityByField.additional, quickPreset.additional),
-            note: normalizeVisibility(visibilityByField.note, quickPreset.note),
-            signatures: normalizeVisibility(visibilityByField.signatures, quickPreset.signatures)
-        };
+        const resolvedVisibility = {};
+        RECEIPT_VISIBILITY_FIELDS.forEach((field) => {
+            const fromDb = normalizeVisibility(visibilityByField[field], null);
+            if (fromDb !== null) {
+                resolvedVisibility[field] = fromDb;
+                return;
+            }
+
+            const fromStored = normalizeVisibility(storedVisibility?.[field], null);
+            if (fromStored !== null) {
+                resolvedVisibility[field] = fromStored;
+                return;
+            }
+
+            resolvedVisibility[field] = quickPreset[field];
+        });
 
         const isQuickMode = Object.keys(quickPreset).every((k) => resolvedVisibility[k] === quickPreset[k]);
         if (typeof window.applyReceiptMode === 'function') {
@@ -531,15 +579,13 @@ async function loadCashBoxData(id) {
         currentCashBoxData = cashBox;
         supportsReceiptLabels = Boolean(cashBox && Object.prototype.hasOwnProperty.call(cashBox, 'receipt_amount_label'));
         supportsCashBoxLogo = Boolean(cashBox && Object.prototype.hasOwnProperty.call(cashBox, 'cash_box_logo_url'));
-        supportsReceiptVisibility = Boolean(
-            cashBox
-            && Object.prototype.hasOwnProperty.call(cashBox, 'receipt_show_logo')
-            && Object.prototype.hasOwnProperty.call(cashBox, 'receipt_show_addresses')
-            && Object.prototype.hasOwnProperty.call(cashBox, 'receipt_show_tracking')
-            && Object.prototype.hasOwnProperty.call(cashBox, 'receipt_show_additional')
-            && Object.prototype.hasOwnProperty.call(cashBox, 'receipt_show_note')
-            && Object.prototype.hasOwnProperty.call(cashBox, 'receipt_show_signatures')
+        unsupportedReceiptVisibilityFields = new Set(
+            RECEIPT_VISIBILITY_FIELDS.filter((field) => {
+                const column = RECEIPT_VISIBILITY_COLUMN_BY_FIELD[field];
+                return !(cashBox && Object.prototype.hasOwnProperty.call(cashBox, column));
+            })
         );
+        supportsReceiptVisibility = unsupportedReceiptVisibilityFields.size < RECEIPT_VISIBILITY_FIELDS.length;
         updateSummaryCard(cashBox);
 
         // Load cash-box-specific logo into Pro Options preview
@@ -679,6 +725,15 @@ async function handleSave(e) {
             return Boolean(el.checked);
         };
 
+        const receiptVisibilityValues = {
+            logo: getToggleBool('logo', true),
+            addresses: getToggleBool('addresses', true),
+            tracking: getToggleBool('tracking', true),
+            additional: getToggleBool('additional', false),
+            note: getToggleBool('note', false),
+            signatures: getToggleBool('signatures', true)
+        };
+
         // Cash box logo from Pro Options: persist only when explicitly changed.
         // null = unchanged, '' = removed, data:... = updated logo
         const cbLogoPending = typeof window.getCashBoxLogoPendingState === 'function'
@@ -691,12 +746,12 @@ async function handleSave(e) {
             color,
             icon,
             id_prefix: idPrefix,
-            receipt_show_logo: getToggleBool('logo', true),
-            receipt_show_addresses: getToggleBool('addresses', true),
-            receipt_show_tracking: getToggleBool('tracking', true),
-            receipt_show_additional: getToggleBool('additional', false),
-            receipt_show_note: getToggleBool('note', false),
-            receipt_show_signatures: getToggleBool('signatures', true),
+            receipt_show_logo: receiptVisibilityValues.logo,
+            receipt_show_addresses: receiptVisibilityValues.addresses,
+            receipt_show_tracking: receiptVisibilityValues.tracking,
+            receipt_show_additional: receiptVisibilityValues.additional,
+            receipt_show_note: receiptVisibilityValues.note,
+            receipt_show_signatures: receiptVisibilityValues.signatures,
             receipt_title: safeText(document.getElementById('receiptTitle')?.value),
             receipt_total_label: safeText(document.getElementById('totalLabel')?.value),
             receipt_from_label: safeText(document.getElementById('fromLabel')?.value),
@@ -732,14 +787,13 @@ async function handleSave(e) {
             return next;
         };
 
-        const stripReceiptVisibilityFields = (payload) => {
+        const stripReceiptVisibilityFields = (payload, fields = RECEIPT_VISIBILITY_FIELDS) => {
             const next = { ...payload };
-            delete next.receipt_show_logo;
-            delete next.receipt_show_addresses;
-            delete next.receipt_show_tracking;
-            delete next.receipt_show_additional;
-            delete next.receipt_show_note;
-            delete next.receipt_show_signatures;
+            const targetFields = Array.isArray(fields) ? fields : RECEIPT_VISIBILITY_FIELDS;
+            targetFields.forEach((field) => {
+                const column = RECEIPT_VISIBILITY_COLUMN_BY_FIELD[field];
+                if (column) delete next[column];
+            });
             return next;
         };
 
@@ -750,6 +804,9 @@ async function handleSave(e) {
             }
             if (!supportsCashBoxLogo) {
                 next = stripCashBoxLogoField(next);
+            }
+            if (unsupportedReceiptVisibilityFields.size > 0) {
+                next = stripReceiptVisibilityFields(next, Array.from(unsupportedReceiptVisibilityFields));
             }
             if (!supportsReceiptVisibility) {
                 next = stripReceiptVisibilityFields(next);
@@ -791,9 +848,22 @@ async function handleSave(e) {
                     supportsCashBoxLogo = false;
                     changed = true;
                 }
-                if (hasReceiptShowError && supportsReceiptVisibility) {
-                    supportsReceiptVisibility = false;
-                    changed = true;
+                if (hasReceiptShowError) {
+                    let visibilityChanged = false;
+                    RECEIPT_VISIBILITY_FIELDS.forEach((field) => {
+                        const column = RECEIPT_VISIBILITY_COLUMN_BY_FIELD[field];
+                        if (!column || !msg.includes(column) || unsupportedReceiptVisibilityFields.has(field)) return;
+                        unsupportedReceiptVisibilityFields.add(field);
+                        visibilityChanged = true;
+                    });
+
+                    if (visibilityChanged) {
+                        supportsReceiptVisibility = unsupportedReceiptVisibilityFields.size < RECEIPT_VISIBILITY_FIELDS.length;
+                        changed = true;
+                    } else if (supportsReceiptVisibility) {
+                        supportsReceiptVisibility = false;
+                        changed = true;
+                    }
                 }
                 if (msg.includes('receipt_') && !hasReceiptShowError && supportsReceiptLabels) {
                     supportsReceiptLabels = false;
@@ -837,6 +907,8 @@ async function handleSave(e) {
                 localStorage.setItem('activeCashBoxRgb', rgb);
             }
 
+            writeStoredReceiptVisibility(currentCashBoxId, receiptVisibilityValues);
+
             if (DEBUG) console.log('Cash box updated:', updatePayload.name);
             await showAlert('Cash box updated successfully!', { iconType: 'success' });
         } else {
@@ -866,6 +938,7 @@ async function handleSave(e) {
                 if (orderResult && orderResult.success === false) {
                     console.warn('⚠️ Could not set sort_order for new cash box:', orderResult.error);
                 }
+                writeStoredReceiptVisibility(createdId, receiptVisibilityValues);
             }
             
             if (DEBUG) console.log('Cash box created:', createPayload.name);
