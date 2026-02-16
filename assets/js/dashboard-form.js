@@ -636,9 +636,18 @@ function initTransactionForm() {
                             try { localStorage.setItem(cbKey, cbLogo); } catch (_) {}
                             params.set('logoKey', cbKey);
                         } else {
-                            const storedLogo = localStorage.getItem('spendnote.proLogoDataUrl') || '';
-                            if (storedLogo) {
-                                params.set('logoKey', 'spendnote.proLogoDataUrl');
+                            const storedCbLogo = cbIdForDefaults
+                                ? String(localStorage.getItem(`spendnote.cashBox.${cbIdForDefaults}.logo.v1`) || '').trim()
+                                : '';
+                            if (storedCbLogo) {
+                                const cbKey = `spendnote.cbLogo.${cbIdForDefaults || 'temp'}`;
+                                try { localStorage.setItem(cbKey, storedCbLogo); } catch (_) {}
+                                params.set('logoKey', cbKey);
+                            } else {
+                                const storedLogo = localStorage.getItem('spendnote.proLogoDataUrl') || '';
+                                if (storedLogo) {
+                                    params.set('logoKey', 'spendnote.proLogoDataUrl');
+                                }
                             }
                         }
                     } catch (_) {

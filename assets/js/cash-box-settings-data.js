@@ -37,6 +37,31 @@ function normalizeCashBoxIdPrefix(value) {
     return up;
 }
 
+function readStoredCashBoxLogo(cashBoxId) {
+    try {
+        const key = getCashBoxLogoStorageKey(cashBoxId);
+        if (!key) return '';
+        return String(localStorage.getItem(key) || '').trim();
+    } catch (_) {
+        return '';
+    }
+}
+
+function writeStoredCashBoxLogo(cashBoxId, logoDataUrl) {
+    try {
+        const key = getCashBoxLogoStorageKey(cashBoxId);
+        if (!key) return;
+        const value = String(logoDataUrl || '').trim();
+        if (value) {
+            localStorage.setItem(key, value);
+        } else {
+            localStorage.removeItem(key);
+        }
+    } catch (_) {
+        // ignore
+    }
+}
+
 function isUuid(value) {
     try {
         if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
@@ -70,6 +95,12 @@ function getCashBoxIdPrefixStorageKey(cashBoxId) {
     const id = String(cashBoxId || '').trim();
     if (!id) return '';
     return `spendnote.cashBox.${id}.idPrefix.v1`;
+}
+
+function getCashBoxLogoStorageKey(cashBoxId) {
+    const id = String(cashBoxId || '').trim();
+    if (!id) return '';
+    return `spendnote.cashBox.${id}.logo.v1`;
 }
 
 function readStoredReceiptVisibility(cashBoxId) {
@@ -693,7 +724,11 @@ async function loadCashBoxData(id) {
 
         // Load cash-box-specific logo into Pro Options preview
         if (typeof window.setCashBoxLogo === 'function') {
-            window.setCashBoxLogo(cashBox.cash_box_logo_url || '');
+            const resolvedLogo = String(cashBox.cash_box_logo_url || '').trim() || readStoredCashBoxLogo(id) || '';
+            if (resolvedLogo) {
+                writeStoredCashBoxLogo(id, resolvedLogo);
+            }
+            window.setCashBoxLogo(resolvedLogo);
         }
         
         if (DEBUG) console.log('Cash box data loaded:', cashBox.name);
@@ -1049,6 +1084,10 @@ async function handleSave(e) {
             writeStoredCashBoxIdPrefix(currentCashBoxId, idPrefix);
             writeStoredReceiptText(currentCashBoxId, receiptTextValues);
             writeStoredReceiptVisibility(currentCashBoxId, receiptVisibilityValues);
+            if (cbLogoPending !== undefined) {
+                const nextLogo = (cbLogoPending !== null) ? cbLogoPending : (window.getCashBoxLogo?.() || '');
+                writeStoredCashBoxLogo(currentCashBoxId, nextLogo || '');
+            }
             try {
                 if (typeof window.persistCashBoxLogoSettings === 'function') {
                     window.persistCashBoxLogoSettings(currentCashBoxId);
@@ -1089,6 +1128,10 @@ async function handleSave(e) {
                 writeStoredCashBoxIdPrefix(createdId, idPrefix);
                 writeStoredReceiptText(createdId, receiptTextValues);
                 writeStoredReceiptVisibility(createdId, receiptVisibilityValues);
+                if (cbLogoPending !== undefined) {
+                    const nextLogo = (cbLogoPending !== null) ? cbLogoPending : (window.getCashBoxLogo?.() || '');
+                    writeStoredCashBoxLogo(createdId, nextLogo || '');
+                }
                 try {
                     if (typeof window.persistCashBoxLogoSettings === 'function') {
                         window.persistCashBoxLogoSettings(createdId);

@@ -82,6 +82,16 @@ const QUICK_PRESET = {
         }
     }
 
+    function readStoredCashBoxLogo(cashBoxId) {
+        const keyId = String(cashBoxId || '').trim();
+        if (!keyId) return '';
+        try {
+            return String(localStorage.getItem(`spendnote.cashBox.${keyId}.logo.v1`) || '').trim();
+        } catch (_) {
+            return '';
+        }
+    }
+
     function resolveLogoRenderSettings(cashBoxId) {
         const parseFinite = (value) => {
             const n = Number(value);
@@ -390,7 +400,9 @@ const QUICK_PRESET = {
         bindText(receivedEl, 'receivedByLabel');
         bindText(footerEl, 'footerNote');
 
-        receiptLogoUrl = String(cb.cash_box_logo_url || profile?.account_logo_url || '').trim();
+        const cbLogoFromDb = String(cb.cash_box_logo_url || '').trim();
+        const cbStoredLogo = readStoredCashBoxLogo(cb?.id || currentCashBoxId || '');
+        receiptLogoUrl = cbLogoFromDb || cbStoredLogo || String(profile?.account_logo_url || '').trim();
 
         const mapBool = (v, fallback) => {
             if (typeof v === 'boolean') return v;
