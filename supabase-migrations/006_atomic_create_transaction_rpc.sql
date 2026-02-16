@@ -76,7 +76,12 @@ BEGIN
     contact_custom_field_1,
     contact_custom_field_2,
     created_by_user_id,
-    created_by_user_name
+    created_by_user_name,
+    cash_box_name_snapshot,
+    cash_box_currency_snapshot,
+    cash_box_color_snapshot,
+    cash_box_icon_snapshot,
+    cash_box_id_prefix_snapshot
   ) VALUES (
     v_actor,
     v_cash_box_id,
@@ -95,7 +100,15 @@ BEGIN
     NULLIF(p_tx->>'contact_custom_field_1', ''),
     NULLIF(p_tx->>'contact_custom_field_2', ''),
     v_actor,
-    NULLIF(p_tx->>'created_by_user_name', '')
+    NULLIF(p_tx->>'created_by_user_name', ''),
+    NULLIF(v_cb.name, ''),
+    COALESCE(NULLIF(upper(trim(v_cb.currency)), ''), 'USD'),
+    NULLIF(trim(v_cb.color), ''),
+    NULLIF(trim(v_cb.icon), ''),
+    CASE
+      WHEN upper(coalesce(trim(v_cb.id_prefix), '')) = 'REC-' THEN 'SN'
+      ELSE COALESCE(NULLIF(upper(trim(v_cb.id_prefix)), ''), 'SN')
+    END
   )
   RETURNING id INTO v_tx_id;
 

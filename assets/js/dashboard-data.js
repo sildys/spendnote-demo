@@ -103,6 +103,32 @@ function createDashboardTransactionsController(ctx) {
         return '—';
     };
 
+    const mergeTxCashBoxSnapshot = (tx, cashBox) => {
+        const base = (cashBox && typeof cashBox === 'object') ? { ...cashBox } : {};
+
+        const snapshotName = safeText(tx?.cash_box_name_snapshot, '').trim();
+        if (snapshotName) base.name = snapshotName;
+
+        const snapshotCurrency = safeText(tx?.cash_box_currency_snapshot, '').trim().toUpperCase();
+        if (/^[A-Z]{3}$/.test(snapshotCurrency)) {
+            base.currency = snapshotCurrency;
+        }
+
+        const snapshotColorRaw = safeText(tx?.cash_box_color_snapshot, '').trim();
+        if (snapshotColorRaw) {
+            base.color = normalizeHexColor(snapshotColorRaw);
+        } else if (base.color) {
+            base.color = normalizeHexColor(base.color);
+        }
+
+        const snapshotIcon = safeText(tx?.cash_box_icon_snapshot, '').trim();
+        if (snapshotIcon) {
+            base.icon = snapshotIcon;
+        }
+
+        return base;
+    };
+
     const getCreatedByAvatarUrl = (createdByName) => {
         try {
             const storedAvatar = localStorage.getItem('spendnote.user.avatar.v1');
@@ -245,7 +271,12 @@ function createDashboardTransactionsController(ctx) {
             'cash_box_sequence',
             'tx_sequence_in_box',
             'status',
-            'voided_at'
+            'voided_at',
+            'cash_box_name_snapshot',
+            'cash_box_currency_snapshot',
+            'cash_box_color_snapshot',
+            'cash_box_icon_snapshot',
+            'cash_box_id_prefix_snapshot'
         ].join(', ');
 
         const baseOpts = {
@@ -263,9 +294,8 @@ function createDashboardTransactionsController(ctx) {
         });
         if (res && Array.isArray(res.data)) {
             res.data = res.data.map((tx) => {
-                if (tx && !tx.cash_box && tx.cash_box_id) {
-                    tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
-                }
+                const baseCashBox = tx?.cash_box || (tx?.cash_box_id ? (cashBoxById.get(String(tx.cash_box_id)) || null) : null);
+                tx.cash_box = mergeTxCashBoxSnapshot(tx, baseCashBox);
                 return tx;
             });
         }

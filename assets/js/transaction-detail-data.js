@@ -177,6 +177,35 @@
         return 'fa-building';
     }
 
+    function applyTxCashBoxSnapshot(tx, cashBox) {
+        const base = (cashBox && typeof cashBox === 'object') ? { ...cashBox } : {};
+
+        const snapshotName = safeText(tx?.cash_box_name_snapshot, '').trim();
+        if (snapshotName) base.name = snapshotName;
+
+        const snapshotCurrency = safeText(tx?.cash_box_currency_snapshot, '').trim().toUpperCase();
+        if (/^[A-Z]{3}$/.test(snapshotCurrency)) {
+            base.currency = snapshotCurrency;
+        }
+
+        const snapshotColorRaw = safeText(tx?.cash_box_color_snapshot, '').trim();
+        if (snapshotColorRaw) {
+            base.color = normalizeHexColor(snapshotColorRaw);
+        } else if (base.color) {
+            base.color = normalizeHexColor(base.color);
+        }
+
+        const snapshotIcon = safeText(tx?.cash_box_icon_snapshot, '').trim();
+        if (snapshotIcon) base.icon = snapshotIcon;
+
+        const snapshotPrefixRaw = safeText(tx?.cash_box_id_prefix_snapshot, '').trim().toUpperCase();
+        if (snapshotPrefixRaw) {
+            base.id_prefix = snapshotPrefixRaw === 'REC-' ? 'SN' : snapshotPrefixRaw;
+        }
+
+        return base;
+    }
+
     async function loadTransactionDetail() {
         if (!window.db?.transactions?.getById) {
             return;
@@ -247,6 +276,8 @@
             return;
         }
 
+        tx.cash_box = applyTxCashBoxSnapshot(tx, tx.cash_box);
+
         try {
             const wantsCashBox = Boolean(tx.cash_box_id && window.db?.cashBoxes?.getById);
             const wantsContact = Boolean(tx.contact_id && window.db?.contacts?.getById);
@@ -264,11 +295,13 @@
                 shouldRefreshContact ? window.db.contacts.getById(tx.contact_id) : Promise.resolve(null)
             ]);
 
-            if (latestCashBox) tx.cash_box = latestCashBox;
+            if (latestCashBox) tx.cash_box = applyTxCashBoxSnapshot(tx, latestCashBox);
             if (latestContact) tx.contact = latestContact;
         } catch (_) {
             // ignore enrich failures
         }
+
+        tx.cash_box = applyTxCashBoxSnapshot(tx, tx.cash_box);
 
         const cashBoxName = safeText(tx.cash_box?.name, 'Unknown');
         const cashBoxCode = getCashBoxCode(tx);

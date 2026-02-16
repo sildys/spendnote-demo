@@ -608,6 +608,32 @@
             return '—';
         }
 
+        function mergeTxCashBoxSnapshot(tx, cashBox) {
+            const base = (cashBox && typeof cashBox === 'object') ? { ...cashBox } : {};
+
+            const snapshotName = safeText(tx?.cash_box_name_snapshot, '').trim();
+            if (snapshotName) base.name = snapshotName;
+
+            const snapshotCurrency = safeText(tx?.cash_box_currency_snapshot, '').trim().toUpperCase();
+            if (/^[A-Z]{3}$/.test(snapshotCurrency)) {
+                base.currency = snapshotCurrency;
+            }
+
+            const snapshotColorRaw = safeText(tx?.cash_box_color_snapshot, '').trim();
+            if (snapshotColorRaw) {
+                base.color = normalizeHexColor(snapshotColorRaw, '#94a3b8');
+            } else if (base.color) {
+                base.color = normalizeHexColor(base.color, '#94a3b8');
+            }
+
+            const snapshotIcon = safeText(tx?.cash_box_icon_snapshot, '').trim();
+            if (snapshotIcon) {
+                base.icon = snapshotIcon;
+            }
+
+            return base;
+        }
+
         let resolvedContactUuid = null;
 
         async function resolveContactBySequence(seq) {
@@ -777,15 +803,21 @@
             // If we have data, fetch cash boxes separately
             if (data && data.length > 0) {
                 const cbIds = [...new Set(data.map(tx => tx.cash_box_id).filter(Boolean))];
+                const cbMap = {};
                 if (cbIds.length > 0) {
                     const { data: cbData } = await window.supabaseClient
                         .from('cash_boxes')
                         .select('id,name,color,currency,sequence_number')
                         .in('id', cbIds);
-                    const cbMap = {};
                     (cbData || []).forEach(cb => { cbMap[cb.id] = cb; });
-                    data = data.map(tx => ({ ...tx, cash_box: cbMap[tx.cash_box_id] || null }));
                 }
+                data = data.map((tx) => {
+                    const baseCashBox = tx?.cash_box || cbMap[tx.cash_box_id] || null;
+                    return {
+                        ...tx,
+                        cash_box: mergeTxCashBoxSnapshot(tx, baseCashBox)
+                    };
+                });
             }
 
             const txs = Array.isArray(data) ? data : [];
@@ -994,7 +1026,7 @@
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260211-2016"></script>
+    <script src="assets/js/supabase-config.js?v=20260216-2135"></script>
     <script src="assets/js/auth-guard.js"></script>
     <script src="assets/js/nav-loader.js?v=8"></script>
     <script>loadNav();</script>

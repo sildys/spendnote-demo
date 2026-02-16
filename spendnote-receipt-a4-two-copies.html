@@ -814,7 +814,7 @@ body {
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260211-2016"></script>
+    <script src="assets/js/supabase-config.js?v=20260216-2135"></script>
     <script src="assets/js/auth-guard.js?v=20260207-2310"></script>
     <script src="assets/js/main.js?v=20260207-2235"></script>
 
@@ -1002,7 +1002,12 @@ body {
           document.querySelectorAll('.void-watermark').forEach((el) => (el.style.display = shouldShowVoid ? 'block' : 'none'));
 
           try {
-            if (( !tx.cash_box || tx.cash_box?.sequence_number === undefined || tx.cash_box?.sequence_number === null) && tx.cash_box_id && window.db?.cashBoxes?.getById) {
+            const hasCashBoxSequence = (
+              tx.cash_box?.sequence_number !== undefined && tx.cash_box?.sequence_number !== null
+            ) || (
+              tx.cash_box_sequence !== undefined && tx.cash_box_sequence !== null
+            );
+            if ((!tx.cash_box || !hasCashBoxSequence) && tx.cash_box_id && window.db?.cashBoxes?.getById) {
               tx.cash_box = await window.db.cashBoxes.getById(tx.cash_box_id);
             }
           } catch (_) {}
@@ -1028,9 +1033,9 @@ body {
           const contactAddress = overrideContactAddress || safeText(tx.contact_address || tx.contact?.address, '');
           const contactOtherId = safeText(tx.contact_custom_field_1, '');
 
-          const currency = safeText(tx.cash_box?.currency, 'USD');
+          const currency = safeText(tx.cash_box_currency_snapshot || tx.cash_box?.currency, 'USD');
 
-          const companyName = safeText(profile?.company_name || profile?.full_name || tx.cash_box?.name, '—');
+          const companyName = safeText(profile?.company_name || profile?.full_name || tx.cash_box_name_snapshot || tx.cash_box?.name, '—');
           const companyAddress = safeText(profile?.address, '');
 
           setTextAll('.company-name', companyName);

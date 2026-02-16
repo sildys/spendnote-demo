@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS public.cash_boxes (
     currency TEXT DEFAULT 'USD' NOT NULL,
     color TEXT DEFAULT '#10b981' NOT NULL,
     icon TEXT DEFAULT 'building' NOT NULL,
-    id_prefix TEXT DEFAULT 'REC-',
+    id_prefix TEXT DEFAULT 'SN',
     current_balance DECIMAL(12, 2) DEFAULT 0.00 NOT NULL,
     
     -- Receipt settings (Standard+)
@@ -195,6 +195,13 @@ CREATE TABLE IF NOT EXISTS public.transactions (
     -- Created by (for team tracking)
     created_by_user_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
     created_by_user_name TEXT,
+
+    -- Cash box snapshot (immutable context for historical rendering)
+    cash_box_name_snapshot TEXT,
+    cash_box_currency_snapshot TEXT,
+    cash_box_color_snapshot TEXT,
+    cash_box_icon_snapshot TEXT,
+    cash_box_id_prefix_snapshot TEXT,
     
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -322,6 +329,39 @@ CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON public.profiles
 
 CREATE TRIGGER update_cash_boxes_updated_at BEFORE UPDATE ON public.cash_boxes
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+-- Prevent immutable cash box identity fields from changing after creation
+CREATE OR REPLACE FUNCTION public.lock_cash_box_identity_fields()
+RETURNS TRIGGER AS $$
+DECLARE
+    old_currency TEXT;
+    new_currency TEXT;
+    old_prefix TEXT;
+    new_prefix TEXT;
+BEGIN
+    old_currency := COALESCE(NULLIF(upper(trim(OLD.currency)), ''), 'USD');
+    new_currency := COALESCE(NULLIF(upper(trim(NEW.currency)), ''), 'USD');
+
+    old_prefix := COALESCE(NULLIF(upper(trim(OLD.id_prefix)), ''), 'SN');
+    new_prefix := COALESCE(NULLIF(upper(trim(NEW.id_prefix)), ''), 'SN');
+    IF old_prefix = 'REC-' THEN old_prefix := 'SN'; END IF;
+    IF new_prefix = 'REC-' THEN new_prefix := 'SN'; END IF;
+
+    IF new_currency IS DISTINCT FROM old_currency THEN
+        RAISE EXCEPTION 'cash_boxes.currency is immutable after creation';
+    END IF;
+
+    IF new_prefix IS DISTINCT FROM old_prefix THEN
+        RAISE EXCEPTION 'cash_boxes.id_prefix is immutable after creation';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER lock_cash_box_identity_fields_trigger
+    BEFORE UPDATE ON public.cash_boxes
+    FOR EACH ROW EXECUTE FUNCTION public.lock_cash_box_identity_fields();
 
 CREATE TRIGGER update_contacts_updated_at BEFORE UPDATE ON public.contacts
     FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

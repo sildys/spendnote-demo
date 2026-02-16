@@ -13,8 +13,8 @@ try {
     // ignore
 }
 
-if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260213-1825');
-window.__spendnoteSupabaseConfigBuild = '20260213-1825';
+if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260216-2135');
+window.__spendnoteSupabaseConfigBuild = '20260216-2135';
 
 // If you previously used localStorage persistence, clean it up so tab-close logout works immediately.
 // Supabase stores sessions under a project-specific key like: sb-<project-ref>-auth-token
@@ -528,6 +528,118 @@ function normalizeTxIdQuery(value) {
     const seq = Number(m[2]);
     if (!Number.isFinite(cb) || cb <= 0 || !Number.isFinite(seq) || seq <= 0) return v;
     return `sn${String(cb)}-${String(seq).padStart(3, '0')}`;
+}
+
+const TX_CASH_BOX_SNAPSHOT_COLUMNS = Object.freeze([
+    'cash_box_name_snapshot',
+    'cash_box_currency_snapshot',
+    'cash_box_color_snapshot',
+    'cash_box_icon_snapshot',
+    'cash_box_id_prefix_snapshot'
+]);
+
+function normalizeCashBoxIdPrefix(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return 'SN';
+    const up = raw.toUpperCase();
+    if (up === 'REC-') return 'SN';
+    return up;
+}
+
+function normalizeCashBoxCurrency(value) {
+    const raw = String(value || '').trim().toUpperCase();
+    return /^[A-Z]{3}$/.test(raw) ? raw : '';
+}
+
+function normalizeCashBoxColor(value) {
+    const raw = String(value || '').trim();
+    if (/^#[0-9a-f]{6}$/i.test(raw)) return raw;
+    if (/^[0-9a-f]{6}$/i.test(raw)) return `#${raw}`;
+    return '';
+}
+
+function buildTxCashBoxSnapshot(tx, cashBox) {
+    const row = (cashBox && typeof cashBox === 'object') ? cashBox : {};
+    const snapshot = {};
+
+    const name = String(tx?.cash_box_name_snapshot || row?.name || '').trim();
+    if (name) snapshot.name = name;
+
+    const currency = normalizeCashBoxCurrency(tx?.cash_box_currency_snapshot || row?.currency);
+    if (currency) snapshot.currency = currency;
+
+    const color = normalizeCashBoxColor(tx?.cash_box_color_snapshot || row?.color);
+    if (color) snapshot.color = color;
+
+    const icon = String(tx?.cash_box_icon_snapshot || row?.icon || '').trim();
+    if (icon) snapshot.icon = icon;
+
+    const idPrefix = normalizeCashBoxIdPrefix(tx?.cash_box_id_prefix_snapshot || row?.id_prefix);
+    if (idPrefix) snapshot.id_prefix = idPrefix;
+
+    return snapshot;
+}
+
+function applyTxCashBoxSnapshot(tx) {
+    if (!tx || typeof tx !== 'object') return tx;
+    const baseCashBox = (tx.cash_box && typeof tx.cash_box === 'object')
+        ? { ...tx.cash_box }
+        : {};
+    const snapshot = buildTxCashBoxSnapshot(tx, baseCashBox);
+    const merged = Object.assign({}, baseCashBox, snapshot);
+    tx.cash_box = Object.keys(merged).length ? merged : null;
+    return tx;
+}
+
+function applyTxCashBoxSnapshotToPayload(payload, cashBox) {
+    const next = payload && typeof payload === 'object' ? { ...payload } : {};
+    const snapshot = buildTxCashBoxSnapshot(next, cashBox);
+
+    const name = String(next.cash_box_name_snapshot || snapshot.name || '').trim();
+    next.cash_box_name_snapshot = name || null;
+
+    const currency = normalizeCashBoxCurrency(next.cash_box_currency_snapshot || snapshot.currency);
+    next.cash_box_currency_snapshot = currency || null;
+
+    const color = normalizeCashBoxColor(next.cash_box_color_snapshot || snapshot.color);
+    next.cash_box_color_snapshot = color || null;
+
+    const icon = String(next.cash_box_icon_snapshot || snapshot.icon || '').trim();
+    next.cash_box_icon_snapshot = icon || null;
+
+    const idPrefix = normalizeCashBoxIdPrefix(next.cash_box_id_prefix_snapshot || snapshot.id_prefix);
+    next.cash_box_id_prefix_snapshot = idPrefix || 'SN';
+
+    return next;
+}
+
+function extractMissingTransactionsColumn(error) {
+    const message = String(error?.message || '');
+    const details = String(error?.details || '');
+    const hint = String(error?.hint || '');
+    const text = [message, details, hint].filter(Boolean).join(' ');
+    if (!text) return '';
+
+    const hasTransactionsContext = /transactions/i.test(text);
+    const patterns = [
+        /column\s+transactions\.([a-zA-Z0-9_]+)\s+does\s+not\s+exist/i,
+        /column\s+"?([a-zA-Z0-9_]+)"?\s+of\s+relation\s+"?transactions"?\s+does\s+not\s+exist/i,
+        /could\s+not\s+find\s+the\s+'([a-zA-Z0-9_]+)'\s+column\s+of\s+'transactions'\s+in\s+the\s+schema\s+cache/i,
+        /could\s+not\s+find\s+the\s+"([a-zA-Z0-9_]+)"\s+column\s+of\s+"transactions"\s+in\s+the\s+schema\s+cache/i,
+        /column\s+"?([a-zA-Z0-9_]+)"?\s+does\s+not\s+exist/i
+    ];
+
+    for (const re of patterns) {
+        const match = re.exec(text);
+        if (!match || !match[1]) continue;
+        const column = String(match[1]).trim().toLowerCase();
+        if (!column) continue;
+        if (hasTransactionsContext || TX_CASH_BOX_SNAPSHOT_COLUMNS.includes(column)) {
+            return column;
+        }
+    }
+
+    return '';
 }
 
 try {
@@ -1523,20 +1635,21 @@ var db = {
                 return await q.range(from, to);
             };
 
-            let { data, error, count } = await run(select);
+            let activeSelect = select;
+            let { data, error, count } = await run(activeSelect);
 
-            if (error && typeof error.message === 'string') {
-                const msg = error.message;
-                const m = msg.match(/column\s+transactions\.([a-zA-Z0-9_]+)\s+does\s+not\s+exist/i);
-                if (m && m[1]) {
-                    const fallbackSelect = stripMissingColumnFromSelect(select, m[1]);
-                    if (fallbackSelect && fallbackSelect !== select) {
-                        const retry = await run(fallbackSelect);
-                        data = retry.data;
-                        error = retry.error;
-                        count = retry.count;
-                    }
-                }
+            for (let attempt = 0; attempt < 8 && error; attempt++) {
+                const missingColumn = extractMissingTransactionsColumn(error);
+                if (!missingColumn) break;
+
+                const fallbackSelect = stripMissingColumnFromSelect(activeSelect, missingColumn);
+                if (!fallbackSelect || fallbackSelect === activeSelect) break;
+
+                activeSelect = fallbackSelect;
+                const retry = await run(activeSelect);
+                data = retry.data;
+                error = retry.error;
+                count = retry.count;
             }
 
             if (error) {
@@ -1647,7 +1760,7 @@ var db = {
                     // #region agent log
                     if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] joined success', { txId });
                     // #endregion
-                    return attemptJoined.data;
+                    return applyTxCashBoxSnapshot(attemptJoined.data);
                 }
 
                 if (attemptJoined.error) {
@@ -1700,7 +1813,7 @@ var db = {
                 if (tx.cash_box_id) {
                     const { data: cb } = await supabaseClient
                         .from('cash_boxes')
-                        .select('id, name, color, currency')
+                        .select('id, name, color, currency, icon, sequence_number, id_prefix')
                         .eq('id', tx.cash_box_id)
                         .single();
                     if (cb) tx.cash_box = cb;
@@ -1718,7 +1831,7 @@ var db = {
                 // ignore enrich failures
             }
 
-            return tx;
+            return applyTxCashBoxSnapshot(tx);
         },
 
         async create(transaction) {
@@ -1749,16 +1862,63 @@ var db = {
                 // ignore and fallback below
             }
 
-            const { data, error } = await supabaseClient
-                .from('transactions')
-                .insert([transaction])
-                .select()
-                .single();
-            if (error) {
-                console.error('Error creating transaction:', error);
-                return { success: false, error: error.message };
+            let insertPayload = { ...(transaction || {}) };
+
+            try {
+                const cashBoxId = String(insertPayload.cash_box_id || '').trim();
+                if (cashBoxId) {
+                    const cashBoxRes = await supabaseClient
+                        .from('cash_boxes')
+                        .select('id, name, currency, color, icon, id_prefix')
+                        .eq('id', cashBoxId)
+                        .maybeSingle();
+
+                    if (!cashBoxRes.error && cashBoxRes.data) {
+                        insertPayload = applyTxCashBoxSnapshotToPayload(insertPayload, cashBoxRes.data);
+                    }
+                }
+            } catch (_) {
+                // ignore snapshot enrichment failures
             }
-            return { success: true, data };
+
+            let workingPayload = { ...insertPayload };
+            let lastError = null;
+
+            for (let attempt = 0; attempt < 6; attempt++) {
+                const { data, error } = await supabaseClient
+                    .from('transactions')
+                    .insert([workingPayload])
+                    .select()
+                    .single();
+
+                if (!error) {
+                    return { success: true, data };
+                }
+
+                lastError = error;
+                const missingColumn = extractMissingTransactionsColumn(error);
+                const canStripSnapshotColumn = Boolean(
+                    missingColumn &&
+                    TX_CASH_BOX_SNAPSHOT_COLUMNS.includes(missingColumn) &&
+                    Object.prototype.hasOwnProperty.call(workingPayload, missingColumn)
+                );
+
+                if (!canStripSnapshotColumn) {
+                    console.error('Error creating transaction:', error);
+                    return { success: false, error: error.message };
+                }
+
+                const nextPayload = { ...workingPayload };
+                delete nextPayload[missingColumn];
+                workingPayload = nextPayload;
+            }
+
+            if (lastError) {
+                console.error('Error creating transaction:', lastError);
+                return { success: false, error: lastError.message };
+            }
+
+            return { success: false, error: 'Failed to create transaction.' };
         },
 
         async update(id, updates) {

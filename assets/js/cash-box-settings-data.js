@@ -18,6 +18,14 @@ const RECEIPT_VISIBILITY_COLUMN_BY_FIELD = Object.freeze({
 const RECEIPT_VISIBILITY_FIELDS = Object.keys(RECEIPT_VISIBILITY_COLUMN_BY_FIELD);
 let unsupportedReceiptVisibilityFields = new Set();
 
+function normalizeCashBoxIdPrefix(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return 'SN';
+    const up = raw.toUpperCase();
+    if (up === 'REC-') return 'SN';
+    return up;
+}
+
 function isUuid(value) {
     try {
         if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
@@ -484,11 +492,24 @@ async function loadCashBoxData(id) {
             currencySelect.dataset.originalCurrency = cashBox.currency;
         }
 
+        if (currencySelect) {
+            const lockCurrency = Boolean(isEditMode);
+            currencySelect.readOnly = lockCurrency;
+            currencySelect.setAttribute('aria-readonly', lockCurrency ? 'true' : 'false');
+            currencySelect.title = lockCurrency ? 'Currency is locked after cash box creation.' : '';
+        }
+
         // Populate ID prefix
         const idPrefixInput = document.getElementById('idPrefixInput');
         if (idPrefixInput) {
-            const rawPrefix = String(cashBox.id_prefix || idPrefixInput.value || 'SN').trim();
-            idPrefixInput.value = rawPrefix.toUpperCase() === 'REC-' ? 'SN' : rawPrefix;
+            const normalizedPrefix = normalizeCashBoxIdPrefix(cashBox.id_prefix || idPrefixInput.value || 'SN');
+            idPrefixInput.value = normalizedPrefix;
+            idPrefixInput.dataset.originalIdPrefix = normalizedPrefix;
+
+            const lockPrefix = Boolean(isEditMode);
+            idPrefixInput.readOnly = lockPrefix;
+            idPrefixInput.setAttribute('aria-readonly', lockPrefix ? 'true' : 'false');
+            idPrefixInput.title = lockPrefix ? 'ID Prefix is locked after cash box creation.' : '';
         }
 
         // Populate color selection
@@ -690,10 +711,21 @@ async function handleSave(e) {
             return null;
         };
 
-        const currency = canonicalizeCurrency(currencyInput ? currencyInput.value : 'USD');
+        let currency = canonicalizeCurrency(currencyInput ? currencyInput.value : 'USD');
         if (!currency) {
             showAlert('Currency must be a valid ISO 4217 code (e.g., USD, EUR, HUF).\nTip: you can type "Ft" and it will be saved as HUF.', { iconType: 'warning' });
             return;
+        }
+
+        if (isEditMode) {
+            const originalCurrency = canonicalizeCurrency(
+                currentCashBoxData?.currency ||
+                currencyInput?.dataset?.originalCurrency ||
+                currency
+            );
+            if (originalCurrency) {
+                currency = originalCurrency;
+            }
         }
 
         try {
@@ -705,7 +737,7 @@ async function handleSave(e) {
 
         if (currencyInput) {
             currencyInput.value = currency;
-            currencyInput.dataset.originalCurrency = currencyInput.dataset.originalCurrency || currency;
+            currencyInput.dataset.originalCurrency = currency;
         }
 
         const color = selectedColor || currentCashBoxData?.color || '#059669';
@@ -717,7 +749,20 @@ async function handleSave(e) {
         };
 
         const idPrefixInput = document.getElementById('idPrefixInput');
-        const idPrefix = String(idPrefixInput?.value || '').trim() || 'SN';
+        let idPrefix = normalizeCashBoxIdPrefix(idPrefixInput?.value || 'SN');
+
+        if (isEditMode) {
+            idPrefix = normalizeCashBoxIdPrefix(
+                currentCashBoxData?.id_prefix ||
+                idPrefixInput?.dataset?.originalIdPrefix ||
+                idPrefix
+            );
+        }
+
+        if (idPrefixInput) {
+            idPrefixInput.value = idPrefix;
+            idPrefixInput.dataset.originalIdPrefix = idPrefix;
+        }
 
         const getToggleBool = (field, fallback) => {
             const el = document.querySelector(`.toggle-list input[type="checkbox"][data-field="${field}"]`);

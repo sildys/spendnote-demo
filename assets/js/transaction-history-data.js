@@ -171,6 +171,37 @@
         return safeText(cb?.name, '—');
     }
 
+    function mergeTxCashBoxSnapshot(tx, cashBox) {
+        const base = (cashBox && typeof cashBox === 'object') ? { ...cashBox } : {};
+
+        const snapshotName = safeText(tx?.cash_box_name_snapshot, '').trim();
+        if (snapshotName) base.name = snapshotName;
+
+        const snapshotCurrency = safeText(tx?.cash_box_currency_snapshot, '').trim().toUpperCase();
+        if (/^[A-Z]{3}$/.test(snapshotCurrency)) {
+            base.currency = snapshotCurrency;
+        }
+
+        const snapshotColorRaw = safeText(tx?.cash_box_color_snapshot, '').trim();
+        if (snapshotColorRaw) {
+            base.color = normalizeHexColor(snapshotColorRaw);
+        } else if (base.color) {
+            base.color = normalizeHexColor(base.color);
+        }
+
+        const snapshotIcon = safeText(tx?.cash_box_icon_snapshot, '').trim();
+        if (snapshotIcon) {
+            base.icon = snapshotIcon;
+        }
+
+        const snapshotPrefixRaw = safeText(tx?.cash_box_id_prefix_snapshot, '').trim().toUpperCase();
+        if (snapshotPrefixRaw) {
+            base.id_prefix = snapshotPrefixRaw === 'REC-' ? 'SN' : snapshotPrefixRaw;
+        }
+
+        return base;
+    }
+
     function ensureCashBoxSelectOptions(selectEl, cashBoxes, selectedId) {
         if (!selectEl) return;
         const existing = qsa('option', selectEl).map((o) => o.value);
@@ -812,7 +843,7 @@
             cashBoxByQuery: new Map()
         };
 
-        const txSelect = 'id, cash_box_id, type, amount, description, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name, cash_box_sequence, tx_sequence_in_box, status, voided_at, voided_by_user_name, contact:contacts(id, name, sequence_number)';
+        const txSelect = 'id, cash_box_id, type, amount, description, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name, cash_box_sequence, tx_sequence_in_box, status, voided_at, voided_by_user_name, cash_box_name_snapshot, cash_box_currency_snapshot, cash_box_color_snapshot, cash_box_icon_snapshot, cash_box_id_prefix_snapshot, contact:contacts(id, name, sequence_number)';
 
         const filterHeader = qs('#filterHeader');
         const filterPanel = qs('#filterPanel');
@@ -1210,8 +1241,13 @@
 
                 const slice = all.slice(0, allowedTotal);
 
+                const resolveTxCashBox = (tx) => {
+                    const base = tx?.cash_box || (tx?.cash_box_id ? (cashBoxById.get(String(tx.cash_box_id)) || null) : null);
+                    return mergeTxCashBoxSnapshot(tx, base);
+                };
+
                 const getCurrencyForTx = (tx) => {
-                    const cb = tx?.cash_box_id ? (cashBoxById.get(String(tx.cash_box_id)) || null) : null;
+                    const cb = resolveTxCashBox(tx);
                     return safeText(cb?.currency, 'USD');
                 };
 
@@ -1242,9 +1278,8 @@
                 });
 
                 const rowsForPdf = slice.map((tx) => {
-                    if (tx && !tx.cash_box && tx.cash_box_id) {
-                        tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
-                    }
+                    const mergedCashBox = resolveTxCashBox(tx);
+                    tx.cash_box = mergedCashBox;
                     const t = safeText(tx?.type, '').toLowerCase();
                     const isVoided = safeText(tx?.status, 'active').toLowerCase() === 'voided';
                     const typeLabel = isVoided ? 'VOID' : (t === 'income' ? 'IN' : (t === 'expense' ? 'OUT' : ''));
@@ -1253,7 +1288,7 @@
                         type: typeLabel,
                         id: getDisplayId(tx),
                         date: formatDateShort(tx?.transaction_date || tx?.created_at),
-                        cashBox: safeText(tx?.cash_box?.name, 'Unknown'),
+                        cashBox: safeText(mergedCashBox?.name, 'Unknown'),
                         contact: safeText(tx?.contact?.name || tx?.contact_name, '—'),
                         contactId: getContactDisplayId(tx),
                         amount: formatCurrency(tx?.amount, currency)
@@ -2053,9 +2088,8 @@
             serverCtx.filteredTxCount = Number(pageRes?.count) || 0;
 
             const rows = (Array.isArray(pageRes?.data) ? pageRes.data : []).map((tx) => {
-                if (tx && !tx.cash_box && tx.cash_box_id) {
-                    tx.cash_box = cashBoxById.get(String(tx.cash_box_id)) || null;
-                }
+                const baseCashBox = tx?.cash_box || (tx?.cash_box_id ? (cashBoxById.get(String(tx.cash_box_id)) || null) : null);
+                tx.cash_box = mergeTxCashBoxSnapshot(tx, baseCashBox);
                 return tx;
             });
 
@@ -2148,6 +2182,10 @@
                 }
 
                 const cashBoxByIdLocal = cashBoxById;
+                const resolveTxCashBoxForCsv = (tx) => {
+                    const base = tx?.cash_box || (tx?.cash_box_id ? (cashBoxByIdLocal.get(String(tx.cash_box_id)) || null) : null);
+                    return mergeTxCashBoxSnapshot(tx, base);
+                };
                 const header = [
                     'Transaction ID',
                     'Type',
@@ -2164,7 +2202,7 @@
 
                 const lines = [header];
                 all.slice(0, allowedTotal).forEach((tx) => {
-                    const cb = cashBoxByIdLocal.get(String(tx?.cash_box_id)) || null;
+                    const cb = resolveTxCashBoxForCsv(tx);
                     const currency = safeText(cb?.currency, '');
                     const type = safeText(tx?.type, '');
                     const date = formatDateShort(tx?.transaction_date || tx?.created_at);
