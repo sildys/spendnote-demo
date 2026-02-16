@@ -444,6 +444,12 @@ async function loadCashBoxData(id) {
             currencySelect.dataset.originalCurrency = cashBox.currency;
         }
 
+        // Populate ID prefix
+        const idPrefixInput = document.getElementById('idPrefixInput');
+        if (idPrefixInput) {
+            idPrefixInput.value = String(cashBox.id_prefix || idPrefixInput.value || 'SN').trim();
+        }
+
         // Populate color selection
         if (cashBox.color) {
             document.querySelectorAll('.color-option').forEach(option => {
@@ -480,6 +486,45 @@ async function loadCashBoxData(id) {
         if (issuedByLabelEl) issuedByLabelEl.value = cashBox.receipt_issued_by_label || '';
         if (receivedByLabelEl) receivedByLabelEl.value = cashBox.receipt_received_by_label || '';
         if (footerNoteEl) footerNoteEl.value = cashBox.receipt_footer_note || '';
+
+        // Populate receipt field visibility toggles
+        const visibilityByField = {
+            logo: cashBox.receipt_show_logo,
+            addresses: cashBox.receipt_show_addresses,
+            tracking: cashBox.receipt_show_tracking,
+            additional: cashBox.receipt_show_additional,
+            note: cashBox.receipt_show_note,
+            signatures: cashBox.receipt_show_signatures
+        };
+
+        const normalizeVisibility = (value, fallback) => {
+            if (typeof value === 'boolean') return value;
+            if (value === '1' || value === 1 || String(value).toLowerCase() === 'true') return true;
+            if (value === '0' || value === 0 || String(value).toLowerCase() === 'false') return false;
+            return fallback;
+        };
+
+        const quickPreset = { logo: true, addresses: true, tracking: true, additional: false, note: false, signatures: true };
+        const resolvedVisibility = {
+            logo: normalizeVisibility(visibilityByField.logo, quickPreset.logo),
+            addresses: normalizeVisibility(visibilityByField.addresses, quickPreset.addresses),
+            tracking: normalizeVisibility(visibilityByField.tracking, quickPreset.tracking),
+            additional: normalizeVisibility(visibilityByField.additional, quickPreset.additional),
+            note: normalizeVisibility(visibilityByField.note, quickPreset.note),
+            signatures: normalizeVisibility(visibilityByField.signatures, quickPreset.signatures)
+        };
+
+        const isQuickMode = Object.keys(quickPreset).every((k) => resolvedVisibility[k] === quickPreset[k]);
+        if (typeof window.applyReceiptMode === 'function') {
+            window.applyReceiptMode(isQuickMode ? 'quick' : 'detailed');
+        }
+
+        document.querySelectorAll('.toggle-list input[type="checkbox"]').forEach((toggle) => {
+            const field = String(toggle?.dataset?.field || '');
+            if (!field || !Object.prototype.hasOwnProperty.call(resolvedVisibility, field)) return;
+            toggle.checked = Boolean(resolvedVisibility[field]);
+            toggle.dispatchEvent(new Event('change', { bubbles: true }));
+        });
 
         currentCashBoxData = cashBox;
         supportsReceiptLabels = Boolean(cashBox && Object.prototype.hasOwnProperty.call(cashBox, 'receipt_amount_label'));
@@ -613,6 +658,15 @@ async function handleSave(e) {
             return s ? s : null;
         };
 
+        const idPrefixInput = document.getElementById('idPrefixInput');
+        const idPrefix = String(idPrefixInput?.value || '').trim() || 'SN';
+
+        const getToggleBool = (field, fallback) => {
+            const el = document.querySelector(`.toggle-list input[type="checkbox"][data-field="${field}"]`);
+            if (!el) return fallback;
+            return Boolean(el.checked);
+        };
+
         // Cash box logo from Pro Options
         const cbLogoValue = typeof window.getCashBoxLogo === 'function' ? window.getCashBoxLogo() : undefined;
 
@@ -621,6 +675,13 @@ async function handleSave(e) {
             currency,
             color,
             icon,
+            id_prefix: idPrefix,
+            receipt_show_logo: getToggleBool('logo', true),
+            receipt_show_addresses: getToggleBool('addresses', true),
+            receipt_show_tracking: getToggleBool('tracking', true),
+            receipt_show_additional: getToggleBool('additional', false),
+            receipt_show_note: getToggleBool('note', false),
+            receipt_show_signatures: getToggleBool('signatures', true),
             cash_box_logo_url: cbLogoValue || null,
             receipt_title: safeText(document.getElementById('receiptTitle')?.value),
             receipt_total_label: safeText(document.getElementById('totalLabel')?.value),
