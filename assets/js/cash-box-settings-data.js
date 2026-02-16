@@ -5,6 +5,7 @@ let currentCashBoxId = null;
 let currentCashBoxData = null;
 let hasInitialized = false;
 let supportsReceiptLabels = true;
+let supportsCashBoxLogo = true;
 
 function isUuid(value) {
     try {
@@ -646,13 +647,24 @@ async function handleSave(e) {
             return next;
         };
 
-        const stripSchemaDependentFields = (payload) => {
-            const next = stripReceiptLabelFields(payload);
+        const stripCashBoxLogoField = (payload) => {
+            const next = { ...payload };
             delete next.cash_box_logo_url;
             return next;
         };
 
-        const safeUpdatePayload = supportsReceiptLabels ? updatePayload : stripReceiptLabelFields(updatePayload);
+        const buildCompatiblePayload = (payload) => {
+            let next = { ...payload };
+            if (!supportsReceiptLabels) {
+                next = stripReceiptLabelFields(next);
+            }
+            if (!supportsCashBoxLogo) {
+                next = stripCashBoxLogoField(next);
+            }
+            return next;
+        };
+
+        const safeUpdatePayload = buildCompatiblePayload(updatePayload);
 
         const createPayload = {
             ...safeUpdatePayload,
@@ -673,9 +685,14 @@ async function handleSave(e) {
             let updateResult = await db.cashBoxes.update(currentCashBoxId, safeUpdatePayload);
             if (updateResult && updateResult.success === false) {
                 const msg = String(updateResult.error || '').toLowerCase();
-                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url')) {
+                if (msg.includes('cash_box_logo_url')) {
+                    supportsCashBoxLogo = false;
+                }
+                if (msg.includes('receipt_')) {
                     supportsReceiptLabels = false;
-                    updateResult = await db.cashBoxes.update(currentCashBoxId, stripSchemaDependentFields(updatePayload));
+                }
+                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url')) {
+                    updateResult = await db.cashBoxes.update(currentCashBoxId, buildCompatiblePayload(updatePayload));
                 }
             }
             if (DEBUG) console.log('Update result:', updateResult);
@@ -704,10 +721,15 @@ async function handleSave(e) {
             createResult = await db.cashBoxes.create(createPayload);
             if (createResult && createResult.success === false) {
                 const msg = String(createResult.error || '').toLowerCase();
-                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url')) {
+                if (msg.includes('cash_box_logo_url')) {
+                    supportsCashBoxLogo = false;
+                }
+                if (msg.includes('receipt_')) {
                     supportsReceiptLabels = false;
+                }
+                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url')) {
                     createResult = await db.cashBoxes.create({
-                        ...stripSchemaDependentFields(updatePayload),
+                        ...buildCompatiblePayload(updatePayload),
                         current_balance: 0,
                         user_id: user.id
                     });
