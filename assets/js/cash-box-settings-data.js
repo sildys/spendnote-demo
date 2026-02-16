@@ -768,17 +768,18 @@ async function handleSave(e) {
 
                 const msg = String(lastResult.error || '').toLowerCase();
                 const isSchemaColumnError = msg.includes('schema cache') || msg.includes('column');
+                const hasReceiptShowError = msg.includes('receipt_show_');
                 let changed = false;
 
                 if (msg.includes('cash_box_logo_url') && supportsCashBoxLogo) {
                     supportsCashBoxLogo = false;
                     changed = true;
                 }
-                if (msg.includes('receipt_show_') && supportsReceiptVisibility) {
+                if (hasReceiptShowError && supportsReceiptVisibility) {
                     supportsReceiptVisibility = false;
                     changed = true;
                 }
-                if (msg.includes('receipt_') && supportsReceiptLabels) {
+                if (msg.includes('receipt_') && !hasReceiptShowError && supportsReceiptLabels) {
                     supportsReceiptLabels = false;
                     changed = true;
                 }
