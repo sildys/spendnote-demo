@@ -6,6 +6,7 @@ let currentCashBoxData = null;
 let hasInitialized = false;
 let supportsReceiptLabels = true;
 let supportsCashBoxLogo = true;
+let supportsReceiptVisibility = true;
 
 function isUuid(value) {
     try {
@@ -714,6 +715,17 @@ async function handleSave(e) {
             return next;
         };
 
+        const stripReceiptVisibilityFields = (payload) => {
+            const next = { ...payload };
+            delete next.receipt_show_logo;
+            delete next.receipt_show_addresses;
+            delete next.receipt_show_tracking;
+            delete next.receipt_show_additional;
+            delete next.receipt_show_note;
+            delete next.receipt_show_signatures;
+            return next;
+        };
+
         const buildCompatiblePayload = (payload) => {
             let next = { ...payload };
             if (!supportsReceiptLabels) {
@@ -721,6 +733,9 @@ async function handleSave(e) {
             }
             if (!supportsCashBoxLogo) {
                 next = stripCashBoxLogoField(next);
+            }
+            if (!supportsReceiptVisibility) {
+                next = stripReceiptVisibilityFields(next);
             }
             return next;
         };
@@ -749,10 +764,13 @@ async function handleSave(e) {
                 if (msg.includes('cash_box_logo_url')) {
                     supportsCashBoxLogo = false;
                 }
+                if (msg.includes('receipt_show_')) {
+                    supportsReceiptVisibility = false;
+                }
                 if (msg.includes('receipt_')) {
                     supportsReceiptLabels = false;
                 }
-                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url')) {
+                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url') || msg.includes('receipt_show_')) {
                     updateResult = await db.cashBoxes.update(currentCashBoxId, buildCompatiblePayload(updatePayload));
                 }
             }
@@ -785,10 +803,13 @@ async function handleSave(e) {
                 if (msg.includes('cash_box_logo_url')) {
                     supportsCashBoxLogo = false;
                 }
+                if (msg.includes('receipt_show_')) {
+                    supportsReceiptVisibility = false;
+                }
                 if (msg.includes('receipt_')) {
                     supportsReceiptLabels = false;
                 }
-                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url')) {
+                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url') || msg.includes('receipt_show_')) {
                     createResult = await db.cashBoxes.create({
                         ...buildCompatiblePayload(updatePayload),
                         current_balance: 0,
