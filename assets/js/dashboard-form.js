@@ -558,6 +558,9 @@ function initTransactionForm() {
                     const storedReceiptText = cbIdForDefaults
                         ? (readStoredObject(`spendnote.cashBox.${cbIdForDefaults}.receiptText.v1`) || {})
                         : {};
+                    const storedLogoSettings = cbIdForDefaults
+                        ? (readStoredObject(`spendnote.cashBox.${cbIdForDefaults}.logoSettings.v1`) || null)
+                        : null;
                     const storedPrefix = (() => {
                         if (!cbIdForDefaults) return '';
                         try {
@@ -627,20 +630,62 @@ function initTransactionForm() {
                     if (footerNote) params.set('footerNote', footerNote);
 
                     try {
-                        const storedLogo = localStorage.getItem('spendnote.proLogoDataUrl') || '';
-                        if (storedLogo) {
-                            params.set('logoKey', 'spendnote.proLogoDataUrl');
-                        } else if (cb?.cash_box_logo_url) {
-                            params.set('logoUrl', cb.cash_box_logo_url);
+                        const cbLogo = String(cb?.cash_box_logo_url || '').trim();
+                        if (cbLogo) {
+                            const cbKey = `spendnote.cbLogo.${cbIdForDefaults || 'temp'}`;
+                            try { localStorage.setItem(cbKey, cbLogo); } catch (_) {}
+                            params.set('logoKey', cbKey);
+                        } else {
+                            const storedLogo = localStorage.getItem('spendnote.proLogoDataUrl') || '';
+                            if (storedLogo) {
+                                params.set('logoKey', 'spendnote.proLogoDataUrl');
+                            }
                         }
                     } catch (_) {
                         // ignore
                     }
 
                     try {
-                        const storedScale = parseFloat(localStorage.getItem('spendnote.receipt.logoScale.v1') || '1');
-                        if (Number.isFinite(storedScale) && storedScale > 0) {
-                            params.set('logoScale', String(storedScale));
+                        const parseFinite = (value) => {
+                            const n = Number(value);
+                            return Number.isFinite(n) ? n : null;
+                        };
+
+                        const cbScale = parseFinite(storedLogoSettings?.scale);
+                        const cbX = parseFinite(storedLogoSettings?.x);
+                        const cbY = parseFinite(storedLogoSettings?.y);
+
+                        if (cbScale !== null && cbScale > 0) {
+                            params.set('logoScale', String(cbScale));
+                        } else {
+                            const storedScale = parseFloat(localStorage.getItem('spendnote.receipt.logoScale.v1') || '1');
+                            if (Number.isFinite(storedScale) && storedScale > 0) {
+                                params.set('logoScale', String(storedScale));
+                            }
+                        }
+
+                        if (cbX !== null) {
+                            params.set('logoX', String(cbX));
+                        }
+                        if (cbY !== null) {
+                            params.set('logoY', String(cbY));
+                        }
+
+                        if (cbX === null || cbY === null) {
+                            try {
+                                const storedPosRaw = localStorage.getItem('spendnote.receipt.logoPosition.v1');
+                                if (storedPosRaw) {
+                                    const p = JSON.parse(storedPosRaw);
+                                    if (cbX === null && Number.isFinite(Number(p?.x))) {
+                                        params.set('logoX', String(Number(p.x)));
+                                    }
+                                    if (cbY === null && Number.isFinite(Number(p?.y))) {
+                                        params.set('logoY', String(Number(p.y)));
+                                    }
+                                }
+                            } catch (_) {
+                                // ignore
+                            }
                         }
                     } catch (_) {}
 

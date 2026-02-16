@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=14">
-    <link rel="stylesheet" href="assets/css/cash-box-settings.css?v=10">
+    <link rel="stylesheet" href="assets/css/cash-box-settings.css?v=11">
 </head>
 <body>
 <div id="nav-container"></div>
@@ -329,12 +329,25 @@
                         <div class="pro-grid">
                             <div class="pro-field full">
                                 <label>Logo</label>
-                                <div class="pro-logo-box">
-                                    <div class="pro-logo-preview" id="logoPreview"><img id="logoPreviewImg" alt="" /></div>
-                                    <div class="pro-logo-actions">
-                                        <input type="file" id="logoInput" accept="image/png,image/jpeg,image/jpg,image/svg+xml" style="display: none;">
-                                        <button type="button" class="btn btn-secondary" id="uploadLogoBtn"><i class="fas fa-upload"></i> Upload</button>
-                                        <button type="button" class="btn btn-secondary" id="removeLogoBtn" style="display: none;"><i class="fas fa-trash"></i> Remove</button>
+                                <div class="logo-compact">
+                                    <div class="logo-compact-row">
+                                        <div class="logo-compact-preview" id="cbLogoEditorCanvas">
+                                            <div class="logo-compact-placeholder" id="cbLogoEditorPlaceholder"><i class="fas fa-image"></i></div>
+                                            <img class="logo-compact-img" id="cbLogoEditorImage" alt="Cash Box Logo" draggable="false">
+                                        </div>
+                                        <div class="logo-compact-controls">
+                                            <div class="logo-compact-zoom">
+                                                <button type="button" class="logo-compact-btn" id="cbLogoZoomOut" title="Smaller"><i class="fas fa-minus"></i></button>
+                                                <span class="logo-compact-pct" id="cbLogoEditorInfo">100%</span>
+                                                <button type="button" class="logo-compact-btn" id="cbLogoZoomIn" title="Bigger"><i class="fas fa-plus"></i></button>
+                                            </div>
+                                            <div class="logo-compact-actions">
+                                                <input type="file" id="cbLogoFileInput" accept="image/*" style="display:none;">
+                                                <button type="button" class="btn btn-secondary btn-small" id="cbLogoUploadBtn"><i class="fas fa-upload"></i> Upload</button>
+                                                <button type="button" class="btn btn-secondary btn-small" id="cbLogoRemoveBtn"><i class="fas fa-trash"></i> Remove</button>
+                                            </div>
+                                            <div class="logo-compact-hint">1200×600px PNG/JPG</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -478,6 +491,73 @@ let displayOptions = { ...QUICK_PRESET };
 const LOGO_SCALE_KEY = 'spendnote.receipt.logoScale.v1';
 const LOGO_ALIGN_KEY = 'spendnote.receipt.logoAlign.v1';
 const LOGO_POSITION_KEY = 'spendnote.receipt.logoPosition.v1';
+const LOGO_SETTINGS_MIN_SCALE = 0.5;
+const LOGO_SETTINGS_MAX_SCALE = 3.0;
+
+function clampLogoScale(value) {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return 1;
+    return Math.round(Math.min(LOGO_SETTINGS_MAX_SCALE, Math.max(LOGO_SETTINGS_MIN_SCALE, n)) * 100) / 100;
+}
+
+function normalizeLogoSettings(value) {
+    const src = (value && typeof value === 'object') ? value : {};
+    return {
+        scale: clampLogoScale(src.scale),
+        x: Number.isFinite(Number(src.x)) ? Math.round(Number(src.x) * 100) / 100 : 0,
+        y: Number.isFinite(Number(src.y)) ? Math.round(Number(src.y) * 100) / 100 : 0
+    };
+}
+
+function getCashBoxLogoSettingsStorageKey(cashBoxId) {
+    const id = String(cashBoxId || '').trim();
+    if (!id) return '';
+    return `spendnote.cashBox.${id}.logoSettings.v1`;
+}
+
+function readStoredCashBoxLogoSettings(cashBoxId, includeGlobalFallback = true) {
+    const key = getCashBoxLogoSettingsStorageKey(cashBoxId);
+    if (key) {
+        try {
+            const raw = localStorage.getItem(key);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed && typeof parsed === 'object') {
+                    return normalizeLogoSettings(parsed);
+                }
+            }
+        } catch (_) {}
+    }
+
+    if (!includeGlobalFallback) {
+        return normalizeLogoSettings(null);
+    }
+
+    const fallback = { scale: 1, x: 0, y: 0 };
+    try {
+        const s = parseFloat(localStorage.getItem(LOGO_SCALE_KEY) || '1');
+        if (Number.isFinite(s)) fallback.scale = s;
+    } catch (_) {}
+
+    try {
+        const rawPos = localStorage.getItem(LOGO_POSITION_KEY);
+        if (rawPos) {
+            const p = JSON.parse(rawPos);
+            if (Number.isFinite(Number(p?.x))) fallback.x = Number(p.x);
+            if (Number.isFinite(Number(p?.y))) fallback.y = Number(p.y);
+        }
+    } catch (_) {}
+
+    return normalizeLogoSettings(fallback);
+}
+
+function writeStoredCashBoxLogoSettings(cashBoxId, settings) {
+    const key = getCashBoxLogoSettingsStorageKey(cashBoxId);
+    if (!key) return;
+    try {
+        localStorage.setItem(key, JSON.stringify(normalizeLogoSettings(settings)));
+    } catch (_) {}
+}
 
 let currentFormat = 'a4';
 let currentZoom = 0.6;
@@ -521,9 +601,20 @@ function buildReceiptUrl(format) {
     } catch (e) {}
 
     try {
-        const storedScale = parseFloat(localStorage.getItem(LOGO_SCALE_KEY) || '1');
-        if (Number.isFinite(storedScale) && storedScale > 0) {
-            params.append('logoScale', String(storedScale));
+        const keyId = String(currentCashBoxData?.id || '').trim();
+        const logoSettings = (typeof window.getCashBoxLogoSettings === 'function')
+            ? window.getCashBoxLogoSettings()
+            : readStoredCashBoxLogoSettings(keyId, true);
+
+        const scale = Number(logoSettings?.scale);
+        if (Number.isFinite(scale) && scale > 0) {
+            params.append('logoScale', String(scale));
+        }
+        if (Number.isFinite(Number(logoSettings?.x))) {
+            params.append('logoX', String(Number(logoSettings.x)));
+        }
+        if (Number.isFinite(Number(logoSettings?.y))) {
+            params.append('logoY', String(Number(logoSettings.y)));
         }
     } catch (e) {}
 
@@ -534,15 +625,6 @@ function buildReceiptUrl(format) {
         }
     } catch (e) {}
 
-    try {
-        const storedPos = localStorage.getItem(LOGO_POSITION_KEY);
-        if (storedPos) {
-            const p = JSON.parse(storedPos);
-            if (Number.isFinite(p.x)) params.append('logoX', String(p.x));
-            if (Number.isFinite(p.y)) params.append('logoY', String(p.y));
-        }
-    } catch (e) {}
-    
     // Dummy data params
     params.append('demoCompany', DUMMY_PROFILE.company_name);
     params.append('demoAddress', DUMMY_PROFILE.address);
@@ -743,59 +825,153 @@ document.getElementById('zoomResetBtn')?.addEventListener('click', resetZoom);
 
 // ===== CASH BOX LOGO (Pro Options) =====
 // This logo is cash-box-specific, stored in DB (cash_box_logo_url).
-// User Settings logo (localStorage) is the global default fallback.
+// Logo editor behavior mirrors User Settings (upload + zoom + drag).
 let pendingCashBoxLogo = null; // null = no change, '' = removed, 'data:...' = new logo
 let loadedCashBoxLogo = '';
+let pendingCashBoxLogoSettings = null;
+let loadedCashBoxLogoSettings = normalizeLogoSettings(null);
 
-const logoInput = document.getElementById('logoInput');
-const uploadLogoBtn = document.getElementById('uploadLogoBtn');
-const removeLogoBtn = document.getElementById('removeLogoBtn');
-const logoPreview = document.getElementById('logoPreview');
-const logoPreviewImg = document.getElementById('logoPreviewImg');
+const cbLogoCanvas = document.getElementById('cbLogoEditorCanvas');
+const cbLogoImage = document.getElementById('cbLogoEditorImage');
+const cbLogoInfo = document.getElementById('cbLogoEditorInfo');
+const cbLogoFileInput = document.getElementById('cbLogoFileInput');
+const cbLogoUploadBtn = document.getElementById('cbLogoUploadBtn');
+const cbLogoRemoveBtn = document.getElementById('cbLogoRemoveBtn');
+const cbLogoZoomIn = document.getElementById('cbLogoZoomIn');
+const cbLogoZoomOut = document.getElementById('cbLogoZoomOut');
 
-function showCashBoxLogo(dataUrl) {
-    if (dataUrl && logoPreviewImg && logoPreview && removeLogoBtn) {
-        logoPreviewImg.src = dataUrl;
-        logoPreview.classList.add('visible');
-        removeLogoBtn.style.display = 'inline-flex';
-    } else if (logoPreview && removeLogoBtn) {
-        if (logoPreviewImg) logoPreviewImg.src = '';
-        logoPreview.classList.remove('visible');
-        removeLogoBtn.style.display = 'none';
+let cbLogoDragActive = false;
+let cbLogoDragStartX = 0;
+let cbLogoDragStartY = 0;
+let cbLogoDragBaseSettings = normalizeLogoSettings(null);
+
+function getEffectiveCashBoxLogoSettings() {
+    if (pendingCashBoxLogoSettings && typeof pendingCashBoxLogoSettings === 'object') {
+        return normalizeLogoSettings(pendingCashBoxLogoSettings);
+    }
+    return normalizeLogoSettings(loadedCashBoxLogoSettings);
+}
+
+function applyCashBoxLogoTransform() {
+    const settings = getEffectiveCashBoxLogoSettings();
+    if (cbLogoInfo) {
+        cbLogoInfo.textContent = `${Math.round(settings.scale * 100)}%`;
+    }
+    if (cbLogoImage) {
+        cbLogoImage.style.transform = `translate(${settings.x}px, ${settings.y}px) scale(${settings.scale})`;
     }
 }
 
-uploadLogoBtn?.addEventListener('click', () => logoInput?.click());
-
-logoInput?.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml'];
-    if (!validTypes.includes(file.type)) {
-        showAlert('Please upload a PNG, JPG, or SVG file.', { iconType: 'warning' });
-        return;
+function setCashBoxLogoSettings(nextSettings, markAsPending = true, reload = true) {
+    const normalized = normalizeLogoSettings(nextSettings);
+    if (markAsPending) {
+        pendingCashBoxLogoSettings = normalized;
+    } else {
+        loadedCashBoxLogoSettings = normalized;
+        pendingCashBoxLogoSettings = null;
     }
-    
+
+    applyCashBoxLogoTransform();
+    if (reload) reloadIframe();
+}
+
+function showCashBoxLogo(dataUrl) {
+    const value = String(dataUrl || '').trim();
+    if (!cbLogoCanvas || !cbLogoImage) return;
+
+    if (value) {
+        cbLogoImage.src = value;
+        cbLogoCanvas.classList.add('has-logo');
+    } else {
+        cbLogoImage.removeAttribute('src');
+        cbLogoCanvas.classList.remove('has-logo');
+    }
+
+    applyCashBoxLogoTransform();
+}
+
+cbLogoUploadBtn?.addEventListener('click', () => {
+    if (!cbLogoFileInput) return;
+    try { cbLogoFileInput.value = ''; } catch (_) {}
+    cbLogoFileInput.click();
+});
+
+cbLogoFileInput?.addEventListener('change', function(e) {
+    const file = e.target?.files?.[0];
+    if (!file) return;
+
     if (file.size > 2 * 1024 * 1024) {
         showAlert('File size must be less than 2MB.', { iconType: 'warning' });
+        try { e.target.value = ''; } catch (_) {}
         return;
     }
-    
+
     const reader = new FileReader();
     reader.onload = function(event) {
-        pendingCashBoxLogo = event.target.result;
-        showCashBoxLogo(pendingCashBoxLogo);
+        const dataUrl = String(event?.target?.result || '').trim();
+        if (!/^data:image\//i.test(dataUrl)) {
+            showAlert('Please upload a valid image file.', { iconType: 'warning' });
+            return;
+        }
+
+        pendingCashBoxLogo = dataUrl;
+        pendingCashBoxLogoSettings = normalizeLogoSettings({ scale: 1, x: 0, y: 0 });
+        showCashBoxLogo(dataUrl);
         reloadIframe();
     };
     reader.readAsDataURL(file);
+    try { e.target.value = ''; } catch (_) {}
 });
 
-removeLogoBtn?.addEventListener('click', () => {
+cbLogoRemoveBtn?.addEventListener('click', () => {
     pendingCashBoxLogo = ''; // empty string = explicitly removed
-    showCashBoxLogo(null);
-    if (logoInput) logoInput.value = '';
+    pendingCashBoxLogoSettings = normalizeLogoSettings({ scale: 1, x: 0, y: 0 });
+    showCashBoxLogo('');
+    if (cbLogoFileInput) cbLogoFileInput.value = '';
     reloadIframe();
+});
+
+const updateCashBoxLogoScale = (delta) => {
+    if (!cbLogoCanvas || !cbLogoCanvas.classList.contains('has-logo')) return;
+    const current = getEffectiveCashBoxLogoSettings();
+    setCashBoxLogoSettings({
+        ...current,
+        scale: clampLogoScale(Number(current.scale) + delta)
+    }, true, true);
+};
+
+cbLogoZoomIn?.addEventListener('click', () => updateCashBoxLogoScale(0.1));
+cbLogoZoomOut?.addEventListener('click', () => updateCashBoxLogoScale(-0.1));
+
+if (cbLogoCanvas) {
+    cbLogoCanvas.style.cursor = 'grab';
+    cbLogoCanvas.addEventListener('mousedown', (event) => {
+        if (!cbLogoCanvas.classList.contains('has-logo')) return;
+        cbLogoDragActive = true;
+        cbLogoDragStartX = event.clientX;
+        cbLogoDragStartY = event.clientY;
+        cbLogoDragBaseSettings = getEffectiveCashBoxLogoSettings();
+        cbLogoCanvas.style.cursor = 'grabbing';
+        event.preventDefault();
+    });
+}
+
+document.addEventListener('mousemove', (event) => {
+    if (!cbLogoDragActive) return;
+    const nextSettings = {
+        ...cbLogoDragBaseSettings,
+        x: cbLogoDragBaseSettings.x + (event.clientX - cbLogoDragStartX),
+        y: cbLogoDragBaseSettings.y + (event.clientY - cbLogoDragStartY)
+    };
+    pendingCashBoxLogoSettings = normalizeLogoSettings(nextSettings);
+    applyCashBoxLogoTransform();
+});
+
+document.addEventListener('mouseup', () => {
+    if (!cbLogoDragActive) return;
+    cbLogoDragActive = false;
+    if (cbLogoCanvas) cbLogoCanvas.style.cursor = 'grab';
+    setCashBoxLogoSettings(getEffectiveCashBoxLogoSettings(), true, true);
 });
 
 // ===== INIT =====
@@ -816,8 +992,11 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // Called from cash-box-settings-data.js after loading cash box data
 window.setCashBoxLogo = function(dataUrl) {
-    loadedCashBoxLogo = dataUrl || '';
+    loadedCashBoxLogo = String(dataUrl || '').trim();
     pendingCashBoxLogo = null;
+    const keyId = String(currentCashBoxData?.id || '').trim();
+    loadedCashBoxLogoSettings = readStoredCashBoxLogoSettings(keyId, true);
+    pendingCashBoxLogoSettings = null;
     showCashBoxLogo(loadedCashBoxLogo);
 };
 
@@ -832,6 +1011,26 @@ window.getCashBoxLogo = function() {
 window.getCashBoxLogoPendingState = function() {
     return pendingCashBoxLogo;
 };
+
+window.getCashBoxLogoSettings = function() {
+    return { ...getEffectiveCashBoxLogoSettings() };
+};
+
+window.getCashBoxLogoSettingsPendingState = function() {
+    return pendingCashBoxLogoSettings ? { ...pendingCashBoxLogoSettings } : null;
+};
+
+window.persistCashBoxLogoSettings = function(cashBoxId) {
+    const keyId = String(cashBoxId || currentCashBoxData?.id || '').trim();
+    if (!keyId) return;
+    const settings = getEffectiveCashBoxLogoSettings();
+    writeStoredCashBoxLogoSettings(keyId, settings);
+    loadedCashBoxLogoSettings = normalizeLogoSettings(settings);
+    pendingCashBoxLogoSettings = null;
+};
+
+loadedCashBoxLogoSettings = readStoredCashBoxLogoSettings('', true);
+applyCashBoxLogoTransform();
 
 // Cleanup temp logo keys on page leave
 window.addEventListener('beforeunload', () => {
@@ -851,6 +1050,6 @@ window.addEventListener('beforeunload', () => {
 <script src="assets/js/nav-loader.js?v=8"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=21"></script>
-<script src="assets/js/cash-box-settings-data.js?v=39"></script>
+<script src="assets/js/cash-box-settings-data.js?v=40"></script>
 </body>
 </html>

@@ -1049,6 +1049,13 @@ async function handleSave(e) {
             writeStoredCashBoxIdPrefix(currentCashBoxId, idPrefix);
             writeStoredReceiptText(currentCashBoxId, receiptTextValues);
             writeStoredReceiptVisibility(currentCashBoxId, receiptVisibilityValues);
+            try {
+                if (typeof window.persistCashBoxLogoSettings === 'function') {
+                    window.persistCashBoxLogoSettings(currentCashBoxId);
+                }
+            } catch (_) {
+                // ignore
+            }
 
             if (DEBUG) console.log('Cash box updated:', updatePayload.name);
             await showAlert('Cash box updated successfully!', { iconType: 'success' });
@@ -1082,6 +1089,13 @@ async function handleSave(e) {
                 writeStoredCashBoxIdPrefix(createdId, idPrefix);
                 writeStoredReceiptText(createdId, receiptTextValues);
                 writeStoredReceiptVisibility(createdId, receiptVisibilityValues);
+                try {
+                    if (typeof window.persistCashBoxLogoSettings === 'function') {
+                        window.persistCashBoxLogoSettings(createdId);
+                    }
+                } catch (_) {
+                    // ignore
+                }
             }
             
             if (DEBUG) console.log('Cash box created:', createPayload.name);

@@ -69,6 +69,55 @@ const QUICK_PRESET = {
         return txId;
     }
 
+    function readStoredCashBoxLogoSettings(cashBoxId) {
+        const keyId = String(cashBoxId || '').trim();
+        if (!keyId) return null;
+        try {
+            const raw = localStorage.getItem(`spendnote.cashBox.${keyId}.logoSettings.v1`);
+            if (!raw) return null;
+            const parsed = JSON.parse(raw);
+            return parsed && typeof parsed === 'object' ? parsed : null;
+        } catch (_) {
+            return null;
+        }
+    }
+
+    function resolveLogoRenderSettings(cashBoxId) {
+        const parseFinite = (value) => {
+            const n = Number(value);
+            return Number.isFinite(n) ? n : null;
+        };
+
+        const fromCashBox = readStoredCashBoxLogoSettings(cashBoxId) || null;
+        const scale = parseFinite(fromCashBox?.scale);
+        const x = parseFinite(fromCashBox?.x);
+        const y = parseFinite(fromCashBox?.y);
+
+        let fallbackScale = null;
+        let fallbackX = null;
+        let fallbackY = null;
+
+        try {
+            const s = parseFloat(localStorage.getItem(LOGO_SCALE_KEY) || '1');
+            fallbackScale = Number.isFinite(s) ? s : null;
+        } catch (_) {}
+
+        try {
+            const raw = localStorage.getItem(LOGO_POSITION_KEY);
+            if (raw) {
+                const p = JSON.parse(raw);
+                fallbackX = parseFinite(p?.x);
+                fallbackY = parseFinite(p?.y);
+            }
+        } catch (_) {}
+
+        return {
+            scale: (scale !== null && scale > 0) ? scale : fallbackScale,
+            x: x !== null ? x : fallbackX,
+            y: y !== null ? y : fallbackY
+        };
+    }
+
     function buildReceiptUrl(format, extraParams) {
         const baseUrls = {
             'a4': 'spendnote-receipt-a4-two-copies.html',
@@ -139,18 +188,17 @@ const QUICK_PRESET = {
         }
 
         try {
-            const storedScale = parseFloat(localStorage.getItem(LOGO_SCALE_KEY) || '1');
-            if (Number.isFinite(storedScale) && storedScale > 0) {
-                params.append('logoScale', String(storedScale));
-            }
-        } catch (_) {}
+            const keyId = String(txData?.cash_box?.id || txData?.cash_box_id || currentCashBoxId || '').trim();
+            const logoSettings = resolveLogoRenderSettings(keyId);
 
-        try {
-            const storedPos = localStorage.getItem(LOGO_POSITION_KEY);
-            if (storedPos) {
-                const p = JSON.parse(storedPos);
-                if (Number.isFinite(p.x)) params.append('logoX', String(p.x));
-                if (Number.isFinite(p.y)) params.append('logoY', String(p.y));
+            if (Number.isFinite(Number(logoSettings.scale)) && Number(logoSettings.scale) > 0) {
+                params.append('logoScale', String(Number(logoSettings.scale)));
+            }
+            if (Number.isFinite(Number(logoSettings.x))) {
+                params.append('logoX', String(Number(logoSettings.x)));
+            }
+            if (Number.isFinite(Number(logoSettings.y))) {
+                params.append('logoY', String(Number(logoSettings.y)));
             }
         } catch (_) {}
 
@@ -343,21 +391,6 @@ const QUICK_PRESET = {
         bindText(footerEl, 'footerNote');
 
         receiptLogoUrl = String(cb.cash_box_logo_url || profile?.account_logo_url || '').trim();
-
-        const storedLogo = (() => {
-            try { return localStorage.getItem(RECEIPT_LOGO_KEY) || ''; } catch (_) { return ''; }
-        })();
-        const resolvedLogo = storedLogo || receiptLogoUrl;
-        if (resolvedLogo) {
-            const logoPreview = document.getElementById('txLogoPreview');
-            const logoPreviewImg = document.getElementById('txLogoPreviewImg');
-            const removeLogoBtn = document.getElementById('txRemoveLogoBtn');
-            if (logoPreview && logoPreviewImg && removeLogoBtn) {
-                logoPreviewImg.src = resolvedLogo;
-                logoPreview.style.display = 'flex';
-                removeLogoBtn.style.display = 'inline-flex';
-            }
-        }
 
         const mapBool = (v, fallback) => {
             if (typeof v === 'boolean') return v;
@@ -1031,60 +1064,6 @@ html, body { height: auto !important; overflow: auto !important; }
                 });
             }
         })();
-
-        const logoInput = document.getElementById('txLogoInput');
-        const uploadLogoBtn = document.getElementById('txUploadLogoBtn');
-        const removeLogoBtn = document.getElementById('txRemoveLogoBtn');
-        const logoPreview = document.getElementById('txLogoPreview');
-        const logoPreviewImg = document.getElementById('txLogoPreviewImg');
-
-        const LOGO_STORAGE_KEY = 'spendnote.proLogoDataUrl';
-
-        const setLogoUi = (dataUrl) => {
-            if (!logoPreview || !logoPreviewImg || !removeLogoBtn) return;
-            if (dataUrl) {
-                logoPreviewImg.src = dataUrl;
-                logoPreview.style.display = 'flex';
-                removeLogoBtn.style.display = 'inline-flex';
-            } else {
-                logoPreviewImg.removeAttribute('src');
-                logoPreview.style.display = 'none';
-                removeLogoBtn.style.display = 'none';
-            }
-        };
-
-        try {
-            const storedLogo = localStorage.getItem(LOGO_STORAGE_KEY) || '';
-            if (storedLogo) setLogoUi(storedLogo);
-        } catch (_) {}
-
-        if (uploadLogoBtn && logoInput) {
-            uploadLogoBtn.addEventListener('click', () => logoInput.click());
-        }
-
-        if (logoInput) {
-            logoInput.addEventListener('change', () => {
-                const file = logoInput.files && logoInput.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = () => {
-                    const dataUrl = String(reader.result || '');
-                    if (dataUrl) {
-                        setLogoUi(dataUrl);
-                        try { localStorage.setItem(LOGO_STORAGE_KEY, dataUrl); } catch (_) {}
-                    }
-                };
-                reader.readAsDataURL(file);
-            });
-        }
-
-        if (removeLogoBtn) {
-            removeLogoBtn.addEventListener('click', () => {
-                if (logoInput) logoInput.value = '';
-                setLogoUi('');
-                try { localStorage.removeItem(LOGO_STORAGE_KEY); } catch (_) {}
-            });
-        }
 
         const storedMode = getStoredReceiptMode();
         if (storedMode) receiptMode = storedMode;
