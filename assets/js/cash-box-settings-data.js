@@ -646,6 +646,12 @@ async function handleSave(e) {
             return next;
         };
 
+        const stripSchemaDependentFields = (payload) => {
+            const next = stripReceiptLabelFields(payload);
+            delete next.cash_box_logo_url;
+            return next;
+        };
+
         const safeUpdatePayload = supportsReceiptLabels ? updatePayload : stripReceiptLabelFields(updatePayload);
 
         const createPayload = {
@@ -667,9 +673,9 @@ async function handleSave(e) {
             let updateResult = await db.cashBoxes.update(currentCashBoxId, safeUpdatePayload);
             if (updateResult && updateResult.success === false) {
                 const msg = String(updateResult.error || '').toLowerCase();
-                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_')) {
+                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url')) {
                     supportsReceiptLabels = false;
-                    updateResult = await db.cashBoxes.update(currentCashBoxId, stripReceiptLabelFields(updatePayload));
+                    updateResult = await db.cashBoxes.update(currentCashBoxId, stripSchemaDependentFields(updatePayload));
                 }
             }
             if (DEBUG) console.log('Update result:', updateResult);
@@ -691,10 +697,23 @@ async function handleSave(e) {
             await showAlert('Cash box updated successfully!', { iconType: 'success' });
         } else {
             // Create new cash box
-            const [maxSortOrder, result] = await Promise.all([
-                db.cashBoxes.getMaxSortOrder(),
-                db.cashBoxes.create(createPayload)
+            let createResult;
+            const [maxSortOrder] = await Promise.all([
+                db.cashBoxes.getMaxSortOrder()
             ]);
+            createResult = await db.cashBoxes.create(createPayload);
+            if (createResult && createResult.success === false) {
+                const msg = String(createResult.error || '').toLowerCase();
+                if (msg.includes('schema cache') || msg.includes('column') || msg.includes('receipt_') || msg.includes('cash_box_logo_url')) {
+                    supportsReceiptLabels = false;
+                    createResult = await db.cashBoxes.create({
+                        ...stripSchemaDependentFields(updatePayload),
+                        current_balance: 0,
+                        user_id: user.id
+                    });
+                }
+            }
+            const result = createResult;
             const nextSortOrder = Number(maxSortOrder || 0) + 1;
             if (DEBUG) console.log('Create result:', result);
             
