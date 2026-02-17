@@ -67,37 +67,9 @@ function loadNav(containerId = 'nav-container') {
         try {
             const avatarImg = container.querySelector('.user-avatar img');
             if (avatarImg) {
-                let customAvatar = null;
-                try {
-                    customAvatar = localStorage.getItem('spendnote.user.avatar.v1');
-                } catch (_) {
-                    customAvatar = null;
-                }
-
-                if (customAvatar) {
-                    avatarImg.src = customAvatar;
-                } else {
-                    let avatarColor = '#10b981';
-                    try {
-                        avatarColor = localStorage.getItem('spendnote.user.avatarColor.v1') || '#10b981';
-                    } catch (_) {
-                        avatarColor = '#10b981';
-                    }
-
-                    let initials = 'U';
-                    try {
-                        const fullName = String(localStorage.getItem('spendnote.user.fullName.v1') || '').trim();
-                        if (fullName) {
-                            const parts = fullName.split(/\s+/).filter(Boolean);
-                            const next = parts.slice(0, 2).map((p) => (p[0] || '').toUpperCase()).join('');
-                            initials = next || (fullName[0] || 'U').toUpperCase();
-                        }
-                    } catch (_) {
-                        initials = 'U';
-                    }
-                    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffffff" stroke="${avatarColor}" stroke-width="4"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="800" fill="${avatarColor}">${initials}</text></svg>`;
-                    avatarImg.src = `data:image/svg+xml,${encodeURIComponent(svg)}`;
-                }
+                const placeholderColor = '#94a3b8';
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffffff" stroke="${placeholderColor}" stroke-width="4"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="800" fill="${placeholderColor}">U</text></svg>`;
+                avatarImg.src = `data:image/svg+xml,${encodeURIComponent(svg)}`;
             }
         } catch (_) {
             // ignore
@@ -180,6 +152,10 @@ function initNavEvents() {
                 localStorage.removeItem('activeCashBoxColor');
                 localStorage.removeItem('activeCashBoxRgb');
                 localStorage.removeItem('activeCashBoxId');
+                localStorage.removeItem('spendnote.user.avatar.activeUserId.v1');
+                localStorage.removeItem('spendnote.user.avatar.v1');
+                localStorage.removeItem('spendnote.user.avatarColor.v1');
+                localStorage.removeItem('spendnote.user.avatarSettings.v1');
             } catch (_) {
                 // ignore
             }

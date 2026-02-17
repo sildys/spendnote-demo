@@ -122,8 +122,16 @@
     }
 
     function getCreatedByAvatarUrl(createdByName) {
+        let activeUserId = '';
         try {
-            const storedAvatar = localStorage.getItem('spendnote.user.avatar.v1');
+            activeUserId = String(localStorage.getItem('spendnote.user.avatar.activeUserId.v1') || '').trim();
+        } catch (_) {
+            activeUserId = '';
+        }
+
+        try {
+            const scopedAvatarKey = activeUserId ? `spendnote.user.avatar.v2.${activeUserId}` : '';
+            const storedAvatar = scopedAvatarKey ? localStorage.getItem(scopedAvatarKey) : '';
             if (storedAvatar) return storedAvatar;
         } catch (_) {
             // ignore
@@ -131,7 +139,8 @@
 
         let avatarColor = '#10b981';
         try {
-            avatarColor = localStorage.getItem('spendnote.user.avatarColor.v1') || '#10b981';
+            const scopedColorKey = activeUserId ? `spendnote.user.avatarColor.v2.${activeUserId}` : '';
+            avatarColor = (scopedColorKey ? localStorage.getItem(scopedColorKey) : '') || '#10b981';
         } catch (_) {
             // ignore
         }

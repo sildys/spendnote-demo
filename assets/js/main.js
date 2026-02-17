@@ -134,6 +134,13 @@ if (document.readyState === 'loading') {
     initSpendNoteNav();
 }
 
+const MAIN_AVATAR_SCOPE_USER_KEY = 'spendnote.user.avatar.activeUserId.v1';
+const MAIN_AVATAR_KEY_PREFIX = 'spendnote.user.avatar.v2';
+const MAIN_AVATAR_COLOR_KEY_PREFIX = 'spendnote.user.avatarColor.v2';
+const MAIN_LEGACY_AVATAR_KEY = 'spendnote.user.avatar.v1';
+const MAIN_LEGACY_AVATAR_COLOR_KEY = 'spendnote.user.avatarColor.v1';
+const MAIN_LEGACY_AVATAR_SETTINGS_KEY = 'spendnote.user.avatarSettings.v1';
+
 async function updateUserNav() {
     const nameEls = document.querySelectorAll('.user-name');
     const avatarImgs = document.querySelectorAll('.user-avatar img');
@@ -158,36 +165,58 @@ async function updateUserNav() {
         }
     }
 
+    const userId = String(user?.id || '').trim();
     const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Account';
-    const avatarUrl = user?.user_metadata?.avatar_url || null;
+    const avatarUrl = String(profile?.avatar_url || user?.user_metadata?.avatar_url || '').trim();
+    const avatarColorFromDb = String(profile?.avatar_color || user?.user_metadata?.avatar_color || '').trim();
+    const scopedAvatarKey = userId ? `${MAIN_AVATAR_KEY_PREFIX}.${userId}` : '';
+    const scopedAvatarColorKey = userId ? `${MAIN_AVATAR_COLOR_KEY_PREFIX}.${userId}` : '';
+
+    try {
+        if (userId) {
+            localStorage.setItem(MAIN_AVATAR_SCOPE_USER_KEY, userId);
+            localStorage.removeItem(MAIN_LEGACY_AVATAR_KEY);
+            localStorage.removeItem(MAIN_LEGACY_AVATAR_COLOR_KEY);
+            localStorage.removeItem(MAIN_LEGACY_AVATAR_SETTINGS_KEY);
+        } else {
+            localStorage.removeItem(MAIN_AVATAR_SCOPE_USER_KEY);
+        }
+    } catch (_) {}
 
     nameEls.forEach((el) => {
         el.textContent = displayName;
     });
 
     if (avatarImgs.length) {
-        // Check for custom avatar from localStorage
-        let customAvatar = null;
+        let customAvatar = '';
         try {
-            customAvatar = localStorage.getItem('spendnote.user.avatar.v1');
-        } catch {}
+            if (scopedAvatarKey) {
+                customAvatar = String(localStorage.getItem(scopedAvatarKey) || '').trim();
+            }
+        } catch (_) {}
+
+        if (!customAvatar && avatarUrl) {
+            customAvatar = avatarUrl;
+            try {
+                if (scopedAvatarKey) localStorage.setItem(scopedAvatarKey, customAvatar);
+            } catch (_) {}
+        }
 
         if (customAvatar) {
             avatarImgs.forEach((img) => {
                 img.src = customAvatar;
                 img.alt = displayName;
             });
-        } else if (avatarUrl) {
-            avatarImgs.forEach((img) => {
-                img.src = avatarUrl;
-                img.alt = displayName;
-            });
         } else {
-            // Get saved avatar color or default
             let avatarColor = '#10b981';
             try {
-                avatarColor = localStorage.getItem('spendnote.user.avatarColor.v1') || '#10b981';
-            } catch {}
+                if (avatarColorFromDb) {
+                    avatarColor = avatarColorFromDb;
+                    if (scopedAvatarColorKey) localStorage.setItem(scopedAvatarColorKey, avatarColor);
+                } else if (scopedAvatarColorKey) {
+                    avatarColor = localStorage.getItem(scopedAvatarColorKey) || '#10b981';
+                }
+            } catch (_) {}
 
             const initials = getInitials(displayName);
             const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffffff" stroke="${avatarColor}" stroke-width="4"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="800" fill="${avatarColor}">${initials}</text></svg>`;

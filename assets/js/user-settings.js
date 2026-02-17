@@ -15,18 +15,23 @@ const applyRoleBadge = (roleValue) => {
     roleEl.classList.add(normalized === 'owner' ? 'owner' : (normalized === 'admin' ? 'admin' : 'member'));
 };
 
-// Avatar localStorage + editor state
-const AVATAR_KEY = 'spendnote.user.avatar.v1';
-const AVATAR_COLOR_KEY = 'spendnote.user.avatarColor.v1';
-const AVATAR_SETTINGS_KEY = 'spendnote.user.avatarSettings.v1';
+// Avatar localStorage + editor state (scoped per authenticated user)
+const AVATAR_SCOPE_USER_KEY = 'spendnote.user.avatar.activeUserId.v1';
+const AVATAR_KEY_PREFIX = 'spendnote.user.avatar.v2';
+const AVATAR_COLOR_KEY_PREFIX = 'spendnote.user.avatarColor.v2';
+const AVATAR_SETTINGS_KEY_PREFIX = 'spendnote.user.avatarSettings.v2';
+const LEGACY_AVATAR_KEY = 'spendnote.user.avatar.v1';
+const LEGACY_AVATAR_COLOR_KEY = 'spendnote.user.avatarColor.v1';
+const LEGACY_AVATAR_SETTINGS_KEY = 'spendnote.user.avatarSettings.v1';
 const AVATAR_SCALE_STEP = 0.1;
-const AVATAR_MIN_SCALE = 1;
+const AVATAR_MIN_SCALE = 0.5;
 const AVATAR_MAX_SCALE = 3;
 const DEFAULT_AVATAR_SETTINGS = Object.freeze({ scale: 1, x: 0, y: 0 });
 const USER_FULLNAME_KEY = 'spendnote.user.fullName.v1';
 
 let avatarPersistTimer = null;
 let avatarProfileColumnsSupported = null;
+let avatarStorageUserId = '';
 let avatarDragActive = false;
 let avatarDragStartX = 0;
 let avatarDragStartY = 0;
@@ -49,11 +54,65 @@ const normalizeAvatarSettings = (settings) => {
     };
 };
 
-const readAvatar = () => { try { return localStorage.getItem(AVATAR_KEY); } catch { return null; } };
-const writeAvatar = (dataUrl) => { try { dataUrl ? localStorage.setItem(AVATAR_KEY, dataUrl) : localStorage.removeItem(AVATAR_KEY); } catch {} };
-const readAvatarSettings = () => {
+const getAvatarStorageUserId = () => {
+    const direct = String(avatarStorageUserId || '').trim();
+    if (direct) return direct;
     try {
-        const raw = localStorage.getItem(AVATAR_SETTINGS_KEY);
+        return String(localStorage.getItem(AVATAR_SCOPE_USER_KEY) || '').trim();
+    } catch {
+        return '';
+    }
+};
+
+const setAvatarStorageUserId = (userId) => {
+    avatarStorageUserId = String(userId || '').trim();
+    try {
+        if (avatarStorageUserId) {
+            localStorage.setItem(AVATAR_SCOPE_USER_KEY, avatarStorageUserId);
+        } else {
+            localStorage.removeItem(AVATAR_SCOPE_USER_KEY);
+        }
+    } catch (_) {}
+};
+
+const getScopedAvatarKey = (prefix) => {
+    const userId = getAvatarStorageUserId();
+    return userId ? `${prefix}.${userId}` : '';
+};
+
+const clearLegacyAvatarKeys = () => {
+    try {
+        localStorage.removeItem(LEGACY_AVATAR_KEY);
+        localStorage.removeItem(LEGACY_AVATAR_COLOR_KEY);
+        localStorage.removeItem(LEGACY_AVATAR_SETTINGS_KEY);
+    } catch (_) {}
+};
+
+const readAvatar = () => {
+    const key = getScopedAvatarKey(AVATAR_KEY_PREFIX);
+    if (!key) return null;
+    try {
+        return localStorage.getItem(key);
+    } catch {
+        return null;
+    }
+};
+
+const writeAvatar = (dataUrl) => {
+    const key = getScopedAvatarKey(AVATAR_KEY_PREFIX);
+    if (!key) return;
+    try {
+        if (dataUrl) localStorage.setItem(key, dataUrl);
+        else localStorage.removeItem(key);
+    } catch (_) {}
+    clearLegacyAvatarKeys();
+};
+
+const readAvatarSettings = () => {
+    const key = getScopedAvatarKey(AVATAR_SETTINGS_KEY_PREFIX);
+    if (!key) return normalizeAvatarSettings(DEFAULT_AVATAR_SETTINGS);
+    try {
+        const raw = localStorage.getItem(key);
         if (!raw) return normalizeAvatarSettings(DEFAULT_AVATAR_SETTINGS);
         return normalizeAvatarSettings(JSON.parse(raw));
     } catch {
@@ -62,11 +121,30 @@ const readAvatarSettings = () => {
 };
 const writeAvatarSettings = (settings) => {
     const normalized = normalizeAvatarSettings(settings);
-    try { localStorage.setItem(AVATAR_SETTINGS_KEY, JSON.stringify(normalized)); } catch {}
+    const key = getScopedAvatarKey(AVATAR_SETTINGS_KEY_PREFIX);
+    if (!key) return normalized;
+    try { localStorage.setItem(key, JSON.stringify(normalized)); } catch {}
+    clearLegacyAvatarKeys();
     return normalized;
 };
-const readAvatarColor = () => { try { return localStorage.getItem(AVATAR_COLOR_KEY) || '#10b981'; } catch { return '#10b981'; } };
-const writeAvatarColor = (color) => { try { localStorage.setItem(AVATAR_COLOR_KEY, color); } catch {} };
+const readAvatarColor = () => {
+    const key = getScopedAvatarKey(AVATAR_COLOR_KEY_PREFIX);
+    if (!key) return '#10b981';
+    try {
+        return localStorage.getItem(key) || '#10b981';
+    } catch {
+        return '#10b981';
+    }
+};
+const writeAvatarColor = (color) => {
+    const key = getScopedAvatarKey(AVATAR_COLOR_KEY_PREFIX);
+    if (!key) return;
+    try {
+        if (color) localStorage.setItem(key, color);
+        else localStorage.removeItem(key);
+    } catch (_) {}
+    clearLegacyAvatarKeys();
+};
 const writeUserFullName = (name) => {
     try {
         const v = String(name || '').trim();
@@ -270,7 +348,11 @@ const syncAvatarFromProfile = (profile) => {
         if (dbColor) {
             writeAvatarColor(dbColor);
         } else {
-            try { localStorage.removeItem(AVATAR_COLOR_KEY); } catch (_) {}
+            const colorKey = getScopedAvatarKey(AVATAR_COLOR_KEY_PREFIX);
+            try {
+                if (colorKey) localStorage.removeItem(colorKey);
+            } catch (_) {}
+            clearLegacyAvatarKeys();
         }
     }
 };
@@ -308,10 +390,12 @@ const loadProfile = async () => {
         avatarProfileColumnsSupported = true;
     }
     let mergedProfile = p ? { ...p } : null;
+    let authUser = null;
 
     try {
-        const user = await window.auth?.getCurrentUser?.({ force: true });
-        const meta = (user?.user_metadata && typeof user.user_metadata === 'object') ? user.user_metadata : null;
+        authUser = await window.auth?.getCurrentUser?.({ force: true });
+        setAvatarStorageUserId(authUser?.id || '');
+        const meta = (authUser?.user_metadata && typeof authUser.user_metadata === 'object') ? authUser.user_metadata : null;
         if (meta) {
             if (!mergedProfile) mergedProfile = {};
             if (!Object.prototype.hasOwnProperty.call(mergedProfile, 'avatar_url') && typeof meta.avatar_url === 'string') {
@@ -324,7 +408,13 @@ const loadProfile = async () => {
                 mergedProfile.avatar_color = meta.avatar_color;
             }
         }
-    } catch (_) {}
+    } catch (_) {
+        setAvatarStorageUserId('');
+    }
+
+    if (!authUser) {
+        setAvatarStorageUserId('');
+    }
 
     fillProfile(mergedProfile);
     // Sync DB logo to localStorage so it works on all devices
