@@ -264,7 +264,6 @@ body {
     align-items: center;
     justify-content: center;
     background: var(--surface-elevated);
-    border: 1px solid var(--border);
     flex-shrink: 0;
 }
 

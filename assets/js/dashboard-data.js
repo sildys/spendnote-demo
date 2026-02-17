@@ -272,7 +272,7 @@ function createDashboardTransactionsController(ctx) {
         if (isCurrentUserRow && viewerAvatar.avatarUrl) {
             return {
                 url: viewerAvatar.avatarUrl,
-                transform: buildAvatarTransform(viewerAvatar.avatarSettings, 32)
+                transform: ''
             };
         }
 
