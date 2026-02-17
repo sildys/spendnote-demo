@@ -452,16 +452,9 @@
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             background: #f0fdf4;
+            min-height: 420px;
         }
 
-        .hero-carousel::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(240, 253, 244, 0.96) 0%, rgba(220, 252, 231, 0.96) 100%);
-            pointer-events: none;
-            z-index: 0;
-        }
 
         .carousel-slide {
             display: none;
@@ -481,7 +474,6 @@
 
         .screenshot-slide {
             width: 100%;
-            aspect-ratio: 16/10;
             overflow: hidden;
             position: relative;
             background: #f8fafc;
@@ -489,24 +481,22 @@
 
         .screenshot-slide img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: top center;
+            height: auto;
             display: block;
+            object-position: top center;
+            position: relative;
+            z-index: 1;
         }
 
         .slide-caption {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            backdrop-filter: blur(10px);
+            position: relative;
             color: white;
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-md);
+            padding: 0.75rem 1.25rem;
             font-weight: 700;
-            font-size: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .carousel-slide:nth-child(1) .slide-caption {
@@ -522,13 +512,11 @@
         }
 
         .carousel-dots {
-            position: absolute;
-            bottom: 90px;
-            left: 50%;
-            transform: translateX(-50%);
             display: flex;
+            justify-content: center;
             gap: 8px;
-            z-index: 10;
+            padding: 0.5rem 0 0.75rem;
+            background: inherit;
         }
 
         .dot {
@@ -538,11 +526,11 @@
             background: rgba(255, 255, 255, 0.5);
             cursor: pointer;
             transition: all 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
         .dot:hover {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
         }
 
         .dot.active {
