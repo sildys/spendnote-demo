@@ -178,6 +178,30 @@ async function updateUserNav() {
         return;
     }
 
+    // Show cached avatar immediately (before auth) to avoid placeholder flash
+    if (avatarImgs.length) {
+        try {
+            const cachedUserId = String(localStorage.getItem(MAIN_AVATAR_SCOPE_USER_KEY) || '').trim();
+            const cachedAvatarKey = cachedUserId ? `${MAIN_AVATAR_KEY_PREFIX}.${cachedUserId}` : '';
+            const cachedAvatar = cachedAvatarKey ? String(localStorage.getItem(cachedAvatarKey) || '').trim() : '';
+            if (cachedAvatar) {
+                let cachedSettings = null;
+                const cachedSettingsKey = cachedUserId ? `${MAIN_AVATAR_SETTINGS_KEY_PREFIX}.${cachedUserId}` : '';
+                if (cachedSettingsKey) {
+                    const raw = localStorage.getItem(cachedSettingsKey);
+                    cachedSettings = raw ? JSON.parse(raw) : null;
+                }
+                avatarImgs.forEach((img) => {
+                    if (img.src && !img.src.startsWith('data:image/svg+xml')) return; // already has a real image
+                    img.src = cachedAvatar;
+                    const slotSize = Number(img?.clientWidth || img?.getBoundingClientRect?.().width || 40);
+                    img.style.transformOrigin = '50% 50%';
+                    img.style.transform = buildMainAvatarTransform(cachedSettings, slotSize);
+                });
+            }
+        } catch (_) {}
+    }
+
     let user = null;
     try {
         user = await window.auth.getCurrentUser();
