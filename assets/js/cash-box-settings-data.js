@@ -725,7 +725,7 @@ async function loadCashBoxData(id) {
         // Load cash-box-specific logo into Pro Options preview
         if (typeof window.setCashBoxLogo === 'function') {
             const dbLogo = String(cashBox.cash_box_logo_url || '').trim();
-            const storedLogo = readStoredCashBoxLogo(cashBoxId);
+            const storedLogo = readStoredCashBoxLogo(id);
             window.setCashBoxLogo(dbLogo || storedLogo || '');
         }
         
