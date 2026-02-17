@@ -568,6 +568,59 @@ async function loadDashboardData() {
             });
 
             const [cashBoxes] = await Promise.all([cashBoxesPromise]);
+
+            const getStoredOrderKey = (userId) => {
+                const uid = String(userId || '').trim();
+                if (!uid) return '';
+                return `spendnote.cashBoxOrder.${uid}.v1`;
+            };
+
+            const readStoredOrder = (userId) => {
+                try {
+                    const key = getStoredOrderKey(userId);
+                    if (!key) return [];
+                    const raw = localStorage.getItem(key);
+                    const parsed = raw ? JSON.parse(raw) : [];
+                    return Array.isArray(parsed)
+                        ? parsed.map((id) => String(id || '').trim()).filter(Boolean)
+                        : [];
+                } catch (_) {
+                    return [];
+                }
+            };
+
+            if (cashBoxes && cashBoxes.length > 0) {
+                let viewerUserId = '';
+                try {
+                    const user = await window.auth?.getCurrentUser?.();
+                    viewerUserId = String(user?.id || '').trim();
+                } catch (_) {
+                    viewerUserId = '';
+                }
+
+                const storedOrderIds = readStoredOrder(viewerUserId);
+                if (storedOrderIds.length > 0) {
+                    const rank = new Map(storedOrderIds.map((id, idx) => [id, idx]));
+                    cashBoxes.sort((a, b) => {
+                        const aId = String(a?.id || '');
+                        const bId = String(b?.id || '');
+                        const aRank = rank.has(aId) ? rank.get(aId) : Number.MAX_SAFE_INTEGER;
+                        const bRank = rank.has(bId) ? rank.get(bId) : Number.MAX_SAFE_INTEGER;
+                        if (aRank !== bRank) return aRank - bRank;
+
+                        const aSort = Number(a?.sort_order);
+                        const bSort = Number(b?.sort_order);
+                        const aSortRank = Number.isFinite(aSort) ? aSort : Number.MAX_SAFE_INTEGER;
+                        const bSortRank = Number.isFinite(bSort) ? bSort : Number.MAX_SAFE_INTEGER;
+                        if (aSortRank !== bSortRank) return aSortRank - bSortRank;
+
+                        const aTime = a?.created_at ? new Date(a.created_at).getTime() : 0;
+                        const bTime = b?.created_at ? new Date(b.created_at).getTime() : 0;
+                        if (aTime !== bTime) return aTime - bTime;
+                        return aId.localeCompare(bId);
+                    });
+                }
+            }
             
             if (cashBoxes && cashBoxes.length > 0) {
                 const savedActiveId = String(localStorage.getItem('activeCashBoxId') || '').trim();
