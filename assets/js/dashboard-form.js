@@ -496,7 +496,7 @@ function initTransactionForm() {
                     };
 
                     const params = new URLSearchParams();
-                    params.set('v', 'print-20260216-2248');
+                    params.set('v', 'print-20260217-0120');
                     if (createdId) params.set('txId', createdId);
                     params.set('bootstrap', '1');
 
@@ -636,18 +636,9 @@ function initTransactionForm() {
                             try { localStorage.setItem(cbKey, cbLogo); } catch (_) {}
                             params.set('logoKey', cbKey);
                         } else {
-                            const storedCbLogo = cbIdForDefaults
-                                ? String(localStorage.getItem(`spendnote.cashBox.${cbIdForDefaults}.logo.v1`) || '').trim()
-                                : '';
-                            if (storedCbLogo) {
-                                const cbKey = `spendnote.cbLogo.${cbIdForDefaults || 'temp'}`;
-                                try { localStorage.setItem(cbKey, storedCbLogo); } catch (_) {}
-                                params.set('logoKey', cbKey);
-                            } else {
-                                const storedLogo = localStorage.getItem('spendnote.proLogoDataUrl') || '';
-                                if (storedLogo) {
-                                    params.set('logoKey', 'spendnote.proLogoDataUrl');
-                                }
+                            const storedLogo = localStorage.getItem('spendnote.proLogoDataUrl') || '';
+                            if (storedLogo) {
+                                params.set('logoKey', 'spendnote.proLogoDataUrl');
                             }
                         }
                     } catch (_) {

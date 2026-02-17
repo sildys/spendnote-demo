@@ -1123,13 +1123,9 @@ if (urlParams.get('signatures') === '0') {
         document.querySelectorAll('.void-watermark').forEach((el) => (el.style.display = shouldShowVoid ? 'block' : 'none'));
 
         try {
-          const hasCashBoxSequence = (
-            tx.cash_box?.sequence_number !== undefined && tx.cash_box?.sequence_number !== null
-          ) || (
-            tx.cash_box_sequence !== undefined && tx.cash_box_sequence !== null
-          );
-          if ((!tx.cash_box || !hasCashBoxSequence) && tx.cash_box_id && window.db?.cashBoxes?.getById) {
-            tx.cash_box = await window.db.cashBoxes.getById(tx.cash_box_id);
+          if (tx.cash_box_id && window.db?.cashBoxes?.getById) {
+            const latestCashBox = await window.db.cashBoxes.getById(tx.cash_box_id);
+            if (latestCashBox) tx.cash_box = latestCashBox;
           }
         } catch (_) {}
 
@@ -1156,6 +1152,27 @@ if (urlParams.get('signatures') === '0') {
         } catch (_) {
           profile = null;
         }
+
+        try {
+          if (urlParams.get('logo') !== '0') {
+            const preferredLogo = safeText(tx?.cash_box?.cash_box_logo_url || profile?.account_logo_url, '');
+            if (preferredLogo) {
+              const currentLogo = document.querySelector('.logo');
+              if (currentLogo) {
+                if (String(currentLogo.tagName || '').toLowerCase() === 'img') {
+                  currentLogo.src = preferredLogo;
+                  currentLogo.alt = 'Company logo';
+                } else if (currentLogo.parentNode) {
+                  const img = document.createElement('img');
+                  img.className = 'logo';
+                  img.alt = 'Company logo';
+                  img.src = preferredLogo;
+                  currentLogo.parentNode.replaceChild(img, currentLogo);
+                }
+              }
+            }
+          }
+        } catch (_) {}
 
         const companyName = safeText(profile?.company_name || profile?.full_name || tx.cash_box_name_snapshot || tx.cash_box?.name, '—');
         const companyAddress = safeText(profile?.address, '');

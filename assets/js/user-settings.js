@@ -15,12 +15,56 @@ const applyRoleBadge = (roleValue) => {
     roleEl.classList.add(normalized === 'owner' ? 'owner' : (normalized === 'admin' ? 'admin' : 'member'));
 };
 
-// Avatar localStorage
+// Avatar localStorage + editor state
 const AVATAR_KEY = 'spendnote.user.avatar.v1';
 const AVATAR_COLOR_KEY = 'spendnote.user.avatarColor.v1';
+const AVATAR_SETTINGS_KEY = 'spendnote.user.avatarSettings.v1';
+const AVATAR_SCALE_STEP = 0.1;
+const AVATAR_MIN_SCALE = 1;
+const AVATAR_MAX_SCALE = 3;
+const DEFAULT_AVATAR_SETTINGS = Object.freeze({ scale: 1, x: 0, y: 0 });
 const USER_FULLNAME_KEY = 'spendnote.user.fullName.v1';
+
+let avatarPersistTimer = null;
+let avatarProfileColumnsSupported = null;
+let avatarDragActive = false;
+let avatarDragStartX = 0;
+let avatarDragStartY = 0;
+let avatarDragBaseX = 0;
+let avatarDragBaseY = 0;
+
+const clampAvatarScale = (value) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return DEFAULT_AVATAR_SETTINGS.scale;
+    const clamped = Math.max(AVATAR_MIN_SCALE, Math.min(AVATAR_MAX_SCALE, n));
+    return Math.round(clamped * 100) / 100;
+};
+
+const normalizeAvatarSettings = (settings) => {
+    const src = settings && typeof settings === 'object' ? settings : DEFAULT_AVATAR_SETTINGS;
+    return {
+        scale: clampAvatarScale(src.scale),
+        x: Number.isFinite(Number(src.x)) ? Number(src.x) : 0,
+        y: Number.isFinite(Number(src.y)) ? Number(src.y) : 0
+    };
+};
+
 const readAvatar = () => { try { return localStorage.getItem(AVATAR_KEY); } catch { return null; } };
 const writeAvatar = (dataUrl) => { try { dataUrl ? localStorage.setItem(AVATAR_KEY, dataUrl) : localStorage.removeItem(AVATAR_KEY); } catch {} };
+const readAvatarSettings = () => {
+    try {
+        const raw = localStorage.getItem(AVATAR_SETTINGS_KEY);
+        if (!raw) return normalizeAvatarSettings(DEFAULT_AVATAR_SETTINGS);
+        return normalizeAvatarSettings(JSON.parse(raw));
+    } catch {
+        return normalizeAvatarSettings(DEFAULT_AVATAR_SETTINGS);
+    }
+};
+const writeAvatarSettings = (settings) => {
+    const normalized = normalizeAvatarSettings(settings);
+    try { localStorage.setItem(AVATAR_SETTINGS_KEY, JSON.stringify(normalized)); } catch {}
+    return normalized;
+};
 const readAvatarColor = () => { try { return localStorage.getItem(AVATAR_COLOR_KEY) || '#10b981'; } catch { return '#10b981'; } };
 const writeAvatarColor = (color) => { try { localStorage.setItem(AVATAR_COLOR_KEY, color); } catch {} };
 const writeUserFullName = (name) => {
@@ -31,16 +75,117 @@ const writeUserFullName = (name) => {
     } catch (_) {}
 };
 
-const persistAvatarColor = async (color) => {
+const isMissingAvatarColumnError = (message) => {
+    const msg = String(message || '').toLowerCase();
+    if (!msg) return false;
+    const hasColumnSignal = msg.includes('column') || msg.includes('does not exist') || msg.includes('schema cache');
+    if (!hasColumnSignal) return false;
+    return msg.includes('avatar_url') || msg.includes('avatar_settings') || msg.includes('avatar_color');
+};
+
+const profileObjectHasAvatarColumns = (profile) => {
+    if (!profile || typeof profile !== 'object') return false;
+    return Object.prototype.hasOwnProperty.call(profile, 'avatar_url')
+        || Object.prototype.hasOwnProperty.call(profile, 'avatar_settings')
+        || Object.prototype.hasOwnProperty.call(profile, 'avatar_color');
+};
+
+const updateAuthAvatarMetadata = async (payload) => {
+    if (!window.supabaseClient?.auth?.updateUser) return false;
     try {
-        if (!window.db?.profiles?.update) return;
-        const result = await window.db.profiles.update({ avatar_color: color });
-        if (!result?.success) {
-            return;
+        const user = await window.auth?.getCurrentUser?.({ force: true });
+        const currentMeta = (user?.user_metadata && typeof user.user_metadata === 'object')
+            ? user.user_metadata
+            : {};
+        const nextMeta = { ...currentMeta };
+
+        if (Object.prototype.hasOwnProperty.call(payload, 'avatar_url')) {
+            nextMeta.avatar_url = payload.avatar_url || null;
         }
+        if (Object.prototype.hasOwnProperty.call(payload, 'avatar_settings')) {
+            nextMeta.avatar_settings = payload.avatar_settings || null;
+        }
+        if (Object.prototype.hasOwnProperty.call(payload, 'avatar_color')) {
+            nextMeta.avatar_color = payload.avatar_color || null;
+        }
+
+        const { data, error } = await window.supabaseClient.auth.updateUser({ data: nextMeta });
+        if (error) return false;
+
+        try {
+            if (window.auth?.__userCache) {
+                window.auth.__userCache.user = data?.user || window.auth.__userCache.user || null;
+                window.auth.__userCache.ts = Date.now();
+                window.auth.__userCache.promise = null;
+            }
+        } catch (_) {}
+
+        return true;
     } catch (_) {
-        // ignore (column may not exist)
+        return false;
     }
+};
+
+const persistAvatarPayload = async (payload) => {
+    let savedProfileRow = false;
+
+    if (avatarProfileColumnsSupported !== false && window.db?.profiles?.update) {
+        try {
+            const result = await window.db.profiles.update(payload);
+            if (result?.success) {
+                savedProfileRow = true;
+                avatarProfileColumnsSupported = true;
+                if (result.data && currentProfile) {
+                    currentProfile = { ...currentProfile, ...result.data };
+                }
+            } else if (isMissingAvatarColumnError(result?.error)) {
+                avatarProfileColumnsSupported = false;
+            }
+        } catch (err) {
+            if (isMissingAvatarColumnError(err?.message)) {
+                avatarProfileColumnsSupported = false;
+            }
+        }
+    }
+
+    const savedMetadata = await updateAuthAvatarMetadata(payload);
+    return savedProfileRow || savedMetadata;
+};
+
+const persistAvatarColor = async (color) => {
+    await persistAvatarPayload({ avatar_color: color || null });
+};
+
+const scheduleAvatarPersistence = (options = {}) => {
+    const immediate = Boolean(options && options.immediate);
+    const includeColor = Boolean(options && options.includeColor);
+
+    const persistNow = async () => {
+        const avatarDataUrl = String(readAvatar() || '').trim();
+        const payload = {
+            avatar_url: avatarDataUrl || null,
+            avatar_settings: avatarDataUrl ? normalizeAvatarSettings(readAvatarSettings()) : null
+        };
+        if (includeColor) {
+            payload.avatar_color = readAvatarColor();
+        }
+        await persistAvatarPayload(payload);
+    };
+
+    if (avatarPersistTimer) {
+        clearTimeout(avatarPersistTimer);
+        avatarPersistTimer = null;
+    }
+
+    if (immediate) {
+        persistNow().catch(() => {});
+        return;
+    }
+
+    avatarPersistTimer = setTimeout(() => {
+        avatarPersistTimer = null;
+        persistNow().catch(() => {});
+    }, 220);
 };
 
 // Logo management moved to logo-editor.js
@@ -58,34 +203,85 @@ const memberColors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#6
 const getMemberColor = (idx) => memberColors[idx % memberColors.length];
 
 // ===== PROFILE =====
+const applyAvatarTransform = () => {
+    const img = document.getElementById('avatarImg');
+    const pct = document.getElementById('avatarEditorInfo');
+    const settings = normalizeAvatarSettings(readAvatarSettings());
+    if (img) {
+        img.style.transform = `translate(${settings.x}px, ${settings.y}px) scale(${settings.scale})`;
+    }
+    if (pct) {
+        pct.textContent = `${Math.round(settings.scale * 100)}%`;
+    }
+};
+
 const applyAvatar = (fullName) => {
     const wrap = document.getElementById('avatarPreview');
     const img = document.getElementById('avatarImg');
     const initials = document.getElementById('avatarInitials');
+    const zoomInBtn = document.getElementById('avatarZoomIn');
+    const zoomOutBtn = document.getElementById('avatarZoomOut');
+    const pct = document.getElementById('avatarEditorInfo');
     if (!wrap || !img || !initials) return;
-    const stored = readAvatar();
+    const stored = String(readAvatar() || '').trim();
     const color = readAvatarColor();
+
     wrap.style.background = 'var(--surface)';
     wrap.style.borderColor = color;
     initials.style.color = color;
     initials.textContent = getInitials(fullName);
+
     if (stored) {
         wrap.classList.add('has-image');
-        img.src = stored;
+        if (img.src !== stored) {
+            img.src = stored;
+        }
+        applyAvatarTransform();
     } else {
+        wrap.classList.remove('dragging');
         wrap.classList.remove('has-image');
         img.removeAttribute('src');
+        img.style.transform = 'translate(0px, 0px) scale(1)';
+        if (pct) pct.textContent = '100%';
     }
+
+    if (zoomInBtn) zoomInBtn.disabled = !stored;
+    if (zoomOutBtn) zoomOutBtn.disabled = !stored;
     
     document.querySelectorAll('.avatar-color-swatch').forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.color === color);
     });
 };
 
+const syncAvatarFromProfile = (profile) => {
+    if (!profile || typeof profile !== 'object') return;
+
+    if (Object.prototype.hasOwnProperty.call(profile, 'avatar_url')) {
+        const dbAvatar = String(profile.avatar_url || '').trim();
+        writeAvatar(dbAvatar || null);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(profile, 'avatar_settings')) {
+        writeAvatarSettings(profile.avatar_settings || null);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(profile, 'avatar_color')) {
+        const dbColor = String(profile.avatar_color || '').trim();
+        if (dbColor) {
+            writeAvatarColor(dbColor);
+        } else {
+            try { localStorage.removeItem(AVATAR_COLOR_KEY); } catch (_) {}
+        }
+    }
+};
+
 // Logo functions moved to logo-editor.js
 
 const fillProfile = (p) => {
     currentProfile = p ? { ...p } : null;
+    if (profileObjectHasAvatarColumns(p)) {
+        avatarProfileColumnsSupported = true;
+    }
     const fullName = String(p?.full_name || '').trim();
     writeUserFullName(fullName);
     document.getElementById('profileFullName').value = fullName;
@@ -99,6 +295,7 @@ const fillProfile = (p) => {
     if (otherIdEl) otherIdEl.value = String(p?.phone || '');
     document.getElementById('receiptAddress').value = String(p?.address || '');
 
+    syncAvatarFromProfile(p);
     applyAvatar(fullName);
 
     window.refreshUserNav?.();
@@ -107,10 +304,32 @@ const fillProfile = (p) => {
 const loadProfile = async () => {
     if (!window.db?.profiles?.getCurrent) return;
     const p = await window.db.profiles.getCurrent();
-    fillProfile(p);
+    if (profileObjectHasAvatarColumns(p)) {
+        avatarProfileColumnsSupported = true;
+    }
+    let mergedProfile = p ? { ...p } : null;
+
+    try {
+        const user = await window.auth?.getCurrentUser?.({ force: true });
+        const meta = (user?.user_metadata && typeof user.user_metadata === 'object') ? user.user_metadata : null;
+        if (meta) {
+            if (!mergedProfile) mergedProfile = {};
+            if (!Object.prototype.hasOwnProperty.call(mergedProfile, 'avatar_url') && typeof meta.avatar_url === 'string') {
+                mergedProfile.avatar_url = meta.avatar_url;
+            }
+            if (!Object.prototype.hasOwnProperty.call(mergedProfile, 'avatar_settings') && meta.avatar_settings && typeof meta.avatar_settings === 'object') {
+                mergedProfile.avatar_settings = meta.avatar_settings;
+            }
+            if (!Object.prototype.hasOwnProperty.call(mergedProfile, 'avatar_color') && typeof meta.avatar_color === 'string') {
+                mergedProfile.avatar_color = meta.avatar_color;
+            }
+        }
+    } catch (_) {}
+
+    fillProfile(mergedProfile);
     // Sync DB logo to localStorage so it works on all devices
     if (window.LogoEditor?.loadFromProfile) {
-        window.LogoEditor.loadFromProfile(p);
+        window.LogoEditor.loadFromProfile(mergedProfile);
     }
 };
 
@@ -404,8 +623,41 @@ const updatePricing = () => {
     }
 };
 
+const ensureAvatarEditorControls = () => {
+    try {
+        const controls = document.querySelector('.profile-avatar-section .avatar-controls');
+        if (!controls) return;
+        const uploadRow = controls.querySelector('.avatar-upload-row');
+        if (!uploadRow) return;
+
+        let editRow = controls.querySelector('.avatar-edit-row');
+        if (!editRow) {
+            editRow = document.createElement('div');
+            editRow.className = 'avatar-edit-row';
+            editRow.innerHTML = `
+                <button type="button" class="avatar-edit-btn" id="avatarZoomOut" title="Smaller"><i class="fas fa-minus"></i></button>
+                <span class="avatar-edit-pct" id="avatarEditorInfo">100%</span>
+                <button type="button" class="avatar-edit-btn" id="avatarZoomIn" title="Bigger"><i class="fas fa-plus"></i></button>
+                <span class="avatar-edit-hint">Drag photo to position</span>
+            `;
+            uploadRow.insertAdjacentElement('afterend', editRow);
+        }
+
+        const avatarImg = document.getElementById('avatarImg');
+        if (avatarImg) avatarImg.setAttribute('draggable', 'false');
+    } catch (_) {
+        // ignore
+    }
+};
+
 // ===== INIT =====
-document.addEventListener('DOMContentLoaded', async () => {
+let userSettingsInitDone = false;
+const initUserSettingsPage = async () => {
+    if (userSettingsInitDone) return;
+    userSettingsInitDone = true;
+
+    ensureAvatarEditorControls();
+
     // Initialize logo editor immediately (must not depend on DB/network)
     if (window.LogoEditor) {
         window.LogoEditor.init();
@@ -437,26 +689,96 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.refreshUserNav?.();
     });
 
+    const avatarPreview = document.getElementById('avatarPreview');
+    const avatarImage = document.getElementById('avatarImg');
+
+    const updateAvatarScale = (delta) => {
+        if (!avatarPreview?.classList.contains('has-image')) return;
+        const current = normalizeAvatarSettings(readAvatarSettings());
+        writeAvatarSettings({
+            ...current,
+            scale: clampAvatarScale(Number(current.scale) + Number(delta || 0))
+        });
+        applyAvatarTransform();
+        scheduleAvatarPersistence();
+    };
+
+    document.getElementById('avatarZoomIn')?.addEventListener('click', () => updateAvatarScale(AVATAR_SCALE_STEP));
+    document.getElementById('avatarZoomOut')?.addEventListener('click', () => updateAvatarScale(-AVATAR_SCALE_STEP));
+
     // Avatar upload
-    document.getElementById('avatarUploadBtn')?.addEventListener('click', () => document.getElementById('avatarFileInput')?.click());
+    document.getElementById('avatarUploadBtn')?.addEventListener('click', () => {
+        const input = document.getElementById('avatarFileInput');
+        if (!input) return;
+        try { input.value = ''; } catch (_) {}
+        input.click();
+    });
     document.getElementById('avatarFileInput')?.addEventListener('change', (e) => {
         const file = e.target?.files?.[0];
         if (!file) return;
-        if (file.size > 2 * 1024 * 1024) { showAlert('Max avatar size is 2MB.', { iconType: 'warning' }); return; }
+        if (file.size > 2 * 1024 * 1024) {
+            showAlert('Max avatar size is 2MB.', { iconType: 'warning' });
+            try { e.target.value = ''; } catch (_) {}
+            return;
+        }
         const reader = new FileReader();
         reader.onload = () => {
-            const dataUrl = reader.result;
-            if (!dataUrl?.startsWith('data:image/')) { showAlert('Invalid image.', { iconType: 'error' }); return; }
+            const dataUrl = String(reader.result || '');
+            if (!dataUrl.startsWith('data:image/')) {
+                showAlert('Invalid image.', { iconType: 'error' });
+                return;
+            }
             writeAvatar(dataUrl);
+            writeAvatarSettings(DEFAULT_AVATAR_SETTINGS);
             applyAvatar(document.getElementById('profileFullName')?.value);
+            scheduleAvatarPersistence({ immediate: true });
             window.refreshUserNav?.();
         };
         reader.readAsDataURL(file);
+        try { e.target.value = ''; } catch (_) {}
     });
     document.getElementById('avatarRemoveBtn')?.addEventListener('click', () => {
         writeAvatar(null);
+        writeAvatarSettings(DEFAULT_AVATAR_SETTINGS);
         applyAvatar(document.getElementById('profileFullName')?.value);
+        scheduleAvatarPersistence({ immediate: true });
         window.refreshUserNav?.();
+    });
+
+    if (avatarPreview) {
+        avatarPreview.addEventListener('mousedown', (event) => {
+            if (!avatarPreview.classList.contains('has-image')) return;
+            avatarDragActive = true;
+            avatarDragStartX = event.clientX;
+            avatarDragStartY = event.clientY;
+            const current = normalizeAvatarSettings(readAvatarSettings());
+            avatarDragBaseX = current.x;
+            avatarDragBaseY = current.y;
+            avatarPreview.classList.add('dragging');
+            event.preventDefault();
+        });
+    }
+
+    document.addEventListener('mousemove', (event) => {
+        if (!avatarDragActive) return;
+        const next = normalizeAvatarSettings({
+            ...readAvatarSettings(),
+            x: avatarDragBaseX + (event.clientX - avatarDragStartX),
+            y: avatarDragBaseY + (event.clientY - avatarDragStartY)
+        });
+        writeAvatarSettings(next);
+        applyAvatarTransform();
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (!avatarDragActive) return;
+        avatarDragActive = false;
+        avatarPreview?.classList.remove('dragging');
+        scheduleAvatarPersistence();
+    });
+
+    avatarImage?.addEventListener('load', () => {
+        applyAvatarTransform();
     });
 
     // Profile form
@@ -746,4 +1068,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('manageBillingBtn')?.addEventListener('click', () => {
         showAlert('Manage Billing\n\nIn production: Opens Stripe customer portal to manage payment methods and view invoices.', { iconType: 'info' });
     });
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initUserSettingsPage().catch(() => {});
+    }, { once: true });
+} else {
+    initUserSettingsPage().catch(() => {});
+}
+
+window.addEventListener('pageshow', () => {
+    ensureAvatarEditorControls();
 });

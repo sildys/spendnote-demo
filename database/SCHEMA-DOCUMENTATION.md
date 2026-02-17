@@ -16,6 +16,9 @@ Extends Supabase Auth with additional user data and subscription info.
 - `phone` (TEXT)
 - `address` (TEXT)
 - `account_logo_url` (TEXT) - Default logo for receipts
+- `avatar_url` (TEXT) - Profile avatar image
+- `avatar_settings` (JSONB) - Profile avatar editor state `{scale,x,y}`
+- `avatar_color` (TEXT) - Monogram accent color
 - `subscription_tier` (TEXT) - 'free', 'standard', or 'pro'
 - `stripe_customer_id` (TEXT)
 - `stripe_subscription_id` (TEXT)

@@ -67,10 +67,22 @@
     height: 100%;
     object-fit: cover;
     display: none;
+    user-select: none;
+    pointer-events: none;
+    transform-origin: center center;
+    transition: transform 0.12s ease;
 }
 
 .avatar-preview-circle.has-image img {
     display: block;
+}
+
+.avatar-preview-circle.has-image {
+    cursor: grab;
+}
+
+.avatar-preview-circle.dragging {
+    cursor: grabbing;
 }
 
 .avatar-preview-circle.has-image span {
@@ -86,6 +98,52 @@
     display: flex;
     gap: 8px;
     margin-top: 16px;
+}
+
+.avatar-edit-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.avatar-edit-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.15s;
+}
+
+.avatar-edit-btn:hover:not(:disabled) {
+    border-color: var(--primary);
+    background: var(--bg);
+}
+
+.avatar-edit-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.avatar-edit-pct {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 36px;
+    text-align: center;
+}
+
+.avatar-edit-hint {
+    font-size: 11px;
+    color: var(--text-muted);
 }
 
 .avatar-color-row {

@@ -82,16 +82,6 @@ const QUICK_PRESET = {
         }
     }
 
-    function readStoredCashBoxLogo(cashBoxId) {
-        const keyId = String(cashBoxId || '').trim();
-        if (!keyId) return '';
-        try {
-            return String(localStorage.getItem(`spendnote.cashBox.${keyId}.logo.v1`) || '').trim();
-        } catch (_) {
-            return '';
-        }
-    }
-
     function resolveLogoRenderSettings(cashBoxId) {
         const parseFinite = (value) => {
             const n = Number(value);
@@ -135,7 +125,7 @@ const QUICK_PRESET = {
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260207-07');
+        params.append('v', 'receipt-20260217-0122');
         const currentTxId = getCurrentTxId();
         if (currentTxId) params.append('txId', currentTxId);
         params.append('bootstrap', '1');
@@ -400,9 +390,7 @@ const QUICK_PRESET = {
         bindText(receivedEl, 'receivedByLabel');
         bindText(footerEl, 'footerNote');
 
-        const cbLogoFromDb = String(cb.cash_box_logo_url || '').trim();
-        const cbStoredLogo = readStoredCashBoxLogo(cb?.id || currentCashBoxId || '');
-        receiptLogoUrl = cbLogoFromDb || cbStoredLogo || String(profile?.account_logo_url || '').trim();
+        receiptLogoUrl = String(cb.cash_box_logo_url || profile?.account_logo_url || '').trim();
 
         const mapBool = (v, fallback) => {
             if (typeof v === 'boolean') return v;
@@ -857,12 +845,14 @@ html, body { height: auto !important; overflow: auto !important; }
                     if (v) pdfParams.set(key, v);
                 }
 
-                let storedLogo = '';
-                try { storedLogo = localStorage.getItem(RECEIPT_LOGO_KEY) || ''; } catch (_) {}
-                if (storedLogo) {
-                    pdfParams.set('logoKey', RECEIPT_LOGO_KEY);
-                } else if (receiptLogoUrl) {
+                if (receiptLogoUrl) {
                     pdfParams.set('logoUrl', receiptLogoUrl);
+                } else {
+                    let storedLogo = '';
+                    try { storedLogo = localStorage.getItem(RECEIPT_LOGO_KEY) || ''; } catch (_) {}
+                    if (storedLogo) {
+                        pdfParams.set('logoKey', RECEIPT_LOGO_KEY);
+                    }
                 }
                 if (currentTxIsVoided) pdfParams.set('void', '1');
 

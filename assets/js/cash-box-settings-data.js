@@ -37,31 +37,6 @@ function normalizeCashBoxIdPrefix(value) {
     return up;
 }
 
-function readStoredCashBoxLogo(cashBoxId) {
-    try {
-        const key = getCashBoxLogoStorageKey(cashBoxId);
-        if (!key) return '';
-        return String(localStorage.getItem(key) || '').trim();
-    } catch (_) {
-        return '';
-    }
-}
-
-function writeStoredCashBoxLogo(cashBoxId, logoDataUrl) {
-    try {
-        const key = getCashBoxLogoStorageKey(cashBoxId);
-        if (!key) return;
-        const value = String(logoDataUrl || '').trim();
-        if (value) {
-            localStorage.setItem(key, value);
-        } else {
-            localStorage.removeItem(key);
-        }
-    } catch (_) {
-        // ignore
-    }
-}
-
 function isUuid(value) {
     try {
         if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
@@ -95,12 +70,6 @@ function getCashBoxIdPrefixStorageKey(cashBoxId) {
     const id = String(cashBoxId || '').trim();
     if (!id) return '';
     return `spendnote.cashBox.${id}.idPrefix.v1`;
-}
-
-function getCashBoxLogoStorageKey(cashBoxId) {
-    const id = String(cashBoxId || '').trim();
-    if (!id) return '';
-    return `spendnote.cashBox.${id}.logo.v1`;
 }
 
 function readStoredReceiptVisibility(cashBoxId) {
@@ -724,11 +693,8 @@ async function loadCashBoxData(id) {
 
         // Load cash-box-specific logo into Pro Options preview
         if (typeof window.setCashBoxLogo === 'function') {
-            const resolvedLogo = String(cashBox.cash_box_logo_url || '').trim() || readStoredCashBoxLogo(id) || '';
-            if (resolvedLogo) {
-                writeStoredCashBoxLogo(id, resolvedLogo);
-            }
-            window.setCashBoxLogo(resolvedLogo);
+            const dbLogo = String(cashBox.cash_box_logo_url || '').trim();
+            window.setCashBoxLogo(dbLogo);
         }
         
         if (DEBUG) console.log('Cash box data loaded:', cashBox.name);
@@ -914,6 +880,53 @@ async function handleSave(e) {
             ? window.getCashBoxLogoPendingState()
             : undefined;
 
+        const persistCashBoxLogoStrict = async (cashBoxId) => {
+            if (cbLogoPending === undefined || cbLogoPending === null) {
+                return { success: true };
+            }
+
+            const targetId = String(cashBoxId || '').trim();
+            if (!targetId) {
+                return { success: false, error: 'Missing cash box ID for logo save.' };
+            }
+
+            if (!supportsCashBoxLogo) {
+                return {
+                    success: false,
+                    error: 'Database schema does not support cash box logos (missing cash_box_logo_url column).'
+                };
+            }
+
+            const logoValue = String(cbLogoPending || '').trim();
+
+            const { data, error } = await window.supabaseClient
+                .from('cash_boxes')
+                .update({ cash_box_logo_url: logoValue || null })
+                .eq('id', targetId)
+                .select('id, cash_box_logo_url')
+                .maybeSingle();
+
+            if (error) {
+                return { success: false, error: error.message || 'Failed to save cash box logo.' };
+            }
+
+            if (!data?.id) {
+                return { success: false, error: 'Cash box logo update did not affect any rows.' };
+            }
+
+            const persistedValue = String(data.cash_box_logo_url || '').trim();
+            const expectedValue = logoValue;
+            if (persistedValue !== expectedValue) {
+                return { success: false, error: 'Cash box logo was not persisted in database.' };
+            }
+
+            if (typeof window.setCashBoxLogo === 'function') {
+                window.setCashBoxLogo(persistedValue);
+            }
+
+            return { success: true };
+        };
+
         const updatePayload = {
             name,
             currency,
@@ -1018,9 +1031,11 @@ async function handleSave(e) {
                 const hasReceiptShowError = msg.includes('receipt_show_');
                 let changed = false;
 
-                if (msg.includes('cash_box_logo_url') && supportsCashBoxLogo) {
-                    supportsCashBoxLogo = false;
-                    changed = true;
+                if (msg.includes('cash_box_logo_url')) {
+                    return {
+                        success: false,
+                        error: 'Database error: cash_box_logo_url column is missing or inaccessible. Please run the latest DB migration.'
+                    };
                 }
                 if (hasReceiptShowError) {
                     let visibilityChanged = false;
@@ -1084,10 +1099,12 @@ async function handleSave(e) {
             writeStoredCashBoxIdPrefix(currentCashBoxId, idPrefix);
             writeStoredReceiptText(currentCashBoxId, receiptTextValues);
             writeStoredReceiptVisibility(currentCashBoxId, receiptVisibilityValues);
-            if (cbLogoPending !== undefined) {
-                const nextLogo = (cbLogoPending !== null) ? cbLogoPending : (window.getCashBoxLogo?.() || '');
-                writeStoredCashBoxLogo(currentCashBoxId, nextLogo || '');
+
+            const logoSaveResult = await persistCashBoxLogoStrict(currentCashBoxId);
+            if (logoSaveResult && logoSaveResult.success === false) {
+                throw new Error(logoSaveResult.error || 'Failed to save cash box logo.');
             }
+
             try {
                 if (typeof window.persistCashBoxLogoSettings === 'function') {
                     window.persistCashBoxLogoSettings(currentCashBoxId);
@@ -1128,10 +1145,12 @@ async function handleSave(e) {
                 writeStoredCashBoxIdPrefix(createdId, idPrefix);
                 writeStoredReceiptText(createdId, receiptTextValues);
                 writeStoredReceiptVisibility(createdId, receiptVisibilityValues);
-                if (cbLogoPending !== undefined) {
-                    const nextLogo = (cbLogoPending !== null) ? cbLogoPending : (window.getCashBoxLogo?.() || '');
-                    writeStoredCashBoxLogo(createdId, nextLogo || '');
+
+                const logoSaveResult = await persistCashBoxLogoStrict(createdId);
+                if (logoSaveResult && logoSaveResult.success === false) {
+                    throw new Error(logoSaveResult.error || 'Failed to save cash box logo.');
                 }
+
                 try {
                     if (typeof window.persistCashBoxLogoSettings === 'function') {
                         window.persistCashBoxLogoSettings(createdId);

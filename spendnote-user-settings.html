@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=14">
-    <link rel="stylesheet" href="assets/css/user-settings.css?v=20260215-1936">
+    <link rel="stylesheet" href="assets/css/user-settings.css?v=20260217-0142">
 </head>
 <body>
 <div id="nav-container"></div>
@@ -40,7 +40,7 @@
                     <div class="profile-avatar-section">
                         <div class="avatar-preview-circle" id="avatarPreview">
                             <span id="avatarInitials">—</span>
-                            <img id="avatarImg" alt="Avatar">
+                            <img id="avatarImg" alt="Avatar" draggable="false">
                         </div>
                         <div class="avatar-controls">
                             <div class="avatar-color-row">
@@ -63,6 +63,12 @@
                                 <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
                                 <button type="button" class="btn btn-secondary btn-small" id="avatarUploadBtn"><i class="fas fa-upload"></i> Upload Photo</button>
                                 <button type="button" class="btn btn-secondary btn-small" id="avatarRemoveBtn"><i class="fas fa-trash"></i> Remove</button>
+                            </div>
+                            <div class="avatar-edit-row">
+                                <button type="button" class="avatar-edit-btn" id="avatarZoomOut" title="Smaller"><i class="fas fa-minus"></i></button>
+                                <span class="avatar-edit-pct" id="avatarEditorInfo">100%</span>
+                                <button type="button" class="avatar-edit-btn" id="avatarZoomIn" title="Bigger"><i class="fas fa-plus"></i></button>
+                                <span class="avatar-edit-hint">Drag photo to position</span>
                             </div>
                         </div>
                     </div>
@@ -417,7 +423,7 @@
 
 <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
 <script src="assets/js/logo-editor.js?v=20260215-2335"></script>
-<script src="assets/js/user-settings.js?v=20260215-2338"></script>
+<script src="assets/js/user-settings.js?v=20260217-0142"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-config.js?v=20260216-2236"></script>
 <script src="assets/js/auth-guard.js?v=20260213-1658"></script>
