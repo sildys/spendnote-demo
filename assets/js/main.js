@@ -185,20 +185,6 @@ async function updateUserNav() {
         user = null;
     }
 
-    if (!user) {
-        try {
-            const { data: { session } } = await window.supabaseClient?.auth?.getSession();
-            user = session?.user || null;
-            if (user && window.auth?.__userCache) {
-                window.auth.__userCache.user = user;
-                window.auth.__userCache.ts = Date.now();
-                window.auth.__userCache.promise = null;
-            }
-        } catch (_) {
-            user = null;
-        }
-    }
-
     let profile = null;
     if (user) {
         try {

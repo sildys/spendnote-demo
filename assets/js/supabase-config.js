@@ -749,45 +749,24 @@ var auth = {
         }
 
         auth.__userCache.promise = (async () => {
-            // Prefer local session first to avoid unnecessary /auth/v1/user network calls.
-            let sessionUser = null;
-            try {
-                const { data: { session } } = await supabaseClient.auth.getSession();
-                sessionUser = session?.user || null;
-            } catch (_) {
-                sessionUser = null;
-            }
-
-            if (sessionUser) {
-                auth.__userCache.user = sessionUser;
-                auth.__userCache.ts = now;
-                return sessionUser;
-            }
-
-            // No local session user. For non-force calls, stop here to avoid noisy retries.
-            if (!force) {
-                auth.__userCache.user = null;
-                auth.__userCache.ts = 0;
-                return null;
-            }
-
             try {
                 const { data: { user }, error } = await supabaseClient.auth.getUser();
                 if (error) {
+                    // Don't log "session missing" as error - it's expected when not logged in
                     if (!error.message?.includes('session') && window.SpendNoteDebug) {
                         console.error('Error getting user:', error);
                     }
                     auth.__userCache.user = null;
-                    auth.__userCache.ts = 0;
+                    auth.__userCache.ts = now;
                     return null;
                 }
-
                 auth.__userCache.user = user || null;
-                auth.__userCache.ts = user ? now : 0;
+                auth.__userCache.ts = now;
                 return auth.__userCache.user;
-            } catch (_) {
+            } catch (e) {
+                // Catch any unexpected errors silently
                 auth.__userCache.user = null;
-                auth.__userCache.ts = 0;
+                auth.__userCache.ts = now;
                 return null;
             }
         })();
