@@ -250,9 +250,8 @@ async function updateUserNav() {
             avatarImgs.forEach((img) => {
                 img.src = customAvatar;
                 img.alt = displayName;
-                const slotSize = Number(img?.clientWidth || img?.getBoundingClientRect?.().width || 40);
-                img.style.transformOrigin = '50% 50%';
-                img.style.transform = buildMainAvatarTransform(avatarSettings, slotSize);
+                img.style.transform = '';
+                img.style.transformOrigin = '';
             });
         } else {
             let avatarColor = '#10b981';
