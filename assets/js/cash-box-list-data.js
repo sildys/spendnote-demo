@@ -296,7 +296,18 @@ async function loadCashBoxList() {
                     const results = await Promise.all(updates);
                     const failed = results.find(r => r && r.success === false);
                     if (failed) {
-                        throw new Error(failed.error || 'Failed to save cash box order');
+                        const errText = String(failed.error || '');
+                        const isNoRowFallback = errText.includes('Cash box update was not applied (permission denied or row not found).');
+                        if (!isNoRowFallback) {
+                            throw new Error(failed.error || 'Failed to save cash box order');
+                        }
+
+                        // Known compatibility path: DB update response may return no rows,
+                        // but we still keep user order locally for a consistent UX.
+                        writeStoredOrder(viewerUserId, orderedIds);
+                        setOrderStatus('Saved locally');
+                        setTimeout(() => setOrderStatus(''), 1600);
+                        return;
                     }
 
                     setOrderStatus('Saved');
