@@ -37,6 +37,31 @@ function normalizeCashBoxIdPrefix(value) {
     return up;
 }
 
+function readStoredCashBoxLogo(cashBoxId) {
+    try {
+        const key = getCashBoxLogoStorageKey(cashBoxId);
+        if (!key) return '';
+        return String(localStorage.getItem(key) || '').trim();
+    } catch (_) {
+        return '';
+    }
+}
+
+function writeStoredCashBoxLogo(cashBoxId, logoDataUrl) {
+    try {
+        const key = getCashBoxLogoStorageKey(cashBoxId);
+        if (!key) return;
+        const value = String(logoDataUrl || '').trim();
+        if (!value) {
+            localStorage.removeItem(key);
+            return;
+        }
+        localStorage.setItem(key, value);
+    } catch (_) {
+        // ignore
+    }
+}
+
 function isUuid(value) {
     try {
         if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
@@ -70,6 +95,12 @@ function getCashBoxIdPrefixStorageKey(cashBoxId) {
     const id = String(cashBoxId || '').trim();
     if (!id) return '';
     return `spendnote.cashBox.${id}.idPrefix.v1`;
+}
+
+function getCashBoxLogoStorageKey(cashBoxId) {
+    const id = String(cashBoxId || '').trim();
+    if (!id) return '';
+    return `spendnote.cashBox.${id}.logo.v1`;
 }
 
 function readStoredReceiptVisibility(cashBoxId) {
@@ -694,7 +725,8 @@ async function loadCashBoxData(id) {
         // Load cash-box-specific logo into Pro Options preview
         if (typeof window.setCashBoxLogo === 'function') {
             const dbLogo = String(cashBox.cash_box_logo_url || '').trim();
-            window.setCashBoxLogo(dbLogo);
+            const storedLogo = readStoredCashBoxLogo(cashBoxId);
+            window.setCashBoxLogo(dbLogo || storedLogo || '');
         }
         
         if (DEBUG) console.log('Cash box data loaded:', cashBox.name);
@@ -891,10 +923,12 @@ async function handleSave(e) {
             }
 
             if (!supportsCashBoxLogo) {
-                return {
-                    success: false,
-                    error: 'Database schema does not support cash box logos (missing cash_box_logo_url column).'
-                };
+                const localLogo = String(cbLogoPending || '').trim();
+                writeStoredCashBoxLogo(targetId, localLogo);
+                if (typeof window.setCashBoxLogo === 'function') {
+                    window.setCashBoxLogo(localLogo);
+                }
+                return { success: true, localOnly: true };
             }
 
             const logoValue = String(cbLogoPending || '').trim();
@@ -907,6 +941,17 @@ async function handleSave(e) {
                 .maybeSingle();
 
             if (error) {
+                const errText = String(error?.message || '').toLowerCase();
+                const isMissingLogoColumn = errText.includes('cash_box_logo_url')
+                    && (errText.includes('column') || errText.includes('schema cache'));
+                if (isMissingLogoColumn) {
+                    supportsCashBoxLogo = false;
+                    writeStoredCashBoxLogo(targetId, logoValue);
+                    if (typeof window.setCashBoxLogo === 'function') {
+                        window.setCashBoxLogo(logoValue);
+                    }
+                    return { success: true, localOnly: true };
+                }
                 return { success: false, error: error.message || 'Failed to save cash box logo.' };
             }
 
@@ -923,6 +968,7 @@ async function handleSave(e) {
             if (typeof window.setCashBoxLogo === 'function') {
                 window.setCashBoxLogo(persistedValue);
             }
+            writeStoredCashBoxLogo(targetId, persistedValue);
 
             return { success: true };
         };
@@ -1032,10 +1078,10 @@ async function handleSave(e) {
                 let changed = false;
 
                 if (msg.includes('cash_box_logo_url')) {
-                    return {
-                        success: false,
-                        error: 'Database error: cash_box_logo_url column is missing or inaccessible. Please run the latest DB migration.'
-                    };
+                    if (supportsCashBoxLogo) {
+                        supportsCashBoxLogo = false;
+                        changed = true;
+                    }
                 }
                 if (hasReceiptShowError) {
                     let visibilityChanged = false;
