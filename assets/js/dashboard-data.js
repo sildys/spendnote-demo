@@ -55,6 +55,20 @@ let dashboardLoadPromise = null;
 
 let dashboardTxController = null;
 
+async function waitForDashboardAuthUser(maxMs = 3200) {
+    const start = Date.now();
+    while ((Date.now() - start) < maxMs) {
+        try {
+            const user = await window.auth?.getCurrentUser?.({ force: true });
+            if (user) return user;
+        } catch (_) {
+            // ignore
+        }
+        await new Promise((resolve) => setTimeout(resolve, 120));
+    }
+    return null;
+}
+
 function createDashboardTransactionsController(ctx) {
     const debug = Boolean(window.SpendNoteDebug);
 
@@ -560,6 +574,8 @@ async function loadDashboardData() {
             if (!swiperWrapper) return;
 
             const debug = Boolean(window.SpendNoteDebug);
+
+            await waitForDashboardAuthUser();
 
             const { hexToRgb, getIconClass, formatCurrency } = getSpendNoteHelpers();
 
