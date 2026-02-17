@@ -51,7 +51,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
-## Where we are now (last updated: 2026-02-18 late night)
+## Where we are now (last updated: 2026-02-18 late night / session 2)
 
 - 2026-02-18 thread summary (cash box + receipt fixes):
   - Cash Box Settings logo persistence is now schema-compatible:
@@ -138,7 +138,12 @@ If a chat thread freezes / context is lost: in the new thread say:
     - After signup/first valid session, auto-create a default USD Cash Box (starting balance: 0).
     - Goal: first receipt can be created in ~30 seconds with a ready-to-use USD cash box.
   - Tomorrow plan: landing polish + preview disclaimer UX + GA4 baseline + Google Search Console setup.
-- TODO (next session): verify and fix the auto-create Cash Box migration (`018_auto_create_default_cash_box.sql`) and any related code changes (Sonnet edits suspected incorrect).
+- TODO: verify and fix the auto-create Cash Box migration (`018_auto_create_default_cash_box.sql`) and any related code changes (Sonnet edits suspected incorrect).
+- TODO: remove fake `aggregateRating` from `index.html` JSON-LD before enabling indexing.
+- TODO: add `robots.txt` to repo root.
+- TODO: add contact email to landing footer (e.g. `hello@spendnote.app`).
+- TODO: desktop-only notice on landing preview banner + signup page.
+- TODO: beta acceptance checkbox on signup page.
  
  - GitHub repo is now: `https://github.com/sildys/spendnote` ✅
  - Local git `origin` points to the new repo ✅
@@ -224,39 +229,34 @@ If a chat thread freezes / context is lost: in the new thread say:
   - **Q1:** Include **Google OAuth signup/login** in the beta scope? (Yes/No)
 
 - **Beta Definition of Done (ship criteria)**
-  - [ ] Cloudflare Pages deploy from `main` is green
-  - [ ] Custom domain is live with SSL, canonical host decided and working
-  - [ ] Supabase Auth URL Configuration updated for the final domain (Site URL + Redirect URLs)
-  - [ ] Landing is public + indexable, and links to Terms + Privacy
-  - [ ] Signup/login works on production domain (email-confirm flow included)
-  - [ ] Beta disclaimer is visible and is explicitly accepted during signup
-  - [ ] Beta is clearly communicated as **desktop-only** on landing + signup
-  - [ ] Free beta mode active (unlimited during beta; 1 user + 1 cash box)
-  - [ ] Minimal client error logging is live (JS errors captured for signed-in users)
-  - [ ] Smoke test passes on production domain: auth, create transaction, receipt
+  - [x] Cloudflare Pages deploy from `main` is green
+  - [x] Custom domain is live with SSL, canonical host decided and working
+  - [x] Supabase Auth URL Configuration updated for the final domain (Site URL + Redirect URLs)
+  - [ ] Landing is public + indexable, and links to Terms + Privacy ← `noindex` still on, fake aggregateRating to remove
+  - [x] Signup/login works on production domain (email-confirm flow included)
+  - [ ] Beta disclaimer is visible and is **explicitly accepted** during signup ← preview banner exists on landing, but no checkbox on signup yet
+  - [ ] Beta is clearly communicated as **desktop-only** on landing + signup ← missing
+  - [ ] Free beta mode active (unlimited during beta; 1 user + 1 cash box) ← preview banner mentions 100 tx, but no enforcement yet
+  - [ ] Minimal client error logging is live (JS errors captured for signed-in users) ← not done
+  - [ ] Smoke test passes on production domain: auth, create transaction, receipt ← not formally done
 
 - **Week 1 (ship infrastructure + surfaces)**
-  - Cloudflare Pages: connect GitHub repo, production deploy on `main`
-  - Custom domain: `spendnote.app` (canonical host decision + DNS/SSL)
-  - Supabase Auth URL configuration:
-    - Site URL
-    - Additional Redirect URLs (for login/signup/OAuth)
+  - [x] Cloudflare Pages: connect GitHub repo, production deploy on `main`
+  - [x] Custom domain: `spendnote.app` (canonical host decision + DNS/SSL)
+  - [x] Supabase Auth URL configuration: Site URL + Additional Redirect URLs
   - Landing SEO baseline:
-    - `robots.txt`
-    - `sitemap.xml`
-    - Canonical + OG/Twitter meta
-  - Landing CTA: **Start free beta** → signup
-  - Legal pages wired everywhere:
-    - Terms + Privacy linked from landing/app
+    - [ ] `robots.txt` ← missing
+    - [x] `sitemap.xml` ← generated
+    - [x] Canonical + OG/Twitter meta ← done on index.html, pricing, faq
+  - [x] Landing CTA: **Start free beta** → signup ← "Start Free - No Card Required" button present
+  - [x] Legal pages wired everywhere: Terms + Privacy linked from footer
 
 - **Week 2 (beta safety + free beta mode)**
-  - Beta disclaimer + acceptance in signup UX (checkbox + link to Terms/Privacy)
-  - Beta communication: **desktop-only** (mobile/responsive not supported during beta) — show on landing + signup
-  - Terms/Privacy updated to reflect **beta/test period** (instability, data loss possibility, limitation of liability)
-  - Beta entitlements:
-    - Free is **unlimited during beta**
-    - Constraints remain: **1 user + 1 cash box**
-  - Smoke test checklist on `spendnote.app` (auth + create transaction + receipt)
+  - [ ] Beta disclaimer acceptance checkbox on signup (link to Terms/Privacy) ← not done
+  - [ ] Desktop-only notice on landing + signup ← not done
+  - [ ] Terms/Privacy updated to reflect beta/test period ← not verified
+  - [ ] Beta entitlements enforced (preview: 100 tx; free: 20 tx) ← banner text exists, no enforcement
+  - [ ] Smoke test checklist on `spendnote.app` (auth + create transaction + receipt)
 
 - **Deferred until after beta ship:** team management / invites / role management / responsive & mobile view (M1)
 
