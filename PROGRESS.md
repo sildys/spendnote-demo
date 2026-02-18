@@ -144,7 +144,7 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Slide-in entrance animations: hero text from left, mockup from right
   - 7s autoplay, fade transition, caption + dots in footer bar
   - Black border cropped from screenshot images (PowerShell)
-- TODO: verify and fix the auto-create Cash Box migration (`018_auto_create_default_cash_box.sql`) and any related code changes (Sonnet edits suspected incorrect).
+- ✅ Auto-create default Cash Box on signup: migration verified and working
 - TODO: remove fake `aggregateRating` from `index.html` JSON-LD before enabling indexing.
 - TODO: add `robots.txt` to repo root.
 - ✅ Contact emails live and working:
@@ -153,7 +153,7 @@ If a chat thread freezes / context is lost: in the new thread say:
   - `legal@spendnote.app` → Terms of Service
   - All `mailto:` links verified working
 - TODO: desktop-only notice on landing preview banner + signup page.
-- TODO: beta acceptance checkbox on signup page.
+- ✅ Beta acceptance checkbox on signup page: done
  
  - GitHub repo is now: `https://github.com/sildys/spendnote` ✅
  - Local git `origin` points to the new repo ✅
@@ -262,7 +262,7 @@ If a chat thread freezes / context is lost: in the new thread say:
   - [x] Legal pages wired everywhere: Terms + Privacy linked from footer
 
 - **Week 2 (beta safety + free beta mode)**
-  - [ ] Beta disclaimer acceptance checkbox on signup (link to Terms/Privacy) ← not done
+  - [x] Beta disclaimer acceptance checkbox on signup (link to Terms/Privacy)
   - [ ] Desktop-only notice on landing + signup ← not done
   - [ ] Terms/Privacy updated to reflect beta/test period ← not verified
   - [ ] Beta entitlements enforced (preview: 100 tx; free: 20 tx) ← banner text exists, no enforcement
