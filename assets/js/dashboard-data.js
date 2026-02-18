@@ -442,9 +442,14 @@ function createDashboardTransactionsController(ctx) {
         if (!txTbody) return;
         clearTbody();
 
+        // Also clear mobile card list
+        const txCardList = document.getElementById('txCardList');
+        if (txCardList) txCardList.innerHTML = '';
+
         const txs = Array.isArray(rows) ? rows : [];
         if (!txs.length) {
             renderMessageRow('No transactions found.');
+            if (txCardList) txCardList.innerHTML = '<div class="tx-card-empty">No transactions found.</div>';
             return;
         }
 
@@ -490,6 +495,7 @@ function createDashboardTransactionsController(ctx) {
             const pillIcon = isVoided ? 'fa-ban' : (isIncome ? 'fa-arrow-down' : 'fa-arrow-up');
             const pillLabel = isVoided ? 'VOID' : (isIncome ? 'IN' : 'OUT');
 
+            // ── Desktop: table row ──
             const tr = document.createElement('tr');
             tr.tabIndex = 0;
             tr.setAttribute('data-tx-id', safeText(tx?.id, ''));
@@ -523,6 +529,40 @@ function createDashboardTransactionsController(ctx) {
                 </td>
             `;
             txTbody.appendChild(tr);
+
+            // ── Mobile: card ──
+            if (txCardList) {
+                const card = document.createElement('a');
+                card.className = `tx-card tx-card--${pillClass}`;
+                card.href = `spendnote-transaction-detail.html?txId=${encodeURIComponent(safeText(tx?.id, ''))}`;
+                card.setAttribute('data-tx-id', safeText(tx?.id, ''));
+                card.style.setProperty('--cb-color', cashBoxColor);
+                card.style.setProperty('--cb-rgb', cashBoxRgb);
+                const hasContact = contactName && contactName !== '—';
+                const hasDesc = descriptionText && descriptionText !== '—';
+                const subline = hasContact ? contactNameHtml : (hasDesc ? descriptionHtml : cashBoxNameHtml);
+                card.innerHTML = `
+                    <div class="tx-card-left">
+                        <div class="tx-card-pill ${pillClass}">
+                            <i class="fas ${pillIcon}"></i>
+                        </div>
+                    </div>
+                    <div class="tx-card-body">
+                        <div class="tx-card-top">
+                            <span class="tx-card-label">${pillLabel} · ${cashBoxNameHtml}</span>
+                            <span class="tx-card-amount ${isIncome ? 'in' : 'out'} ${isVoided ? 'voided' : ''}">${formattedAmount}</span>
+                        </div>
+                        <div class="tx-card-bottom">
+                            <span class="tx-card-sub">${subline}</span>
+                            <span class="tx-card-date">${formatDateShort(tx?.transaction_date || tx?.created_at)}</span>
+                        </div>
+                    </div>
+                    <div class="tx-card-right">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                `;
+                txCardList.appendChild(card);
+            }
         });
     };
 
