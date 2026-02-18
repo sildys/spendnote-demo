@@ -1430,7 +1430,10 @@ function togglePreviewDetails() {
             </svg>
             <span>SpendNote</span>
         </a>
-        <ul class="nav-links">
+        <button class="nav-hamburger" id="landingNavHamburger" aria-label="Open menu" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="landingNavLinks">
             <li><a href="index.html" class="active">Home</a></li>
             <li><a href="spendnote-pricing.html">Pricing</a></li>
             <li><a href="spendnote-faq.html">FAQ</a></li>
@@ -1439,6 +1442,33 @@ function togglePreviewDetails() {
         </ul>
     </div>
 </nav>
+<script>
+(function() {
+    var btn = document.getElementById('landingNavHamburger');
+    var links = document.getElementById('landingNavLinks');
+    if (!btn || !links) return;
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var isOpen = links.classList.toggle('nav-open');
+        btn.classList.toggle('nav-hamburger--open', isOpen);
+        btn.setAttribute('aria-expanded', String(isOpen));
+    });
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.site-nav') && links.classList.contains('nav-open')) {
+            links.classList.remove('nav-open');
+            btn.classList.remove('nav-hamburger--open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    });
+    links.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', function() {
+            links.classList.remove('nav-open');
+            btn.classList.remove('nav-hamburger--open');
+            btn.setAttribute('aria-expanded', 'false');
+        });
+    });
+})();
+</script>
 
 <div class="account-confirmed-banner" id="accountConfirmedBanner" style="display:none;">
     <div class="account-confirmed-banner-inner">
