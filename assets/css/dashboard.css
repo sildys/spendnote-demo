@@ -2319,7 +2319,7 @@ tr:hover [data-category-tag] {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 24px;
+    padding: 14px 24px;
     border-bottom: 3px solid rgba(var(--modal-dir-rgb), 0.6);
     background: white;
     position: sticky;
@@ -2376,7 +2376,7 @@ tr:hover [data-category-tag] {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 16px;
+    padding: 0 16px;
     border-radius: 10px;
     cursor: pointer;
     border: 2px solid var(--border);
@@ -2387,7 +2387,8 @@ tr:hover [data-category-tag] {
     letter-spacing: 0.05em;
     color: var(--text-muted);
     transition: all 0.15s ease;
-    height: 48px;
+    height: 52px;
+    box-sizing: border-box;
 }
 
 .direction-primary-btn:hover {
@@ -2448,12 +2449,13 @@ tr:hover [data-category-tag] {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 12px;
+    padding: 0 12px;
     background: white;
     border: 2px solid var(--border);
     border-radius: 10px;
     min-width: 200px;
     height: 52px;
+    box-sizing: border-box;
 }
 
 .cashbox-display .cashbox-icon {
