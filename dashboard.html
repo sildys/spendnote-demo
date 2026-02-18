@@ -29,8 +29,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         /* Modal header alignment fix — direction buttons and cashbox same height */
-        .direction-primary-btn { height: 52px !important; box-sizing: border-box !important; padding-top: 0 !important; padding-bottom: 0 !important; }
-        .cashbox-display { height: 52px !important; box-sizing: border-box !important; padding-top: 0 !important; padding-bottom: 0 !important; }
+        .direction-primary-btn { height: 52px !important; min-height: 52px !important; max-height: 52px !important; box-sizing: border-box !important; padding-top: 0 !important; padding-bottom: 0 !important; overflow: hidden !important; }
+        .cashbox-display { height: 52px !important; min-height: 52px !important; max-height: 52px !important; box-sizing: border-box !important; padding-top: 0 !important; padding-bottom: 0 !important; overflow: hidden !important; }
+        .modal-header-left, .modal-header-right { align-items: center !important; }
+        .modal-header { align-items: center !important; }
     </style>
 </head>
 <body>
