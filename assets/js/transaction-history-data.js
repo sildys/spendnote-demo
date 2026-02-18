@@ -506,10 +506,15 @@
         if (!tbody) return;
         tbody.innerHTML = '';
 
+        // Also clear mobile card list
+        const txCardList = document.getElementById('txCardList');
+        if (txCardList) txCardList.innerHTML = '';
+
         if (!txs || txs.length === 0) {
             const tr = document.createElement('tr');
             tr.innerHTML = '<td colspan="10" style="padding: 24px 10px; text-align: center; color: var(--text-muted); font-weight: 700;">No transactions found.</td>';
             tbody.appendChild(tr);
+            if (txCardList) txCardList.innerHTML = '<div class="tx-card-empty">No transactions found.</div>';
             return;
         }
 
@@ -567,6 +572,41 @@
             `;
 
             tbody.appendChild(tr);
+
+            // ── Mobile: card ──
+            if (txCardList) {
+                const cashBoxNameText = safeText(tx.cash_box?.name, 'Unknown');
+                const descriptionText = safeText(tx.description, '—');
+                const hasContact = contactName && contactName !== '—';
+                const hasDesc = descriptionText && descriptionText !== '—';
+                const subline = hasContact ? contactName : (hasDesc ? descriptionText : cashBoxNameText);
+                const card = document.createElement('a');
+                card.className = `tx-card tx-card--${pillClass}`;
+                card.href = `spendnote-transaction-detail.html?txId=${encodeURIComponent(tx.id)}`;
+                card.setAttribute('data-tx-id', safeText(tx.id, ''));
+                card.style.setProperty('--cb-color', cashBoxColor);
+                card.innerHTML = `
+                    <div class="tx-card-left">
+                        <div class="tx-card-pill ${pillClass}">
+                            <i class="fas ${pillIcon}"></i>
+                        </div>
+                    </div>
+                    <div class="tx-card-body">
+                        <div class="tx-card-top">
+                            <span class="tx-card-label">${pillLabel} · ${cashBoxNameText}</span>
+                            <span class="tx-card-amount ${isIncome ? 'in' : 'out'} ${isVoided ? 'voided' : ''}">${formatCurrency(tx.amount, currency)}</span>
+                        </div>
+                        <div class="tx-card-bottom">
+                            <span class="tx-card-sub">${subline}</span>
+                            <span class="tx-card-date">${formatDateShort(tx.transaction_date || tx.created_at)}</span>
+                        </div>
+                    </div>
+                    <div class="tx-card-right">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                `;
+                txCardList.appendChild(card);
+            }
         });
     }
 

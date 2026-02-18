@@ -800,7 +800,7 @@
                 padding: 7px 8px;
             }
 
-            /* Hide: Contact ID (col 7), Created By (col 9) */
+            /* Tablet: hide less-important columns */
             #transactionsTable thead th:nth-child(7),
             #transactionsTable tbody td:nth-child(7),
             #transactionsTable thead th:nth-child(9),
@@ -809,7 +809,7 @@
             }
         }
 
-        /* 480px mobile: strict 3-column layout - Type, Amount, Action only */
+        /* 480px mobile: hide table entirely, show card list */
         @media (max-width: 480px) {
             .stats-bar {
                 grid-template-columns: 1fr 1fr;
@@ -819,42 +819,13 @@
                 padding: 12px;
             }
 
-            /* Hide ALL except: col 2 (Type), col 8 (Amount), col 10 (Action) */
-            /* col 1 = checkbox, col 3 = ID, col 4 = Date, col 5 = Cash Box,
-               col 6 = Contact, col 7 = Contact ID, col 9 = Created by */
-            #transactionsTable thead th:nth-child(1),
-            #transactionsTable tbody td:nth-child(1),
-            #transactionsTable thead th:nth-child(3),
-            #transactionsTable tbody td:nth-child(3),
-            #transactionsTable thead th:nth-child(4),
-            #transactionsTable tbody td:nth-child(4),
-            #transactionsTable thead th:nth-child(5),
-            #transactionsTable tbody td:nth-child(5),
-            #transactionsTable thead th:nth-child(6),
-            #transactionsTable tbody td:nth-child(6),
-            #transactionsTable thead th:nth-child(7),
-            #transactionsTable tbody td:nth-child(7),
-            #transactionsTable thead th:nth-child(9),
-            #transactionsTable tbody td:nth-child(9) {
+            /* Hide table, show card list */
+            .table-wrapper {
                 display: none;
             }
 
-            /* Action column: icon-only buttons */
-            .tx-actions .tx-action span {
-                display: none;
-            }
-
-            .tx-actions .tx-action {
-                padding: 6px 9px;
-                min-width: 32px;
-                justify-content: center;
-                gap: 0;
-            }
-
-            /* Amount: right-align, bold */
-            #transactionsTable td:nth-child(8) {
-                font-weight: 700;
-                text-align: right;
+            .tx-card-list {
+                display: flex;
             }
 
             .pagination-controls {
@@ -1015,6 +986,8 @@
 
         <!-- TABLE -->
         <div class="table-container">
+            <!-- Mobile card list — shown instead of table on small screens -->
+            <div id="txCardList" class="tx-card-list" aria-label="Transactions"></div>
             <div class="table-wrapper">
                 <table id="transactionsTable">
                     <thead>
