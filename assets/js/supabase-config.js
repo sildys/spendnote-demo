@@ -2203,56 +2203,27 @@ var db = {
                 // ignore
             }
 
-            const trySelect = async () => {
-                const res = await supabaseClient
+            try {
+                const { data, error, status } = await supabaseClient
                     .from('profiles')
                     .select('*')
                     .eq('id', userId)
-                    .maybeSingle();
-                return res;
-            };
+                    .limit(1);
 
-            try {
-                let { data, error, status } = await trySelect();
-
-                // Missing profile is OK; avoid noisy errors.
                 if (error) {
+                    // "No rows" style cases are non-fatal.
                     const code = String(error?.code || '');
                     if (status === 406 || code === 'PGRST116') {
-                        error = null;
-                        data = null;
+                        return null;
                     }
-                }
-
-                if (!error && data) {
-                    return data;
-                }
-
-                // If profile is missing, try to auto-create once.
-                if (!error && !data) {
-                    const email = String(user?.email || '').trim();
-                    const fullNameRaw = String(user?.user_metadata?.full_name || '').trim();
-                    const fullName = fullNameRaw || (email ? email.split('@')[0] : 'User');
-
-                    if (email) {
-                        try {
-                            await supabaseClient
-                                .from('profiles')
-                                .upsert([{ id: userId, email, full_name: fullName }], { onConflict: 'id' });
-                        } catch (_) {
-                            // ignore
-                        }
-                        ({ data, error } = await trySelect());
-                        if (!error && data) {
-                            return data;
-                        }
+                    if (window.SpendNoteDebug) {
+                        console.warn('Error fetching profile:', error);
                     }
+                    return null;
                 }
 
-                if (window.SpendNoteDebug && error) {
-                    console.warn('Error fetching profile:', error);
-                }
-                return null;
+                const row = Array.isArray(data) ? (data[0] || null) : null;
+                return row;
             } catch (e) {
                 if (window.SpendNoteDebug) {
                     console.warn('Error fetching profile:', e);
