@@ -135,6 +135,7 @@ try {
 
 const __spendnoteInviteTokenKey = 'spendnote.inviteToken.pending';
 const __spendnoteInviteDebug = Boolean(window.SpendNoteDebug);
+let __spendnoteInviteAcceptAttemptedToken = '';
 
 const __spendnotePersistInviteTokenFromUrl = () => {
     try {
@@ -233,10 +234,25 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
     } catch (_) {
         token = '';
     }
-    if (!token) {
-        // No explicit invite token -> do not call acceptance RPCs on normal app pages.
+
+    // Basic stale token sanitization
+    if (token && (token.length < 20 || /\s/.test(token))) {
+        try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
         return;
     }
+
+    if (!token) {
+        // No explicit invite token -> do not call acceptance RPCs on normal app pages.
+        __spendnoteInviteAcceptAttemptedToken = '';
+        return;
+    }
+
+    // Prevent repeated retries for the same token during one page lifecycle.
+    if (__spendnoteInviteAcceptAttemptedToken && __spendnoteInviteAcceptAttemptedToken === token) {
+        return;
+    }
+    __spendnoteInviteAcceptAttemptedToken = token;
+
     if (__spendnoteInviteDebug) {
         console.warn('[invite-accept] Found token in localStorage, length=' + token.length);
     }
@@ -262,6 +278,7 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
         }
         if (r?.error) throw r.error;
         try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
+        __spendnoteInviteAcceptAttemptedToken = '';
         if (__spendnoteInviteDebug) {
             console.warn('[invite-accept] SUCCESS via v2');
         }
@@ -280,6 +297,7 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
             }
             if (r2?.error) throw r2.error;
             try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
+            __spendnoteInviteAcceptAttemptedToken = '';
             if (__spendnoteInviteDebug) {
                 console.warn('[invite-accept] SUCCESS via fallback');
             }
@@ -293,6 +311,7 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
             } catch (_) {
                 // ignore
             }
+            __spendnoteInviteAcceptAttemptedToken = '';
         }
     }
 };
