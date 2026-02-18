@@ -134,6 +134,7 @@ try {
 }
 
 const __spendnoteInviteTokenKey = 'spendnote.inviteToken.pending';
+const __spendnoteInviteDebug = Boolean(window.SpendNoteDebug);
 
 const __spendnotePersistInviteTokenFromUrl = () => {
     try {
@@ -150,12 +151,21 @@ const __spendnoteEnsureProfileForCurrentUser = async () => {
     try {
         const { data: { user }, error } = await supabaseClient.auth.getUser();
         if (error || !user) return;
+        const userId = String(user?.id || '').trim();
+        if (!userId) return;
+        try {
+            if (typeof isUuid === 'function' && !isUuid(userId)) {
+                return;
+            }
+        } catch (_) {
+            // ignore
+        }
 
         try {
             const { data: existing, error: selErr } = await supabaseClient
                 .from('profiles')
                 .select('id')
-                .eq('id', user.id)
+                .eq('id', userId)
                 .single();
             if (!selErr && existing?.id) return;
         } catch (_) {
@@ -169,7 +179,7 @@ const __spendnoteEnsureProfileForCurrentUser = async () => {
         try {
             await supabaseClient
                 .from('profiles')
-                .insert([{ id: user.id, email, full_name: fullName }]);
+                .insert([{ id: userId, email, full_name: fullName }]);
         } catch (_) {
             // ignore
         }
@@ -182,18 +192,28 @@ const __spendnoteAutoAcceptMyInvites = async () => {
     try {
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (!user) return null;
-        console.warn('[invite-auto] Calling spendnote_auto_accept_my_invites...');
+        if (__spendnoteInviteDebug) {
+            console.warn('[invite-auto] Calling spendnote_auto_accept_my_invites...');
+        }
         const r = await supabaseClient.rpc('spendnote_auto_accept_my_invites');
-        console.warn('[invite-auto] result:', JSON.stringify(r?.data || r?.error));
+        if (__spendnoteInviteDebug) {
+            console.warn('[invite-auto] result:', JSON.stringify(r?.data || r?.error));
+        }
         if (r?.error) {
-            console.warn('[invite-auto] error:', r.error?.message || r.error);
+            if (__spendnoteInviteDebug) {
+                console.warn('[invite-auto] error:', r.error?.message || r.error);
+            }
         } else if (r?.data?.accepted > 0) {
-            console.warn('[invite-auto] Auto-accepted', r.data.accepted, 'invite(s) for', r.data.email);
+            if (__spendnoteInviteDebug) {
+                console.warn('[invite-auto] Auto-accepted', r.data.accepted, 'invite(s) for', r.data.email);
+            }
             try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
         }
         return r?.data;
     } catch (e) {
-        console.warn('[invite-auto] exception:', e?.message || e);
+        if (__spendnoteInviteDebug) {
+            console.warn('[invite-auto] exception:', e?.message || e);
+        }
         return null;
     }
 };
@@ -214,39 +234,60 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
         token = '';
     }
     if (!token) {
-        console.warn('[invite-accept] No invite token in localStorage, trying auto-accept by email...');
-        await __spendnoteAutoAcceptMyInvites();
+        // No explicit invite token -> do not call acceptance RPCs on normal app pages.
         return;
     }
-    console.warn('[invite-accept] Found token in localStorage, length=' + token.length);
+    if (__spendnoteInviteDebug) {
+        console.warn('[invite-accept] Found token in localStorage, length=' + token.length);
+    }
 
     try {
         await __spendnoteEnsureProfileForCurrentUser();
-        console.warn('[invite-accept] ensureProfile done');
+        if (__spendnoteInviteDebug) {
+            console.warn('[invite-accept] ensureProfile done');
+        }
     } catch (ep) {
-        console.warn('[invite-accept] ensureProfile error (non-fatal):', ep);
+        if (__spendnoteInviteDebug) {
+            console.warn('[invite-accept] ensureProfile error (non-fatal):', ep);
+        }
     }
 
     try {
-        console.warn('[invite-accept] Calling spendnote_accept_invite_v2...');
+        if (__spendnoteInviteDebug) {
+            console.warn('[invite-accept] Calling spendnote_accept_invite_v2...');
+        }
         const r = await supabaseClient.rpc('spendnote_accept_invite_v2', { p_token: token });
-        console.warn('[invite-accept] v2 result:', JSON.stringify({ data: r?.data, error: r?.error }));
+        if (__spendnoteInviteDebug) {
+            console.warn('[invite-accept] v2 result:', JSON.stringify({ data: r?.data, error: r?.error }));
+        }
         if (r?.error) throw r.error;
         try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
-        console.warn('[invite-accept] SUCCESS via v2');
+        if (__spendnoteInviteDebug) {
+            console.warn('[invite-accept] SUCCESS via v2');
+        }
         return;
     } catch (e1) {
-        console.error('[invite-accept] v2 failed:', e1?.message || e1);
+        if (__spendnoteInviteDebug) {
+            console.error('[invite-accept] v2 failed:', e1?.message || e1);
+        }
         try {
-            console.warn('[invite-accept] Trying fallback spendnote_accept_invite...');
+            if (__spendnoteInviteDebug) {
+                console.warn('[invite-accept] Trying fallback spendnote_accept_invite...');
+            }
             const r2 = await supabaseClient.rpc('spendnote_accept_invite', { p_token: token });
-            console.warn('[invite-accept] fallback result:', JSON.stringify({ data: r2?.data, error: r2?.error }));
+            if (__spendnoteInviteDebug) {
+                console.warn('[invite-accept] fallback result:', JSON.stringify({ data: r2?.data, error: r2?.error }));
+            }
             if (r2?.error) throw r2.error;
             try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
-            console.warn('[invite-accept] SUCCESS via fallback');
+            if (__spendnoteInviteDebug) {
+                console.warn('[invite-accept] SUCCESS via fallback');
+            }
         } catch (e2) {
-            console.error('[invite-accept] BOTH token RPCs FAILED. v2:', e1?.message || e1, 'fb:', e2?.message || e2);
-            console.warn('[invite-accept] Trying auto-accept by email as last resort...');
+            if (__spendnoteInviteDebug) {
+                console.error('[invite-accept] BOTH token RPCs FAILED. v2:', e1?.message || e1, 'fb:', e2?.message || e2);
+                console.warn('[invite-accept] Trying auto-accept by email as last resort...');
+            }
             await __spendnoteAutoAcceptMyInvites();
         }
     }
