@@ -641,3 +641,18 @@
             }
         }
 
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 8px 12px;
+            }
+
+            .register-row {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .register-actions {
+                justify-content: flex-start;
+            }
+        }
+
