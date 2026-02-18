@@ -445,12 +445,56 @@
             opacity: 1;
         }
 
+        /* BROWSER MOCKUP */
+        .browser-mockup {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.14);
+            border: 1px solid #d1d5db;
+            background: #ffffff;
+        }
+
+        .browser-bar {
+            background: #f1f3f5;
+            border-bottom: 1px solid #d1d5db;
+            padding: 9px 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .browser-dots {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .browser-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+
+        .browser-dot:nth-child(1) { background: #ff5f57; }
+        .browser-dot:nth-child(2) { background: #febc2e; }
+        .browser-dot:nth-child(3) { background: #28c840; }
+
+        .browser-url {
+            flex: 1;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 0.72rem;
+            color: #6b7280;
+            font-family: monospace;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         /* CAROUSEL */
         .hero-carousel {
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 12px 40px rgba(0,0,0,0.10);
-            border: 1px solid #e2e8f0;
             background: #ffffff;
         }
 
@@ -1328,8 +1372,17 @@ function togglePreviewDetails() {
         </div>
     </div>
 
-    <!-- ANIMATED CAROUSEL -->
-    <div class="hero-carousel">
+    <!-- BROWSER MOCKUP -->
+    <div class="browser-mockup">
+        <div class="browser-bar">
+            <div class="browser-dots">
+                <span class="browser-dot"></span>
+                <span class="browser-dot"></span>
+                <span class="browser-dot"></span>
+            </div>
+            <div class="browser-url" id="browserUrl">app.spendnote.app/dashboard</div>
+        </div>
+        <div class="hero-carousel">
         <div class="carousel-track">
             <!-- Slide 1: Dashboard -->
             <div class="carousel-slide active">
@@ -1362,7 +1415,8 @@ function togglePreviewDetails() {
                 <span class="dot" data-slide="2"></span>
             </div>
         </div>
-    </div>
+        </div><!-- /.hero-carousel -->
+    </div><!-- /.browser-mockup -->
 </section>
 
 <!-- FEATURES -->
@@ -1682,7 +1736,13 @@ function togglePreviewDetails() {
         '<i class="fas fa-history"></i> Full transaction history',
         '<i class="fas fa-file-pdf"></i> Receipt in seconds'
     ];
+    const urlLabels = [
+        'app.spendnote.app/dashboard',
+        'app.spendnote.app/transactions',
+        'app.spendnote.app/receipt/SN4-005'
+    ];
     const captionEl = document.getElementById('carouselCaption');
+    const browserUrlEl = document.getElementById('browserUrl');
 
     function showSlide(n) {
         slides.forEach(s => s.classList.remove('active'));
@@ -1693,6 +1753,7 @@ function togglePreviewDetails() {
         slides[currentSlide].classList.add('active');
         dots[currentSlide].classList.add('active');
         if (captionEl) captionEl.innerHTML = captions[currentSlide];
+        if (browserUrlEl) browserUrlEl.textContent = urlLabels[currentSlide];
     }
 
     function nextSlide() {
