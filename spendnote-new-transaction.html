@@ -200,6 +200,43 @@
         .nt-body .modal-contact-grid {
             grid-template-columns: 1fr !important;
         }
+
+        /* Force compact modal-layout widths for this standalone mobile page */
+        #createTransactionModalContainer .receipt-items-header,
+        #createTransactionModalContainer .form-row-line-item,
+        #createTransactionModalContainer[data-mode="quick"] .receipt-items-header,
+        #createTransactionModalContainer[data-mode="quick"] .form-row-line-item {
+            grid-template-columns: minmax(0, 1fr) 108px !important;
+        }
+
+        #createTransactionModalContainer .modal-contact-grid,
+        #createTransactionModalContainer[data-mode="quick"] .modal-contact-grid,
+        #createTransactionModalContainer[data-mode="detailed"] .modal-contact-grid {
+            grid-template-columns: 1fr !important;
+        }
+
+        #createTransactionModalContainer .cashbox-display {
+            min-width: 0 !important;
+            width: 100% !important;
+        }
+
+        #createTransactionModalContainer #modalDateField {
+            width: 108px !important;
+        }
+
+        @media (max-width: 390px) {
+            #createTransactionModalContainer .receipt-items-header,
+            #createTransactionModalContainer .form-row-line-item,
+            #createTransactionModalContainer[data-mode="quick"] .receipt-items-header,
+            #createTransactionModalContainer[data-mode="quick"] .form-row-line-item {
+                grid-template-columns: minmax(0, 1fr) 92px !important;
+            }
+
+            #createTransactionModalContainer #modalDateField {
+                width: 92px !important;
+                font-size: 11px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -226,10 +263,10 @@
     <div class="nt-error" id="ntError" style="display:none;"></div>
 
     <!-- Main content (hidden until loaded) -->
-    <div id="ntContent" style="display:none;">
+    <div id="createTransactionModalContainer" data-direction="in" data-mode="quick" style="display:none;">
 
         <!-- Direction header: IN/OUT + watermark -->
-        <div class="nt-direction-header" id="createTransactionModalContainer" data-direction="in" data-mode="quick">
+        <div class="nt-direction-header">
             <div class="modal-direction-primary">
                 <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
                 <label for="modalDirectionIn" class="direction-primary-btn in" tabindex="0">
@@ -388,7 +425,7 @@
             </button>
         </div>
 
-    </div><!-- /ntContent -->
+    </div><!-- /createTransactionModalContainer -->
 </div><!-- /nt-page -->
 
 <!-- Supabase + core scripts -->
@@ -594,7 +631,7 @@
 
         const loadingEl = document.getElementById('ntLoading');
         const errorEl   = document.getElementById('ntError');
-        const contentEl = document.getElementById('ntContent');
+        const contentEl = document.getElementById('createTransactionModalContainer');
 
         try {
             // Wait for supabase-config.js to expose window.auth + window.db
