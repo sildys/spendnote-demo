@@ -580,7 +580,7 @@
                 try {
                     const sp = new URLSearchParams(window.location.search);
                     const inviteToken = sp.get('inviteToken');
-                    const redirectUrl = new URL(`${window.location.origin}/spendnote-login.html`);
+                    const redirectUrl = new URL(`${window.location.origin}/login`);
                     redirectUrl.searchParams.set('confirmed', '1');
                     redirectUrl.searchParams.set('returnTo', getSafeReturnTo());
                     if (inviteToken) {
@@ -669,7 +669,7 @@
             try {
                 const sp = new URLSearchParams(window.location.search);
                 const inviteToken = sp.get('inviteToken');
-                const redirectUrl = new URL(`${window.location.origin}/spendnote-login.html`);
+                const redirectUrl = new URL(`${window.location.origin}/login`);
                 redirectUrl.searchParams.set('returnTo', getSafeReturnTo());
                 if (inviteToken) {
                     redirectUrl.searchParams.set('inviteToken', inviteToken);
