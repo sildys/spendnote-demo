@@ -2333,6 +2333,7 @@ tr:hover [data-category-tag] {
 .modal-header-left {
     display: flex;
     align-items: center;
+    height: 72px;
     gap: 8px;
     z-index: 1;
 }
@@ -2340,6 +2341,7 @@ tr:hover [data-category-tag] {
 .modal-header-right {
     display: flex;
     align-items: center;
+    height: 72px;
     gap: 12px;
     z-index: 1;
     position: relative;
@@ -2347,10 +2349,7 @@ tr:hover [data-category-tag] {
 
 /* Watermark - to the right of cashbox selector */
 .modal-watermark {
-    position: absolute;
-    right: 42px;
-    top: 50%;
-    transform: translateY(-50%);
+    position: static;
     font-size: 64px;
     font-weight: 900;
     letter-spacing: 0.08em;
@@ -2358,6 +2357,7 @@ tr:hover [data-category-tag] {
     pointer-events: none;
     user-select: none;
     line-height: 1;
+    flex-shrink: 0;
 }
 
 .modal-watermark::after {
@@ -2631,10 +2631,6 @@ tr:hover [data-category-tag] {
 
 #createTransactionModalContainer[data-mode="quick"] .modal-header {
     padding: 0 22px !important;
-}
-
-#createTransactionModalContainer[data-mode="quick"] .modal-watermark {
-    display: none;
 }
 
 #createTransactionModalContainer[data-mode="quick"] .modal-body {
