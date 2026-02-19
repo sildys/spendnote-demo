@@ -506,6 +506,9 @@ const QUICK_PRESET = {
             const body = doc.body;
             if (!de || !body) return;
 
+            const ua = String(window.navigator && window.navigator.userAgent ? window.navigator.userAgent : '').toLowerCase();
+            const isSafari = ua.includes('safari') && !ua.includes('chrome') && !ua.includes('chromium') && !ua.includes('android');
+
             let style = doc.getElementById('txReceiptPreviewOverride');
             if (!style) {
                 style = doc.createElement('style');
@@ -519,7 +522,17 @@ html, body { height: auto !important; overflow: auto !important; }
 
             de.style.overflow = 'auto';
             body.style.overflow = 'auto';
-            body.style.zoom = String(currentZoom);
+            if (isSafari) {
+                body.style.zoom = '1';
+                body.style.transformOrigin = 'top left';
+                body.style.transform = `scale(${currentZoom})`;
+                body.style.width = `${100 / currentZoom}%`;
+            } else {
+                body.style.transform = 'none';
+                body.style.transformOrigin = '';
+                body.style.width = '';
+                body.style.zoom = String(currentZoom);
+            }
         } catch (_) {}
     }
 

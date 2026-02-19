@@ -847,10 +847,11 @@
 }
 
 .preview-frame-container {
-    overflow: hidden;
+    overflow: auto;
     background: white;
     flex: 1;
     min-height: 520px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .preview-frame {
