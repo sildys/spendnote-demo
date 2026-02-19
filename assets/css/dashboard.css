@@ -4224,6 +4224,34 @@ tr:hover [data-category-tag] {
    RESPONSIVE - Dashboard
    ============================================ */
 
+/* iPad / touch-tablet: avoid cramped desktop table layout */
+@media (max-width: 1180px) and (pointer: coarse) {
+    .app-container {
+        padding: 14px 16px;
+    }
+
+    .main-content {
+        gap: 12px;
+    }
+
+    .table-wrapper {
+        display: none;
+    }
+
+    .tx-card-list {
+        display: flex;
+    }
+
+    .page-header {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .page-subtitle {
+        display: none;
+    }
+}
+
 /* 768px - tablet/mobile */
 @media (max-width: 768px) {
     .app-container {

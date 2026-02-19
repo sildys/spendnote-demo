@@ -541,7 +541,7 @@ body {
     display: none; /* hidden on desktop */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-width: 1180px) and (pointer: coarse) {
     /* Push page content above bottom nav */
     body {
         padding-bottom: calc(64px + env(safe-area-inset-bottom));
@@ -671,7 +671,7 @@ body {
 /* ============================================
    RESPONSIVE (existing)
    ============================================ */
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-width: 1180px) and (pointer: coarse) {
     .app-container {
         padding: 16px 16px;
     }
