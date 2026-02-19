@@ -2319,7 +2319,7 @@ tr:hover [data-category-tag] {
     display: grid;
     grid-template-columns: 1fr auto;
     grid-template-rows: 72px;
-    align-items: center;
+    align-items: stretch;
     padding: 0 24px;
     border-bottom: 3px solid rgba(var(--modal-dir-rgb), 0.6);
     background: white;
