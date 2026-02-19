@@ -4156,6 +4156,9 @@ tr:hover [data-category-tag] {
         flex-direction: column !important;
     }
 
+    /* Mobile modal header: 2-row grid
+       Row 1: [direction buttons ............ close]
+       Row 2: [cashbox .................. watermark] */
     .modal-header {
         flex-shrink: 0;
         position: sticky;
@@ -4163,43 +4166,54 @@ tr:hover [data-category-tag] {
         z-index: 10;
         background: var(--surface);
         border-radius: 20px 20px 0 0;
-        /* Two-row layout: wrap direction+close on row 1, cashbox on row 2 */
-        flex-wrap: wrap;
+        display: grid !important;
+        grid-template-rows: auto auto;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "dir close"
+            "cashbox watermark";
         height: auto !important;
         padding: 12px 16px !important;
-        gap: 8px;
+        gap: 8px 8px;
+        align-items: center;
     }
 
-    /* Row 1: direction buttons (left) + close button (right) */
     .modal-direction-primary {
-        order: 1;
+        grid-area: dir;
         margin-right: 0;
-        flex: 1 1 auto;
     }
 
     .modal-close {
-        order: 2;
-        margin-left: auto;
+        grid-area: close;
+        margin-left: 0;
     }
 
-    /* Row 2: cashbox + watermark side by side */
     .cashbox-display {
-        order: 3;
-        flex: 1 1 0;
+        grid-area: cashbox;
         min-width: 0 !important;
         max-width: none !important;
     }
 
-    /* Mode toggle + date row: stack vertically on narrow screens */
+    /* Mode toggle + date: keep on one row, date compact */
     #createTransactionModalContainer .modal-mode-row {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         gap: 8px;
+        align-items: center;
     }
 
-    /* Date field: full width when wrapped */
+    /* Date field: compact, auto width, no flex-grow */
     #createTransactionModalContainer .modal-mode-row .form-group {
         width: auto !important;
-        flex: 1 1 100%;
+        flex: 0 0 auto;
+        margin: 0 !important;
+    }
+
+    #createTransactionModalContainer .modal-mode-row #modalDateField {
+        width: 110px !important;
+        min-height: 36px !important;
+        font-size: 12px !important;
+        padding: 4px 8px !important;
+        text-align: center;
     }
 
     /* Contact grid: stack Name + Address vertically on mobile */
@@ -4219,20 +4233,20 @@ tr:hover [data-category-tag] {
 
     /* Direction buttons: flexible width on mobile */
     .direction-primary-btn {
-        width: auto;
         flex: 1;
         min-width: 0;
         justify-content: center;
     }
 
-    /* Watermark: same row as cashbox, desktop size */
+    /* Watermark: grid area, desktop size */
     .modal-watermark {
         display: block;
-        order: 4;
-        flex: 0 0 auto;
+        grid-area: watermark;
         font-size: 64px;
         line-height: 1;
         pointer-events: none;
+        text-align: right;
+        align-self: center;
     }
 
     .modal-body {
