@@ -96,12 +96,10 @@ function initTransactionForm() {
         const wantsReceipt = action === 'done-receipt';
 
         let preopenedReceiptWindow = null;
-        let intendedPdfDownload = false;
-        let precreatedPdfIframe = null;
 
         const triggerHiddenPdfDownload = (url) => {
             try {
-                const iframe = precreatedPdfIframe || document.createElement('iframe');
+                const iframe = document.createElement('iframe');
                 iframe.style.position = 'fixed';
                 iframe.style.left = '-10000px';
                 iframe.style.top = '0';
@@ -110,10 +108,7 @@ function initTransactionForm() {
                 iframe.style.opacity = '0';
                 iframe.style.pointerEvents = 'none';
                 iframe.style.border = '0';
-
-                if (!precreatedPdfIframe) {
-                    document.body.appendChild(iframe);
-                }
+                document.body.appendChild(iframe);
 
                 iframe.src = url;
 
@@ -123,9 +118,6 @@ function initTransactionForm() {
                     } catch (_) {
                         // ignore
                     }
-                    if (precreatedPdfIframe === iframe) {
-                        precreatedPdfIframe = null;
-                    }
                 }, 30000);
                 return true;
             } catch (_) {
@@ -134,6 +126,16 @@ function initTransactionForm() {
         };
 
         if (wantsReceipt) {
+            preopenedReceiptWindow = window.open('about:blank', '_blank');
+            if (preopenedReceiptWindow) {
+                try {
+                    preopenedReceiptWindow.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Opening receipt…</title></head><body style="font-family:system-ui,-apple-system,sans-serif;padding:16px;color:#334155">Opening receipt…</body></html>');
+                    preopenedReceiptWindow.document.close();
+                } catch (_) {
+                    // ignore document access issues
+                }
+            }
+
             // Write fresh bootstrap session BEFORE opening new tab/iframe
             try {
                 if (typeof window.writeBootstrapSession === 'function') {
@@ -154,41 +156,12 @@ function initTransactionForm() {
             } catch (_) {
                 intendedFormat = 'a4';
             }
-
-            intendedPdfDownload = intendedFormat === 'pdf';
-            if (intendedPdfDownload) {
-                try {
-                    precreatedPdfIframe = document.createElement('iframe');
-                    precreatedPdfIframe.style.position = 'fixed';
-                    precreatedPdfIframe.style.left = '-10000px';
-                    precreatedPdfIframe.style.top = '0';
-                    precreatedPdfIframe.style.width = '1200px';
-                    precreatedPdfIframe.style.height = '1700px';
-                    precreatedPdfIframe.style.opacity = '0';
-                    precreatedPdfIframe.style.pointerEvents = 'none';
-                    precreatedPdfIframe.style.border = '0';
-                    precreatedPdfIframe.src = 'about:blank';
-                    document.body.appendChild(precreatedPdfIframe);
-                } catch (_) {
-                    precreatedPdfIframe = null;
-                }
-            } else {
-                preopenedReceiptWindow = window.open('about:blank', '_blank');
-            }
         }
 
         const closeReceiptWindow = () => {
             try {
                 if (preopenedReceiptWindow && !preopenedReceiptWindow.closed) {
                     preopenedReceiptWindow.close();
-                }
-            } catch (_) {
-                // ignore
-            }
-            try {
-                if (precreatedPdfIframe) {
-                    precreatedPdfIframe.remove();
-                    precreatedPdfIframe = null;
                 }
             } catch (_) {
                 // ignore
@@ -708,11 +681,15 @@ function initTransactionForm() {
                 const finalFormat = receipt?.format || 'a4';
 
                 if (finalFormat === 'pdf') {
-                    const ok = triggerHiddenPdfDownload(url);
-                    if (!ok) {
-                        const opened = window.open(url, '_blank');
-                        if (!opened) {
-                            showAlert('Popup blocked. Please allow popups to download PDFs.', { iconType: 'warning' });
+                    if (preopenedReceiptWindow && !preopenedReceiptWindow.closed) {
+                        preopenedReceiptWindow.location.href = url;
+                    } else {
+                        const ok = triggerHiddenPdfDownload(url);
+                        if (!ok) {
+                            const opened = window.open(url, '_blank');
+                            if (!opened) {
+                                showAlert('Popup blocked. Please allow popups to download PDFs.', { iconType: 'warning' });
+                            }
                         }
                     }
                 } else {

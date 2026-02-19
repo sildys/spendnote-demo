@@ -630,8 +630,26 @@ html, body { height: auto !important; overflow: auto !important; }
             }
         };
 
+        const openReceiptPlaceholder = () => {
+            const w = window.open('about:blank', '_blank');
+            if (!w) return null;
+            try {
+                w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Opening receipt…</title></head><body style="font-family:system-ui,-apple-system,sans-serif;padding:16px;color:#334155">Opening receipt…</body></html>');
+                w.document.close();
+            } catch (_) {
+                // ignore cross-origin/document errors
+            }
+            return w;
+        };
+
         if (printBtn) {
             printBtn.addEventListener('click', async () => {
+                const opened = openReceiptPlaceholder();
+                if (!opened) {
+                    showAlert('Popup blocked. Please allow popups to print receipts.', { iconType: 'warning' });
+                    return;
+                }
+
                 // Write fresh bootstrap session before opening new tab
                 try {
                     if (typeof window.writeBootstrapSession === 'function') {
@@ -640,14 +658,24 @@ html, body { height: auto !important; overflow: auto !important; }
                 } catch (_) {}
 
                 const url = buildReceiptUrl('a4', { autoPrint: '1' });
-                const opened = window.open(url, '_blank');
-                if (!opened) {
-                    showAlert('Popup blocked. Please allow popups to print receipts.', { iconType: 'warning' });
+                try {
+                    opened.location.href = url;
+                } catch (_) {
+                    const fallback = window.open(url, '_blank');
+                    if (!fallback) {
+                        showAlert('Popup blocked. Please allow popups to print receipts.', { iconType: 'warning' });
+                    }
                 }
             });
         }
         if (pdfBtn) {
             pdfBtn.addEventListener('click', async () => {
+                const opened = openReceiptPlaceholder();
+                if (!opened) {
+                    showAlert('Popup blocked. Please allow popups to download PDFs.', { iconType: 'warning' });
+                    return;
+                }
+
                 // Write fresh bootstrap session before triggering PDF download
                 try {
                     if (typeof window.writeBootstrapSession === 'function') {
@@ -656,7 +684,11 @@ html, body { height: auto !important; overflow: auto !important; }
                 } catch (_) {}
 
                 const url = buildReceiptUrl('pdf', { download: '1' });
-                triggerHiddenPdfDownload(url);
+                try {
+                    opened.location.href = url;
+                } catch (_) {
+                    triggerHiddenPdfDownload(url);
+                }
             });
         }
         if (emailBtn) {
