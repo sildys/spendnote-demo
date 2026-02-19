@@ -580,8 +580,12 @@
 (function () {
     'use strict';
 
-    // On desktop: redirect to dashboard (modal handles it there)
-    if (window.innerWidth >= 769) {
+    // On real desktop: redirect to dashboard (modal handles it there)
+    // Keep tablets (incl. iPad) on this standalone page.
+    const desktopViewport = window.matchMedia('(min-width: 1024px)').matches;
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (desktopViewport && !coarsePointer && !hasTouch) {
         window.location.replace('dashboard.html#new-transaction');
         return;
     }
