@@ -25,19 +25,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=15">
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260219-0126">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260219-0230">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <style>
-        /* Modal header alignment — inline to bypass CDN cache */
-        #createTransactionModalContainer .modal-header{display:flex!important;flex-direction:row!important;align-items:center!important;height:72px!important;padding:0 24px!important;box-sizing:border-box!important}
-        #createTransactionModalContainer .modal-header-left,#createTransactionModalContainer .modal-header-right{display:contents!important}
-        #createTransactionModalContainer .modal-direction-primary{display:flex!important;align-items:center!important;gap:8px!important;margin-right:auto!important;height:52px!important;box-sizing:border-box!important}
-        #createTransactionModalContainer .modal-direction-primary>input[type="radio"]{position:absolute!important;width:0!important;height:0!important;margin:0!important;padding:0!important;opacity:0!important;pointer-events:none!important}
-        #createTransactionModalContainer .direction-primary-btn{height:52px!important;box-sizing:border-box!important}
-        #createTransactionModalContainer .cashbox-display{height:52px!important;box-sizing:border-box!important;flex-shrink:0!important;margin-left:12px!important}
-        #createTransactionModalContainer .modal-watermark{flex-shrink:0!important;margin-left:8px!important}
-        #createTransactionModalContainer .modal-close{flex-shrink:0!important;margin-left:8px!important}
-    </style>
 </head>
 <body>
 <!-- Navigation loaded dynamically by nav-loader.js -->
@@ -142,23 +131,23 @@
     <!-- CREATE TRANSACTION MODAL v20260128a - cashbox right + icon fix -->
     <div class="modal-overlay" id="createTransactionModal" aria-hidden="true">
         <div class="modal-container" id="createTransactionModalContainer" data-direction="in" data-mode="quick" role="dialog" aria-modal="true" aria-label="Create transaction" tabindex="-1">
-            <div class="modal-header" style="display:flex!important;flex-direction:row!important;align-items:center!important;height:72px!important;padding:0 24px!important;box-sizing:border-box!important;">
+            <div class="modal-header">
                     <!-- Direction buttons -->
-                    <div class="modal-direction-primary" style="display:flex;align-items:center;gap:8px;margin-right:auto;margin-top:0;margin-bottom:0;height:52px;align-self:center;">
-                        <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked style="display:none;">
-                        <label for="modalDirectionIn" class="direction-primary-btn in" tabindex="0" style="height:52px;box-sizing:border-box;">
+                    <div class="modal-direction-primary">
+                        <input type="radio" name="modalDirection" id="modalDirectionIn" value="in" checked>
+                        <label for="modalDirectionIn" class="direction-primary-btn in" tabindex="0">
                             <span class="quick-icon"><i class="fas fa-arrow-down"></i></span>
                             <span>IN</span>
                         </label>
-                        <input type="radio" name="modalDirection" id="modalDirectionOut" value="out" style="display:none;">
-                        <label for="modalDirectionOut" class="direction-primary-btn out" tabindex="0" style="height:52px;box-sizing:border-box;">
+                        <input type="radio" name="modalDirection" id="modalDirectionOut" value="out">
+                        <label for="modalDirectionOut" class="direction-primary-btn out" tabindex="0">
                             <span class="quick-icon"><i class="fas fa-arrow-up"></i></span>
                             <span>OUT</span>
                         </label>
                     </div>
 
                     <!-- Cashbox selector -->
-                    <div class="cashbox-display" id="modalCashboxDisplay" style="height:52px;box-sizing:border-box;">
+                    <div class="cashbox-display" id="modalCashboxDisplay">
                         <div class="cashbox-icon" id="modalCashboxIcon"></div>
                         <div class="cashbox-info">
                             <div class="cashbox-name"><span class="cashbox-id" id="modalCashboxIdDisplay"></span> <span id="modalCashboxName">Loading...</span></div>
@@ -1604,7 +1593,7 @@
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=20260217-2001"></script>
     <script src="assets/js/dashboard-ui.js?v=8"></script>
-    <script src="assets/js/dashboard-modal.js?v=20260219-0225"></script>
+    <script src="assets/js/dashboard-modal.js?v=20260219-0230"></script>
     <script src="assets/js/dashboard-form.js?v=20260218-0015"></script>
     <script src="assets/js/dashboard-data.js?v=20260217-2314"></script>
 

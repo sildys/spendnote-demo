@@ -2316,10 +2316,10 @@ tr:hover [data-category-tag] {
 
 /* Modal Header - single row with watermark */
 .modal-header {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: 72px;
-    align-items: stretch;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 72px;
     padding: 0 24px;
     border-bottom: 3px solid rgba(var(--modal-dir-rgb), 0.6);
     background: white;
@@ -2328,24 +2328,10 @@ tr:hover [data-category-tag] {
     z-index: 5;
     overflow: hidden;
     box-sizing: border-box;
-}
-
-.modal-header-left {
-    display: flex;
-    align-items: center;
-    height: 72px;
-    gap: 8px;
-    z-index: 1;
-}
-
-.modal-header-right {
-    display: flex;
-    align-items: center;
-    height: 72px;
     gap: 12px;
-    z-index: 1;
-    position: relative;
 }
+
+/* modal-header-left/right wrappers removed from HTML — rules removed */
 
 /* Watermark - to the right of cashbox selector */
 .modal-watermark {
@@ -2371,7 +2357,9 @@ tr:hover [data-category-tag] {
 /* Direction buttons */
 .modal-direction-primary {
     display: flex;
+    align-items: center;
     gap: 8px;
+    margin-right: auto;
 }
 
 .modal-direction-primary input[type="radio"] {
@@ -3394,8 +3382,10 @@ tr:hover [data-category-tag] {
 
 .modal-direction-primary {
     display: flex;
+    align-items: center;
     gap: 8px;
     flex-shrink: 0;
+    margin-right: auto;
 }
 
 .modal-direction-primary input[type="radio"] {
@@ -4233,65 +4223,4 @@ tr:hover [data-category-tag] {
     }
 }
 
-/* ==========================================================
-   MODAL HEADER ALIGNMENT — DEFINITIVE OVERRIDE
-   display:contents flattens wrappers so ALL items (direction
-   buttons, cashbox, watermark, close) are direct flex children
-   of .modal-header → single align-items:center baseline.
-   ========================================================== */
-#createTransactionModalContainer .modal-header {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    height: 72px !important;
-    padding: 0 24px !important;
-    box-sizing: border-box !important;
-    gap: 0 !important;
-}
-
-#createTransactionModalContainer .modal-header-left,
-#createTransactionModalContainer .modal-header-right {
-    display: contents !important;
-}
-
-#createTransactionModalContainer .modal-direction-primary {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    margin-right: auto !important;
-    height: 52px !important;
-    box-sizing: border-box !important;
-}
-
-#createTransactionModalContainer .modal-direction-primary > input[type="radio"] {
-    position: absolute !important;
-    width: 0 !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-#createTransactionModalContainer .direction-primary-btn {
-    height: 52px !important;
-    box-sizing: border-box !important;
-}
-
-#createTransactionModalContainer .cashbox-display {
-    height: 52px !important;
-    box-sizing: border-box !important;
-    flex-shrink: 0 !important;
-    margin-left: 12px !important;
-}
-
-#createTransactionModalContainer .modal-watermark {
-    flex-shrink: 0 !important;
-    margin-left: 8px !important;
-}
-
-#createTransactionModalContainer .modal-close {
-    flex-shrink: 0 !important;
-    margin-left: 8px !important;
-}
 

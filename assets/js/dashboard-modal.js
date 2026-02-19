@@ -364,13 +364,11 @@ function openModal(preset) {
     document.addEventListener('keydown', handleModalKeydown, true);
     document.addEventListener('focusin', handleModalFocusIn, true);
 
-    // Fix modal header alignment — measure after render and adjust with translateY
-    // (translateY doesn't affect flex layout, unlike marginTop which gets halved by re-centering)
+    // Alignment safety net — only kicks in if CSS alone leaves >0.5px offset
     requestAnimationFrame(() => {
         const dirWrapper = container.querySelector('.modal-direction-primary');
         const cashbox = container.querySelector('.cashbox-display');
         if (dirWrapper && cashbox) {
-            dirWrapper.style.marginTop = '0';
             const dirBtn = dirWrapper.querySelector('.direction-primary-btn');
             const btnTop = (dirBtn || dirWrapper).getBoundingClientRect().top;
             const cbTop = cashbox.getBoundingClientRect().top;
