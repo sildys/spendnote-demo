@@ -68,6 +68,27 @@
             flex: 1;
         }
 
+        .nt-topbar-watermark {
+            display: none;
+            margin-left: auto;
+            font-size: 56px;
+            line-height: 1;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            color: rgba(16, 185, 129, 0.16);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .nt-topbar-watermark::after {
+            content: "IN";
+        }
+
+        body:has(#createTransactionModalContainer[data-direction="out"]) .nt-topbar-watermark::after {
+            content: "OUT";
+            color: rgba(71, 85, 105, 0.2);
+        }
+
         .nt-topbar-date {
             font-size: 12px;
             color: var(--text-muted, #64748b);
@@ -249,6 +270,16 @@
 
             .nt-topbar-title {
                 font-size: 16px;
+                flex: 0 1 auto;
+            }
+
+            .nt-topbar-watermark {
+                display: block;
+                font-size: clamp(34px, 11vw, 56px);
+            }
+
+            .nt-topbar-date {
+                display: none;
             }
 
             .nt-direction-header {
@@ -273,9 +304,7 @@
             }
 
             .nt-direction-header .modal-watermark {
-                font-size: 34px;
-                margin-left: 0;
-                align-self: flex-end;
+                display: none;
             }
 
             .nt-cashbox-row {
@@ -297,20 +326,43 @@
                 font-size: 13px;
                 padding: 10px 8px;
             }
-        }
-
-        @media (max-width: 420px) {
-            .nt-topbar-date {
-                display: none;
-            }
 
             .nt-mode-row {
-                flex-direction: column;
-                align-items: stretch;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: nowrap;
+            }
+
+            .nt-mode-row .modal-mode-toggle {
+                flex: 1;
+                min-width: 0;
             }
 
             #createTransactionModalContainer #modalDateField {
-                width: 100% !important;
+                width: auto !important;
+                min-width: 88px;
+                max-width: 108px;
+                flex: 0 0 auto;
+                font-size: 11px !important;
+                min-height: 34px !important;
+                padding: 4px 6px !important;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .nt-topbar-watermark {
+                font-size: clamp(30px, 10vw, 42px);
+            }
+
+            .nt-mode-row {
+                flex-direction: row;
+                align-items: center;
+            }
+
+            #createTransactionModalContainer #modalDateField {
+                width: 88px !important;
             }
 
             .nt-footer {
@@ -334,6 +386,7 @@
             <i class="fas fa-arrow-left"></i>
         </a>
         <span class="nt-topbar-title">New Transaction</span>
+        <span class="nt-topbar-watermark" aria-hidden="true"></span>
         <span class="nt-topbar-date" id="ntTopbarDate"></span>
     </div>
 
