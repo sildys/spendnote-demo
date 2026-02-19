@@ -1409,6 +1409,18 @@
             flex: 1;
         }
 
+        @media (min-width: 769px) {
+            .registers-swiper .register-card,
+            .registers-swiper .add-cash-box-card {
+                height: 236px;
+                min-height: 236px;
+            }
+
+            .registers-swiper .register-card {
+                justify-content: space-between;
+            }
+        }
+
         /* Pagination */
         .swiper-pagination {
             bottom: 10px !important;
@@ -1535,6 +1547,8 @@
             .add-cash-box-card {
                 padding: 10px;
                 border-radius: 16px;
+                height: 210px;
+                min-height: 210px;
             }
 
             .register-top {
