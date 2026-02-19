@@ -364,6 +364,21 @@ function openModal(preset) {
     document.addEventListener('keydown', handleModalKeydown, true);
     document.addEventListener('focusin', handleModalFocusIn, true);
 
+    // Fix modal header alignment — measure after render and adjust
+    requestAnimationFrame(() => {
+        const dirWrapper = container.querySelector('.modal-direction-primary');
+        const cashbox = container.querySelector('.cashbox-display');
+        if (dirWrapper && cashbox) {
+            const dirBtn = dirWrapper.querySelector('.direction-primary-btn');
+            const btnTop = (dirBtn || dirWrapper).getBoundingClientRect().top;
+            const cbTop = cashbox.getBoundingClientRect().top;
+            const diff = cbTop - btnTop;
+            if (Math.abs(diff) > 0.5) {
+                dirWrapper.style.marginTop = diff + 'px';
+            }
+        }
+    });
+
     const form = getEl('modalTransactionForm');
     if (form) form.reset();
 
