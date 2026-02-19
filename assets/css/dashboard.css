@@ -4233,3 +4233,53 @@ tr:hover [data-category-tag] {
     }
 }
 
+/* ==========================================================
+   MODAL HEADER ALIGNMENT — DEFINITIVE OVERRIDE
+   display:contents flattens wrappers so ALL items (direction
+   buttons, cashbox, watermark, close) are direct flex children
+   of .modal-header → single align-items:center baseline.
+   ========================================================== */
+#createTransactionModalContainer .modal-header {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    height: 72px !important;
+    padding: 0 24px !important;
+    box-sizing: border-box !important;
+    gap: 0 !important;
+}
+
+#createTransactionModalContainer .modal-header-left,
+#createTransactionModalContainer .modal-header-right {
+    display: contents !important;
+}
+
+#createTransactionModalContainer .modal-direction-primary {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-right: auto !important;
+}
+
+#createTransactionModalContainer .direction-primary-btn {
+    height: 52px !important;
+    box-sizing: border-box !important;
+}
+
+#createTransactionModalContainer .cashbox-display {
+    height: 52px !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    margin-left: 12px !important;
+}
+
+#createTransactionModalContainer .modal-watermark {
+    flex-shrink: 0 !important;
+    margin-left: 8px !important;
+}
+
+#createTransactionModalContainer .modal-close {
+    flex-shrink: 0 !important;
+    margin-left: 8px !important;
+}
+
