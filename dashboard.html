@@ -1639,7 +1639,10 @@
                         e.stopPropagation();
                         const direction = btn.getAttribute('data-quick');
                         activateCard(card);
-                        if (typeof window.openModal === 'function') {
+                        if (window.innerWidth <= 768) {
+                            window.location.href = 'spendnote-new-transaction.html?cashBoxId=' +
+                                encodeURIComponent(card.dataset.id) + '&direction=' + encodeURIComponent(direction);
+                        } else if (typeof window.openModal === 'function') {
                             window.openModal({ cashBoxId: card.dataset.id, direction });
                         }
                     });

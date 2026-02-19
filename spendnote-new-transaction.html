@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="robots" content="noindex">
     <title>New Transaction — SpendNote</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=12">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=15">
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260219-0340">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260219-0400">
     <style>
         /* =============================================
            NEW TRANSACTION PAGE — full-screen mobile form
@@ -170,27 +170,35 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-bottom: 12px;
         }
 
         .nt-mode-row .modal-mode-toggle {
             flex: 1;
         }
 
-        /* On desktop (≥769px): redirect to dashboard */
-        @media (min-width: 769px) {
-            .nt-desktop-notice {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 16px;
-                padding: 60px 24px;
-                text-align: center;
-            }
-            .nt-desktop-notice p {
-                color: var(--text-muted, #64748b);
-                font-size: 15px;
-            }
+        /* Compact form inputs on mobile */
+        .nt-body .form-control,
+        .nt-body .form-input,
+        .nt-body .form-textarea {
+            font-size: 15px !important;
+            min-height: 40px !important;
+            padding: 8px 12px !important;
+        }
+
+        .nt-body .modal-section {
+            padding: 12px !important;
+        }
+
+        /* Description/Amount ratio: description wider */
+        .nt-body .form-row-line-item,
+        .nt-body .receipt-items-header {
+            grid-template-columns: minmax(0, 1fr) 100px !important;
+        }
+
+        /* Contact grid: single column */
+        .nt-body .modal-contact-grid {
+            grid-template-columns: 1fr !important;
         }
     </style>
 </head>
@@ -388,7 +396,7 @@
 <script src="assets/js/supabase-config.js?v=20260216-2236"></script>
 <script src="assets/js/auth-guard.js?v=20260213-1658"></script>
 <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
-<script src="assets/js/nav-loader.js?v=20260217-0200"></script>
+<script src="assets/js/nav-loader.js?v=20260219-0400"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=20260217-2001"></script>
 <script src="assets/js/dashboard-modal.js?v=20260219-0230"></script>
@@ -396,9 +404,7 @@
 
 <script>
 (function () {
-    // =============================================
-    // NEW TRANSACTION PAGE INIT
-    // =============================================
+    'use strict';
 
     // On desktop: redirect to dashboard (modal handles it there)
     if (window.innerWidth >= 769) {
@@ -406,8 +412,31 @@
         return;
     }
 
-    // Set date display
-    (function setDate() {
+    // ── helpers ──────────────────────────────────────────────
+    function hexToRgb(hex) {
+        const h = String(hex || '').replace('#', '');
+        if (h.length !== 6) return '5, 150, 105';
+        const r = parseInt(h.slice(0, 2), 16);
+        const g = parseInt(h.slice(2, 4), 16);
+        const b = parseInt(h.slice(4, 6), 16);
+        return r + ', ' + g + ', ' + b;
+    }
+
+    function formatBalance(balance, currency) {
+        const n = parseFloat(balance);
+        if (!Number.isFinite(n)) return '';
+        const sym = currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : '$';
+        return sym + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function getIconClass(icon) {
+        if (!icon) return 'fa-cash-register';
+        if (icon.startsWith('fa-')) return icon;
+        return 'fa-cash-register';
+    }
+
+    // ── date init ────────────────────────────────────────────
+    function initDate() {
         const now = new Date();
         const mm = String(now.getMonth() + 1).padStart(2, '0');
         const dd = String(now.getDate()).padStart(2, '0');
@@ -421,115 +450,137 @@
         }
         const dateHidden = document.getElementById('modalDate');
         if (dateHidden) dateHidden.value = yyyy + '-' + mm + '-' + dd;
-    })();
+    }
 
-    // Build synthetic .register-card elements from cashbox data
-    // so dashboard-modal.js initModalCashboxCarousel() can find them
+    // ── build hidden .register-card elements ─────────────────
+    // dashboard-modal.js reads these to populate the cashbox carousel
     function buildRegisterCards(cashBoxes) {
         let container = document.getElementById('ntRegisterCards');
         if (!container) {
             container = document.createElement('div');
             container.id = 'ntRegisterCards';
-            container.style.display = 'none';
+            container.style.cssText = 'display:none;position:absolute;left:-9999px;';
             document.body.appendChild(container);
         }
         container.innerHTML = '';
 
+        let preferredId = '';
+        try { preferredId = String(localStorage.getItem('activeCashBoxId') || '').trim(); } catch (_) {}
+
         cashBoxes.forEach(function (cb) {
+            const seq = Number(cb.sequence_number);
+            const displayCode = Number.isFinite(seq) && seq > 0
+                ? 'SN-' + String(seq).padStart(3, '0')
+                : (String(cb.id_prefix || '').trim() || 'SN');
+            const color = cb.color || '#059669';
+            const rgb = hexToRgb(color);
+            const iconClass = getIconClass(cb.icon);
+            const balanceText = formatBalance(cb.current_balance, cb.currency);
+
             const card = document.createElement('div');
-            card.className = 'register-card';
+            card.className = 'register-card' + (cb.id === preferredId ? ' active' : '');
             card.dataset.id = cb.id;
-            card.dataset.color = cb.color || '#059669';
-            card.dataset.rgb = cb.rgb || '5, 150, 105';
-            card.dataset.displayCode = cb.display_code || cb.id_prefix || 'SN';
-            card.dataset.sequenceNumber = cb.sequence_number || '';
-            card.dataset.icon = cb.icon || 'fa-cash-register';
+            card.dataset.color = color;
+            card.dataset.rgb = rgb;
+            card.dataset.displayCode = displayCode;
+            card.dataset.sequenceNumber = Number.isFinite(seq) ? String(seq) : '';
+            card.dataset.icon = iconClass;
+            // dashboard-modal.js reads these child elements:
             card.innerHTML =
-                '<span class="register-id">' + (cb.display_code || '') + '</span>' +
+                '<span class="register-id">' + displayCode + '</span>' +
                 '<span class="register-name">' + (cb.name || 'Cash Box') + '</span>' +
-                '<span class="register-balance">' + formatBalance(cb.current_balance, cb.currency) + '</span>' +
-                '<i class="fas ' + (cb.icon || 'fa-cash-register') + '"></i>';
+                '<span class="register-balance">' + balanceText + '</span>';
             container.appendChild(card);
         });
+    }
 
-        // Mark preferred cashbox as active
+    // ── direction UI ─────────────────────────────────────────
+    function setDirection(direction) {
+        const container = document.getElementById('createTransactionModalContainer');
+        if (!container) return;
+        const dir = direction === 'out' ? 'out' : 'in';
+        container.dataset.direction = dir;
+        // sync radio
+        const radio = document.getElementById(dir === 'out' ? 'modalDirectionOut' : 'modalDirectionIn');
+        if (radio) radio.checked = true;
+    }
+
+    // ── cashbox display ───────────────────────────────────────
+    // Mirrors dashboard-modal.js updateModalCashboxDisplay but works standalone
+    function updateCashboxDisplay() {
+        const cashbox = window.modalCashBoxes && window.modalCashBoxes[window.modalCashBoxIndex];
+        if (!cashbox) return;
+
+        const iconEl = document.getElementById('modalCashboxIcon');
+        const nameEl = document.getElementById('modalCashboxName');
+        const idDisplayEl = document.getElementById('modalCashboxIdDisplay');
+        const balanceEl = document.getElementById('modalCashboxBalance');
+        const idInput = document.getElementById('modalCashBoxId');
+
+        if (iconEl) {
+            iconEl.innerHTML = '<i class="fas ' + cashbox.icon + '"></i>';
+            iconEl.style.background = cashbox.color;
+        }
+        if (nameEl) nameEl.textContent = cashbox.name;
+        if (idDisplayEl) idDisplayEl.textContent = cashbox.displayId || '';
+        if (balanceEl) balanceEl.textContent = cashbox.balance ? 'Balance: ' + cashbox.balance : '';
+        if (idInput) idInput.value = cashbox.id;
+
+        // Update theme color
+        document.documentElement.style.setProperty('--active', cashbox.color);
+        document.documentElement.style.setProperty('--active-rgb', cashbox.rgb);
         try {
-            const preferred = localStorage.getItem('activeCashBoxId');
-            if (preferred) {
-                const activeCard = container.querySelector('.register-card[data-id="' + preferred + '"]');
-                if (activeCard) activeCard.classList.add('active');
-            }
+            localStorage.setItem('activeCashBoxColor', cashbox.color);
+            localStorage.setItem('activeCashBoxRgb', cashbox.rgb);
+            localStorage.setItem('activeCashBoxId', cashbox.id);
         } catch (_) {}
     }
+    // expose so dashboard-modal.js can call it too
+    window.updateModalCashboxDisplay = updateCashboxDisplay;
 
-    function formatBalance(balance, currency) {
-        const n = parseFloat(balance);
-        if (!Number.isFinite(n)) return '';
-        const sym = currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : '$';
-        return sym + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-
-    // Direction UI update (mirrors dashboard-modal.js)
-    function updateDirectionUI(direction) {
-        const container = document.getElementById('createTransactionModalContainer');
-        if (container) container.dataset.direction = direction === 'out' ? 'out' : 'in';
-    }
-
-    // Wire direction radio buttons
-    function wireDirectionButtons() {
+    // ── wire events ───────────────────────────────────────────
+    function wireEvents() {
+        // Direction buttons
         document.querySelectorAll('input[name="modalDirection"]').forEach(function (radio) {
             radio.addEventListener('change', function () {
-                updateDirectionUI(radio.value);
+                setDirection(radio.value);
             });
         });
-    }
 
-    // Wire cashbox prev/next
-    function wireCashboxArrows() {
-        const prevBtn = document.getElementById('modalCashboxPrev');
-        const nextBtn = document.getElementById('modalCashboxNext');
-        if (prevBtn) {
-            prevBtn.addEventListener('click', function () {
-                if (window.modalCashBoxes && window.modalCashBoxes.length > 1) {
-                    window.modalCashBoxIndex = (window.modalCashBoxIndex - 1 + window.modalCashBoxes.length) % window.modalCashBoxes.length;
-                    if (typeof window.updateModalCashboxDisplay === 'function') window.updateModalCashboxDisplay();
-                    else if (typeof initModalCashboxCarousel === 'function') initModalCashboxCarousel();
-                }
-            });
-        }
-        if (nextBtn) {
-            nextBtn.addEventListener('click', function () {
-                if (window.modalCashBoxes && window.modalCashBoxes.length > 1) {
-                    window.modalCashBoxIndex = (window.modalCashBoxIndex + 1) % window.modalCashBoxes.length;
-                    if (typeof window.updateModalCashboxDisplay === 'function') window.updateModalCashboxDisplay();
-                    else if (typeof initModalCashboxCarousel === 'function') initModalCashboxCarousel();
-                }
-            });
-        }
-    }
+        // Cashbox prev/next
+        document.getElementById('modalCashboxPrev') && document.getElementById('modalCashboxPrev').addEventListener('click', function () {
+            if (!window.modalCashBoxes || window.modalCashBoxes.length < 2) return;
+            window.modalCashBoxIndex = (window.modalCashBoxIndex - 1 + window.modalCashBoxes.length) % window.modalCashBoxes.length;
+            updateCashboxDisplay();
+        });
+        document.getElementById('modalCashboxNext') && document.getElementById('modalCashboxNext').addEventListener('click', function () {
+            if (!window.modalCashBoxes || window.modalCashBoxes.length < 2) return;
+            window.modalCashBoxIndex = (window.modalCashBoxIndex + 1) % window.modalCashBoxes.length;
+            updateCashboxDisplay();
+        });
 
-    // Wire mode toggle
-    function wireModeToggle() {
+        // Mode toggle — update data-mode on #createTransactionModalContainer
         document.querySelectorAll('input[name="modalMode"]').forEach(function (radio) {
             radio.addEventListener('change', function () {
                 if (typeof window.updateModalModeUI === 'function') {
                     window.updateModalModeUI(radio.value);
+                } else {
+                    const container = document.getElementById('createTransactionModalContainer');
+                    if (container) container.dataset.mode = radio.value;
                 }
             });
         });
     }
 
-    // Override closeModal / loadDashboardData for page context
+    // ── override page-level functions ────────────────────────
     window.closeModal = function () {
         window.location.href = 'dashboard.html';
     };
 
-    // After successful save: navigate back (or reload for "add another")
-    const _origLoadDashboardData = window.loadDashboardData;
     window.loadDashboardData = function () {
-        // Check "add another" checkbox
-        const addAnother = Boolean(document.getElementById('modalAddAnother')?.checked);
+        const addAnother = Boolean(document.getElementById('modalAddAnother') && document.getElementById('modalAddAnother').checked);
         if (addAnother) {
+            // preserve cashbox selection across reload
             window.location.reload();
         } else {
             window.location.href = 'dashboard.html';
@@ -537,124 +588,120 @@
         return Promise.resolve();
     };
 
-    // Main init: load cashboxes then init form
+    // ── main init ─────────────────────────────────────────────
     async function init() {
+        initDate();
+
         const loadingEl = document.getElementById('ntLoading');
-        const errorEl = document.getElementById('ntError');
+        const errorEl   = document.getElementById('ntError');
         const contentEl = document.getElementById('ntContent');
 
         try {
-            // Wait for auth + db
+            // Wait for supabase-config.js to expose window.auth + window.db
             let tries = 0;
-            while ((!window.auth || !window.db) && tries < 50) {
-                await new Promise(r => setTimeout(r, 100));
+            while ((!window.auth || !window.db) && tries < 80) {
+                await new Promise(function (r) { setTimeout(r, 100); });
                 tries++;
             }
-
-            if (!window.auth || !window.db) {
-                throw new Error('Authentication not available. Please refresh.');
-            }
+            if (!window.auth || !window.db) throw new Error('Auth not available — please refresh.');
 
             const user = await window.auth.getCurrentUser();
-            if (!user) {
-                window.location.href = 'spendnote-login.html';
-                return;
-            }
+            if (!user) { window.location.href = 'spendnote-login.html'; return; }
 
-            // Load cashboxes
-            const result = await window.db.cashBoxes.getAll();
-            const cashBoxes = Array.isArray(result) ? result : (result?.data || []);
+            // Load cashboxes with all fields needed
+            const cashBoxes = await window.db.cashBoxes.getAll({
+                select: 'id, name, color, currency, icon, current_balance, sequence_number, id_prefix, sort_order'
+            });
 
-            if (!cashBoxes.length) {
+            if (!Array.isArray(cashBoxes) || !cashBoxes.length) {
                 if (loadingEl) loadingEl.style.display = 'none';
                 if (errorEl) {
                     errorEl.style.display = '';
-                    errorEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> You need to create a Cash Box first. <a href="spendnote-cash-box-settings.html" style="color:inherit; font-weight:700;">Create one →</a>';
+                    errorEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> You need to create a Cash Box first. ' +
+                        '<a href="spendnote-cash-box-settings.html" style="color:inherit;font-weight:700;">Create one →</a>';
                 }
                 return;
             }
 
-            // Build synthetic register cards for dashboard-modal.js
+            // Build hidden register-card DOM so dashboard-modal.js carousel works
             buildRegisterCards(cashBoxes);
+
+            // Build window.modalCashBoxes array directly (don't rely on DOM)
+            window.modalCashBoxes = cashBoxes.map(function (cb) {
+                const seq = Number(cb.sequence_number);
+                const displayId = Number.isFinite(seq) && seq > 0
+                    ? 'SN-' + String(seq).padStart(3, '0')
+                    : (String(cb.id_prefix || '').trim() || 'SN');
+                return {
+                    id: cb.id,
+                    name: cb.name || 'Cash Box',
+                    displayId: displayId,
+                    color: cb.color || '#059669',
+                    rgb: hexToRgb(cb.color || '#059669'),
+                    icon: getIconClass(cb.icon),
+                    balance: formatBalance(cb.current_balance, cb.currency)
+                };
+            });
+
+            // Set preferred cashbox from URL param or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const urlCashBoxId = urlParams.get('cashBoxId');
+            const urlDirection = urlParams.get('direction');
+
+            let preferredId = urlCashBoxId || '';
+            if (!preferredId) {
+                try { preferredId = String(localStorage.getItem('activeCashBoxId') || '').trim(); } catch (_) {}
+            }
+            const preferredIdx = preferredId
+                ? window.modalCashBoxes.findIndex(function (cb) { return cb.id === preferredId; })
+                : -1;
+            window.modalCashBoxIndex = preferredIdx >= 0 ? preferredIdx : 0;
 
             // Show content
             if (loadingEl) loadingEl.style.display = 'none';
             if (contentEl) contentEl.style.display = '';
 
-            // Init modal carousel (reads .register-card elements)
-            if (typeof window.openModal === 'function') {
-                // Use openModal internals by calling initModalCashboxCarousel via openModal
-                // We can't call openModal directly (it shows overlay), so init manually
+            // Update cashbox display
+            updateCashboxDisplay();
+
+            // Set direction from URL or default
+            if (urlDirection === 'in' || urlDirection === 'out') {
+                setDirection(urlDirection);
+            } else {
+                setDirection('in');
             }
 
-            // Init cashbox carousel directly
-            const cards = document.querySelectorAll('.register-card');
-            window.modalCashBoxes = [];
-            cards.forEach(function (card) {
-                if (!card.dataset.id) return;
-                const iconClass = card.dataset.icon || 'fa-cash-register';
-                let displayId = String(card.dataset.displayCode || '').trim();
-                if (!displayId) {
-                    const seq = Number(card.dataset.sequenceNumber || '');
-                    if (Number.isFinite(seq) && seq > 0) displayId = 'SN-' + String(seq).padStart(3, '0');
-                }
-                window.modalCashBoxes.push({
-                    id: card.dataset.id,
-                    name: card.querySelector('.register-name') ? card.querySelector('.register-name').textContent : 'Cash Box',
-                    displayId: displayId,
-                    color: card.dataset.color || '#059669',
-                    rgb: card.dataset.rgb || '5, 150, 105',
-                    icon: iconClass
-                });
-            });
-
-            // Set preferred cashbox index
-            let preferredId = '';
-            try { preferredId = String(localStorage.getItem('activeCashBoxId') || '').trim(); } catch (_) {}
-            const preferredIdx = preferredId
-                ? window.modalCashBoxes.findIndex(function (cb) { return String(cb.id) === preferredId; })
-                : -1;
-            window.modalCashBoxIndex = preferredIdx >= 0 ? preferredIdx : 0;
-
-            // Expose updateModalCashboxDisplay globally (from dashboard-modal.js scope)
-            // Trigger display update via the existing function
-            if (typeof window.updateModalCashboxDisplay === 'function') {
-                window.updateModalCashboxDisplay();
-            }
-
-            // Init mode from localStorage
+            // Set mode from localStorage
+            const storedMode = (() => {
+                try { return localStorage.getItem('spendnote.modalMode') === 'detailed' ? 'detailed' : 'quick'; }
+                catch (_) { return 'quick'; }
+            })();
             if (typeof window.updateModalModeUI === 'function') {
-                const storedMode = (() => {
-                    try { return localStorage.getItem('spendnote.modalMode') === 'detailed' ? 'detailed' : 'quick'; }
-                    catch (_) { return 'quick'; }
-                })();
                 window.updateModalModeUI(storedMode, { persist: false });
+            } else {
+                const container = document.getElementById('createTransactionModalContainer');
+                if (container) container.dataset.mode = storedMode;
+                const modeRadio = document.getElementById(storedMode === 'detailed' ? 'modalModeDetailed' : 'modalModeQuick');
+                if (modeRadio) modeRadio.checked = true;
             }
 
-            // Wire events
-            wireDirectionButtons();
-            wireCashboxArrows();
-            wireModeToggle();
+            // Wire all events
+            wireEvents();
 
-            // Init form submit
+            // Init form submission (dashboard-form.js)
             if (typeof initTransactionForm === 'function') {
                 initTransactionForm();
             }
-
-            // Focus first direction button
-            const firstBtn = document.querySelector('.direction-primary-btn');
-            if (firstBtn) firstBtn.focus();
 
         } catch (err) {
             if (loadingEl) loadingEl.style.display = 'none';
             if (errorEl) {
                 errorEl.style.display = '';
-                errorEl.textContent = err.message || 'Failed to load. Please refresh.';
+                errorEl.textContent = String(err && err.message ? err.message : 'Failed to load. Please refresh.');
             }
         }
     }
 
-    // Start after DOM ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
