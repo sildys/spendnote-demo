@@ -4259,6 +4259,18 @@ tr:hover [data-category-tag] {
     align-items: center !important;
     gap: 8px !important;
     margin-right: auto !important;
+    height: 52px !important;
+    box-sizing: border-box !important;
+}
+
+#createTransactionModalContainer .modal-direction-primary > input[type="radio"] {
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
 }
 
 #createTransactionModalContainer .direction-primary-btn {
