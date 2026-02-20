@@ -565,11 +565,8 @@ function buildReceiptUrl(format) {
     };
     
     const params = new URLSearchParams();
-    params.append('v', 'settings-preview-04');
+    params.append('v', 'settings-preview-05');
     params.append('demo', '1');
-    if (format === 'a4') {
-        params.append('copies', '1');
-    }
     
     // Display options
     for (const [key, value] of Object.entries(displayOptions)) {

@@ -22,19 +22,22 @@ body {
 .page {
   width: 215.9mm;
   height: 279.4mm;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 /* RECEIPT */
 .receipt {
   width: 215.9mm;
-  height: 279.4mm;
+  height: calc((279.4mm - 6mm) / 2);
   box-sizing: border-box;
   padding: 6mm 12mm;
-  clear: both;              /* <<< CRITICAL FIX */
   --logo-w: 36mm;
   --logo-scale: 1;
   --logo-gap: 4mm;
   position: relative;
+  overflow: hidden;
 }
 
 /* VOID WATERMARK */
@@ -102,11 +105,13 @@ body {
 .parties {
   height: 26mm;
   margin-top: 1.5mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 .party {
-  width: 48%;
-  display: inline-block;
-  vertical-align: top;
+  width: calc(50% - 2mm);
+  display: block;
   font-size: 8.5pt;
   line-height: 1.15;
 }
@@ -116,7 +121,7 @@ body {
   margin-bottom: 0.6mm;
 }
 .party.right {
-  float: right;
+  float: none;
 }
 .party-id {
   font-size: 7.5pt;
@@ -185,15 +190,17 @@ body {
 .signatures {
   height: 15.5mm;
   margin-top: 4mm;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 .signature {
-  width: 48%;
-  display: inline-block;
-  vertical-align: bottom;
+  width: calc(50% - 2mm);
+  display: block;
   font-size: 8.5pt;
 }
 .signature.right {
-  float: right;
+  float: none;
 }
 .signature .line {
   border-top: 0.25mm solid #000;
@@ -218,7 +225,7 @@ body {
   position: relative;
   font-size: 7.5pt;
   color: #666;
-  clear: both;
+  flex: 0 0 6mm;
 }
 .cut-band:before {
   content: "";
@@ -236,26 +243,9 @@ body {
   z-index: 1;
 }
 
-/* Single-copy is default. Enable second copy only with ?copies=2 */
-.cut-band,
+/* Always two copies per page (top + bottom) */
 .receipt-copy-b {
-  display: none;
-}
-
-body.two-copies .receipt {
-  height: calc((279.4mm - 6mm) / 2);
-}
-
-body.two-copies .cut-band {
-  display: flex;
-}
-
-body.two-copies .receipt-copy-b {
   display: block;
-}
-
-body.single-copy .receipt-copy-b {
-  display: none !important;
 }
 
 .sn-logo{
@@ -516,9 +506,7 @@ body.single-copy .receipt-copy-b {
 
 <script>
   const urlParams = new URLSearchParams(window.location.search);
-  const copiesParam = String(urlParams.get('copies') || '').trim().toLowerCase();
-  const useTwoCopies = copiesParam === '2' || copiesParam === 'two';
-  document.body.classList.add(useTwoCopies ? 'two-copies' : 'single-copy');
+  document.body.classList.add('two-copies');
   const shouldShowAddresses = urlParams.get('addresses') !== '0';
   const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
   const isItemsSingle = itemsMode === 'single';
