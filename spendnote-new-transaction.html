@@ -32,7 +32,7 @@
             max-width: 680px;
             margin: 0 auto;
             width: 100%;
-            overflow-x: clip;
+            overflow-x: hidden;
         }
 
         #createTransactionModalContainer,
@@ -56,6 +56,10 @@
             position: sticky;
             top: 0;
             z-index: 20;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .nt-back-btn {
@@ -83,6 +87,10 @@
             font-weight: 800;
             color: var(--text, #1e293b);
             flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .nt-topbar-watermark {
@@ -125,6 +133,9 @@
             top: 65px;
             z-index: 19;
             overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .nt-direction-header .modal-direction-primary {
@@ -146,6 +157,10 @@
             padding: 10px 16px;
             background: white;
             border-bottom: 1px solid var(--border, #e2e8f0);
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
         }
 
         .nt-cashbox-row .cashbox-display {
@@ -176,6 +191,8 @@
             display: flex;
             gap: 10px;
             z-index: 1120;
+            box-sizing: border-box;
+            overflow-x: hidden;
         }
 
         .nt-footer .btn {
@@ -256,6 +273,16 @@
         #createTransactionModalContainer .cashbox-display {
             min-width: 0 !important;
             width: 100% !important;
+        }
+
+        #createTransactionModalContainer .cashbox-display .cashbox-name,
+        #createTransactionModalContainer .cashbox-display .cashbox-balance,
+        #createTransactionModalContainer #modalCashboxName {
+            min-width: 0 !important;
+            max-width: 100% !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
         }
 
         #createTransactionModalContainer #modalDateField {
