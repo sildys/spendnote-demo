@@ -65,6 +65,7 @@
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=18">
     <style>
         /* ===================================
@@ -86,6 +87,18 @@
         body {
             position: relative;
             background: #ffffff;
+        }
+
+        /* Yandex-safe CTA fallbacks: keep text visible even if gradient vars fail */
+        .btn-primary {
+            background: #059669;
+            color: #ffffff !important;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #0a0a0a !important;
+            border: 2px solid rgba(0, 0, 0, 0.08);
         }
 
         body::before {
@@ -315,13 +328,20 @@
             display: block;
             font-size: clamp(4rem, 10vw, 7rem);
             font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #047857;
             line-height: 0.95;
             margin-bottom: 0.15rem;
             letter-spacing: -0.04em;
+        }
+
+        @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+            .hero-big {
+                background: linear-gradient(135deg, var(--primary), var(--primary-light));
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                -webkit-text-fill-color: transparent;
+            }
         }
 
         .hero-accent {
@@ -705,6 +725,7 @@
         .feature-icon {
             width: 48px;
             height: 48px;
+            background: #059669;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border-radius: var(--radius-md);
             display: flex;
@@ -717,36 +738,43 @@
         }
 
         .feature-item:nth-child(2) .feature-icon {
+            background: #f59e0b;
             background: linear-gradient(135deg, var(--orange), #fbbf24);
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
         }
 
         .feature-item:nth-child(3) .feature-icon {
+            background: #3b82f6;
             background: linear-gradient(135deg, var(--blue), #60a5fa);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         .feature-item:nth-child(4) .feature-icon {
+            background: #10b981;
             background: linear-gradient(135deg, var(--primary-light), var(--primary));
             box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .feature-item:nth-child(5) .feature-icon {
+            background: #f59e0b;
             background: linear-gradient(135deg, #f59e0b, #fbbf24);
             box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
         }
 
         .feature-item:nth-child(6) .feature-icon {
+            background: #3b82f6;
             background: linear-gradient(135deg, #3b82f6, #60a5fa);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         .feature-item:nth-child(7) .feature-icon {
+            background: #3b82f6;
             background: linear-gradient(135deg, #3b82f6, #60a5fa);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         .feature-item:nth-child(8) .feature-icon {
+            background: #059669;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
         }
@@ -887,6 +915,7 @@
         }
 
         .toggle-switch.active {
+            background: #059669;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border-color: transparent;
         }
@@ -909,6 +938,7 @@
 
         .save-badge {
             display: inline-block;
+            background: #059669;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             padding: 0.35rem 0.9rem;
@@ -1503,7 +1533,7 @@ function togglePreviewDetails() {
         <div class="trust-badges">
             <span><i class="fas fa-check-circle"></i> SSL Encrypted</span>
             <span>
-                <i class="fas fa-shield-check"></i> 
+                <i class="fas fa-shield-halved"></i> 
                 <span class="tooltip-wrapper">
                     30-Day Money Back
                     <span class="tooltip-icon">i</span>
@@ -1700,7 +1730,7 @@ function togglePreviewDetails() {
         </div>
 
         <div class="pricing-guarantee">
-            <i class="fas fa-shield-check"></i>
+            <i class="fas fa-shield-halved"></i>
             <p>
                 <strong>
                     <span class="tooltip-wrapper">
