@@ -18,6 +18,11 @@
         body {
             background: var(--bg, #f1f5f9);
             min-height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        html {
+            overflow-x: hidden;
         }
 
         .nt-page {
@@ -26,6 +31,18 @@
             min-height: 100dvh;
             max-width: 680px;
             margin: 0 auto;
+            width: 100%;
+            overflow-x: clip;
+        }
+
+        #createTransactionModalContainer,
+        .nt-body,
+        .nt-body form,
+        .nt-body .modal-section {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
         }
 
         /* Top bar: back button + title + date */
@@ -445,8 +462,8 @@
         <!-- Scrollable form body -->
         <div class="nt-body">
             <form id="modalTransactionForm" autocomplete="off" style="display: flex; flex-direction: column; gap: 12px;">
-                <input type="text" name="username" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
-                <input type="password" name="password" autocomplete="new-password" tabindex="-1" aria-hidden="true" style="position:absolute; left:-9999px; width:1px; height:1px; opacity:0;">
+                <input type="text" name="username" autocomplete="username" tabindex="-1" aria-hidden="true" style="position:fixed; top:0; left:0; width:1px; height:1px; opacity:0; pointer-events:none;">
+                <input type="password" name="password" autocomplete="new-password" tabindex="-1" aria-hidden="true" style="position:fixed; top:0; left:0; width:1px; height:1px; opacity:0; pointer-events:none;">
 
                 <!-- Contact Section -->
                 <div class="modal-section" style="padding: 16px;">
@@ -637,7 +654,7 @@
         if (!container) {
             container = document.createElement('div');
             container.id = 'ntRegisterCards';
-            container.style.cssText = 'display:none;position:absolute;left:-9999px;';
+            container.style.cssText = 'display:none;position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
             document.body.appendChild(container);
         }
         container.innerHTML = '';
