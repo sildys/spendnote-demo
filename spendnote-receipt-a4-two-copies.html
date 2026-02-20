@@ -27,7 +27,7 @@ body {
 /* RECEIPT */
 .receipt {
   width: 215.9mm;
-  height: calc((279.4mm - 6mm) / 2);
+  height: 279.4mm;
   box-sizing: border-box;
   padding: 6mm 12mm;
   clear: both;              /* <<< CRITICAL FIX */
@@ -236,6 +236,24 @@ body {
   z-index: 1;
 }
 
+/* Single-copy is default. Enable second copy only with ?copies=2 */
+.cut-band,
+.receipt-copy-b {
+  display: none;
+}
+
+body.two-copies .receipt {
+  height: calc((279.4mm - 6mm) / 2);
+}
+
+body.two-copies .cut-band {
+  display: flex;
+}
+
+body.two-copies .receipt-copy-b {
+  display: block;
+}
+
 .sn-logo{
   display:inline-flex;
   align-items:center;
@@ -331,7 +349,7 @@ body {
 <div class="page">
 
   <!-- RECEIPT A -->
-  <div class="receipt">
+  <div class="receipt receipt-copy-a">
     <div class="void-watermark" aria-hidden="true">VOID</div>
     <div class="topbar">
   <div>
@@ -412,7 +430,7 @@ body {
   <div class="cut-band"><span>CUT HERE</span></div>
 
   <!-- RECEIPT B -->
-  <div class="receipt">
+  <div class="receipt receipt-copy-b">
     <div class="void-watermark" aria-hidden="true">VOID</div>
     <!-- identical copy -->
     <div class="topbar">
@@ -494,6 +512,9 @@ body {
 
 <script>
   const urlParams = new URLSearchParams(window.location.search);
+  const copiesParam = String(urlParams.get('copies') || '').trim().toLowerCase();
+  const useTwoCopies = copiesParam === '2' || copiesParam === 'two';
+  document.body.classList.add(useTwoCopies ? 'two-copies' : 'single-copy');
   const shouldShowAddresses = urlParams.get('addresses') !== '0';
   const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
   const isItemsSingle = itemsMode === 'single';

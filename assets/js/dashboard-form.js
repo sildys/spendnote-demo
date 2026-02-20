@@ -469,7 +469,7 @@ function initTransactionForm() {
                     };
 
                     const params = new URLSearchParams();
-                    params.set('v', 'print-20260219-2048');
+                    params.set('v', 'print-20260220-1600');
                     if (createdId) params.set('txId', createdId);
                     params.set('bootstrap', '1');
 
@@ -491,6 +491,7 @@ function initTransactionForm() {
                     }
 
                     if (format === 'a4') {
+                        params.set('copies', '1');
                         params.set('autoPrint', '1');
                         try {
                             params.set('returnTo', window.location.href);
