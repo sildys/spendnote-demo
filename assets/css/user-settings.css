@@ -47,6 +47,8 @@
     margin-bottom: 24px;
     padding-bottom: 24px;
     border-bottom: 1px solid var(--border);
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .avatar-preview-circle {
@@ -99,6 +101,8 @@
 .avatar-controls {
     flex: 1;
     min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .avatar-upload-row {
@@ -162,6 +166,8 @@
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .avatar-color-swatch {
