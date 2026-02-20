@@ -187,8 +187,9 @@
         .register-quick-actions {
             display: flex;
             gap: 10px;
-            margin-top: 14px;
+            margin-top: auto;
             justify-content: flex-end;
+            flex-wrap: wrap;
         }
 
         .register-quick-btn {
@@ -1412,8 +1413,8 @@
         @media (min-width: 769px) {
             .registers-swiper .register-card,
             .registers-swiper .add-cash-box-card {
-                height: 236px;
                 min-height: 236px;
+                height: auto;
             }
 
             .registers-swiper .register-card {
@@ -1547,8 +1548,8 @@
             .add-cash-box-card {
                 padding: 10px;
                 border-radius: 16px;
-                height: 210px;
                 min-height: 210px;
+                height: auto;
             }
 
             .register-top {
