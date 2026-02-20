@@ -1111,6 +1111,33 @@ body {
 }
 
 @media (max-width: 768px) {
+    .settings-layout,
+    .settings-layout > div,
+    .settings-card,
+    .settings-card > * {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .settings-card input,
+    .settings-card textarea,
+    .settings-card select,
+    .settings-card .btn,
+    .settings-card .role-display,
+    .settings-card .form-group,
+    .settings-card .form-actions,
+    .settings-card .avatar-upload-row,
+    .settings-card .avatar-edit-row,
+    .settings-card .logo-compact-actions,
+    .settings-card .billing-info,
+    .settings-card .billing-toggle {
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
     .settings-layout {
         gap: 12px;
         grid-template-columns: 1fr;
@@ -1268,6 +1295,18 @@ body {
         justify-content: center;
     }
 
+    .team-table-wrap {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .team-table {
+        width: 100%;
+        min-width: 0;
+    }
+
     .collapsible-header {
         padding: 14px 16px;
     }
@@ -1320,12 +1359,12 @@ body {
     }
 
     .team-table-wrap {
-        margin: 0 -12px;
-        padding: 0 12px;
+        margin: 0;
+        padding: 0;
     }
 
     .team-table {
-        min-width: 380px;
+        min-width: 0;
     }
 
     .collapsible-header {
