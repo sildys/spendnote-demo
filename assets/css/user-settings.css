@@ -4,6 +4,9 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 24px;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 @media (max-width: 1100px) {
@@ -18,6 +21,10 @@
     border-radius: 16px;
     padding: 24px;
     margin-bottom: 20px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .settings-card:last-child {
@@ -271,6 +278,8 @@
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .form-group {
@@ -337,6 +346,8 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
     margin-bottom: 20px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .stat-box {
@@ -599,6 +610,8 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+    min-width: 0;
+    max-width: 100%;
 }
 
 @media (max-width: 900px) {
@@ -930,6 +943,7 @@
 
 .logo-compact-preview {
     width: 180px;
+    max-width: 100%;
     height: 80px;
     border-radius: 8px;
     background: #f8f9fa;
@@ -940,6 +954,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
 }
 
 .logo-compact-preview.has-logo {
@@ -1074,43 +1089,85 @@
 
 @media (max-width: 768px) {
     .settings-layout {
-        gap: 16px;
+        gap: 12px;
+        grid-template-columns: 1fr;
+        overflow-x: hidden;
     }
 
     .settings-card {
-        padding: 18px;
-        border-radius: 14px;
-        margin-bottom: 16px;
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+        overflow: hidden;
     }
 
     .profile-avatar-section {
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
-        gap: 16px;
-        margin-bottom: 18px;
-        padding-bottom: 18px;
+        gap: 14px;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+    }
+
+    .avatar-preview-circle {
+        width: 72px;
+        height: 72px;
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .avatar-controls {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .avatar-color-swatches {
+        gap: 6px;
+    }
+
+    .avatar-color-swatch {
+        width: 26px;
+        height: 26px;
     }
 
     .avatar-upload-row {
         flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
     }
 
     .avatar-upload-row .btn {
-        flex: 1 1 180px;
+        flex: 1 1 calc(50% - 6px);
+        min-width: 0;
+        font-size: 12px;
+        padding: 0 10px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .form-group.span-2 {
+        grid-column: span 1;
     }
 
     .form-actions {
         flex-wrap: wrap;
-        justify-content: stretch;
+        gap: 8px;
+        margin-top: 12px;
     }
 
     .form-actions .btn {
-        flex: 1 1 180px;
+        flex: 1 1 calc(50% - 8px);
+        min-width: 0;
         justify-content: center;
     }
 
-    .billing-info-left {
+    .billing-info {
+        flex-direction: column;
         align-items: flex-start;
+        gap: 10px;
     }
 
     .billing-toggle {
@@ -1118,70 +1175,135 @@
         gap: 10px;
     }
 
+    .plan-cards {
+        grid-template-columns: 1fr;
+    }
+
     .plan-card {
-        padding: 18px;
+        padding: 16px;
     }
 
     .plan-price {
-        font-size: 28px;
+        font-size: 26px;
+    }
+
+    .stats-row {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .stat-box {
+        padding: 10px 8px;
+    }
+
+    .stat-value {
+        font-size: 18px;
     }
 
     .logo-compact-row {
         flex-direction: column;
         align-items: flex-start;
+        gap: 10px;
     }
 
     .logo-compact-preview {
         width: 100%;
-        max-width: 320px;
-        height: 92px;
+        max-width: 100%;
+        height: 80px;
     }
 
     .logo-compact-actions {
         flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .logo-compact-actions .btn {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 0;
+        font-size: 12px;
+    }
+
+    .settings-card-header {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    .team-header-actions {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .team-header-actions .btn {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 0;
+        justify-content: center;
+    }
+
+    .collapsible-header {
+        padding: 14px 16px;
+    }
+
+    .collapsible-content {
+        padding: 0 16px 16px 16px;
+    }
+
+    .collapsible-card.open .collapsible-content {
+        padding-top: 14px;
     }
 }
 
 @media (max-width: 480px) {
-    .settings-layout {
-        gap: 12px;
-    }
-
     .settings-card {
-        padding: 14px;
-        border-radius: 12px;
+        padding: 12px;
     }
 
-    .settings-card-header {
-        margin-bottom: 14px;
+    .profile-avatar-section {
+        gap: 10px;
     }
 
-    .team-table-wrap {
-        margin: 0 -14px;
-        padding: 0 14px;
+    .avatar-preview-circle {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
     }
 
-    .team-table {
-        min-width: 420px;
+    .avatar-color-swatch {
+        width: 22px;
+        height: 22px;
     }
 
     .avatar-upload-row .btn,
     .form-actions .btn,
     .logo-compact-actions .btn {
-        width: 100%;
         flex: 1 1 100%;
+        width: 100%;
         justify-content: center;
     }
 
+    .stats-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .team-table-wrap {
+        margin: 0 -12px;
+        padding: 0 12px;
+    }
+
+    .team-table {
+        min-width: 380px;
+    }
+
     .collapsible-header {
-        padding: 16px 14px;
+        padding: 12px;
     }
 
     .collapsible-content {
-        padding: 0 14px 14px 14px;
+        padding: 0 12px 12px 12px;
     }
 
     .collapsible-card.open .collapsible-content {
-        padding-top: 14px;
+        padding-top: 12px;
     }
 }
