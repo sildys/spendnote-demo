@@ -9,28 +9,33 @@
 html, body {
   margin: 0;
   padding: 0;
-  width: 215.9mm;
-  height: 279.4mm;
+  width: 100%;
+  height: 100%;
 }
 body {
   font-family: Arial, Helvetica, sans-serif;
   color: #111;
   background: #ffffff;
+  overflow: hidden;
 }
 
 /* PAGE */
 .page {
-  width: 215.9mm;
-  height: 279.4mm;
+  width: 100%;
+  height: 100%;
+  max-width: 215.9mm;
+  max-height: 279.4mm;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  page-break-after: avoid;
+  break-after: avoid-page;
 }
 
 /* RECEIPT */
 .receipt {
-  width: 215.9mm;
-  height: calc((279.4mm - 6mm) / 2);
+  width: 100%;
+  height: calc((100% - 6mm) / 2);
   box-sizing: border-box;
   padding: 6mm 12mm;
   --logo-w: 36mm;
@@ -38,6 +43,8 @@ body {
   --logo-gap: 4mm;
   position: relative;
   overflow: hidden;
+  page-break-inside: avoid;
+  break-inside: avoid-page;
 }
 
 /* VOID WATERMARK */
@@ -226,6 +233,8 @@ body {
   font-size: 7.5pt;
   color: #666;
   flex: 0 0 6mm;
+  page-break-inside: avoid;
+  break-inside: avoid-page;
 }
 .cut-band:before {
   content: "";
@@ -246,6 +255,25 @@ body {
 /* Always two copies per page (top + bottom) */
 .receipt-copy-b {
   display: block;
+}
+
+@media print {
+  html, body {
+    width: 215.9mm;
+    height: 279.4mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .page {
+    width: 215.9mm;
+    height: 279.4mm;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    overflow: hidden;
+  }
 }
 
 .sn-logo{
