@@ -61,7 +61,6 @@ body {
     padding-bottom: 24px;
     border-bottom: 1px solid var(--border);
     max-width: 100%;
-    overflow: hidden;
 }
 
 .avatar-preview-circle {
@@ -115,7 +114,6 @@ body {
     flex: 1;
     min-width: 0;
     max-width: 100%;
-    overflow: hidden;
 }
 
 .avatar-upload-row {
@@ -183,7 +181,10 @@ body {
     flex-wrap: wrap;
     width: 100%;
     max-width: 100%;
-    overflow: hidden;
+}
+
+.settings-card .btn {
+    min-height: 40px;
 }
 
 .avatar-color-swatch {
@@ -1124,9 +1125,9 @@ body {
     }
 
     .profile-avatar-section {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
         margin-bottom: 16px;
         padding-bottom: 16px;
     }
@@ -1141,10 +1142,15 @@ body {
     .avatar-controls {
         min-width: 0;
         flex: 1;
+        width: 100%;
+        max-width: 100%;
     }
 
     .avatar-color-swatches {
+        display: grid;
+        grid-template-columns: repeat(8, minmax(0, 24px));
         gap: 6px;
+        justify-content: start;
     }
 
     .avatar-color-swatch {
@@ -1161,7 +1167,7 @@ body {
     .avatar-upload-row .btn {
         flex: 1 1 calc(50% - 6px);
         min-width: 0;
-        font-size: 12px;
+        font-size: 13px;
         padding: 0 10px;
     }
 
@@ -1293,6 +1299,11 @@ body {
     .avatar-color-swatch {
         width: 22px;
         height: 22px;
+    }
+
+    .avatar-color-swatches {
+        grid-template-columns: repeat(6, minmax(0, 22px));
+        gap: 6px;
     }
 
     .avatar-upload-row .btn,
