@@ -125,7 +125,7 @@ const QUICK_PRESET = {
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260220-1626');
+        params.append('v', 'receipt-20260220-1627');
         const currentTxId = getCurrentTxId();
         if (currentTxId) params.append('txId', currentTxId);
         params.append('bootstrap', '1');
@@ -210,6 +210,14 @@ const QUICK_PRESET = {
         }
 
         if (format === 'receipt-print-two-copies' && extraParams && String(extraParams.autoPrint || '') === '1') {
+            try {
+                params.append('returnTo', window.location.href);
+            } catch (_) {
+
+            }
+        }
+
+        if (format === 'pdf' && extraParams && String(extraParams.download || '') === '1') {
             try {
                 params.append('returnTo', window.location.href);
             } catch (_) {

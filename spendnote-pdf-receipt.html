@@ -515,6 +515,7 @@ const itemsMode = String(urlParams.get('itemsMode') || '').toLowerCase();
 const isItemsSingle = itemsMode === 'single';
 
 const shouldAutoDownload = urlParams.get('download') === '1' && urlParams.get('preview') !== '1';
+const returnToAfterDownload = String(urlParams.get('returnTo') || '').trim();
 
 const EMPTY_ROW_HTML = '<tr class="empty-row"><td>&nbsp;</td><td class="amount">&nbsp;</td></tr>';
 
@@ -530,6 +531,38 @@ function toSafeFileName(input) {
     .replace(/[\\/:*?"<>|]+/g, '-')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function finalizeAutoDownload() {
+  const payload = { type: 'RECEIPT_PRINT_DONE', returnTo: returnToAfterDownload || '' };
+  try {
+    if (window.opener && window.opener !== window && window.location.origin) {
+      window.opener.postMessage(payload, window.location.origin);
+    }
+  } catch (_) {}
+
+  setTimeout(() => {
+    let closeAttempted = false;
+    try {
+      window.close();
+      closeAttempted = true;
+    } catch (_) {
+      closeAttempted = false;
+    }
+
+    if (!closeAttempted && returnToAfterDownload) {
+      try {
+        window.location.replace(returnToAfterDownload);
+        return;
+      } catch (_) {}
+    }
+
+    if (!returnToAfterDownload) {
+      try {
+        document.body.classList.remove('download-mode');
+      } catch (_) {}
+    }
+  }, 220);
 }
 
 async function downloadReceiptPdf() {
@@ -550,6 +583,7 @@ async function downloadReceiptPdf() {
 
   const btn = document.getElementById('btnDownloadPdf');
   const prevText = btn ? btn.textContent : '';
+  let didSavePdf = false;
   try {
     if (btn) {
       btn.disabled = true;
@@ -598,17 +632,22 @@ async function downloadReceiptPdf() {
     const baseName = receiptId ? `SpendNote_${receiptId}` : `SpendNote_${document.title || 'receipt'}`;
     const fileName = `${toSafeFileName(baseName)}.pdf`;
     pdf.save(fileName);
+    didSavePdf = true;
   } catch (e) {
     console.error(e);
     showAlert('Could not generate PDF.', { iconType: 'error' });
   } finally {
     document.body.classList.remove('exporting');
-    if (shouldAutoDownload) {
-      document.body.classList.add('download-mode');
-    }
     if (btn) {
       btn.textContent = prevText;
       btn.disabled = false;
+    }
+    if (shouldAutoDownload) {
+      if (didSavePdf) {
+        finalizeAutoDownload();
+      } else {
+        document.body.classList.remove('download-mode');
+      }
     }
   }
 }

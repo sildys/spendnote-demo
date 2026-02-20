@@ -472,7 +472,7 @@ function initTransactionForm() {
                     };
 
                     const params = new URLSearchParams();
-                    params.set('v', 'print-20260220-1626');
+                    params.set('v', 'print-20260220-1627');
                     if (createdId) params.set('txId', createdId);
                     params.set('bootstrap', '1');
 
@@ -507,6 +507,11 @@ function initTransactionForm() {
 
                     if (format === 'pdf') {
                         params.set('download', '1');
+                        try {
+                            params.set('returnTo', window.location.href);
+                        } catch (_) {
+
+                        }
                     }
 
                     let cb = null;
