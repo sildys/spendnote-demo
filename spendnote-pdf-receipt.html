@@ -331,6 +331,14 @@
       color: #999;
       line-height: 1.6;
     }
+
+    .footer-qr {
+      width: 14px;
+      height: 14px;
+      margin-left: 6px;
+      vertical-align: middle;
+      border-radius: 2px;
+    }
     
     /* PRINT */
     @media print {
@@ -511,7 +519,7 @@
         <span>SpendNote</span>
       </div>
       <div class="footer-disclaimer">
-        • Proof of cash handoff. Not a tax document. • https://spendnote.app/
+        • Proof of cash handoff. Not a tax document. • https://spendnote.app/<img class="footer-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=64x64&margin=0&data=https%3A%2F%2Fspendnote.app%2F" alt="SpendNote QR" loading="lazy">
       </div>
     </div>
 
