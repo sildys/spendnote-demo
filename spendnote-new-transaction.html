@@ -19,10 +19,14 @@
             background: var(--bg, #f1f5f9);
             min-height: 100dvh;
             overflow-x: hidden;
+            overscroll-behavior-x: none;
+            touch-action: pan-y;
         }
 
         html {
             overflow-x: hidden;
+            overscroll-behavior-x: none;
+            touch-action: pan-y;
         }
 
         .nt-page {
@@ -275,6 +279,11 @@
             width: 100% !important;
         }
 
+        #createTransactionModalContainer .cashbox-display .cashbox-info {
+            min-width: 0 !important;
+            width: 100% !important;
+        }
+
         #createTransactionModalContainer .cashbox-display .cashbox-name,
         #createTransactionModalContainer .cashbox-display .cashbox-balance,
         #createTransactionModalContainer #modalCashboxName {
@@ -283,6 +292,30 @@
             overflow: hidden !important;
             text-overflow: ellipsis !important;
             white-space: nowrap !important;
+        }
+
+        #createTransactionModalContainer .cashbox-display .cashbox-name {
+            overflow: hidden !important;
+        }
+
+        #createTransactionModalContainer .cashbox-display .cashbox-id {
+            max-width: 78px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #createTransactionModalContainer .modal-mode-row,
+        #createTransactionModalContainer .nt-mode-row {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        #createTransactionModalContainer .modal-mode-row > *,
+        #createTransactionModalContainer .nt-mode-row > * {
+            min-width: 0;
         }
 
         #createTransactionModalContainer #modalDateField {
@@ -407,6 +440,11 @@
 
             #createTransactionModalContainer #modalDateField {
                 width: 88px !important;
+            }
+
+            #createTransactionModalContainer .modal-mode-toggle label {
+                padding: 0 10px;
+                font-size: 11px;
             }
 
             .nt-footer {
