@@ -52,7 +52,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
-## Where we are now (last updated: 2026-02-21 — dashboard + mobile UI kész, release-ready állapot)
+## Where we are now (last updated: 2026-02-21 — live operations + SEO baseline configured)
 
 ### 2026-02-21 esti zárás — release polish (KÉSZ)
 
@@ -76,20 +76,41 @@ If a chat thread freezes / context is lost: in the new thread say:
   - dupla © probléma megszüntetve,
   - footer link igazítás desktopon rendezve,
   - footer logó + tagline egységesítve oldalak között.
+- **Cloudflare monitoring baseline (KÉSZ)**
+  - Web Analytics ellenőrizve,
+  - Health Check notification/alert flow beállítva emailre.
+- **Sentry hibalog baseline (KÉSZ)**
+  - Sentry Browser SDK bekötve globálisan (`assets/js/main.js`),
+  - teszthiba beérkezése validálva az Issues nézetben.
+- **Google/Search baseline (KÉSZ)**
+  - Search Console property aktív,
+  - sitemap (`/sitemap.xml`) sikeresen beküldve,
+  - indexelés kérés elküldve `/` és `/faq` URL-ekre,
+  - canonical clean URL-ekhez `_redirects` szabályok megerősítve (`/faq`, `/pricing`).
+- **Landing image SEO jelölések (KÉSZ)**
+  - részletesebb `alt` + `title` attribútumok,
+  - `ImageObject` JSON-LD hozzáadva.
 
 **Állapot:**
 
 - Dashboard + mobilnézet megjelenés: **kész**.
 - Funkcionális core flow-k (felhasználói teszt alapján): **működnek**.
 - Jelen állapotban a rendszer **élőbe rakható**.
+- Monitoring + SEO minimum baseline: **bekonfigurálva**.
 
 **Maradék backlog (nem blocker):**
 
 - User Settings: Team kezelés véglegesítése.
 - Előfizetés/billing bekötés véglegesítése.
 - Marketing oldalak copy/szövegjavítások.
-- Üzemeltetési minimumok: Cloudflare + Sentry hibafigyelés.
-- Google minimumok: Search Console + indexelés + sitemap/robots ellenőrzés.
+
+**Következő operatív lépés (rutin):**
+
+- Heti 5 perces ellenőrzés:
+  - Sentry új issue-k,
+  - Search Console index státusz (`/`, `/faq`),
+  - Cloudflare analytics/alert állapot,
+  - rövid core smoke (login + new tx + receipt).
 
 ### 2026-02-21 frissítés — mobil reszponzivitás + onboarding irány
 

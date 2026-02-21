@@ -40,18 +40,27 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - User Settings: finalize Team management.
 - Finalize subscription/billing integration.
 - Marketing page copy refinements.
-- Monitoring baseline: Cloudflare + Sentry.
-- Google baseline: Search Console, indexing checks, sitemap/robots verification.
+
+### Completed operational baseline
+
+- Cloudflare monitoring baseline configured (Web Analytics + Health Check alerts).
+- Sentry frontend error tracking configured and validated with test issue.
+- Google Search Console baseline configured:
+  - domain property active,
+  - sitemap submitted successfully,
+  - indexing requests sent for `/` and `/faq`.
 
 ## Near-term rollout plan (next session)
 
-1. Cloudflare monitoring baseline (analytics + uptime alerts).
-2. Sentry frontend error tracking (minimal production setup).
-3. Google/Search baseline:
-   - Search Console property + verification
-   - sitemap submission
-   - indexing status checks
-4. Weekly post-go-live operational checklist.
+1. Weekly post-go-live operational checklist (5 minutes):
+   - review new Sentry issues,
+   - check Search Console indexing status (`/`, `/faq`),
+   - verify Cloudflare analytics + alerts,
+   - run core smoke (login + new transaction + receipt).
+2. Continue non-blocking backlog:
+   - Team management finalization,
+   - subscription/billing integration,
+   - marketing copy refinements.
 
 ## Recent engineering updates (2026-02-19 — modal header alignment fix)
 
