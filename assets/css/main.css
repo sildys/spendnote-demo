@@ -82,6 +82,18 @@
     --logo-optical-offset: -8px;
 }
 
+@media (max-width: 768px) {
+    :root {
+        --page-gutter: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        --page-gutter: 0.875rem;
+    }
+}
+
 /* ========================================
    2. RESET & BASE
    ======================================== */
@@ -1018,7 +1030,7 @@ tr:hover {
     }
     
     .nav-container {
-        padding: 0 var(--space-md);
+        padding: 0 var(--page-gutter);
     }
     
     .site-nav .logo span {
