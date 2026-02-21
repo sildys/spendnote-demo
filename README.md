@@ -7,56 +7,51 @@ SpendNote is a **cash box + transaction + contacts** web app.
 
 This repository is meant to be deployable as a static site (e.g. Vercel).
 
-## Recent engineering updates (2026-02-21 — mobile cash-box fixes + onboarding direction)
+## Current status (2026-02-21 — release-ready UI/UX)
 
-- **Cash Box Detail mobile transaction cards (completed):**
-  - Added `#txCardList` to `spendnote-cash-box-detail.html` so the existing renderer can display card view on small screens.
-  - Added responsive behavior at `@media (max-width: 480px)` to hide `.table-wrapper` and show `.tx-card-list`.
-  - Added narrower-screen column trimming for table fallback at `@media (max-width: 768px)`.
-- **Duplicate action mobile routing fix (completed):**
-  - Updated global duplicate handler in `assets/js/main.js`.
-  - On mobile/touch/coarse-pointer contexts, duplicate now routes to `spendnote-new-transaction.html?...#new-transaction`.
-  - Desktop behavior remains unchanged (`dashboard.html?...#new-transaction` / modal path when available).
-- **Cache-busting updates (completed):**
-  - Bumped `main.js` query version to `v=23` on:
-    - `spendnote-cash-box-detail.html`
-    - `spendnote-transaction-history.html`
-- **Product/onboarding direction captured (planned):**
-  - Keep auto-created default USD cash box as the immediate post-signup base state.
-  - Add a first-run setup modal for required receipt identity fields (e.g. receipt display name), instead of forcing users to manually navigate to Settings first.
-  - Keep Settings as the canonical place to edit receipt identity after initial setup.
-- **Commit:** `0a2319e`
+### Completed in the latest release-polish cycle
 
-- **Preview sprint day-1 (marketing mobile pass) (completed):**
-  - Shared mobile safety rules added in `assets/css/main.css` for preview banner and footer disclaimer components (`<=480px`) to reduce overflow risk.
-  - FAQ page mobile hardening:
-    - reduced grid minimum widths (`380/320` -> `300/280`)
-    - added dedicated `<=480px` spacing and stats/help section adjustments.
-  - Pricing page mobile pass (`<=480px`): tightened heading/toggle/card spacing and price typography for small screens.
-  - Terms/Privacy legal pages mobile pass:
-    - reduced content padding at `<=768px` and `<=480px`
-    - improved TOC link wrapping
-    - privacy table now scrolls horizontally on very small screens.
-  - SEO pages mobile pass:
-    - `cash-handoff-receipt.html`
-    - `petty-cash-receipt-template.html`
-    - tightened hero/content/CTA spacing and full-width CTA buttons on small screens.
-  - Cache-busting: `main.css?v=20` updated on affected marketing pages.
+- **Standalone New Transaction duplicate prefill fixed (mobile page):**
+  - Duplicate now pre-fills cash box, direction, amount, description, contact fields, note, and line items.
+- **New Transaction mobile shift fixed:**
+  - Footer positioning stabilized to prevent horizontal movement/jitter.
+- **User Settings layout regression fixed:**
+  - Content width now matches shared nav/footer container on large screens.
+- **Landing mobile feature cards improved:**
+  - Icon footprint reduced for better card proportions.
+- **Privacy page mobile overflow fixed:**
+  - Table/cell wrapping and width behavior hardened.
+- **Privacy content cleanup:**
+  - Contact emails unified to `legal@spendnote.app`.
+  - "Contact form" row removed from section 11.
+- **Footer consistency pass (global):**
+  - Duplicate copyright symbol issue fixed.
+  - Desktop link alignment corrected.
+  - Footer logo + tagline normalized between marketing and internal pages.
 
-- **SEO readiness baseline (completed):**
-  - Added root `robots.txt` with sitemap reference and app/internal route crawl disallow rules.
-  - `sitemap.xml` presence verified.
+### State right now
 
-### Preview sprint checklist (7-8 days, scope lock)
+- Dashboard and mobile view are **UI-complete**.
+- Core functional flows are **stable** in continuous manual testing.
+- App is in a **go-live capable** state.
 
-- [ ] Landing + SEO pages mobile audit/fixes (430/390/375px): overflow, hero/CTA, footer/legal.
-- [ ] Marketing visual consistency + conversion polish pass.
-- [ ] SEO release minimum: only landing + 2 SEO pages indexable; sitemap/robots verified; GSC submit ready.
-- [ ] Marketing-only regression check (mobile + desktop).
-- [ ] Preview deploy + post-deploy smoke on marketing pages.
-- [ ] Buffer days: blocker-only fixes.
+### Remaining backlog (non-blocking)
 
-**Post-preview (deferred):** Team multi-cash-box permission logic, email templates (L2/L3), non-critical app-internal improvements.
+- User Settings: finalize Team management.
+- Finalize subscription/billing integration.
+- Marketing page copy refinements.
+- Monitoring baseline: Cloudflare + Sentry.
+- Google baseline: Search Console, indexing checks, sitemap/robots verification.
+
+## Near-term rollout plan (next session)
+
+1. Cloudflare monitoring baseline (analytics + uptime alerts).
+2. Sentry frontend error tracking (minimal production setup).
+3. Google/Search baseline:
+   - Search Console property + verification
+   - sitemap submission
+   - indexing status checks
+4. Weekly post-go-live operational checklist.
 
 ## Recent engineering updates (2026-02-19 — modal header alignment fix)
 

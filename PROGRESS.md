@@ -52,7 +52,44 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
-## Where we are now (last updated: 2026-02-21 — cash box detail mobile cards + duplicate routing)
+## Where we are now (last updated: 2026-02-21 — dashboard + mobile UI kész, release-ready állapot)
+
+### 2026-02-21 esti zárás — release polish (KÉSZ)
+
+**Lezárt és pusholt javítások (mai kör):**
+
+- **Standalone New Transaction duplicate prefill fix** (mobil oldal)
+  - duplicate nyitáskor prefill már helyesen tölti: cash box, direction, amount, description,
+    contact mezők, note, line item-ek.
+- **New Transaction mobil elmozdulás fix**
+  - footer pozícionálás stabilizálva (translateX középre igazítás helyett stabil left/right alapú igazítás).
+- **User Settings desktop width regresszió fix**
+  - tartalom szélessége újra konzisztens a nav/footer konténer szélességével.
+- **Landing Features mobil kártya finomhangolás**
+  - kisebb ikon footprint mobilon, jobb arányok.
+- **Privacy oldal mobil overflow fixek**
+  - táblázat/cella tördelés és szélesség hardening mobilon.
+- **Privacy tartalmi javítások**
+  - email címek egységesítve `legal@spendnote.app`-ra,
+  - 11. pontból a „Contact form” sor törölve.
+- **Footer konzisztencia javítások (globális)**
+  - dupla © probléma megszüntetve,
+  - footer link igazítás desktopon rendezve,
+  - footer logó + tagline egységesítve oldalak között.
+
+**Állapot:**
+
+- Dashboard + mobilnézet megjelenés: **kész**.
+- Funkcionális core flow-k (felhasználói teszt alapján): **működnek**.
+- Jelen állapotban a rendszer **élőbe rakható**.
+
+**Maradék backlog (nem blocker):**
+
+- User Settings: Team kezelés véglegesítése.
+- Előfizetés/billing bekötés véglegesítése.
+- Marketing oldalak copy/szövegjavítások.
+- Üzemeltetési minimumok: Cloudflare + Sentry hibafigyelés.
+- Google minimumok: Search Console + indexelés + sitemap/robots ellenőrzés.
 
 ### 2026-02-21 frissítés — mobil reszponzivitás + onboarding irány
 
