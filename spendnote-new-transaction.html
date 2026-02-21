@@ -744,6 +744,138 @@
         return 'fa-cash-register';
     }
 
+    function decodeParam(value) {
+        if (value === null || value === undefined) return '';
+        return String(value);
+    }
+
+    function applyStandalonePreset(options) {
+        if (!options || typeof options !== 'object') return;
+
+        if (options.cashBoxId) {
+            const idx = Array.isArray(window.modalCashBoxes)
+                ? window.modalCashBoxes.findIndex(function (cb) { return cb && cb.id === options.cashBoxId; })
+                : -1;
+            if (idx >= 0) {
+                window.modalCashBoxIndex = idx;
+                updateCashboxDisplay();
+            }
+        }
+
+        if (options.direction === 'in' || options.direction === 'out') {
+            setDirection(options.direction);
+        }
+
+        const hasLineItems = Array.isArray(options.lineItems) && options.lineItems.length > 0;
+        const targetMode = (options.mode === 'detailed' || options.mode === 'quick')
+            ? options.mode
+            : (hasLineItems ? 'detailed' : null);
+        if (targetMode) {
+            if (typeof window.updateModalModeUI === 'function') {
+                window.updateModalModeUI(targetMode, { persist: false });
+            } else {
+                const container = document.getElementById('createTransactionModalContainer');
+                if (container) container.dataset.mode = targetMode;
+                const modeRadio = document.getElementById(targetMode === 'detailed' ? 'modalModeDetailed' : 'modalModeQuick');
+                if (modeRadio) modeRadio.checked = true;
+            }
+        }
+
+        if (Object.prototype.hasOwnProperty.call(options, 'amount')) {
+            const amountEl = document.getElementById('modalAmount');
+            if (amountEl) amountEl.value = options.amount || '';
+        }
+        if (Object.prototype.hasOwnProperty.call(options, 'description')) {
+            const descEl = document.getElementById('modalDescription');
+            if (descEl) descEl.value = options.description || '';
+        }
+        if (Object.prototype.hasOwnProperty.call(options, 'contactName')) {
+            const contactNameEl = document.getElementById('modalContactName');
+            if (contactNameEl) contactNameEl.value = options.contactName || '';
+        }
+        if (Object.prototype.hasOwnProperty.call(options, 'contactAddress')) {
+            if (typeof window.__setModalContactAddress === 'function') {
+                window.__setModalContactAddress(options.contactAddress || '');
+            } else {
+                const contactAddrEl = document.getElementById('modalContactAddress');
+                if (contactAddrEl) contactAddrEl.value = options.contactAddress || '';
+            }
+        }
+        if (Object.prototype.hasOwnProperty.call(options, 'contactOtherId')) {
+            const otherIdEl = document.getElementById('modalContactCompanyId');
+            if (otherIdEl) otherIdEl.value = options.contactOtherId || '';
+        }
+        if (Object.prototype.hasOwnProperty.call(options, 'contactId')) {
+            const contactIdEl = document.getElementById('modalContactId');
+            if (contactIdEl) contactIdEl.value = options.contactId || '';
+        }
+        if (Object.prototype.hasOwnProperty.call(options, 'transactionId')) {
+            const txIdEl = document.getElementById('modalTransactionId');
+            if (txIdEl) txIdEl.value = options.transactionId || '';
+        }
+        if (Object.prototype.hasOwnProperty.call(options, 'note')) {
+            const noteEl = document.getElementById('modalNote');
+            if (noteEl) noteEl.value = options.note || '';
+            if (options.note) {
+                const noteSection = document.getElementById('modalNoteSection');
+                if (noteSection) noteSection.open = true;
+            }
+        }
+
+        if (hasLineItems) {
+            if (typeof window.updateModalModeUI === 'function') {
+                window.updateModalModeUI('detailed', { persist: false });
+            }
+            const itemsContainer = document.getElementById('modalLineItemsContainer');
+            if (itemsContainer) {
+                itemsContainer.innerHTML = '';
+                options.lineItems.forEach(function(item, idx) {
+                    const row = document.createElement('div');
+                    row.className = 'form-row-line-item';
+                    row.innerHTML = '<div class="form-group"><input type="text" class="line-item-input" data-item-index="' + (idx + 1) + '" placeholder="Item description" value="' + String(item && item.description ? item.description : '').replace(/"/g, '&quot;') + '"></div><div class="form-group"><div class="amount-input-wrapper"><span class="currency-symbol">$</span><input type="text" class="line-item-input line-item-amount" data-amount-index="' + (idx + 1) + '" placeholder="0.00" value="' + String(item && item.amount ? item.amount : '') + '"></div></div>';
+                    itemsContainer.appendChild(row);
+                });
+            }
+            if (typeof window.setDetailedItemsExpanded === 'function') {
+                window.setDetailedItemsExpanded(true);
+            }
+        }
+
+        if (typeof window.updateLineItemsTotal === 'function') {
+            setTimeout(function () { window.updateLineItemsTotal(); }, 0);
+        }
+    }
+
+    async function buildDuplicatePreset(txId) {
+        if (!txId || !window.db || !window.db.transactions || typeof window.db.transactions.getById !== 'function') {
+            return null;
+        }
+
+        const tx = await window.db.transactions.getById(txId);
+        if (!tx) return null;
+
+        const lineItems = Array.isArray(tx.line_items) ? tx.line_items : [];
+        const firstItem = lineItems[0] || {};
+        const extraItems = lineItems.slice(1);
+        const rawOtherId = String(tx && tx.contact_custom_field_1 ? tx.contact_custom_field_1 : '').trim();
+        const rawNote = String((tx && (tx.notes || tx.note)) || '').trim();
+        const duplicateMode = (extraItems.length > 0 || Boolean(rawOtherId) || Boolean(rawNote)) ? 'detailed' : 'quick';
+
+        return {
+            cashBoxId: tx.cash_box_id || (tx.cash_box && tx.cash_box.id) || '',
+            direction: tx.type === 'income' ? 'in' : 'out',
+            mode: duplicateMode,
+            amount: firstItem.amount || tx.amount || '',
+            description: firstItem.description || tx.description || '',
+            contactName: (tx.contact && tx.contact.name) || tx.contact_name || '',
+            contactAddress: tx.contact_address || (tx.contact && tx.contact.address) || '',
+            contactOtherId: rawOtherId,
+            transactionId: '',
+            note: tx.notes || tx.note || '',
+            lineItems: extraItems
+        };
+    }
+
     // ── date init ────────────────────────────────────────────
     function initDate() {
         const now = new Date();
@@ -956,6 +1088,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const urlCashBoxId = urlParams.get('cashBoxId');
             const urlDirection = urlParams.get('direction');
+            const duplicateTxId = decodeParam(urlParams.get('duplicate')).trim();
 
             let preferredId = urlCashBoxId || '';
             if (!preferredId) {
@@ -1001,6 +1134,32 @@
             if (typeof initTransactionForm === 'function') {
                 initTransactionForm();
             }
+
+            // Apply prefill for standalone duplicate/new-transaction query params
+            let preset = null;
+            if (duplicateTxId) {
+                try {
+                    preset = await buildDuplicatePreset(duplicateTxId);
+                } catch (_) {
+                    preset = null;
+                }
+            }
+
+            if (!preset) {
+                preset = {
+                    cashBoxId: decodeParam(urlParams.get('cashBoxId')).trim(),
+                    direction: decodeParam(urlParams.get('direction')).trim(),
+                    amount: decodeParam(urlParams.get('amount')).trim(),
+                    contactId: decodeParam(urlParams.get('contactId')).trim(),
+                    contactName: decodeParam(urlParams.get('contactName')).trim(),
+                    contactAddress: decodeParam(urlParams.get('contactAddress')).trim(),
+                    description: decodeParam(urlParams.get('description')).trim(),
+                    note: decodeParam(urlParams.get('note')).trim(),
+                    mode: decodeParam(urlParams.get('mode')).trim()
+                };
+            }
+
+            applyStandalonePreset(preset);
 
         } catch (err) {
             if (loadingEl) loadingEl.style.display = 'none';
