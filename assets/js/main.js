@@ -22,6 +22,23 @@ function updateMenuColors(color) {
 
 window.updateMenuColors = updateMenuColors;
 
+function initSentryMonitoring() {
+    if (window.__spendnoteSentryInitDone) return;
+    window.__spendnoteSentryInitDone = true;
+
+    const host = String(window.location && window.location.hostname || '').toLowerCase();
+    if (host === 'localhost' || host === '127.0.0.1') return;
+
+    if (document.querySelector('script[data-spendnote-sentry="1"]')) return;
+
+    const s = document.createElement('script');
+    s.src = 'https://js-de.sentry-cdn.com/3109ed7fcfb26be5b6d35c5e7cf52275.min.js';
+    s.crossOrigin = 'anonymous';
+    s.async = true;
+    s.dataset.spendnoteSentry = '1';
+    document.head.appendChild(s);
+}
+
 function normalizeFooterBranding() {
     const brands = document.querySelectorAll('.app-footer .app-footer-brand');
     if (!brands.length) return;
@@ -50,6 +67,8 @@ function initSpendNoteNav() {
         return;
     }
     window.__spendnoteNavInitDone = true;
+
+    initSentryMonitoring();
 
     // Mobile menu toggle (if needed in future)
     const menuToggle = document.querySelector('.menu-toggle');
