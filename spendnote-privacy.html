@@ -13,6 +13,11 @@
     <link rel="stylesheet" href="assets/css/main.css?v=23">
     <style>
         /* ===== LEGAL PAGE SPECIFIC STYLES ===== */
+
+        html,
+        body {
+            overflow-x: hidden;
+        }
         
         /* SCROLL PROGRESS BAR */
         .scroll-progress {
@@ -242,15 +247,16 @@
             .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
             .footer-links-inline { flex-wrap: wrap; justify-content: center; gap: 1rem; }
             .data-table {
-                display: block;
                 width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
+                table-layout: fixed;
                 font-size: 0.8rem;
             }
             .data-table th, .data-table td {
                 padding: 8px 10px;
-                min-width: 130px;
+                min-width: 0;
+                white-space: normal;
+                overflow-wrap: anywhere;
+                word-break: break-word;
             }
         }
 
@@ -273,7 +279,7 @@
 
             .data-table th,
             .data-table td {
-                min-width: 120px;
+                min-width: 0;
             }
         }
     </style></head>
