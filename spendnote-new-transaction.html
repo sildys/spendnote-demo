@@ -201,6 +201,13 @@
 
         .nt-footer .btn {
             flex: 1;
+            min-width: 0;
+            max-width: 100%;
+            box-sizing: border-box;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: clip;
+            justify-content: center;
         }
 
         /* Loading / error states */
