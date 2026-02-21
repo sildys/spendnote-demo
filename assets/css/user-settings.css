@@ -5,7 +5,6 @@ body {
     overflow-x: hidden;
 }
 
-.app-container,
 .main-content {
     width: 100%;
     max-width: 100%;
