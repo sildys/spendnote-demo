@@ -16,6 +16,36 @@ try {
 if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260216-2135');
 window.__spendnoteSupabaseConfigBuild = '20260216-2135';
 
+const PREVIEW_RECEIPT_LIMIT = 200;
+const PREVIEW_RECEIPT_LIMIT_ERROR = 'PREVIEW_RECEIPT_LIMIT_REACHED';
+const PREVIEW_RECEIPT_LIMIT_OVERRIDE_KEY = 'spendnote.preview.receiptLimit.enabled.v1';
+
+const isPreviewReceiptLimitEnabled = () => {
+    try {
+        const raw = String(localStorage.getItem(PREVIEW_RECEIPT_LIMIT_OVERRIDE_KEY) || '').trim().toLowerCase();
+        if (!raw) return true;
+        if (raw === '0' || raw === 'false' || raw === 'off' || raw === 'disabled') return false;
+        if (raw === '1' || raw === 'true' || raw === 'on' || raw === 'enabled') return true;
+        return true;
+    } catch (_) {
+        return true;
+    }
+};
+
+const getActiveTransactionCount = async () => {
+    const res = await supabaseClient
+        .from('transactions')
+        .select('id', { count: 'exact', head: true })
+        .or('is_system.is.null,is_system.eq.false')
+        .eq('status', 'active');
+
+    if (res.error) {
+        return { success: false, count: 0, error: res.error };
+    }
+
+    return { success: true, count: Number(res.count) || 0 };
+};
+
 // If you previously used localStorage persistence, clean it up so tab-close logout works immediately.
 // Supabase stores sessions under a project-specific key like: sb-<project-ref>-auth-token
 try {
@@ -2177,6 +2207,25 @@ var db = {
         },
 
         async create(transaction) {
+            if (isPreviewReceiptLimitEnabled()) {
+                try {
+                    const usage = await getActiveTransactionCount();
+                    if (usage.success && usage.count >= PREVIEW_RECEIPT_LIMIT) {
+                        return {
+                            success: false,
+                            error: PREVIEW_RECEIPT_LIMIT_ERROR
+                        };
+                    }
+                    if (!usage.success && window.SpendNoteDebug) {
+                        console.warn('Could not validate preview receipt limit before create:', usage.error);
+                    }
+                } catch (e) {
+                    if (window.SpendNoteDebug) {
+                        console.warn('Preview receipt limit check failed, continuing create:', e);
+                    }
+                }
+            }
+
             // Prefer atomic RPC: insert transaction + enforce balance rules under a row lock.
             // Fallback to direct insert if RPC is not installed.
             try {

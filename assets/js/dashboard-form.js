@@ -442,6 +442,9 @@ function initTransactionForm() {
                 if (raw === 'INSUFFICIENT_BALANCE' || lower.includes('insufficient_balance')) {
                     msg = 'Not enough funds in this Cash Box.';
                 } else
+                if (raw === 'PREVIEW_RECEIPT_LIMIT_REACHED' || lower.includes('preview_receipt_limit_reached')) {
+                    msg = 'Preview limit reached (200 receipts). Upgrade when plans go live to keep creating new receipts.';
+                } else
                 if (lower.includes('permission denied') || lower.includes('row level security') || lower.includes('rls')) {
                     msg = 'Permission denied (RLS). Please log out and log in again. If the problem persists, your profile row may be missing.';
                 } else if (lower.includes('foreign key') && (lower.includes('profiles') || lower.includes('user_id'))) {
