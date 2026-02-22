@@ -866,6 +866,19 @@
             font-size: 0.95rem;
             color: #000000;
             line-height: 1.5;
+            margin: 0;
+        }
+
+        .feature-content p .feature-inline-link {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(5, 150, 105, 0.35);
+        }
+
+        .feature-content p .feature-inline-link:hover {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
         /* USE CASES */
@@ -1732,7 +1745,7 @@ function togglePreviewDetails() {
                 </div>
                 <div class="feature-content">
                     <h3>30 Second Receipts</h3>
-                    <p>Fill form, generate PDF, print or email instantly. No complexity. See our <a href="petty-cash-receipt-generator.html">petty cash receipt generator</a> examples.</p>
+                    <p>Fill form, generate PDF, print or email instantly. No complexity. See our <a href="petty-cash-receipt-generator.html" class="feature-inline-link">petty cash receipt generator</a> examples.</p>
                 </div>
             </div>
 
