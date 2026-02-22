@@ -52,7 +52,40 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
-## Where we are now (last updated: 2026-02-21 — live baseline done, full polish scope expanded)
+## Where we are now (last updated: 2026-02-22 — 4-page SEO go-live pass completed)
+
+### 2026-02-22 zárás — SEO go-live stabilizáció (KÉSZ)
+
+**Lezárt és pusholt javítások (mai kör):**
+
+- **Indexelhető nyilvános készlet rögzítve 4 oldalra:**
+  - `/`, `/faq`, `/petty-cash-receipt-generator`, `/cash-handoff-receipt`.
+- **`petty-cash-receipt-generator.html` SEO finomítások:**
+  - OG/Twitter képhivatkozás javítva élő assetre,
+  - `SoftwareApplication` schema bővítve (image + operatingSystem),
+  - `FAQPage` JSON-LD hozzáadva,
+  - képeknél `loading="lazy"`,
+  - belső link a `cash-handoff-receipt` oldalra.
+- **`cash-handoff-receipt.html` SEO finomítások:**
+  - print receipt kép beillesztve SEO alt/captionnel,
+  - `Article` schema bővítve (`image`, `datePublished`, `dateModified`),
+  - belső link a petty cash generator oldalra.
+- **`index.html` + `spendnote-faq.html` meta/markup tisztítás:**
+  - hibás OG/Twitter képutak javítva,
+  - `index.html` Organization schema logo URL javítva élő URL-re.
+- **Hitelességi ellenőrzés (KÉSZ):**
+  - publikus SEO oldalakon nincs `aggregateRating`/`ratingValue` (nincs kamu értékelés).
+- **Sitemap stratégia frissítve (KÉSZ):**
+  - `sitemap.xml` leszűkítve a jelenleg indexelhető 4 oldalra,
+  - friss sitemap URL: `https://spendnote.app/sitemap.xml`.
+- **Search Console lépések (KÉSZ):**
+  - mind a 4 indexelhető URL-re új indexelési kérés elküldve.
+
+**Mostani fókusz:**
+
+- 1 hétig nincs új SEO oldal publikálás.
+- FAQ szövegjavítás után célzott újraindexelés.
+- Fő fókusz visszakerül az app belső hibajavításaira/fejlesztésére.
 
 ### 2026-02-21 esti zárás — release polish (KÉSZ)
 
@@ -417,7 +450,7 @@ Full "profi app" mobilnézet implementálva. Minden változtatás CSS+JS szinten
   - 7s autoplay, fade transition, caption + dots in footer bar
   - Black border cropped from screenshot images (PowerShell)
 - ✅ Auto-create default Cash Box on signup: migration verified and working
-- TODO: remove fake `aggregateRating` from `index.html` JSON-LD before enabling indexing.
+- ✅ fake `aggregateRating` eltávolítva a publikus SEO oldalakról.
 - TODO: add `robots.txt` to repo root.
 - ✅ Contact emails live and working:
   - `feedback@spendnote.app` → preview banner

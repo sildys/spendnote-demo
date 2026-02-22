@@ -7,7 +7,7 @@ SpendNote is a **cash box + transaction + contacts** web app.
 
 This repository is meant to be deployable as a static site (e.g. Vercel).
 
-## Current status (2026-02-21 — live baseline complete, full polish scope expanded)
+## Current status (2026-02-22 — SEO go-live pass completed, app focus ongoing)
 
 ### Completed in the latest release-polish cycle
 
@@ -58,6 +58,13 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - domain property active,
   - sitemap submitted successfully,
   - indexing requests sent for `/` and `/faq`.
+- SEO go-live hardening completed (2026-02-22):
+  - indexable public set aligned to 4 pages: `/`, `/faq`, `/petty-cash-receipt-generator`, `/cash-handoff-receipt`.
+  - `petty-cash-receipt-generator.html` and `cash-handoff-receipt.html` refined with schema improvements, image SEO, and cross-linking.
+  - homepage + FAQ metadata cleanup completed (valid OG/Twitter image URLs and valid Organization logo URL).
+  - verified no fake rating schema on public SEO pages (no `aggregateRating` / `ratingValue` blocks).
+  - sitemap reduced to only currently indexable public pages and re-submitted (`https://spendnote.app/sitemap.xml`).
+  - indexing requests sent for all 4 public indexable pages.
 - Preview receipt cap enforcement configured:
   - create-time check blocks new transactions after 200 active receipts,
   - clear UI message shown on limit reached,
@@ -71,7 +78,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 4. Implementation waves (wizard, onboarding, team, email flows, billing alignment).
 5. Keep weekly 5-minute operational checks running:
    - Sentry issues,
-   - Search Console indexing status (`/`, `/faq`),
+   - Search Console indexing status (`/`, `/faq`, `/petty-cash-receipt-generator`, `/cash-handoff-receipt`),
    - Cloudflare analytics + alerts,
    - core smoke (login + new transaction + receipt).
 
