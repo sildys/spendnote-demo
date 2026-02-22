@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <meta name="description" content="Free online petty cash receipt generator. Create professional cash receipts instantly - no downloads, no templates. SpendNote generates, saves, and organizes every receipt automatically.">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Petty cash receipt generator for teams: default 2-copy print receipt, downloadable PDF, email receipt delivery, and customizable receipt fields in one workflow.">
     <link rel="canonical" href="https://spendnote.app/petty-cash-receipt-generator">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://spendnote.app/petty-cash-receipt-generator">
-    <meta property="og:title" content="Petty Cash Receipt Generator - Create Receipts Instantly | SpendNote">
-    <meta property="og:description" content="Free online petty cash receipt generator. Create professional cash receipts instantly - no downloads, no templates.">
+    <meta property="og:title" content="Petty Cash Receipt Generator (Print, PDF, Email) | SpendNote">
+    <meta property="og:description" content="Generate petty cash receipts in seconds: instant 2-copy print, PDF download, email delivery, and customizable receipt layout.">
     <meta property="og:image" content="https://spendnote.app/assets/img/og-image.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://spendnote.app/petty-cash-receipt-generator">
-    <meta property="twitter:title" content="Petty Cash Receipt Generator - Create Receipts Instantly | SpendNote">
-    <meta property="twitter:description" content="Free online petty cash receipt generator. Create professional cash receipts instantly - no downloads, no templates.">
+    <meta property="twitter:title" content="Petty Cash Receipt Generator (Print, PDF, Email) | SpendNote">
+    <meta property="twitter:description" content="Generate petty cash receipts in seconds: instant 2-copy print, PDF download, email delivery, and customizable receipt layout.">
     <meta property="twitter:image" content="https://spendnote.app/assets/img/og-image.jpg">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
-    <title>Petty Cash Receipt Generator - Create Receipts Instantly | SpendNote</title>
+    <title>Petty Cash Receipt Generator (Print, PDF, Email) | SpendNote</title>
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -32,7 +32,7 @@
       "@type": "SoftwareApplication",
       "name": "SpendNote Petty Cash Receipt Generator",
       "applicationCategory": "BusinessApplication",
-      "description": "Free online petty cash receipt generator. Create professional cash receipts instantly.",
+      "description": "Petty cash receipt generator for teams with instant print, downloadable PDF, email receipt delivery, and customizable receipt fields.",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -289,6 +289,13 @@
             text-decoration: underline;
         }
 
+        .section-lead {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
         /* FEATURE GRID */
         .feature-grid {
             display: grid;
@@ -324,6 +331,43 @@
             line-height: 1.6;
             color: var(--text-muted);
             margin: 0;
+        }
+
+        .output-showcase {
+            margin: 2rem 0;
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .output-showcase figure {
+            margin: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .output-showcase img {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #f8fafc;
+        }
+
+        .output-showcase figcaption {
+            padding: 0.875rem 1rem 1rem;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .callout-note {
+            background: #ecfeff;
+            border: 1px solid #99f6e4;
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.125rem;
+            color: #115e59;
+            font-size: 0.95rem;
+            margin: 1.5rem 0;
         }
 
         /* CTA BOX */
@@ -638,65 +682,98 @@ function togglePreviewDetails() {
     <section class="seo-hero">
         <div class="seo-hero-content">
             <h1>Petty Cash Receipt Generator</h1>
-            <p>Generate professional cash receipts in seconds. No downloads. No templates. Just instant receipts.</p>
+            <p>Default 2-copy print receipt for handoff, plus downloadable PDF and email receipt delivery in one flow.</p>
             <a href="spendnote-signup.html" class="hero-btn">Generate Your First Receipt</a>
         </div>
     </section>
 
     <!-- MAIN CONTENT -->
     <div class="seo-content">
-        <p>You need a receipt right now. Not a template to fill out. Not a Word doc to download. A <strong>working tool</strong> that generates receipts instantly.</p>
-
-        <p>SpendNote is an online cash receipt generator. Enter your transaction details, click generate, and you're done. The receipt is created, saved, and ready to print or email.</p>
-
-        <h2>How the Generator Works</h2>
-        <ol>
-            <li><strong>Enter transaction details</strong> – Amount, date, recipient, description</li>
-            <li><strong>Click generate</strong> – Professional PDF receipt created instantly</li>
-            <li><strong>Print or email</strong> – Send it immediately or save for later</li>
-        </ol>
-
-        <p>Every receipt you generate is automatically saved. No manual filing. No lost records. Everything is searchable and exportable.</p>
-
-        <div class="cta-box">
-            <h3>Start Generating Receipts Now</h3>
-            <p>Free account. No credit card. First receipt ready in 30 seconds.</p>
-            <a href="spendnote-signup.html" class="btn">Try the Generator Free</a>
-        </div>
-
-        <h2>Why Use a Receipt Generator?</h2>
+        <p class="section-lead">SpendNote is built for internal cash handoff documentation. You create one petty cash record and immediately choose the output format that fits the situation.</p>
 
         <div class="feature-grid">
             <div class="feature-card">
-                <h3><i class="fas fa-bolt"></i> Speed</h3>
-                <p>Generate receipts in seconds, not minutes. No formatting, no printing templates.</p>
+                <h3><i class="fas fa-print"></i> Instant Print (Default)</h3>
+                <p>The default format is a 2-copy print receipt, ideal for on-the-spot handoff between team members.</p>
             </div>
             <div class="feature-card">
-                <h3><i class="fas fa-save"></i> Auto-Save</h3>
-                <p>Every receipt is saved automatically. Search and export your full history anytime.</p>
+                <h3><i class="fas fa-file-pdf"></i> Downloadable PDF</h3>
+                <p>Download a clean PDF receipt for digital storage, sharing, and audit trail records.</p>
             </div>
             <div class="feature-card">
-                <h3><i class="fas fa-mobile-alt"></i> Works Anywhere</h3>
-                <p>Generate receipts from your phone, tablet, or computer. No app install required.</p>
+                <h3><i class="fas fa-envelope"></i> Email Receipt</h3>
+                <p>Send receipts by email directly after creation so both sides receive documented proof.</p>
             </div>
             <div class="feature-card">
-                <h3><i class="fas fa-file-pdf"></i> Professional Format</h3>
-                <p>Clean, professional PDF receipts. Customizable text and branding (Pro plan).</p>
+                <h3><i class="fas fa-sliders-h"></i> Customizable Receipt</h3>
+                <p>Adjust labels, logo, and visible fields to match your team's receipt process and language.</p>
             </div>
         </div>
 
-        <h2>Generator vs Template</h2>
-        <p>A template requires you to download, fill out, save, and organize manually. A generator does all of that for you automatically.</p>
-        
-        <p><strong>Template:</strong> Download → Fill → Save → File → Hope you can find it later</p>
-        <p><strong>Generator:</strong> Enter details → Done. Everything is saved and searchable.</p>
+        <h2>Receipt Output Examples</h2>
+        <p>These examples show how the same petty cash transaction can be delivered as print, PDF, and email-ready receipt output.</p>
 
-        <p>If you're creating more than a few receipts per month, a generator saves hours of work.</p>
+        <div class="output-showcase">
+            <figure>
+                <img src="assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png" alt="Default two-copy print petty cash receipt layout for immediate handoff">
+                <figcaption><strong>Default print output:</strong> two-copy layout for immediate handoff documentation.</figcaption>
+            </figure>
+            <figure>
+                <img src="assets/images/seo/petty-cash-receipt-generator/pdf-receipt-example.png" alt="Downloadable PDF petty cash receipt example with branded totals and transaction fields">
+                <figcaption><strong>PDF output:</strong> downloadable receipt for digital archive and reporting workflows.</figcaption>
+            </figure>
+            <figure>
+                <img src="assets/images/seo/petty-cash-receipt-generator/email-receipt-example.png" alt="Email cash receipt example showing total handed over and PDF receipt button">
+                <figcaption><strong>Email output:</strong> send a receipt instantly, with optional PDF download for the recipient.</figcaption>
+            </figure>
+        </div>
+
+        <h2>Customize Receipt Layout Before Sending</h2>
+        <p>SpendNote lets you personalize how each receipt looks before print, PDF, or email delivery.</p>
+
+        <div class="output-showcase">
+            <figure>
+                <img src="assets/images/seo/petty-cash-receipt-generator/receipt-customization-settings.png" alt="Receipt and print settings screen with print, PDF, email format options and customizable fields">
+                <figcaption><strong>Customization panel:</strong> configure logo, labels, and field visibility in one place.</figcaption>
+            </figure>
+        </div>
+
+        <div class="callout-note">
+            SpendNote is for internal cash tracking and handoff proof. It is not a POS, accounting, or tax invoicing replacement.
+        </div>
+
+        <h2>How the Petty Cash Receipt Generator Works</h2>
+        <ol>
+            <li><strong>Record transaction details</strong> - amount, date, handoff parties, and line items.</li>
+            <li><strong>Generate the receipt</strong> - SpendNote creates a professional cash receipt instantly.</li>
+            <li><strong>Deliver in your preferred format</strong> - print now, download PDF, or send by email.</li>
+        </ol>
+
+        <p>Every generated receipt is saved with searchable history, so teams can trace who issued and who received cash without manual filing.</p>
 
         <div class="cta-box">
-            <h3>Ready to Generate Receipts?</h3>
-            <p>Join teams who've replaced manual templates with SpendNote's instant generator.</p>
-            <a href="spendnote-signup.html" class="btn">Get Started Free</a>
+            <h3>Start Generating Petty Cash Receipts</h3>
+            <p>Use one workflow for print receipts, downloadable PDF, and email delivery.</p>
+            <a href="spendnote-signup.html" class="btn">Start Free - No Card Required</a>
+        </div>
+
+        <h2>Use Cases</h2>
+        <ul>
+            <li><strong>Shift handoff:</strong> document cash transfer between outgoing and incoming staff.</li>
+            <li><strong>Petty cash withdrawal:</strong> issue and receive cash with receipt-level proof.</li>
+            <li><strong>Internal reimbursement:</strong> keep a searchable record for follow-up checks.</li>
+        </ul>
+
+        <h2>Petty Cash Receipt Generator FAQ</h2>
+        <p><strong>Can I print receipts immediately?</strong><br>Yes. Print is the default format and supports a two-copy layout for handoff workflows.</p>
+        <p><strong>Can I download the receipt as PDF?</strong><br>Yes. Each receipt can be downloaded as a PDF for digital storage and sharing.</p>
+        <p><strong>Can I send receipts by email?</strong><br>Yes. Receipts can be sent by email directly after creation.</p>
+        <p><strong>Can I customize receipt fields and labels?</strong><br>Yes. You can personalize labels, logo, and visible sections to match your team process.</p>
+
+        <div class="cta-box">
+            <h3>Ready to Replace Manual Receipt Templates?</h3>
+            <p>Create, print, download, and email petty cash receipts from one place.</p>
+            <a href="spendnote-signup.html" class="btn">Generate Your First Receipt</a>
         </div>
 
         <p style="margin-top: 2rem; text-align: center;">Need more info? Visit our <a href="spendnote-pricing.html">pricing page</a> or <a href="spendnote-faq.html">FAQ</a>.</p>
