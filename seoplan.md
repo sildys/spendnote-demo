@@ -132,3 +132,71 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - cross-link between related SEO pages + pricing + FAQ + signup CTA.
 5. Re-submit for indexing after updates:
    - URL inspection + request indexing in Search Console.
+
+---
+
+## 7-Day Mini SEO Sprint (30-60 min/day)
+
+### Day 1 - Indexing foundation
+1. In Search Console, run live test + request indexing for:
+   - `https://spendnote.app/`
+   - `https://spendnote.app/spendnote-faq.html`
+2. Re-submit sitemap.
+3. Confirm one canonical host strategy (`www` vs non-`www`) and keep it consistent.
+
+**KPI:** 2 core URLs submitted for indexing.
+
+### Day 2 - Choose 2 launch SEO pages
+1. Pick 2 strongest intent pages (e.g. template + handoff).
+2. Remove `noindex` only on these 2 pages.
+3. Verify title/meta/H1 alignment for primary query intent.
+
+**KPI:** 2 SEO pages set to indexable.
+
+### Day 3 - On-page upgrade
+For each of the 2 pages:
+1. Reach ~600-1200 words with concrete use-case sections.
+2. Keep one clear CTA above the fold and one near bottom.
+3. Add an FAQ block (3-5 questions).
+4. Add 2-4 relevant images with descriptive alt text.
+
+**KPI:** each page covers 1 primary keyword + 3 long-tail variants.
+
+### Day 4 - Internal link graph
+1. Link both SEO pages from homepage.
+2. Link both from FAQ where context fits.
+3. Add links back from SEO pages to homepage, pricing, FAQ, and signup CTA.
+
+**KPI:** minimum 3 relevant internal links per SEO page.
+
+### Day 5 - Image SEO (receipt samples only)
+1. Publish anonymized/public sample receipt images (no real customer data).
+2. Use descriptive filenames (e.g. `cash-receipt-template-example.png`).
+3. Ensure real `<img>` placement on indexable pages (not sitemap-only).
+4. Keep ImageObject schema as support signal.
+5. Add image sitemap entries if available.
+
+**KPI:** 3+ crawlable, indexable sample image URLs.
+
+### Day 6 - Lightweight off-page signals
+1. Publish 3-5 relevant mentions/links:
+   - founder LinkedIn post,
+   - 1-2 niche communities,
+   - 1 startup directory/listing.
+2. Use UTM tags to track referral impact.
+
+**KPI:** at least 3 external mentions/links.
+
+### Day 7 - Measure and adjust
+1. Review Search Console performance:
+   - queries,
+   - impressions,
+   - average position,
+   - clicks.
+2. Tune titles/meta on top pages based on real queries.
+3. Choose one page to double down next week.
+
+**KPI target for week 1:**
+- Impressions: 20-200
+- Clicks: 1-10
+- If 0 clicks but impressions exist: keep direction, improve snippet + intent match.
