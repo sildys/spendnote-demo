@@ -281,15 +281,18 @@ async function renderCashBoxTeamMembersAccess() {
         ]);
 
         const accessSet = new Set((accessRows || []).map((row) => String(row?.user_id || '').trim()).filter(Boolean));
-        const activeMembers = (teamMembers || []).filter((m) => String(m?.status || '').toLowerCase() === 'active');
+        const visibleMembers = (teamMembers || []).filter((m) => {
+            const status = String(m?.status || '').toLowerCase();
+            return status === 'active' || status === 'pending';
+        });
 
-        if (!activeMembers.length) {
-            list.innerHTML = '<div class="team-member-row" style="justify-content:center;color:var(--text-muted);">No active team members found.</div>';
+        if (!visibleMembers.length) {
+            list.innerHTML = '<div class="team-member-row" style="justify-content:center;color:var(--text-muted);">No team members found.</div>';
             return;
         }
 
         const rank = { owner: 0, admin: 1, user: 2 };
-        activeMembers.sort((a, b) => {
+        visibleMembers.sort((a, b) => {
             const ra = rank[String(a?.role || '').toLowerCase()] ?? 99;
             const rb = rank[String(b?.role || '').toLowerCase()] ?? 99;
             if (ra !== rb) return ra - rb;
@@ -298,15 +301,19 @@ async function renderCashBoxTeamMembersAccess() {
             return na.localeCompare(nb);
         });
 
-        list.innerHTML = activeMembers.map((m, idx) => {
+        list.innerHTML = visibleMembers.map((m, idx) => {
             const name = m?.member?.full_name || m?.member?.email || m?.invited_email || 'Unknown member';
             const email = m?.member?.email || m?.invited_email || '';
             const role = String(m?.role || 'user').toLowerCase();
+            const status = String(m?.status || 'active').toLowerCase();
             const memberId = String(m?.member_id || m?.member?.id || '').trim();
             const isOwnerOrAdmin = role === 'owner' || role === 'admin';
-            const hasAccess = isOwnerOrAdmin ? true : accessSet.has(memberId);
+            const hasAccess = isOwnerOrAdmin ? true : (memberId ? accessSet.has(memberId) : false);
             const roleLabel = role === 'owner' ? 'Owner' : (role === 'admin' ? 'Admin' : 'User');
-            const accessLabel = hasAccess ? 'Has access' : 'No access';
+            const statusLabel = status === 'pending' ? 'Pending invite' : 'Active';
+            const accessLabel = status === 'pending'
+                ? 'No access yet'
+                : (hasAccess ? 'Has access' : 'No access');
             const accessColor = hasAccess ? '#10b981' : '#6b7280';
 
             return `<div class="team-member-row">
@@ -314,7 +321,8 @@ async function renderCashBoxTeamMembersAccess() {
                 <div class="team-member-info" style="min-width:0;flex:1;">
                     <div class="team-member-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(name)}</div>
                     <div class="team-member-role" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                        <span>${esc(roleLabel)}</span>
+                        <span>Role: ${esc(roleLabel)}</span>
+                        <span>Status: ${esc(statusLabel)}</span>
                         ${email ? `<span style="opacity:.75;">${esc(email)}</span>` : ''}
                     </div>
                 </div>
