@@ -43,13 +43,35 @@ async function updateOrgContextIndicator() {
         const roleLabel = role === 'owner' ? 'Owner' : (role === 'admin' ? 'Admin' : 'User');
         const shortOrg = orgId.slice(0, 8);
 
+        const looksMachineName = (value) => {
+            const v = String(value || '').trim();
+            if (!v) return true;
+            // Common ugly fallback: short hex-like local-part (e.g. a5b27a78)
+            if (/^[a-f0-9]{8,}$/i.test(v)) return true;
+            return false;
+        };
+
+        let identityLabel = '';
+        try {
+            if (window.db?.profiles?.getCurrent) {
+                const p = await window.db.profiles.getCurrent();
+                const fullName = String(p?.full_name || '').trim();
+                const email = String(p?.email || '').trim();
+                if (fullName && !looksMachineName(fullName)) identityLabel = fullName;
+                else if (email) identityLabel = email;
+            }
+        } catch (_) {
+            // ignore
+        }
+        if (!identityLabel) identityLabel = `Workspace ${shortOrg}`;
+
         if (dropInfo) {
-            dropInfo.innerHTML = `<span class="org-context-dropdown-dot"></span><span><span class="org-context-dropdown-role">${roleLabel}</span><br><span class="org-context-dropdown-org">${shortOrg}</span></span>`;
+            dropInfo.innerHTML = `<span class="org-context-dropdown-dot"></span><span><span class="org-context-dropdown-role">${roleLabel}</span><br><span class="org-context-dropdown-org">${identityLabel}</span></span>`;
             dropInfo.style.display = 'flex';
         }
 
         if (dashboardEl) {
-            dashboardEl.textContent = `Org: ${shortOrg} \u00b7 ${roleLabel} \u00b7 Switch via Log out \u2192 Log in`;
+            dashboardEl.textContent = `Org: ${identityLabel} \u00b7 ${roleLabel} \u00b7 Switch via Log out \u2192 Log in`;
             dashboardEl.style.display = memberships.length > 1 ? 'inline-flex' : 'none';
         }
     } catch (_) {
