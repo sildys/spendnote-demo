@@ -203,14 +203,15 @@ const initTeamPage = async () => {
     const proGate = document.getElementById('teamProGate');
     const teamContent = document.getElementById('teamContent');
 
-    const waitForDb = () => new Promise(resolve => {
-        const check = () => {
-            if (window.db?.teamMembers?.getAll) resolve();
-            else setTimeout(check, 80);
-        };
-        check();
-    });
-    await waitForDb();
+    const waitForTeamApis = async (maxAttempts = 50) => {
+        for (let i = 0; i < maxAttempts; i += 1) {
+            if (window.db?.teamMembers?.getAll && window.db?.cashBoxes?.getAll) {
+                return true;
+            }
+            await new Promise((resolve) => setTimeout(resolve, 120));
+        }
+        return false;
+    };
 
     // Get role
     try {
@@ -225,7 +226,15 @@ const initTeamPage = async () => {
     if (proGate) proGate.style.display = 'none';
     if (teamContent) teamContent.style.display = '';
 
-    await Promise.all([loadTeam(), loadCashBoxes()]);
+    const apisReady = await waitForTeamApis();
+    if (apisReady) {
+        await Promise.all([loadTeam(), loadCashBoxes()]);
+    } else {
+        // Degrade gracefully: still render page shell even if db APIs are late/unavailable.
+        teamMembers = [];
+        cashBoxes = [];
+        renderTeamTable();
+    }
 
     // Invite modal
     const inviteModal = document.getElementById('inviteModal');
