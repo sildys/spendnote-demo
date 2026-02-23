@@ -1,41 +1,54 @@
-/* ===== TEAM PAGE ===== */
+/* ===== TEAM PAGE — Compact + Responsive ===== */
 
-/* Cash Box Access — compact list */
-.team-cb-list-wrap {
-    margin-top: 8px;
-}
+/* Page-level overrides for tighter spacing */
+.team-page-compact .page-header { margin-bottom: 12px; }
+.team-page-compact .page-subtitle { font-size: 13px; margin-top: 2px; }
+.team-page-compact .stats-row { margin-bottom: 16px !important; gap: 10px; }
+.team-page-compact .stat-box { padding: 10px 14px; }
+.team-page-compact .stat-label { font-size: 11px; }
+.team-page-compact .stat-value { font-size: 20px; }
+.team-page-compact .settings-card { padding: 14px 16px; margin-bottom: 16px; }
+.team-page-compact .settings-card-header { margin-bottom: 8px; }
+.team-page-compact .settings-card-title { font-size: 15px; }
+.team-page-compact .settings-card-subtitle { font-size: 12px; }
+
+/* Compact team table */
+.team-page-compact .team-table th { font-size: 11px; padding: 8px 10px; }
+.team-page-compact .team-table td { padding: 8px 10px; font-size: 13px; }
+.team-page-compact .member-avatar { width: 28px; height: 28px; font-size: 11px; }
+.team-page-compact .member-name { font-size: 13px; }
+.team-page-compact .member-email { font-size: 11px; }
+.team-page-compact .team-actions { gap: 4px; }
+.team-page-compact .btn-small { font-size: 11px; padding: 4px 8px; }
+
+/* Cash Box Access — compact rows */
+.team-cb-list-wrap { margin-top: 4px; }
 
 .team-cb-row {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 0;
+    gap: 10px;
+    padding: 8px 0;
     border-bottom: 1px solid var(--border);
 }
+.team-cb-row:last-child { border-bottom: none; }
 
-.team-cb-row:last-child {
-    border-bottom: none;
-}
-
-.team-cb-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
+.team-cb-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
 .team-cb-row-name {
     font-weight: 600;
-    font-size: 14px;
-    min-width: 120px;
+    font-size: 13px;
+    min-width: 100px;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .team-cb-row-members {
     flex: 1;
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 3px;
     align-items: center;
     min-width: 0;
 }
@@ -43,139 +56,113 @@
 .team-cb-member-pill {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 2px 8px 2px 2px;
-    border-radius: 14px;
+    gap: 3px;
+    padding: 1px 6px 1px 1px;
+    border-radius: 12px;
     background: var(--bg, #f3f4f6);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
     border: 1px solid var(--border);
+    line-height: 1.3;
 }
-
 .team-cb-member-pill .pill-avatar {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 9px;
-    font-weight: 700;
-    flex-shrink: 0;
+    width: 16px; height: 16px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 8px; font-weight: 700; flex-shrink: 0;
 }
 
-.team-cb-row-actions {
-    flex-shrink: 0;
-}
+.team-cb-row-actions { flex-shrink: 0; }
+.team-cb-empty { color: var(--text-muted); font-size: 11px; font-style: italic; }
 
-.team-cb-empty {
-    color: var(--text-muted);
-    font-size: 12px;
-    font-style: italic;
-}
-
-/* Invite modal cash box list */
-.invite-cb-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
+/* Invite modal — compact CB list */
+.invite-cb-list { display: flex; flex-direction: column; gap: 4px; }
 .invite-cb-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.1s, border-color 0.1s;
-    user-select: none;
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px;
+    cursor: pointer; transition: background 0.1s; user-select: none;
 }
+.invite-cb-item:hover { background: rgba(99,102,241,0.04); }
+.invite-cb-item.selected { border-color: var(--primary,#6366f1); background: rgba(99,102,241,0.08); }
+.invite-cb-item input[type="checkbox"] { accent-color: var(--primary,#6366f1); width: 14px; height: 14px; flex-shrink: 0; }
+.invite-cb-item .invite-cb-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.invite-cb-item .invite-cb-name { font-size: 13px; font-weight: 500; }
 
-.invite-cb-item:hover {
-    background: rgba(99, 102, 241, 0.04);
-}
-
-.invite-cb-item.selected {
-    border-color: var(--primary, #6366f1);
-    background: rgba(99, 102, 241, 0.08);
-}
-
-.invite-cb-item input[type="checkbox"] {
-    accent-color: var(--primary, #6366f1);
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-}
-
-.invite-cb-item .invite-cb-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
-.invite-cb-item .invite-cb-name {
-    font-size: 14px;
-    font-weight: 500;
-}
-
-/* Access modal member list */
+/* Access modal — compact member rows */
 .access-member-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
 }
-
-.access-member-row:last-child {
-    border-bottom: none;
-}
-
-.access-member-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
+.access-member-row:last-child { border-bottom: none; }
+.access-member-info { display: flex; align-items: center; gap: 8px; }
 .access-member-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    flex-shrink: 0;
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0;
 }
+.access-member-name { font-weight: 600; font-size: 13px; }
+.access-member-email { font-size: 11px; color: var(--text-muted); }
+.access-member-note { font-size: 11px; color: var(--text-muted); font-style: italic; }
 
-.access-member-name {
-    font-weight: 600;
-    font-size: 14px;
-}
+/* ===== MOBILE ===== */
 
-.access-member-email {
-    font-size: 12px;
-    color: var(--text-muted);
-}
-
-.access-member-note {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-style: italic;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-    .team-cb-grid {
-        grid-template-columns: 1fr;
-    }
-    .team-cb-card-actions {
+@media (max-width: 768px) {
+    .team-page-compact .page-header {
         flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
+    .team-page-compact .page-header-actions {
+        width: 100%;
+    }
+    .team-page-compact .page-header-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .team-page-compact .stats-row {
+        flex-wrap: wrap;
+    }
+    .team-page-compact .stat-box {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 0;
+    }
+
+    /* Team table: horizontal scroll */
+    .team-page-compact .team-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -16px;
+        padding: 0 16px;
+    }
+    .team-page-compact .team-table {
+        min-width: 580px;
+    }
+
+    /* CB access rows: stack on mobile */
+    .team-cb-row {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .team-cb-row-name {
+        min-width: unset;
+        flex: 1 1 auto;
+    }
+    .team-cb-row-members {
+        flex-basis: 100%;
+        order: 3;
+    }
+    .team-cb-row-actions {
+        order: 2;
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .team-page-compact .settings-card { padding: 10px 12px; }
+    .team-page-compact .stat-box { flex: 1 1 100%; }
+    .team-page-compact .team-table { min-width: 520px; }
+    .team-page-compact .team-table th,
+    .team-page-compact .team-table td { padding: 6px 8px; font-size: 12px; }
+    .team-page-compact .member-avatar { width: 24px; height: 24px; font-size: 10px; }
+    .team-cb-row { padding: 6px 0; }
+    .invite-cb-item { padding: 6px 8px; }
 }
