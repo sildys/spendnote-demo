@@ -34,7 +34,7 @@ const renderOrgNamePanel = () => {
         return;
     }
 
-    panel.style.display = '';
+    panel.style.display = 'block';
     input.value = String(currentOrgName || '').trim();
     const hasName = Boolean(String(currentOrgName || '').trim());
     note.textContent = hasName
