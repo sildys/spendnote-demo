@@ -52,7 +52,31 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
-## Where we are now (last updated: 2026-02-22 — 4-page SEO go-live pass completed)
+## Where we are now (last updated: 2026-02-23 — SEO copy refinement + reindex follow-up)
+
+### 2026-02-23 zárás — SEO/copy finomítás + indexelési follow-up (KÉSZ)
+
+**Lezárt és pusholt javítások (mai kör):**
+
+- **Billing copy ellentmondás feloldva** (`spendnote-faq.html`, `spendnote-pricing.html`):
+  - különválasztva: lemondás vs visszatérítés logika,
+  - upgrade: azonnali, proratált különbözet,
+  - downgrade: következő megújuláskor lép életbe,
+  - refund: 30 napos feltétel tisztázva, ezen kívül nincs prorata visszatérítés.
+- **Billing FAQ layout regresszió javítva** (`spendnote-faq.html`):
+  - hibás `faq-card` markup helyreállítva (trial kártya),
+  - grid és lenyíló viselkedés visszaállt.
+- **Landing copy frissítve** (`index.html`):
+  - "Designed for speed: one form → PDF → done." -> "Űrlap, nyomtat, kész."
+- **Cash handoff SEO hero copy puhítva** (`cash-handoff-receipt.html`):
+  - "Clear accountability for every handoff." -> "Clear record for every handoff."
+- **Search Console operatív lépés lezárva**:
+  - módosított indexelhető oldalakra új indexelési kérés beküldve.
+
+**Mostani fókusz:**
+
+- 48-72 órás GSC monitorozás az újraküldött URL-ekre.
+- Csak hiba/beragadás esetén célzott újrakérés vagy technikai beavatkozás.
 
 ### 2026-02-22 zárás — SEO go-live stabilizáció (KÉSZ)
 

@@ -7,7 +7,7 @@ SpendNote is a **cash box + transaction + contacts** web app.
 
 This repository is meant to be deployable as a static site (e.g. Vercel).
 
-## Current status (2026-02-22 — SEO go-live pass completed, app focus ongoing)
+## Current status (2026-02-23 — SEO copy refinement + reindex follow-up completed)
 
 ### Completed in the latest release-polish cycle
 
@@ -35,6 +35,23 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - Core functional flows are **stable** in continuous manual testing.
 - App is in a **go-live capable** state.
 - Preview usage cap is now **technically enforced** at 200 receipts during preview.
+- Public SEO copy is now **aligned and consistent** on billing/refund wording and key landing/SEO trust lines.
+- Updated public URLs were **re-submitted for indexing** in Google Search Console.
+
+### Latest SEO/copy follow-up (2026-02-23)
+
+- **Billing FAQ wording clarified** to remove ambiguity:
+  - cancellation stops renewal but paid access remains until period end,
+  - refund terms are separate,
+  - no prorated refund outside the 30-day guarantee window.
+- **Billing FAQ layout regression fixed** (`spendnote-faq.html` card markup corrected).
+- **Landing reassurance copy updated**:
+  - "Designed for speed: one form → PDF → done." → "Űrlap, nyomtat, kész."
+- **Cash handoff SEO hero copy softened**:
+  - "Clear accountability for every handoff." → "Clear record for every handoff."
+- **Search Console follow-up completed**:
+  - modified indexable pages re-submitted for indexing,
+  - next step is 48-72h status monitoring.
 
 ### Next major scope (deep round, estimate: ~6-8 weeks)
 
@@ -65,6 +82,10 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - verified no fake rating schema on public SEO pages (no `aggregateRating` / `ratingValue` blocks).
   - sitemap reduced to only currently indexable public pages and re-submitted (`https://spendnote.app/sitemap.xml`).
   - indexing requests sent for all 4 public indexable pages.
+- SEO/copy follow-up completed (2026-02-23):
+  - billing/refund copy consistency pass completed on FAQ + Pricing,
+  - minor landing + cash handoff SEO copy improvements merged,
+  - new indexing requests submitted after copy updates.
 - Preview receipt cap enforcement configured:
   - create-time check blocks new transactions after 200 active receipts,
   - clear UI message shown on limit reached,
