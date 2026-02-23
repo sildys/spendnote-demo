@@ -16,6 +16,103 @@ try {
 if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260216-2135');
 window.__spendnoteSupabaseConfigBuild = '20260216-2135';
 
+const __spendnoteGetResponseRequestId = (resp) => {
+    try {
+        if (!resp?.headers) return '';
+        return String(
+            resp.headers.get('x-request-id') ||
+            resp.headers.get('x-supabase-request-id') ||
+            resp.headers.get('cf-ray') ||
+            ''
+        ).trim();
+    } catch (_) {
+        return '';
+    }
+};
+
+const __spendnoteParseFetchError = async (resp, opts = {}) => {
+    const defaultMessage = String(opts?.defaultMessage || 'Request failed').trim();
+    let text = '';
+    let payload = null;
+
+    try {
+        text = await resp.text();
+    } catch (_) {
+        text = '';
+    }
+
+    if (text) {
+        try {
+            payload = JSON.parse(text);
+        } catch (_) {
+            payload = null;
+        }
+    }
+
+    const message = String(
+        payload?.detail ||
+        payload?.error?.message ||
+        payload?.error ||
+        payload?.message ||
+        text ||
+        `HTTP ${Number(resp?.status) || 0}` ||
+        defaultMessage
+    ).trim() || defaultMessage;
+
+    return {
+        status: Number(resp?.status) || null,
+        statusText: String(resp?.statusText || '').trim(),
+        requestId: __spendnoteGetResponseRequestId(resp),
+        message,
+        payload,
+        rawText: text
+    };
+};
+
+const __spendnoteBuildUserMessage = (prefix, parsed) => {
+    const pre = String(prefix || '').trim();
+    const msg = String(parsed?.message || '').trim() || 'Unknown error';
+    const requestId = String(parsed?.requestId || '').trim();
+    const base = pre ? `${pre}: ${msg}` : msg;
+    return requestId ? `${base} (Ref: ${requestId})` : base;
+};
+
+const __spendnoteLogBackendError = (context, parsed, extra) => {
+    const ctx = String(context || 'backend').trim();
+    const logPayload = {
+        context: ctx,
+        status: parsed?.status ?? null,
+        requestId: parsed?.requestId || null,
+        message: parsed?.message || 'Unknown backend error',
+        payload: parsed?.payload || null,
+        extra: extra || null
+    };
+
+    console.error(`[backend-error] ${ctx}`, logPayload);
+
+    try {
+        if (window.Sentry?.captureException) {
+            const err = new Error(`${ctx}: ${logPayload.message}`);
+            window.Sentry.captureException(err, {
+                tags: {
+                    area: 'backend',
+                    context: ctx,
+                    status: logPayload.status != null ? String(logPayload.status) : 'n/a'
+                },
+                extra: logPayload
+            });
+        }
+    } catch (_) {
+        // ignore
+    }
+};
+
+window.SpendNoteBackendErrors = {
+    parseFetchError: __spendnoteParseFetchError,
+    buildUserMessage: __spendnoteBuildUserMessage,
+    logBackendError: __spendnoteLogBackendError
+};
+
 const PREVIEW_RECEIPT_LIMIT = 200;
 const PREVIEW_RECEIPT_LIMIT_ERROR = 'PREVIEW_RECEIPT_LIMIT_REACHED';
 const PREVIEW_RECEIPT_LIMIT_OVERRIDE_KEY = 'spendnote.preview.receiptLimit.enabled.v1';
@@ -2552,8 +2649,22 @@ var db = {
             });
 
             if (error) {
-                console.error('Error creating invite:', error);
-                return { success: false, error: error.message };
+                const rpcMessage = [error?.message, error?.details, error?.hint].filter(Boolean).join(' | ') || 'Failed to create invite.';
+                __spendnoteLogBackendError('teamMembers.invite.rpc', {
+                    status: null,
+                    requestId: String(error?.code || '').trim() || null,
+                    message: rpcMessage,
+                    payload: {
+                        code: error?.code || null,
+                        details: error?.details || null,
+                        hint: error?.hint || null
+                    }
+                }, {
+                    orgId: ctx.orgId,
+                    invitedEmail: String(email || '').trim(),
+                    role: role || 'user'
+                });
+                return { success: false, error: rpcMessage };
             }
 
             const row = Array.isArray(data) ? data[0] : data;
@@ -2626,20 +2737,20 @@ var db = {
                         }
                     }
 
-                    const text = await resp.text();
-                    let payload = null;
-                    try {
-                        payload = text ? JSON.parse(text) : null;
-                    } catch (_) {
-                        payload = null;
-                    }
-
                     if (!resp.ok) {
                         emailSent = false;
                         if (resp.status === 401) {
                             emailError = 'Session expired/invalid. Please log in again.';
                         } else {
-                            emailError = payload?.detail || payload?.error || text || `HTTP ${resp.status}`;
+                            const parsed = await __spendnoteParseFetchError(resp, {
+                                defaultMessage: 'Failed to send invite email'
+                            });
+                            __spendnoteLogBackendError('teamMembers.invite.sendInviteEmail', parsed, {
+                                orgId: ctx.orgId,
+                                invitedEmail: String(email || '').trim(),
+                                role: row?.role || role || 'user'
+                            });
+                            emailError = __spendnoteBuildUserMessage('Failed to send invite email', parsed);
                         }
                     } else {
                         emailSent = true;
@@ -2648,6 +2759,16 @@ var db = {
             } catch (err) {
                 emailSent = false;
                 emailError = err?.message || String(err);
+                __spendnoteLogBackendError('teamMembers.invite.sendInviteEmail.catch', {
+                    status: null,
+                    requestId: null,
+                    message: String(emailError || 'Failed to send invite email'),
+                    payload: null
+                }, {
+                    orgId: ctx.orgId,
+                    invitedEmail: String(email || '').trim(),
+                    role: row?.role || role || 'user'
+                });
             }
 
             return { success: true, data: row, emailSent, emailError };

@@ -767,19 +767,35 @@ html, body { height: auto !important; overflow: auto !important; }
                         })
                     });
 
-                    let data = null;
-                    try {
-                        data = await res.json();
-                    } catch (_) {
-                        data = null;
-                    }
                     if (!res.ok) {
-                        const msg =
-                            data?.error?.message ||
-                            (typeof data?.error === 'string' ? data.error : '') ||
-                            (data ? JSON.stringify(data) : '') ||
-                            `HTTP ${res.status}`;
-                        throw new Error(msg || 'Failed to send email');
+                        const backend = window.SpendNoteBackendErrors;
+                        let parsed = null;
+
+                        if (backend?.parseFetchError) {
+                            parsed = await backend.parseFetchError(res, {
+                                defaultMessage: 'Failed to send receipt email'
+                            });
+                        } else {
+                            parsed = {
+                                status: Number(res?.status) || null,
+                                requestId: '',
+                                message: `HTTP ${Number(res?.status) || 0}`,
+                                payload: null
+                            };
+                        }
+
+                        if (backend?.logBackendError) {
+                            backend.logBackendError('transactionDetail.sendReceiptEmail', parsed, {
+                                txId: getCurrentTxId(),
+                                to: email
+                            });
+                        }
+
+                        const userMessage = backend?.buildUserMessage
+                            ? backend.buildUserMessage('Failed to send email', parsed)
+                            : `Failed to send email: ${parsed?.message || 'Unknown error'}`;
+
+                        throw new Error(userMessage);
                     }
 
                     showAlert('Receipt sent successfully to ' + email, { iconType: 'success' });
