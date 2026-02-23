@@ -54,20 +54,20 @@ If a chat thread freezes / context is lost: in the new thread say:
 
 ## Where we are now (last updated: 2026-02-23 — SEO szakasz lezárva, app fókusz aktív)
 
-### 2026-02-23 frissítés — P0/3 abuse/WAF baseline audit (RÉSZBEN KÉSZ)
+### 2026-02-23 frissítés — P0/3 abuse/WAF baseline (KÉSZ a jelenlegi Free plan kereten)
 
 **Cloudflare audit eredmény (képernyőképes validáció):**
 
 - WAF managed ruleset: **ON** (Always active).
 - Security Events: **van blokkolási esemény** (managed rules -> Block), tehát edge védelem aktív.
 - Challenge passage: **30 perc** konfigurálva.
-- Bot Fight Mode: **OFF** (csak JS Detections ON).
-- Rate limiting rules: **nincs** (0 szabály).
+- Bot Fight Mode: **ON** (JS Detections ON).
+- Rate limiting rules: **1 aktív** (`RL-HighRisk-Paths`, Block) — Free plan rule limit miatt.
 
-**Hátralévő P0/3 teendő (konkrét):**
+**Megjegyzés a korlátról:**
 
-- Bot Fight Mode bekapcsolása baseline szinten.
-- Rate limit szabályok létrehozása legalább invite/email/auth kritikus útvonalakra.
+- Cloudflare Free plan rule limit elérve; további endpoint-specifikus rate limit csak szabálycsere vagy upgrade mellett adható hozzá.
+- Jelenlegi minimum baseline cél teljesítve: bot védelem + aktív edge rate limit + aktív edge blokkolási események.
 
 ### 2026-02-23 frissítés — P0/1 backend hibaláthatóság első kör (KÉSZ)
 
@@ -110,7 +110,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 
 **Mostani fókusz (aktív):**
 
-- P0 baseline hardening (hátralévő): Bot Fight Mode ON + rate limit szabályok beállítása.
+- P0 baseline hardening (Cloudflare minimum): kész a jelenlegi plan kereten.
 - Onboarding + registration wizard előkészítés.
 - Team/org/invite modell és szerepkörös settings terv (DB-TEAM-1, L4/L5).
 

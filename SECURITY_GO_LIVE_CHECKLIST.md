@@ -47,14 +47,15 @@ Evidence / notes:
 
 ### 4) Edge protection (Cloudflare)
 - [x] WAF managed rules enabled.
-- [ ] Bot protection enabled (at least baseline).
-- [ ] Login/signup/reset endpoints are rate-limited.
+- [x] Bot protection enabled (at least baseline).
+- [~] Login/signup/reset endpoints are rate-limited.
 - [x] Suspicious high-risk paths are challenged/blocked (`/wp-*`, `/.env`, etc.).
 
 Evidence / notes:
 - WAF mode: Cloudflare managed ruleset is active (Always active = ON).
-- Bot mode: Bot Fight Mode currently OFF (JS Detections ON only).
-- Rate-limit rules: none configured yet (0/1 shown in Rate limiting rules view).
+- Bot mode: Bot Fight Mode ON (JS Detections ON).
+- Rate-limit rules: 1 active rule (`RL-HighRisk-Paths`, Block) within Free-plan rule limit.
+- Rate-limit coverage note: auth/invite/email endpoint-specific limits are not fully covered from this zone on current plan/architecture.
 - Security events: multiple managed-rule BLOCK actions visible in Security Analytics Events.
 - Challenge passage: configured (30 minutes).
 - Owner: SpendNote ops

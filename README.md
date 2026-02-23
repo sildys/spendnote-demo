@@ -53,12 +53,13 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - **P0/2 formal smoke checklist documented**:
   - new release checklist file: `SMOKE_CHECKLIST.md`,
   - includes pass/fail checks for auth, create transaction, print/PDF/email receipt, and invite flow.
-- **P0/3 Cloudflare abuse/WAF baseline audit completed (partial pass)**:
+- **P0/3 Cloudflare abuse/WAF baseline completed (within current Free plan limits)**:
   - Cloudflare managed ruleset active,
   - Security Events show managed-rule blocks,
   - challenge passage configured (30 min),
-  - remaining gap: Bot Fight Mode is OFF,
-  - remaining gap: no rate-limit rules configured yet for invite/email/auth routes.
+  - Bot Fight Mode is ON,
+  - one active rate-limit rule is in place (`RL-HighRisk-Paths`, Block),
+  - note: additional endpoint-specific rate-limit rules are constrained by current Free-plan rule limits.
 
 ### Latest SEO/copy follow-up (2026-02-23)
 
@@ -115,8 +116,8 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 ## Near-term execution plan (next sessions)
 
 1. P0 production baseline hardening:
-   - enable Bot Fight Mode,
-   - add rate-limit rules on invite/email/auth critical paths.
+   - Cloudflare minimum baseline complete on current plan,
+   - optional next step: endpoint-specific throttling at backend/edge level (or Cloudflare plan upgrade).
 2. Onboarding + registration wizard specification and implementation prep.
 3. Team/org/invite model alignment (DB-TEAM-1) and role-based settings plan.
 4. Billing/subscription + Stripe prep alignment with the team/onboarding model.
