@@ -91,47 +91,24 @@ const getRole = async () => {
     } catch (_) {}
 };
 
-// ── Render: Cash Box Grid ──
+// ── Helpers for member data ──
 
-const renderCashBoxGrid = () => {
-    const grid = document.getElementById('cashBoxGrid');
-    if (!grid) return;
-    const canManage = myRole === 'owner' || myRole === 'admin';
-
-    if (!boxes.length) {
-        grid.innerHTML = '<div style="color:var(--text-muted);padding:16px 0;text-align:center;">No Cash Boxes found. Create one first from the Cash Boxes page.</div>';
-        return;
+const memberName = (m) => m.member?.full_name || m.invited_email || '—';
+const memberEmail = (m) => m.member?.email || m.invited_email || '—';
+const memberCbHtml = (m) => {
+    const role = String(m.role || '').toLowerCase();
+    if (role === 'owner' || role === 'admin') return '<span class="tm-cb-label">All Cash Boxes</span>';
+    if (m.status === 'active' && m.member_id) {
+        const mBoxes = boxes.filter(cb => accessMap[cb.id]?.has(m.member_id));
+        if (mBoxes.length) return '<div class="tm-cb-dots">' + mBoxes.map(cb =>
+            `<span class="tm-cb-dot" style="background:${cb.color || '#6b7280'}" title="${esc(cb.name)}"></span>`
+        ).join('') + '</div>';
+        return '<span class="tm-cb-label">None</span>';
     }
-
-    grid.innerHTML = boxes.map((cb) => {
-        const cbMembers = members.filter(m => {
-            if (m.status !== 'active' || !m.member_id) return false;
-            return accessMap[cb.id]?.has(m.member_id);
-        });
-
-        const pills = cbMembers.length
-            ? cbMembers.map((m, mi) => {
-                const name = m.member?.full_name || m.invited_email || '—';
-                const r = String(m.role || '').toLowerCase();
-                const badge = r === 'owner' ? ' 👑' : (r === 'admin' ? ' ⭐' : '');
-                return `<span class="team-cb-member-pill"><span class="pill-avatar" style="background:${color(mi)}">${initials(name)}</span>${esc(name)}${badge}</span>`;
-            }).join('')
-            : '<span class="team-cb-empty">No members</span>';
-
-        const manageBtn = canManage
-            ? `<button type="button" class="btn btn-secondary btn-small" data-action="manage-cb" data-cb-id="${cb.id}"><i class="fas fa-user-cog"></i> Manage</button>`
-            : '';
-
-        return `<div class="team-cb-row">
-            <div class="team-cb-dot" style="background:${cb.color || '#6b7280'}"></div>
-            <div class="team-cb-row-name">${esc(cb.name)}</div>
-            <div class="team-cb-row-members">${pills}</div>
-            <div class="team-cb-row-actions">${manageBtn}</div>
-        </div>`;
-    }).join('');
+    return '<span class="tm-cb-label">—</span>';
 };
 
-// ── Render: Members Table ──
+// ── Render: Members Table (desktop) ──
 
 const renderMembersTable = () => {
     const tbody = document.getElementById('teamTableBody');
@@ -139,77 +116,157 @@ const renderMembersTable = () => {
     const canManage = myRole === 'owner' || myRole === 'admin';
 
     if (!members.length) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:32px;">No team members yet. Click "Invite Member" to add.</td></tr>';
+        tbody.innerHTML = `<tr><td colspan="5" class="team-empty">
+            <div class="team-empty-icon"><i class="fas fa-users"></i></div>
+            <div class="team-empty-title">No team members yet</div>
+            <div class="team-empty-text">Invite your first team member to get started</div>
+        </td></tr>`;
         return;
     }
 
     tbody.innerHTML = members.map((m, idx) => {
-        const name = m.member?.full_name || m.invited_email || '—';
-        const email = m.member?.email || m.invited_email || '—';
+        const name = memberName(m);
+        const email = memberEmail(m);
         const role = String(m.role || 'user').toLowerCase();
         const status = m.status || 'active';
         const isOwner = role === 'owner';
 
-        // Role cell
-        const roleBadgeClass = isOwner ? 'owner' : (role === 'admin' ? 'admin' : 'member');
+        // Role
         const roleHtml = isOwner
-            ? `<span class="role-badge owner"><i class="fas fa-crown"></i> Owner</span>`
+            ? `<span class="tm-role owner"><i class="fas fa-crown"></i> Owner</span>`
             : (canManage
-                ? `<select class="team-role-select role-badge ${roleBadgeClass}" data-action="set-role" data-id="${m.id}" data-status="${status}" ${status === 'active' || status === 'pending' ? '' : 'disabled'}>
+                ? `<select class="tm-role-select" data-action="set-role" data-id="${m.id}" data-status="${status}">
                     <option value="user" ${role !== 'admin' ? 'selected' : ''}>User</option>
                     <option value="admin" ${role === 'admin' ? 'selected' : ''}>Admin</option>
                    </select>`
-                : `<span class="role-badge ${roleBadgeClass}">${role === 'admin' ? 'Admin' : 'User'}</span>`);
-
-        // Cash boxes cell
-        let cbCell = '';
-        if (isOwner || role === 'admin') {
-            cbCell = '<span style="font-size:12px;color:var(--text-muted);">All Cash Boxes</span>';
-        } else if (m.status === 'active' && m.member_id) {
-            const memberBoxes = boxes.filter(cb => accessMap[cb.id]?.has(m.member_id));
-            cbCell = memberBoxes.length
-                ? memberBoxes.map(cb => `<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px;margin-right:6px;"><span style="width:8px;height:8px;border-radius:50%;background:${cb.color || '#6b7280'};display:inline-block;"></span>${esc(cb.name)}</span>`).join('')
-                : '<span style="font-size:12px;color:var(--text-muted);">None</span>';
-        } else {
-            cbCell = '<span style="font-size:12px;color:var(--text-muted);">—</span>';
-        }
+                : `<span class="tm-role ${role}">${role === 'admin' ? 'Admin' : 'User'}</span>`);
 
         // Status
-        const statusClass = status === 'active' ? 'active' : (status === 'pending' ? 'pending' : 'inactive');
+        const statusHtml = `<span class="tm-status ${status}"><span class="tm-status-dot"></span>${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
 
         // Actions
-        let actionsHtml = '<span style="color:var(--text-muted)">—</span>';
+        let actionsHtml = '';
         if (canManage && !isOwner) {
-            const btns = [];
             if (status === 'pending') {
-                btns.push(`<button type="button" class="btn btn-secondary btn-small" data-action="resend" data-id="${m.id}"><i class="fas fa-paper-plane"></i> Resend</button>`);
-                btns.push(`<button type="button" class="btn btn-danger btn-small" data-action="revoke" data-id="${m.id}"><i class="fas fa-ban"></i> Revoke</button>`);
+                actionsHtml = `<div class="tm-actions">
+                    <button class="tm-action" data-action="resend" data-id="${m.id}"><i class="fas fa-paper-plane"></i> Resend</button>
+                    <button class="tm-action danger" data-action="revoke" data-id="${m.id}"><i class="fas fa-ban"></i></button>
+                </div>`;
             } else {
-                btns.push(`<button type="button" class="btn btn-danger btn-small" data-action="remove" data-id="${m.id}"><i class="fas fa-trash"></i> Remove</button>`);
+                actionsHtml = `<div class="tm-actions">
+                    <button class="tm-action danger" data-action="remove" data-id="${m.id}"><i class="fas fa-trash"></i></button>
+                </div>`;
             }
-            actionsHtml = `<div class="team-actions">${btns.join('')}</div>`;
         }
 
         return `<tr>
-            <td><div class="member-cell">
-                <div class="member-avatar" style="background:${color(idx)}">${initials(name)}</div>
-                <div><div class="member-name">${esc(name)}</div><div class="member-email">${esc(email)}</div></div>
+            <td><div class="tm-member">
+                <div class="tm-avatar" style="background:${color(idx)}">${initials(name)}</div>
+                <div><div class="tm-name">${esc(name)}</div><div class="tm-email">${esc(email)}</div></div>
             </div></td>
             <td>${roleHtml}</td>
-            <td>${cbCell}</td>
-            <td><span class="status-badge ${statusClass}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+            <td>${memberCbHtml(m)}</td>
+            <td>${statusHtml}</td>
             <td>${actionsHtml}</td>
         </tr>`;
+    }).join('');
+};
+
+// ── Render: Members Cards (mobile) ──
+
+const renderMemberCards = () => {
+    const list = document.getElementById('teamCardList');
+    if (!list) return;
+    const canManage = myRole === 'owner' || myRole === 'admin';
+
+    if (!members.length) {
+        list.innerHTML = `<div class="team-empty">
+            <div class="team-empty-icon"><i class="fas fa-users"></i></div>
+            <div class="team-empty-title">No team members yet</div>
+            <div class="team-empty-text">Invite your first team member</div>
+        </div>`;
+        return;
+    }
+
+    list.innerHTML = members.map((m, idx) => {
+        const name = memberName(m);
+        const role = String(m.role || 'user').toLowerCase();
+        const status = m.status || 'active';
+        const isOwner = role === 'owner';
+
+        const roleBadge = isOwner
+            ? '<span class="tm-role owner"><i class="fas fa-crown"></i> Owner</span>'
+            : `<span class="tm-role ${role}">${role === 'admin' ? 'Admin' : 'User'}</span>`;
+        const statusBadge = `<span class="tm-status ${status}"><span class="tm-status-dot"></span>${status.charAt(0).toUpperCase() + status.slice(1)}</span>`;
+
+        let actions = '';
+        if (canManage && !isOwner) {
+            if (status === 'pending') {
+                actions = `<button class="tm-action" data-action="resend" data-id="${m.id}"><i class="fas fa-paper-plane"></i></button>
+                           <button class="tm-action danger" data-action="revoke" data-id="${m.id}"><i class="fas fa-ban"></i></button>`;
+            } else {
+                actions = `<button class="tm-action danger" data-action="remove" data-id="${m.id}"><i class="fas fa-trash"></i></button>`;
+            }
+        }
+
+        return `<div class="team-card">
+            <div class="tm-avatar" style="background:${color(idx)}">${initials(name)}</div>
+            <div class="team-card-body">
+                <div class="team-card-name">${esc(name)}</div>
+                <div class="team-card-meta">${roleBadge} ${statusBadge}</div>
+            </div>
+            <div class="team-card-actions">${actions}</div>
+        </div>`;
+    }).join('');
+};
+
+// ── Render: Cash Box Access list ──
+
+const renderCbAccess = () => {
+    const wrap = document.getElementById('cashBoxAccessList');
+    if (!wrap) return;
+    const canManage = myRole === 'owner' || myRole === 'admin';
+
+    if (!boxes.length) {
+        wrap.innerHTML = '<div style="color:var(--text-muted);padding:20px;text-align:center;font-size:13px;">No Cash Boxes yet.</div>';
+        return;
+    }
+
+    wrap.innerHTML = boxes.map((cb) => {
+        const cbMembers = members.filter(m => m.status === 'active' && m.member_id && accessMap[cb.id]?.has(m.member_id));
+
+        const pills = cbMembers.length
+            ? cbMembers.map((m, mi) => {
+                const n = memberName(m);
+                return `<span class="cb-access-pill"><span class="cb-access-pill-avatar" style="background:${color(mi)}">${initials(n)}</span>${esc(n)}</span>`;
+            }).join('')
+            : '<span class="cb-access-empty">No members</span>';
+
+        const manageBtn = canManage
+            ? `<button class="tm-action" data-action="manage-cb" data-cb-id="${cb.id}"><i class="fas fa-user-cog"></i> Manage</button>`
+            : '';
+
+        return `<div class="cb-access-row">
+            <div class="cb-access-dot" style="background:${cb.color || '#6b7280'}"></div>
+            <div class="cb-access-name">${esc(cb.name)}</div>
+            <div class="cb-access-members">${pills}</div>
+            <div class="cb-access-manage">${manageBtn}</div>
+        </div>`;
     }).join('');
 };
 
 // ── Render: Stats ──
 
 const renderStats = () => {
-    const el = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = v; };
-    el('statTotalMembers', members.length);
-    el('statCashBoxes', boxes.length);
-    el('statPendingMembers', members.filter(m => m.status === 'pending').length);
+    const pending = members.filter(m => m.status === 'pending').length;
+    const el = document.getElementById('statMemberCount');
+    if (el) {
+        const parts = [];
+        parts.push(`${members.length} total`);
+        if (pending) parts.push(`${pending} pending`);
+        parts.push(`${boxes.length} boxes`);
+        el.textContent = `(${parts.join(' · ')})`;
+    }
 };
 
 // ── Render all ──
@@ -220,8 +277,9 @@ const renderAll = () => {
     if (headerActions) headerActions.style.display = canManage ? '' : 'none';
 
     renderStats();
-    renderCashBoxGrid();
     renderMembersTable();
+    renderMemberCards();
+    renderCbAccess();
 };
 
 // ── Invite Modal: populate cash box checkboxes ──
@@ -398,8 +456,8 @@ const initTeamPage = async () => {
         renderAll();
     });
 
-    // Cash Box grid: manage access button
-    document.getElementById('cashBoxGrid')?.addEventListener('click', async (e) => {
+    // Cash Box access list: manage access button
+    document.getElementById('cashBoxAccessList')?.addEventListener('click', async (e) => {
         const btn = e.target?.closest('[data-action="manage-cb"]');
         if (!btn || !canManage()) return;
         await openCbAccessModal(btn.dataset.cbId);
@@ -427,8 +485,8 @@ const initTeamPage = async () => {
     document.getElementById('accessModalClose')?.addEventListener('click', () => document.getElementById('accessModal')?.classList.remove('active'));
     document.getElementById('accessModalDone')?.addEventListener('click', () => document.getElementById('accessModal')?.classList.remove('active'));
 
-    // Members table: actions
-    document.getElementById('teamTableBody')?.addEventListener('click', async (e) => {
+    // Members actions (shared handler for both table and mobile cards)
+    const handleMemberAction = async (e) => {
         const btn = e.target?.closest('button[data-action]');
         if (!btn || !canManage()) return;
         const action = btn.dataset.action;
@@ -461,7 +519,9 @@ const initTeamPage = async () => {
             await loadAll(); renderAll();
             showAlert(isPending ? 'Invite revoked.' : 'Member removed.', { iconType: 'success' });
         }
-    });
+    };
+    document.getElementById('teamTableBody')?.addEventListener('click', handleMemberAction);
+    document.getElementById('teamCardList')?.addEventListener('click', handleMemberAction);
 
     // Members table: role change
     document.getElementById('teamTableBody')?.addEventListener('change', async (e) => {
