@@ -395,28 +395,24 @@ body {
 }
 
 /* ============================================
-   ORG CONTEXT NAV CHIP (Pro, inline in nav)
+   ORG CONTEXT NAV LABEL (Pro, beside avatar)
    ============================================ */
 
-.org-context-nav-chip {
-    display: flex;
+.org-context-nav-label {
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
     color: #065f46;
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.25);
-    border-radius: 999px;
-    padding: 4px 10px;
     white-space: nowrap;
-    letter-spacing: 0.01em;
     cursor: default;
     user-select: none;
-    list-style: none;
+    opacity: 0.85;
+    line-height: 1;
 }
 
-.org-context-nav-chip::before {
+.org-context-nav-label::before {
     content: '';
     display: inline-block;
     width: 6px;
@@ -427,7 +423,7 @@ body {
 }
 
 @media (max-width: 900px) {
-    .org-context-nav-chip {
+    .org-context-nav-label {
         display: none !important;
     }
 }

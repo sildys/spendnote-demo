@@ -61,8 +61,8 @@ const NAV_HTML = `
                     <span class="btn-text">New Transaction</span>
                 </button>
             </li>
-            <li id="orgContextNavChip" class="org-context-nav-chip" style="display:none;"></li>
             <li class="user-avatar-wrapper" id="userAvatarBtn">
+                <span id="orgContextNavLabel" class="org-context-nav-label" style="display:none;"></span>
                 <div class="user-avatar">
                     <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="User">
                 </div>

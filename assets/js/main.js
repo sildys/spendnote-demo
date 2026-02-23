@@ -22,11 +22,11 @@ function updateMenuColors(color) {
 
 async function updateOrgContextIndicator() {
     const dashboardEl = document.getElementById('dashboardOrgContext');
-    const chip = document.getElementById('orgContextNavChip');
+    const navLabel = document.getElementById('orgContextNavLabel');
 
     const hide = () => {
         if (dashboardEl) dashboardEl.style.display = 'none';
-        if (chip) chip.style.display = 'none';
+        if (navLabel) navLabel.style.display = 'none';
     };
 
     try {
@@ -42,11 +42,10 @@ async function updateOrgContextIndicator() {
 
         const roleLabel = role === 'owner' ? 'Owner' : (role === 'admin' ? 'Admin' : 'User');
         const shortOrg = orgId.slice(0, 8);
-        const label = `${shortOrg} \u00b7 ${roleLabel}`;
 
-        if (chip) {
-            chip.textContent = label;
-            chip.style.display = 'flex';
+        if (navLabel) {
+            navLabel.textContent = `${shortOrg} \u00b7 ${roleLabel}`;
+            navLabel.style.display = 'inline-flex';
         }
 
         if (dashboardEl) {
