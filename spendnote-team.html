@@ -12,243 +12,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=23">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=19">
+    <link rel="stylesheet" href="assets/css/user-settings.css?v=20260223-2200">
     <style>
-        /* ===== TEAM PAGE — inline, matching app style ===== */
-
-        /* --- Members table container (same as contact-list) --- */
-        .team-container {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px var(--shadow);
-            margin-bottom: 20px;
-        }
-        .team-container-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 20px;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .team-container-title {
-            font-size: 16px;
-            font-weight: 800;
-            color: var(--text);
-        }
-        .team-container-subtitle {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-        .team-header-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        /* --- Desktop table --- */
-        .team-table-wrap { overflow-x: auto; max-width: 100%; }
-        .team-tbl {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 640px;
-        }
-        .team-tbl thead { background: var(--bg); }
-        .team-tbl th {
-            padding: 8px 14px;
-            text-align: left;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-        }
-        .team-tbl tbody tr {
-            border-bottom: 1px solid var(--border);
-            transition: background 0.15s;
-        }
-        .team-tbl tbody tr:last-child { border-bottom: none; }
-        .team-tbl tbody tr:hover { background: rgba(var(--active-rgb, 99,102,241), 0.04); }
-        .team-tbl td {
-            padding: 10px 14px;
-            font-size: 13px;
-            vertical-align: middle;
-        }
-
-        /* Member cell */
-        .tm-member {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .tm-avatar {
-            width: 36px; height: 36px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 13px; font-weight: 700; flex-shrink: 0;
-            letter-spacing: -0.02em;
-        }
-        .tm-name { font-weight: 700; font-size: 13px; color: var(--text); }
-        .tm-email { font-size: 11px; color: var(--text-muted); }
-
-        /* Role badge */
-        .tm-role {
-            display: inline-flex; align-items: center; gap: 4px;
-            padding: 3px 10px; border-radius: 6px;
-            font-size: 11px; font-weight: 700; white-space: nowrap;
-        }
-        .tm-role.owner { background: rgba(245,158,11,0.12); color: #b45309; }
-        .tm-role.admin { background: rgba(99,102,241,0.10); color: #4f46e5; }
-        .tm-role.user  { background: var(--bg); color: var(--text-muted); }
-
-        /* Role select */
-        .tm-role-select {
-            padding: 4px 8px; border-radius: 6px;
-            border: 1px solid var(--border); background: var(--surface);
-            font-size: 11px; font-weight: 600; cursor: pointer;
-        }
-
-        /* Status */
-        .tm-status {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 11px; font-weight: 600;
-        }
-        .tm-status-dot {
-            width: 7px; height: 7px; border-radius: 50%;
-        }
-        .tm-status.active .tm-status-dot { background: #10b981; }
-        .tm-status.pending .tm-status-dot { background: #f59e0b; }
-
-        /* CB dots in table */
-        .tm-cb-dots {
-            display: flex; flex-wrap: wrap; gap: 4px; align-items: center;
-        }
-        .tm-cb-dot {
-            width: 10px; height: 10px; border-radius: 50%;
-            display: inline-block; cursor: help;
-        }
-        .tm-cb-label {
-            font-size: 11px; color: var(--text-muted); white-space: nowrap;
-        }
-
-        /* Action buttons */
-        .tm-actions { display: flex; gap: 6px; justify-content: flex-end; }
-        .tm-action {
-            padding: 5px 10px; border-radius: 8px; border: 1px solid var(--border);
-            background: var(--surface); font-size: 11px; font-weight: 700;
-            cursor: pointer; transition: all 0.15s; display: inline-flex;
-            align-items: center; gap: 4px; color: var(--text); white-space: nowrap;
-        }
-        .tm-action:hover { border-color: var(--primary); color: var(--primary); background: rgba(var(--active-rgb,99,102,241),0.06); }
-        .tm-action.danger { color: var(--error, #ef4444); }
-        .tm-action.danger:hover { border-color: var(--error, #ef4444); background: rgba(239,68,68,0.06); color: var(--error, #ef4444); }
-
-        /* --- Mobile card list (hidden on desktop) --- */
-        .team-card-list { display: none; flex-direction: column; }
-        .team-card {
-            display: flex; align-items: center; gap: 12px;
-            padding: 14px 16px; border-bottom: 1px solid var(--border);
-            -webkit-tap-highlight-color: transparent;
-        }
-        .team-card:last-child { border-bottom: none; }
-        .team-card-body { flex: 1; min-width: 0; }
-        .team-card-name { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .team-card-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-        .team-card-actions { display: flex; gap: 6px; flex-shrink: 0; }
-
-        /* --- Cash Box Access section --- */
-        .cb-access-row {
-            display: flex; align-items: center; gap: 12px;
-            padding: 10px 20px; border-bottom: 1px solid var(--border);
-        }
-        .cb-access-row:last-child { border-bottom: none; }
-        .cb-access-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-        .cb-access-name { font-weight: 600; font-size: 13px; min-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .cb-access-members { flex: 1; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; min-width: 0; }
-        .cb-access-pill {
-            display: inline-flex; align-items: center; gap: 3px;
-            padding: 2px 8px 2px 2px; border-radius: 12px;
-            background: var(--bg); font-size: 10px; font-weight: 600;
-            border: 1px solid var(--border);
-        }
-        .cb-access-pill-avatar {
-            width: 16px; height: 16px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 7px; font-weight: 700; flex-shrink: 0;
-        }
-        .cb-access-empty { font-size: 11px; color: var(--text-muted); font-style: italic; }
-        .cb-access-manage {
-            flex-shrink: 0;
-        }
-
-        /* --- Invite modal CB list --- */
-        .invite-cb-list { display: flex; flex-direction: column; gap: 4px; }
+        /* Invite modal CB checkboxes */
+        .invite-cb-list { display: flex; flex-direction: column; gap: 6px; }
         .invite-cb-item {
             display: flex; align-items: center; gap: 8px;
-            padding: 8px 10px; border: 1px solid var(--border); border-radius: 10px;
+            padding: 8px 12px; border: 1px solid var(--border); border-radius: 10px;
             cursor: pointer; transition: background 0.1s; user-select: none;
         }
         .invite-cb-item:hover { background: rgba(var(--active-rgb,99,102,241),0.04); }
         .invite-cb-item input[type="checkbox"] { accent-color: var(--primary); width: 15px; height: 15px; flex-shrink: 0; }
         .invite-cb-item .invite-cb-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
         .invite-cb-item .invite-cb-name { font-size: 13px; font-weight: 600; }
-
-        /* --- Access modal --- */
-        .access-member-row {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 10px 0; border-bottom: 1px solid var(--border);
-        }
-        .access-member-row:last-child { border-bottom: none; }
-        .access-member-info { display: flex; align-items: center; gap: 10px; }
-        .access-member-avatar {
-            width: 30px; height: 30px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0;
-        }
-        .access-member-name { font-weight: 600; font-size: 13px; }
-        .access-member-email { font-size: 11px; color: var(--text-muted); }
-        .access-member-note { font-size: 11px; color: var(--text-muted); font-style: italic; }
-
-        /* --- Empty state --- */
-        .team-empty {
-            padding: 60px 24px; text-align: center;
-        }
-        .team-empty-icon { font-size: 48px; color: var(--text-muted); opacity: 0.4; margin-bottom: 16px; }
-        .team-empty-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
-        .team-empty-text { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
-
-        /* --- Loading / Error --- */
-        .team-loading {
-            text-align: center; padding: 60px 24px; color: var(--text-muted);
-        }
-        .team-loading i { font-size: 20px; margin-bottom: 10px; display: block; }
-        .team-error {
-            text-align: center; padding: 48px 24px;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 20px; box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .page-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .team-header-actions { width: 100%; }
-            .team-header-actions .btn { width: 100%; justify-content: center; }
-            .team-container-header { padding: 12px 16px; }
-            .cb-access-row { padding: 8px 16px; flex-wrap: wrap; }
-            .cb-access-name { min-width: unset; flex: 1; }
-            .cb-access-members { flex-basis: 100%; order: 3; margin-top: 4px; }
-            .cb-access-manage { order: 2; }
-        }
-
-        @media (max-width: 480px) {
-            /* Hide desktop table, show card list */
-            .team-table-wrap { display: none; }
-            .team-card-list { display: flex; }
-            .team-container-header { padding: 12px 14px; }
-            .cb-access-row { padding: 8px 14px; }
-        }
     </style>
 </head>
 <body>
@@ -258,78 +34,77 @@
     <main class="main-content">
         <div class="page-header">
             <div class="page-title-group">
-                <h1 class="page-title">Team <span class="badge badge-warning" style="font-size:12px;vertical-align:middle;">PRO</span></h1>
+                <h1 class="page-title">Team <span class="badge badge-warning" style="font-size:13px;vertical-align:middle;">PRO</span></h1>
                 <p class="page-subtitle">Manage your team members and Cash Box access</p>
             </div>
         </div>
 
         <!-- LOADING -->
-        <div id="teamLoading" class="team-loading">
-            <i class="fas fa-spinner fa-spin"></i>
+        <div id="teamLoading" style="text-align:center;padding:48px 24px;color:var(--text-muted);">
+            <i class="fas fa-spinner fa-spin" style="font-size:20px;margin-bottom:10px;display:block;"></i>
             Loading team...
         </div>
 
         <!-- ERROR -->
-        <div id="teamError" class="team-error" style="display:none;">
+        <div id="teamError" class="settings-card" style="display:none;text-align:center;padding:48px 24px;">
             <i class="fas fa-exclamation-triangle" style="font-size:28px;color:#f59e0b;margin-bottom:10px;display:block;"></i>
             <div style="font-size:15px;font-weight:700;margin-bottom:6px;">Could not load team data</div>
             <div style="color:var(--text-muted);margin-bottom:14px;font-size:13px;" id="teamErrorMsg">Please check your connection and try again.</div>
             <button type="button" class="btn btn-secondary" onclick="location.reload()"><i class="fas fa-redo"></i> Retry</button>
         </div>
 
-        <!-- MAIN CONTENT -->
+        <!-- MAIN CONTENT (original settings-style layout) -->
         <div id="teamContent" style="display:none;">
-
-            <!-- MEMBERS -->
-            <div class="team-container">
-                <div class="team-container-header">
+            <div class="settings-card">
+                <div class="settings-card-header">
                     <div>
-                        <div class="team-container-title">Members <span id="statMemberCount" style="font-weight:500;font-size:13px;color:var(--text-muted);"></span></div>
+                        <div class="settings-card-title">Team Management</div>
+                        <div class="settings-card-subtitle">Manage members and their permissions</div>
                     </div>
                     <div class="team-header-actions" id="teamHeaderActions" style="display:none;">
-                        <button type="button" class="btn btn-primary" id="inviteMemberBtn" style="font-size:13px;padding:8px 16px;">
-                            <i class="fas fa-user-plus"></i> Invite
-                        </button>
+                        <button type="button" class="btn btn-secondary btn-small" id="manageAccessBtn"><i class="fas fa-key"></i> Cash Box Access</button>
+                        <button type="button" class="btn btn-primary btn-small" id="inviteMemberBtn"><i class="fas fa-user-plus"></i> Invite</button>
                     </div>
                 </div>
-
-                <!-- Desktop table -->
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-label">Total Members</div>
+                        <div class="stat-value" id="statTotalMembers">—</div>
+                        <div class="stat-note" id="statMembersNote">of plan limit</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Active</div>
+                        <div class="stat-value" id="statActiveMembers">—</div>
+                        <div class="stat-note">Members active</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Pending</div>
+                        <div class="stat-value" id="statPendingMembers">—</div>
+                        <div class="stat-note">Awaiting acceptance</div>
+                    </div>
+                </div>
                 <div class="team-table-wrap">
-                    <table class="team-tbl">
+                    <table class="team-table">
                         <thead>
                             <tr>
                                 <th>Member</th>
                                 <th>Role</th>
-                                <th>Cash Boxes</th>
                                 <th>Status</th>
-                                <th style="text-align:right;">Actions</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="teamTableBody"></tbody>
+                        <tbody id="teamTableBody">
+                            <tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:24px;"><i class="fas fa-spinner fa-spin"></i> Loading team...</td></tr>
+                        </tbody>
                     </table>
                 </div>
-
-                <!-- Mobile card list -->
-                <div class="team-card-list" id="teamCardList"></div>
-            </div>
-
-            <!-- CASH BOX ACCESS -->
-            <div class="team-container">
-                <div class="team-container-header">
-                    <div>
-                        <div class="team-container-title">Cash Box Access</div>
-                        <div class="team-container-subtitle">Who can use each Cash Box</div>
-                    </div>
-                </div>
-                <div id="cashBoxAccessList">
-                    <!-- Populated by JS -->
-                </div>
+                <div style="margin-top:16px;font-size:12px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Admins can access all Cash Boxes. Configure per-cash-box access for Users via "Cash Box Access".</div>
             </div>
         </div>
     </main>
 </div>
 
-<!-- MODAL: Invite Member -->
+<!-- MODAL: Invite Team Member -->
 <div class="modal-backdrop" id="inviteModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -337,20 +112,20 @@
             <button type="button" class="modal-close" id="inviteModalClose">&times;</button>
         </div>
         <div class="modal-body">
-            <div class="form-group" style="margin-bottom:14px;">
+            <div class="form-group" style="margin-bottom:16px;">
                 <label for="inviteEmail">Email Address</label>
                 <input type="email" id="inviteEmail" required placeholder="colleague@example.com">
             </div>
-            <div class="form-group" style="margin-bottom:14px;">
+            <div class="form-group" style="margin-bottom:16px;">
                 <label for="inviteRole">Role</label>
                 <select id="inviteRole">
-                    <option value="user">User — record transactions in assigned boxes</option>
-                    <option value="admin">Admin — full access to all Cash Boxes</option>
+                    <option value="user">User — Can record transactions in assigned Cash Boxes</option>
+                    <option value="admin">Admin — Full access to all Cash Boxes</option>
                 </select>
             </div>
             <div class="form-group" id="inviteCashBoxGroup">
                 <label>Cash Box Access</label>
-                <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">Select which Cash Boxes this member can use.</div>
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">Select which Cash Boxes this member can use. Admins get access to all.</div>
                 <div id="inviteCashBoxList" class="invite-cb-list"></div>
             </div>
         </div>
@@ -361,19 +136,29 @@
     </div>
 </div>
 
-<!-- MODAL: Manage Access for a Cash Box -->
+<!-- MODAL: Cash Box Access -->
 <div class="modal-backdrop" id="accessModal">
     <div class="modal-content">
         <div class="modal-header">
-            <div class="modal-title" id="accessModalTitle">Manage Access</div>
+            <div class="modal-title">Manage Cash Box Access</div>
             <button type="button" class="modal-close" id="accessModalClose">&times;</button>
         </div>
         <div class="modal-body">
-            <div style="font-size:12px;margin-bottom:10px;color:var(--text-muted);">Toggle access for team members:</div>
-            <div id="accessMemberList" class="access-list"></div>
+            <div id="accessMemberPickerWrap" style="display:none;margin-bottom:14px;">
+                <label for="accessMemberSelect" style="display:block;font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">Member</label>
+                <select id="accessMemberSelect" class="team-role-select" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface);"></select>
+            </div>
+            <div style="margin-bottom:16px;">
+                <strong id="accessMemberName">—</strong>
+                <div style="font-size:13px;color:var(--text-muted);" id="accessMemberEmail">—</div>
+            </div>
+            <div style="font-size:13px;margin-bottom:12px;color:var(--text-muted);">Select which Cash Boxes this member can access:</div>
+            <div class="access-list" id="accessCashBoxList">
+                <div style="text-align:center;color:var(--text-muted);padding:20px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+            </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="accessModalDone">Done</button>
+            <button type="button" class="btn btn-secondary" id="accessModalClose2">Close</button>
         </div>
     </div>
 </div>
@@ -410,6 +195,6 @@
 <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=26"></script>
-<script src="assets/js/team-page.js?v=20260223-2157"></script>
+<script src="assets/js/team-page.js?v=20260223-2204"></script>
 </body>
 </html>
