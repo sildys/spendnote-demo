@@ -401,15 +401,16 @@ body {
 .org-context-nav-label {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    font-size: 11px;
+    gap: 6px;
+    font-size: 12px;
     font-weight: 600;
     color: #065f46;
-    white-space: nowrap;
+    white-space: normal;
+    max-width: 120px;
+    line-height: 1.35;
     cursor: default;
     user-select: none;
     opacity: 0.85;
-    line-height: 1;
 }
 
 .org-context-nav-label::before {
