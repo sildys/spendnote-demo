@@ -72,6 +72,7 @@ If a chat thread freezes / context is lost: in the new thread say:
   - `spendnote-transaction-detail.html` `transaction-detail-ui.js?v=46`.
 - P0/2 formalizálás:
   - release smoke checklist dokumentálva: `SMOKE_CHECKLIST.md`.
+  - gyors manuális smoke futás rögzítve (`2026-02-23`): PASS (auth, IN/OUT tx, print/PDF/email receipt, invite).
 
 ### 2026-02-23 zárás — SEO/copy finomítás + indexelési follow-up (KÉSZ)
 

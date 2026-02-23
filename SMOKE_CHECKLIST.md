@@ -77,3 +77,13 @@ Fail if:
 - Result: PASS / FAIL
 - Failed steps:
 - Notes:
+
+## Latest Run
+
+- Date: 2026-02-23
+- Environment: https://spendnote.app
+- Tester: User (manual quick run)
+- Result: PASS
+- Failed steps: none
+- Notes:
+  - All 6 checklist groups passed: auth, create transaction (IN/OUT), receipt print/PDF, receipt email, team invite.
