@@ -151,6 +151,41 @@
             padding: 0 10px;
         }
 
+        .org-name-panel {
+            margin-top: 10px;
+            margin-bottom: 14px;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg);
+            display: none;
+        }
+
+        .org-name-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .org-name-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .org-name-row input {
+            flex: 1;
+            min-width: 0;
+            height: 34px;
+        }
+
+        .org-name-note {
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
         /* Invite modal CB checkboxes */
         .invite-cb-list {
             display: flex;
@@ -282,6 +317,11 @@
                 height: 32px;
             }
 
+            .org-name-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
             .modal-content {
                 width: calc(100vw - 20px);
                 max-height: 88vh;
@@ -328,6 +368,16 @@
                         <button type="button" class="btn btn-primary btn-small" id="inviteMemberBtn"><i class="fas fa-user-plus"></i> Invite</button>
                     </div>
                 </div>
+
+                <div class="org-name-panel" id="orgNamePanel">
+                    <div class="org-name-title">Organization name (required for Pro)</div>
+                    <div class="org-name-row">
+                        <input type="text" id="orgNameInput" placeholder="e.g. Acme Finance Team">
+                        <button type="button" class="btn btn-primary btn-small" id="orgNameSaveBtn">Save</button>
+                    </div>
+                    <div class="org-name-note" id="orgNameNote">This name will be shown when users choose organization at login.</div>
+                </div>
+
                 <div class="stats-row">
                     <div class="stat-box">
                         <div class="stat-label">Total Members</div>
@@ -452,11 +502,11 @@
 
 <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase-config.js?v=20260223-1949"></script>
+<script src="assets/js/supabase-config.js?v=20260223-2313"></script>
 <script src="assets/js/auth-guard.js?v=20260223-1949"></script>
 <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
 <script>loadNav();</script>
-<script src="assets/js/main.js?v=26"></script>
-<script src="assets/js/team-page.js?v=20260223-2218"></script>
+<script src="assets/js/main.js?v=27"></script>
+<script src="assets/js/team-page.js?v=20260223-2313"></script>
 </body>
 </html>

@@ -16,9 +16,46 @@ let teamMembers = [];
 let cashBoxes = [];
 let currentRole = 'user';
 let selectedMemberForAccess = null;
+let currentOrgName = '';
 
 const show = (id) => { const el = document.getElementById(id); if (el) el.style.display = ''; };
 const hide = (id) => { const el = document.getElementById(id); if (el) el.style.display = 'none'; };
+
+const canManageOrgName = () => currentRole === 'owner' || currentRole === 'admin';
+
+const renderOrgNamePanel = () => {
+    const panel = document.getElementById('orgNamePanel');
+    const input = document.getElementById('orgNameInput');
+    const note = document.getElementById('orgNameNote');
+    if (!panel || !input || !note) return;
+
+    if (!canManageOrgName()) {
+        panel.style.display = 'none';
+        return;
+    }
+
+    panel.style.display = '';
+    input.value = String(currentOrgName || '').trim();
+    const hasName = Boolean(String(currentOrgName || '').trim());
+    note.textContent = hasName
+        ? 'This name is used in organization selection during login.'
+        : 'Organization name is required for Pro users. Please set it.';
+    note.style.color = hasName ? 'var(--text-muted)' : '#d97706';
+};
+
+const loadCurrentOrgName = async () => {
+    try {
+        if (!window.db?.orgMemberships?.getCurrentOrgName) {
+            currentOrgName = '';
+            renderOrgNamePanel();
+            return;
+        }
+        currentOrgName = await window.db.orgMemberships.getCurrentOrgName();
+    } catch (_) {
+        currentOrgName = '';
+    }
+    renderOrgNamePanel();
+};
 
 // ── Wait for Supabase session ──
 
@@ -291,6 +328,28 @@ const initTeamPage = async () => {
 
     const canManage = () => currentRole === 'owner' || currentRole === 'admin';
 
+    const orgNameSaveBtn = document.getElementById('orgNameSaveBtn');
+    orgNameSaveBtn?.addEventListener('click', async () => {
+        if (!canManageOrgName()) return;
+        const input = document.getElementById('orgNameInput');
+        const nextName = String(input?.value || '').trim();
+        if (!nextName) {
+            showAlert('Organization name is required.', { iconType: 'warning' });
+            return;
+        }
+        const result = await window.db?.orgMemberships?.updateCurrentOrgName?.(nextName);
+        if (!result?.success) {
+            showAlert(result?.error || 'Failed to save organization name.', { iconType: 'error' });
+            return;
+        }
+        currentOrgName = nextName;
+        renderOrgNamePanel();
+        showAlert('Organization name saved.', { iconType: 'success' });
+        try {
+            if (typeof window.updateUserNav === 'function') window.updateUserNav();
+        } catch (_) {}
+    });
+
     // Invite modal
     const inviteModal = document.getElementById('inviteModal');
     document.getElementById('inviteMemberBtn')?.addEventListener('click', () => {
@@ -304,6 +363,10 @@ const initTeamPage = async () => {
     document.getElementById('inviteModalCancel')?.addEventListener('click', () => inviteModal?.classList.remove('active'));
     document.getElementById('inviteModalSubmit')?.addEventListener('click', async () => {
         if (!canManage()) return;
+        if (!String(currentOrgName || '').trim()) {
+            showAlert('Set Organization name first. This is required for Pro organization selection.', { iconType: 'warning' });
+            return;
+        }
         const email = document.getElementById('inviteEmail')?.value?.trim();
         const role = document.getElementById('inviteRole')?.value || 'user';
         if (!email) { showAlert('Email is required.', { iconType: 'warning' }); return; }
@@ -409,6 +472,8 @@ const initTeamPage = async () => {
         const keepPicker = Boolean(pickerWrap && pickerWrap.style.display !== 'none');
         await openAccessModal(selectedMemberForAccess.id, { forcePicker: keepPicker });
     });
+
+    await loadCurrentOrgName();
 };
 
 if (document.readyState === 'loading') {

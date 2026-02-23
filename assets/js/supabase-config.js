@@ -1231,6 +1231,30 @@ async function __spendnoteGetUserSubscriptionTier(userId) {
     }
 }
 
+async function __spendnoteGetOrgNameMap(orgIds) {
+    const ids = Array.from(new Set((Array.isArray(orgIds) ? orgIds : []).map((v) => String(v || '').trim()).filter(Boolean)));
+    if (!ids.length) return new Map();
+
+    try {
+        const { data, error } = await supabaseClient
+            .from('orgs')
+            .select('id,name')
+            .in('id', ids);
+
+        if (error) return new Map();
+
+        const map = new Map();
+        (data || []).forEach((row) => {
+            const id = String(row?.id || '').trim();
+            const name = String(row?.name || '').trim();
+            if (id) map.set(id, name);
+        });
+        return map;
+    } catch (_) {
+        return new Map();
+    }
+}
+
 async function __spendnoteGetOrgSelectionState(userId) {
     const uid = String(userId || '').trim();
     if (!uid) {
@@ -1241,7 +1265,8 @@ async function __spendnoteGetOrgSelectionState(userId) {
             selectedOrgId: '',
             selectedRole: '',
             orgId: '',
-            role: ''
+            role: '',
+            orgName: ''
         };
     }
 
@@ -1259,31 +1284,39 @@ async function __spendnoteGetOrgSelectionState(userId) {
             selectedOrgId: '',
             selectedRole: '',
             orgId: '',
-            role: ''
+            role: '',
+            orgName: ''
         };
     }
 
     const normalized = __spendnoteNormalizeMemberships(memberships);
+    const orgNameById = await __spendnoteGetOrgNameMap(normalized.map((m) => m?.org_id));
+    const normalizedWithNames = normalized.map((m) => ({
+        ...m,
+        org_name: String(orgNameById.get(String(m?.org_id || '').trim()) || '').trim()
+    }));
     const tier = await __spendnoteGetUserSubscriptionTier(uid);
     const isPro = tier === 'pro';
     const selected = __spendnoteReadSelectedOrgForUser(uid);
-    const selectedMembership = normalized.find((m) => String(m?.org_id || '') === selected) || null;
+    const selectedMembership = normalizedWithNames.find((m) => String(m?.org_id || '') === selected) || null;
 
     if (isPro && normalized.length > 1 && !selectedMembership) {
         return {
             required: true,
             isPro,
-            memberships: normalized,
+            memberships: normalizedWithNames,
             selectedOrgId: '',
             selectedRole: '',
             orgId: '',
-            role: ''
+            role: '',
+            orgName: ''
         };
     }
 
-    const chosen = selectedMembership || __spendnotePickPreferredMembership(normalized);
+    const chosen = selectedMembership || __spendnotePickPreferredMembership(normalizedWithNames);
     const chosenOrgId = String(chosen?.org_id || '').trim();
     const chosenRole = String(chosen?.role || '').trim().toLowerCase();
+    const chosenOrgName = String(chosen?.org_name || '').trim();
 
     if (chosenOrgId) {
         __spendnoteWriteSelectedOrgForUser(uid, chosenOrgId);
@@ -1292,11 +1325,12 @@ async function __spendnoteGetOrgSelectionState(userId) {
     return {
         required: false,
         isPro,
-        memberships: normalized,
+        memberships: normalizedWithNames,
         selectedOrgId: chosenOrgId,
         selectedRole: chosenRole,
         orgId: chosenOrgId,
-        role: chosenRole
+        role: chosenRole,
+        orgName: chosenOrgName
     };
 }
 
@@ -1363,7 +1397,7 @@ window.SpendNoteOrgContext = {
     async getSelectionState() {
         const user = await auth.getCurrentUser();
         if (!user) {
-            return { required: false, isPro: false, memberships: [], selectedOrgId: '', selectedRole: '', orgId: '', role: '' };
+            return { required: false, isPro: false, memberships: [], selectedOrgId: '', selectedRole: '', orgId: '', role: '', orgName: '' };
         }
         return await __spendnoteGetOrgSelectionState(user.id);
     },
@@ -2739,6 +2773,45 @@ var db = {
         async getMyOrgId() {
             const ctx = await getMyOrgContext();
             return ctx?.orgId || null;
+        },
+
+        async getCurrentOrgName() {
+            const ctx = await getMyOrgContext();
+            if (!ctx?.orgId) return '';
+            try {
+                const { data, error } = await supabaseClient
+                    .from('orgs')
+                    .select('name')
+                    .eq('id', ctx.orgId)
+                    .single();
+                if (error) return '';
+                return String(data?.name || '').trim();
+            } catch (_) {
+                return '';
+            }
+        },
+
+        async updateCurrentOrgName(name) {
+            const ctx = await getMyOrgContext();
+            const orgId = String(ctx?.orgId || '').trim();
+            const role = String(ctx?.role || '').trim().toLowerCase();
+            const nextName = String(name || '').trim();
+            if (!orgId) return { success: false, error: 'No organization selected.' };
+            if (!nextName) return { success: false, error: 'Organization name is required.' };
+            if (role !== 'owner' && role !== 'admin') return { success: false, error: 'Only Owner/Admin can rename organization.' };
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('orgs')
+                    .update({ name: nextName })
+                    .eq('id', orgId)
+                    .select('id,name')
+                    .single();
+                if (error) return { success: false, error: error.message || 'Failed to update organization name.' };
+                return { success: true, data };
+            } catch (err) {
+                return { success: false, error: String(err?.message || err || 'Failed to update organization name.') };
+            }
         },
 
         async getMyRole() {

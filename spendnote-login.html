@@ -427,7 +427,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260223-1949"></script>
+    <script src="assets/js/supabase-config.js?v=20260223-2313"></script>
     <script>
         const ensureProfile = async () => {
             try {
@@ -525,7 +525,9 @@
                     const roleLabel = role === 'owner' ? 'Owner' : (role === 'admin' ? 'Admin' : 'User');
                     const orgId = String(m?.org_id || '').trim();
                     const shortOrg = orgId ? orgId.slice(0, 8) : 'unknown';
-                    return `${idx + 1}. Org ${shortOrg} (${roleLabel})`;
+                    const orgName = String(m?.org_name || '').trim();
+                    const label = orgName || `Org ${shortOrg}`;
+                    return `${idx + 1}. ${label} (${roleLabel})`;
                 });
 
                 const message = [
