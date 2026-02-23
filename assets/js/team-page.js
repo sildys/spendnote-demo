@@ -38,8 +38,8 @@ const renderOrgNamePanel = () => {
     input.value = String(currentOrgName || '').trim();
     const hasName = Boolean(String(currentOrgName || '').trim());
     note.textContent = hasName
-        ? 'This name is used in organization selection during login.'
-        : 'Organization name is required for Pro users. Please set it.';
+        ? 'Team tagok ezt látják belépéskor, amikor kiválasztják a teamet.'
+        : 'Adj meg egy Team name-et, hogy a tagok belépéskor ki tudják választani.';
     note.style.color = hasName ? 'var(--text-muted)' : '#d97706';
 };
 
@@ -334,17 +334,17 @@ const initTeamPage = async () => {
         const input = document.getElementById('orgNameInput');
         const nextName = String(input?.value || '').trim();
         if (!nextName) {
-            showAlert('Organization name is required.', { iconType: 'warning' });
+            showAlert('Team name kötelező.', { iconType: 'warning' });
             return;
         }
         const result = await window.db?.orgMemberships?.updateCurrentOrgName?.(nextName);
         if (!result?.success) {
-            showAlert(result?.error || 'Failed to save organization name.', { iconType: 'error' });
+            showAlert(result?.error || 'Nem sikerült menteni a Team name-et.', { iconType: 'error' });
             return;
         }
         currentOrgName = nextName;
         renderOrgNamePanel();
-        showAlert('Organization name saved.', { iconType: 'success' });
+        showAlert('Team name mentve.', { iconType: 'success' });
         try {
             if (typeof window.updateUserNav === 'function') window.updateUserNav();
         } catch (_) {}
@@ -364,7 +364,7 @@ const initTeamPage = async () => {
     document.getElementById('inviteModalSubmit')?.addEventListener('click', async () => {
         if (!canManage()) return;
         if (!String(currentOrgName || '').trim()) {
-            showAlert('Set Organization name first. This is required for Pro organization selection.', { iconType: 'warning' });
+            showAlert('Előbb add meg a Team name-et, hogy a tagok belépéskor ki tudják választani.', { iconType: 'warning' });
             return;
         }
         const email = document.getElementById('inviteEmail')?.value?.trim();
