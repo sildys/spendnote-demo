@@ -1,4 +1,6 @@
 // ===== TEAM PAGE — Original Settings Style + Session Fix + CB Invite =====
+(function () {
+'use strict';
 
 const escapeHtml = (str) => String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
@@ -414,3 +416,5 @@ if (document.readyState === 'loading') {
 } else {
     initTeamPage().catch(e => { console.error('[team-page]', e); hide('teamLoading'); show('teamError'); });
 }
+
+})();
