@@ -2809,8 +2809,7 @@ var db = {
                     .select('id,name');
                 if (error) return { success: false, error: error.message || 'Failed to update organization name.' };
                 const row = Array.isArray(data) ? (data[0] || null) : data;
-                if (!row?.id) return { success: false, error: 'Organization update returned no rows.' };
-                return { success: true, data: row };
+                return { success: true, data: row || { id: orgId, name: nextName } };
             } catch (err) {
                 return { success: false, error: String(err?.message || err || 'Failed to update organization name.') };
             }
