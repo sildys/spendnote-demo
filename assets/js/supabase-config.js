@@ -13,6 +13,36 @@ try {
     // ignore
 }
 
+function __spendnoteOrgNameStorageKey(userId, orgId) {
+    const uid = String(userId || '').trim();
+    const oid = String(orgId || '').trim();
+    if (!uid || !oid) return '';
+    return `spendnote.orgName.${uid}.${oid}.v1`;
+}
+
+function __spendnoteReadOrgNameForUser(userId, orgId) {
+    const key = __spendnoteOrgNameStorageKey(userId, orgId);
+    if (!key) return '';
+    try {
+        return String(localStorage.getItem(key) || '').trim();
+    } catch (_) {
+        return '';
+    }
+}
+
+function __spendnoteWriteOrgNameForUser(userId, orgId, orgName) {
+    const key = __spendnoteOrgNameStorageKey(userId, orgId);
+    if (!key) return false;
+    try {
+        const value = String(orgName || '').trim();
+        if (value) localStorage.setItem(key, value);
+        else localStorage.removeItem(key);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
+
 if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260216-2135');
 window.__spendnoteSupabaseConfigBuild = '20260216-2135';
 
@@ -1291,10 +1321,16 @@ async function __spendnoteGetOrgSelectionState(userId) {
 
     const normalized = __spendnoteNormalizeMemberships(memberships);
     const orgNameById = await __spendnoteGetOrgNameMap(normalized.map((m) => m?.org_id));
-    const normalizedWithNames = normalized.map((m) => ({
-        ...m,
-        org_name: String(orgNameById.get(String(m?.org_id || '').trim()) || '').trim()
-    }));
+    const normalizedWithNames = normalized.map((m) => {
+        const oid = String(m?.org_id || '').trim();
+        const fromDb = String(orgNameById.get(oid) || '').trim();
+        const fromLocal = __spendnoteReadOrgNameForUser(uid, oid);
+        const orgName = fromDb || fromLocal;
+        return {
+            ...m,
+            org_name: orgName
+        };
+    });
     const tier = await __spendnoteGetUserSubscriptionTier(uid);
     const isPro = tier === 'pro';
     const selected = __spendnoteReadSelectedOrgForUser(uid);
@@ -1320,6 +1356,10 @@ async function __spendnoteGetOrgSelectionState(userId) {
 
     if (chosenOrgId) {
         __spendnoteWriteSelectedOrgForUser(uid, chosenOrgId);
+        const chosenOrgNameLocal = String(chosenOrgName || '').trim();
+        if (chosenOrgNameLocal) {
+            __spendnoteWriteOrgNameForUser(uid, chosenOrgId, chosenOrgNameLocal);
+        }
     }
 
     return {
@@ -2777,18 +2817,27 @@ var db = {
 
         async getCurrentOrgName() {
             const ctx = await getMyOrgContext();
-            if (!ctx?.orgId) return '';
+            const orgId = String(ctx?.orgId || '').trim();
+            if (!orgId) return '';
+            let user = null;
+            try { user = await auth.getCurrentUser(); } catch (_) {}
+            const uid = String(user?.id || '').trim();
             try {
                 const { data, error } = await supabaseClient
                     .from('orgs')
                     .select('name')
-                    .eq('id', ctx.orgId)
+                    .eq('id', orgId)
                     .maybeSingle();
-                if (error) return '';
+                if (error) return __spendnoteReadOrgNameForUser(uid, orgId);
                 const row = Array.isArray(data) ? (data[0] || null) : data;
-                return String(row?.name || '').trim();
+                const dbName = String(row?.name || '').trim();
+                if (dbName) {
+                    __spendnoteWriteOrgNameForUser(uid, orgId, dbName);
+                    return dbName;
+                }
+                return __spendnoteReadOrgNameForUser(uid, orgId);
             } catch (_) {
-                return '';
+                return __spendnoteReadOrgNameForUser(uid, orgId);
             }
         },
 
@@ -2797,6 +2846,9 @@ var db = {
             const orgId = String(ctx?.orgId || '').trim();
             const role = String(ctx?.role || '').trim().toLowerCase();
             const nextName = String(name || '').trim();
+            let user = null;
+            try { user = await auth.getCurrentUser(); } catch (_) {}
+            const uid = String(user?.id || '').trim();
             if (!orgId) return { success: false, error: 'No organization selected.' };
             if (!nextName) return { success: false, error: 'Organization name is required.' };
             if (role !== 'owner' && role !== 'admin') return { success: false, error: 'Only Owner/Admin can rename organization.' };
@@ -2809,6 +2861,7 @@ var db = {
                     .select('id,name');
                 if (error) return { success: false, error: error.message || 'Failed to update organization name.' };
                 const row = Array.isArray(data) ? (data[0] || null) : data;
+                __spendnoteWriteOrgNameForUser(uid, orgId, nextName);
                 return { success: true, data: row || { id: orgId, name: nextName } };
             } catch (err) {
                 return { success: false, error: String(err?.message || err || 'Failed to update organization name.') };
