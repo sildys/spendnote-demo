@@ -756,10 +756,9 @@ document.addEventListener('click', function(e) {
 
     const shouldUseStandaloneNewTransaction = () => {
         try {
-            const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
-            const hasTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-            const mobileViewport = window.matchMedia('(max-width: 1024px)').matches;
-            return mobileViewport || coarsePointer || hasTouch;
+            // Use standalone page only on phone-sized layouts.
+            // Touch-enabled desktops/tablets in desktop view should keep dashboard modal flow.
+            return window.matchMedia('(max-width: 768px)').matches;
         } catch (_) {
             return false;
         }
