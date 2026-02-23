@@ -7,7 +7,23 @@ SpendNote is a **cash box + transaction + contacts** web app.
 
 This repository is meant to be deployable as a static site (e.g. Vercel).
 
-## Current status (2026-02-23 — SEO phase closed, app-internal focus active)
+## Current status (2026-02-24 — SEO phase closed, app-internal focus active)
+
+### Latest team/org context progress (2026-02-24)
+
+- Team Name is now handled as a DB-backed org field (`orgs.name`) for org context display.
+- Team page now includes Team Name management UI for owner/admin users.
+- Login org selection and nav org-context header were aligned to show human-readable Team Name.
+- Dropdown UI was cleaned up (user name + role + `Team: <name>`), and cache-version sync was rolled out across pages.
+- Added migration for orgs RLS (`supabase-migrations/025_orgs_team_name_rls.sql`) to allow org members to read org row and owner/admin to update Team Name.
+
+### Team management scope status (important)
+
+- Team management is **not closed yet**.
+- Remaining mandatory scope:
+  - Admin vs User registration flow completion (role-based onboarding/entry path)
+  - Role-based Settings completion for admin/user separation
+  - Final end-to-end team flow closure after these are implemented
 
 ### Completed in the latest release-polish cycle
 

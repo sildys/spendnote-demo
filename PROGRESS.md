@@ -52,7 +52,28 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
-## Where we are now (last updated: 2026-02-23 — SEO szakasz lezárva, app fókusz aktív)
+## Where we are now (last updated: 2026-02-24 — team/org context kör lezárva, team management scope még nyitott)
+
+### 2026-02-24 frissítés — Team Name + org context UI/DB hardening (RÉSZBEN KÉSZ)
+
+**Lezárt és pusholt változtatások (mai kör):**
+
+- Team Name kezelés átállítva DB-alapú org mezőre (`orgs.name`) az org context megjelenítéshez.
+- Team oldalon Team Name szerkesztés bekerült owner/admin jogosultsággal.
+- Login org választó és nav dropdown org-context rész human-readable Team Name megjelenítésre állítva.
+- Dropdown UI finomítva: user név + role + `Team: <név>`.
+- Cache-verziók szinkronizálva oldalak között (`main.js`, `app-layout.css`, `supabase-config.js`), hogy minden nézet azonosan töltse az új org-context logikát.
+- Új migráció: `supabase-migrations/025_orgs_team_name_rls.sql`
+  - org tagok SELECT `orgs` sorra,
+  - owner/admin UPDATE jogosultság Team Name-re.
+
+**Fontos státusz:**
+
+- A team kezelés ezzel **még nincs lezárva**.
+- Kifejezetten nyitott és kötelező következő scope:
+  - Admin vs User regisztrációs folyamat (role-alapú onboarding/entry)
+  - Role-based Settings oldalak teljesítése (admin/user külön kezelés)
+  - Team management végleges lezárása csak ezek után
 
 ### 2026-02-23 frissítés — org context safety + role downgrade guard (KÉSZ)
 
