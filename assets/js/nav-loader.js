@@ -61,6 +61,7 @@ const NAV_HTML = `
                     <span class="btn-text">New Transaction</span>
                 </button>
             </li>
+            <li id="orgContextNavChip" class="org-context-nav-chip" style="display:none;"></li>
             <li class="user-avatar-wrapper" id="userAvatarBtn">
                 <div class="user-avatar">
                     <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="User">
@@ -88,12 +89,6 @@ function loadNav(containerId = 'nav-container') {
     const container = document.getElementById(containerId);
     if (container) {
         container.innerHTML = NAV_HTML;
-        // Inject orgContextBar outside nav-container so it spans full width
-        if (!document.getElementById('orgContextBar')) {
-            const barEl = document.createElement('div');
-            barEl.innerHTML = '<div id="orgContextBar" class="org-context-bar" style="display:none;" aria-hidden="true"><span id="orgContextBarInner" class="org-context-bar__inner"></span></div>';
-            container.after(barEl.firstElementChild);
-        }
         // Inject bottom nav once
         if (!document.getElementById('bottomNav')) {
             const bnEl = document.createElement('div');

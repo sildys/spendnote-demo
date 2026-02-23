@@ -395,52 +395,40 @@ body {
 }
 
 /* ============================================
-   ORG CONTEXT BAR (Pro multi-org, below nav)
+   ORG CONTEXT NAV CHIP (Pro, inline in nav)
    ============================================ */
 
-.org-context-bar {
-    width: 100%;
-    background: linear-gradient(90deg, rgba(16, 185, 129, 0.07) 0%, rgba(5, 150, 105, 0.05) 100%);
-    border-bottom: 1px solid rgba(16, 185, 129, 0.18);
-    padding: 4px 0;
-    position: sticky;
-    top: 64px;
-    z-index: 990;
-    backdrop-filter: blur(8px);
-}
-
-.org-context-bar__inner {
+.org-context-nav-chip {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 8px;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px;
-    font-size: 11.5px;
+    gap: 6px;
+    font-size: 11px;
     font-weight: 700;
     color: #065f46;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 999px;
+    padding: 4px 10px;
+    white-space: nowrap;
     letter-spacing: 0.01em;
+    cursor: default;
+    user-select: none;
+    list-style: none;
 }
 
-.org-context-bar__inner::before {
+.org-context-nav-chip::before {
     content: '';
     display: inline-block;
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: #10b981;
     flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-    .org-context-bar {
-        top: 56px;
-        padding: 3px 0;
-    }
-    .org-context-bar__inner {
-        font-size: 11px;
-        padding: 0 16px;
+@media (max-width: 900px) {
+    .org-context-nav-chip {
+        display: none !important;
     }
 }
 

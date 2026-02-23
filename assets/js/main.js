@@ -22,12 +22,11 @@ function updateMenuColors(color) {
 
 async function updateOrgContextIndicator() {
     const dashboardEl = document.getElementById('dashboardOrgContext');
-    const bar = document.getElementById('orgContextBar');
-    const barInner = document.getElementById('orgContextBarInner');
+    const chip = document.getElementById('orgContextNavChip');
 
     const hide = () => {
         if (dashboardEl) dashboardEl.style.display = 'none';
-        if (bar) { bar.style.display = 'none'; bar.setAttribute('aria-hidden', 'true'); }
+        if (chip) chip.style.display = 'none';
     };
 
     try {
@@ -43,16 +42,15 @@ async function updateOrgContextIndicator() {
 
         const roleLabel = role === 'owner' ? 'Owner' : (role === 'admin' ? 'Admin' : 'User');
         const shortOrg = orgId.slice(0, 8);
-        const label = `Org: ${shortOrg}\u2002•\u2002${roleLabel}`;
+        const label = `${shortOrg} \u00b7 ${roleLabel}`;
 
-        if (bar && barInner) {
-            barInner.textContent = label;
-            bar.style.display = 'block';
-            bar.setAttribute('aria-hidden', 'false');
+        if (chip) {
+            chip.textContent = label;
+            chip.style.display = 'flex';
         }
 
         if (dashboardEl) {
-            dashboardEl.textContent = `${label}\u2002•\u2002Switch org via Log out → Log in`;
+            dashboardEl.textContent = `Org: ${shortOrg} \u00b7 ${roleLabel} \u00b7 Switch via Log out \u2192 Log in`;
             dashboardEl.style.display = memberships.length > 1 ? 'inline-flex' : 'none';
         }
     } catch (_) {
