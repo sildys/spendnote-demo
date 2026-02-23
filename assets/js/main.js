@@ -46,7 +46,7 @@ async function updateOrgContextIndicator() {
         const identityLabel = orgName || `Workspace ${shortOrg}`;
 
         if (dropInfo) {
-            dropInfo.innerHTML = `<span class="org-context-dropdown-dot"></span><span><span class="org-context-dropdown-role">${roleLabel}</span><br><span class="org-context-dropdown-org">${identityLabel}</span></span>`;
+            dropInfo.innerHTML = `<span class="org-context-dropdown-role">${roleLabel}</span><span class="org-context-dropdown-org">${identityLabel}</span>`;
             dropInfo.style.display = 'flex';
         }
 
