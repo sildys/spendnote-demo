@@ -55,6 +55,7 @@ const NAV_HTML = `
             <li><a href="spendnote-cash-box-list.html" class="nav-cash-item" data-page="cash-boxes">Cash Boxes</a></li>
             <li><a href="spendnote-transaction-history.html" id="navTransactions" class="nav-cash-item" data-page="transactions">Transactions</a></li>
             <li><a href="spendnote-contact-list.html" class="nav-cash-item" data-page="contacts">Contacts</a></li>
+            <li id="navTeamItem"><a href="spendnote-team.html" class="nav-cash-item" data-page="team">Team</a></li>
             <li class="nav-mobile-new-tx">
                 <button class="btn btn-primary nav-new-transaction-btn" id="addTransactionBtn">
                     <i class="fas fa-plus"></i>

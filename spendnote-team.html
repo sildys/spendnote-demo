@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Manage your team members and permissions in SpendNote.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <title>Team Management - SpendNote</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css?v=23">
+    <link rel="stylesheet" href="assets/css/app-layout.css?v=19">
+    <link rel="stylesheet" href="assets/css/user-settings.css?v=20260223-2100">
+</head>
+<body>
+<div id="nav-container"></div>
+
+<div class="app-container">
+    <main class="main-content">
+        <div class="page-header">
+            <div class="page-title-group">
+                <h1 class="page-title">Team Management <span class="badge badge-warning" style="font-size:13px;vertical-align:middle;">PRO</span></h1>
+                <p class="page-subtitle">Manage your team members, roles, and Cash Box access.</p>
+            </div>
+            <div class="page-header-actions" id="teamHeaderActions" style="display:none;">
+                <button type="button" class="btn btn-secondary" id="manageAccessBtn"><i class="fas fa-key"></i> Cash Box Access</button>
+                <button type="button" class="btn btn-primary" id="inviteMemberBtn"><i class="fas fa-user-plus"></i> Invite Member</button>
+            </div>
+        </div>
+
+        <!-- PRO GATE -->
+        <div id="teamProGate" class="settings-card" style="display:none;text-align:center;padding:48px 24px;">
+            <i class="fas fa-users" style="font-size:40px;color:var(--text-muted);margin-bottom:16px;display:block;"></i>
+            <div style="font-size:18px;font-weight:700;margin-bottom:8px;">Team Management is a Pro feature</div>
+            <div style="color:var(--text-muted);margin-bottom:24px;">Upgrade to Pro to invite team members, assign roles, and manage Cash Box access.</div>
+            <a href="spendnote-user-settings.html" class="btn btn-primary"><i class="fas fa-arrow-up"></i> Upgrade to Pro</a>
+        </div>
+
+        <!-- TEAM CONTENT -->
+        <div id="teamContent" style="display:none;">
+            <!-- STATS -->
+            <div class="stats-row" style="margin-bottom:24px;">
+                <div class="stat-box">
+                    <div class="stat-label">Total Members</div>
+                    <div class="stat-value" id="statTotalMembers">—</div>
+                    <div class="stat-note" id="statMembersNote">of plan limit</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Active</div>
+                    <div class="stat-value" id="statActiveMembers">—</div>
+                    <div class="stat-note">Members active</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-value" id="statPendingMembers">—</div>
+                    <div class="stat-note">Awaiting acceptance</div>
+                </div>
+            </div>
+
+            <!-- TEAM TABLE -->
+            <div class="settings-card">
+                <div class="team-table-wrap">
+                    <table class="team-table">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamTableBody">
+                            <tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:32px;"><i class="fas fa-spinner fa-spin"></i> Loading team...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top:16px;font-size:12px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Admins can access all Cash Boxes. Configure per-cash-box access for Users via "Cash Box Access".</div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- MODAL: Invite Member -->
+<div class="modal-backdrop" id="inviteModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">Invite Team Member</div>
+            <button type="button" class="modal-close" id="inviteModalClose">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group" style="margin-bottom:16px;">
+                <label for="inviteEmail">Email Address</label>
+                <input type="email" id="inviteEmail" required placeholder="colleague@example.com">
+            </div>
+            <div class="form-group">
+                <label for="inviteRole">Role</label>
+                <select id="inviteRole">
+                    <option value="member">Member — Can record transactions</option>
+                    <option value="admin">Admin — Full access to assigned Cash Boxes</option>
+                </select>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="inviteModalCancel">Cancel</button>
+            <button type="button" class="btn btn-primary" id="inviteModalSubmit"><i class="fas fa-paper-plane"></i> Send Invite</button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: Cash Box Access -->
+<div class="modal-backdrop" id="accessModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title">Manage Cash Box Access</div>
+            <button type="button" class="modal-close" id="accessModalClose">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="accessMemberPickerWrap" style="display:none;margin-bottom:14px;">
+                <label for="accessMemberSelect" style="display:block;font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">Member</label>
+                <select id="accessMemberSelect" class="team-role-select" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface);"></select>
+            </div>
+            <div style="margin-bottom:16px;">
+                <strong id="accessMemberName">—</strong>
+                <div style="font-size:13px;color:var(--text-muted);" id="accessMemberEmail">—</div>
+            </div>
+            <div style="font-size:13px;margin-bottom:12px;color:var(--text-muted);">Select which Cash Boxes this member can access:</div>
+            <div class="access-list" id="accessCashBoxList">
+                <div style="text-align:center;color:var(--text-muted);padding:20px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="accessModalClose2">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="app-footer">
+    <div class="app-footer-container">
+        <div class="app-footer-top">
+            <div class="app-footer-brand">
+                <a href="dashboard.html" class="app-footer-brand-logo">
+                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none"><path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="white"/><path d="M32 4 L38 10 L32 10 Z" fill="rgba(0,0,0,0.15)"/></svg>
+                    <span>SpendNote</span>
+                </a>
+                <p class="app-footer-brand-desc">Cash receipt management for modern teams.</p>
+            </div>
+            <div class="app-footer-right">
+                <div class="app-footer-links-simple">
+                    <a href="index.html#features">Features</a>
+                    <a href="spendnote-pricing.html">Pricing</a>
+                    <a href="spendnote-faq.html">FAQ</a>
+                    <a href="spendnote-terms.html">Legal</a>
+                </div>
+                <div class="app-footer-brand-disclaimer"><i class="fas fa-info-circle"></i><span>Cash handoff documentation only. Not a tax or accounting tool.</span></div>
+            </div>
+        </div>
+        <div class="app-footer-bottom"><div class="app-footer-copyright">2026 SpendNote. All rights reserved.</div></div>
+    </div>
+</footer>
+
+<script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js?v=20260223-1949"></script>
+<script src="assets/js/auth-guard.js?v=20260223-1949"></script>
+<script src="assets/js/nav-loader.js?v=20260223-2045"></script>
+<script>loadNav();</script>
+<script src="assets/js/main.js?v=26"></script>
+<script src="assets/js/team-page.js?v=20260223-2100"></script>
+</body>
+</html>

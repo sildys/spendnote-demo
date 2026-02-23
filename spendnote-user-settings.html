@@ -212,51 +212,15 @@
 
             <!-- RIGHT COLUMN -->
             <div>
-                <!-- TEAM MANAGEMENT -->
+                <!-- TEAM MANAGEMENT LINK -->
                 <div class="settings-card">
                     <div class="settings-card-header">
                         <div>
                             <div class="settings-card-title">Team Management <span class="badge badge-warning">PRO</span></div>
-                            <div class="settings-card-subtitle">Manage members and their permissions</div>
-                        </div>
-                        <div class="team-header-actions">
-                            <button type="button" class="btn btn-secondary btn-small" id="manageAccessBtn"><i class="fas fa-key"></i> Cash Box Access</button>
-                            <button type="button" class="btn btn-primary btn-small" id="inviteMemberBtn"><i class="fas fa-user-plus"></i> Invite</button>
+                            <div class="settings-card-subtitle">Invite members, assign roles, and manage Cash Box access</div>
                         </div>
                     </div>
-                    <div class="stats-row">
-                        <div class="stat-box">
-                            <div class="stat-label">Total Members</div>
-                            <div class="stat-value" id="statTotalMembers">—</div>
-                            <div class="stat-note" id="statMembersNote">Loading...</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Active</div>
-                            <div class="stat-value" id="statActiveMembers">—</div>
-                            <div class="stat-note">Members active</div>
-                        </div>
-                        <div class="stat-box">
-                            <div class="stat-label">Pending</div>
-                            <div class="stat-value" id="statPendingMembers">—</div>
-                            <div class="stat-note">Awaiting acceptance</div>
-                        </div>
-                    </div>
-                    <div class="team-table-wrap">
-                        <table class="team-table">
-                            <thead>
-                                <tr>
-                                    <th>Member</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="teamTableBody">
-                                <tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:24px;"><i class="fas fa-spinner fa-spin"></i> Loading team...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div style="margin-top:16px;font-size:12px;color:var(--text-muted);"><i class="fas fa-info-circle"></i> Admins can access all Cash Boxes. Configure per-cash-box access for Users via "Cash Box Access".</div>
+                    <a href="spendnote-team.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:8px;margin-top:4px;"><i class="fas fa-users"></i> Manage your team &rarr;</a>
                 </div>
 
                 <!-- SUBSCRIPTION & BILLING -->
@@ -340,60 +304,6 @@
             </div>
         </div>
     </main>
-</div>
-
-<!-- MODAL: Invite Member -->
-<div class="modal-backdrop" id="inviteModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">Invite Team Member</div>
-            <button type="button" class="modal-close" id="inviteModalClose">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group" style="margin-bottom:16px;">
-                <label for="inviteEmail">Email Address</label>
-                <input type="email" id="inviteEmail" required placeholder="colleague@example.com">
-            </div>
-            <div class="form-group">
-                <label for="inviteRole">Role</label>
-                <select id="inviteRole">
-                    <option value="member">Member — Can record transactions</option>
-                    <option value="admin">Admin — Full access to assigned Cash Boxes</option>
-                </select>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="inviteModalCancel">Cancel</button>
-            <button type="button" class="btn btn-primary" id="inviteModalSubmit"><i class="fas fa-paper-plane"></i> Send Invite</button>
-        </div>
-    </div>
-</div>
-
-<!-- MODAL: Cash Box Access -->
-<div class="modal-backdrop" id="accessModal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <div class="modal-title">Manage Cash Box Access</div>
-            <button type="button" class="modal-close" id="accessModalClose">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div id="accessMemberPickerWrap" style="display:none;margin-bottom:14px;">
-                <label for="accessMemberSelect" style="display:block;font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;">Member</label>
-                <select id="accessMemberSelect" class="team-role-select" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--surface);"></select>
-            </div>
-            <div style="margin-bottom:16px;">
-                <strong id="accessMemberName">—</strong>
-                <div style="font-size:13px;color:var(--text-muted);" id="accessMemberEmail">—</div>
-            </div>
-            <div style="font-size:13px;margin-bottom:12px;color:var(--text-muted);">Select which Cash Boxes this member can access:</div>
-            <div class="access-list" id="accessCashBoxList">
-                <div style="text-align:center;color:var(--text-muted);padding:20px;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="accessModalClose2">Close</button>
-        </div>
-    </div>
 </div>
 
 <!-- Footer -->
