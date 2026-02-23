@@ -99,11 +99,11 @@ const renderCashBoxGrid = () => {
     const canManage = myRole === 'owner' || myRole === 'admin';
 
     if (!boxes.length) {
-        grid.innerHTML = '<div style="color:var(--text-muted);padding:20px;text-align:center;">No Cash Boxes found. Create one first from the Cash Boxes page.</div>';
+        grid.innerHTML = '<div style="color:var(--text-muted);padding:16px 0;text-align:center;">No Cash Boxes found. Create one first from the Cash Boxes page.</div>';
         return;
     }
 
-    grid.innerHTML = boxes.map((cb, ci) => {
+    grid.innerHTML = boxes.map((cb) => {
         const cbMembers = members.filter(m => {
             if (m.status !== 'active' || !m.member_id) return false;
             return accessMap[cb.id]?.has(m.member_id);
@@ -114,25 +114,19 @@ const renderCashBoxGrid = () => {
                 const name = m.member?.full_name || m.invited_email || '—';
                 const r = String(m.role || '').toLowerCase();
                 const badge = r === 'owner' ? ' 👑' : (r === 'admin' ? ' ⭐' : '');
-                return `<span class="team-cb-member-pill">
-                    <span class="pill-avatar" style="background:${color(mi)}">${initials(name)}</span>
-                    ${esc(name)}${badge}
-                </span>`;
+                return `<span class="team-cb-member-pill"><span class="pill-avatar" style="background:${color(mi)}">${initials(name)}</span>${esc(name)}${badge}</span>`;
             }).join('')
-            : '<span class="team-cb-empty">No members assigned</span>';
+            : '<span class="team-cb-empty">No members</span>';
 
         const manageBtn = canManage
-            ? `<button type="button" class="btn btn-secondary btn-small" data-action="manage-cb" data-cb-id="${cb.id}"><i class="fas fa-user-cog"></i> Manage Access</button>`
+            ? `<button type="button" class="btn btn-secondary btn-small" data-action="manage-cb" data-cb-id="${cb.id}"><i class="fas fa-user-cog"></i> Manage</button>`
             : '';
 
-        return `<div class="team-cb-card">
-            <div class="team-cb-card-header">
-                <div class="team-cb-dot" style="background:${cb.color || '#6b7280'}"></div>
-                <div class="team-cb-card-name">${esc(cb.name)}</div>
-                <div class="team-cb-card-count">${cbMembers.length} member${cbMembers.length !== 1 ? 's' : ''}</div>
-            </div>
-            <div class="team-cb-members">${pills}</div>
-            <div class="team-cb-card-actions">${manageBtn}</div>
+        return `<div class="team-cb-row">
+            <div class="team-cb-dot" style="background:${cb.color || '#6b7280'}"></div>
+            <div class="team-cb-row-name">${esc(cb.name)}</div>
+            <div class="team-cb-row-members">${pills}</div>
+            <div class="team-cb-row-actions">${manageBtn}</div>
         </div>`;
     }).join('');
 };

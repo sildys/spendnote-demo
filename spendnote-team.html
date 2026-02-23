@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="assets/css/main.css?v=23">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=19">
     <link rel="stylesheet" href="assets/css/user-settings.css?v=20260223-2100">
-    <link rel="stylesheet" href="assets/css/team-page.css?v=20260223-2135">
+    <link rel="stylesheet" href="assets/css/team-page.css?v=20260223-2146">
 </head>
 <body>
 <div id="nav-container"></div>
@@ -63,24 +63,11 @@
                 </div>
             </div>
 
-            <!-- CASH BOX ACCESS GRID -->
+            <!-- MEMBERS TABLE (primary) -->
             <div class="settings-card" style="margin-bottom:24px;">
                 <div class="settings-card-header">
                     <div>
-                        <div class="settings-card-title">Cash Box Access</div>
-                        <div class="settings-card-subtitle">See and manage who has access to each Cash Box</div>
-                    </div>
-                </div>
-                <div id="cashBoxGrid" class="team-cb-grid">
-                    <!-- Populated by JS -->
-                </div>
-            </div>
-
-            <!-- ALL MEMBERS TABLE -->
-            <div class="settings-card">
-                <div class="settings-card-header">
-                    <div>
-                        <div class="settings-card-title">All Team Members</div>
+                        <div class="settings-card-title">Team Members</div>
                         <div class="settings-card-subtitle">Everyone in your organization</div>
                     </div>
                 </div>
@@ -97,6 +84,19 @@
                         </thead>
                         <tbody id="teamTableBody"></tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- CASH BOX ACCESS (compact list) -->
+            <div class="settings-card">
+                <div class="settings-card-header">
+                    <div>
+                        <div class="settings-card-title">Cash Box Access</div>
+                        <div class="settings-card-subtitle">Who can access each Cash Box</div>
+                    </div>
+                </div>
+                <div id="cashBoxGrid" class="team-cb-list-wrap">
+                    <!-- Populated by JS -->
                 </div>
             </div>
         </div>
@@ -186,6 +186,6 @@
 <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=26"></script>
-<script src="assets/js/team-page.js?v=20260223-2135"></script>
+<script src="assets/js/team-page.js?v=20260223-2146"></script>
 </body>
 </html>
