@@ -106,20 +106,6 @@ function renderAppNav(container, options = {}) {
     highlightCurrentPage();
     initNavEvents();
 
-    try {
-        const avatarImgs = container.querySelectorAll('.user-avatar img');
-        if (avatarImgs && avatarImgs.length) {
-            const placeholderColor = '#94a3b8';
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffffff" stroke="${placeholderColor}" stroke-width="4"/><circle cx="32" cy="26" r="9" fill="${placeholderColor}"/><path d="M18 50c0-7.7 6.3-14 14-14s14 6.3 14 14" fill="${placeholderColor}"/></svg>`;
-            const src = `data:image/svg+xml,${encodeURIComponent(svg)}`;
-            avatarImgs.forEach((img) => {
-                if (img) img.src = src;
-            });
-        }
-    } catch (_) {
-        // ignore
-    }
-
     // Ensure avatar/identity gets refreshed even if main.js loads after nav.
     (function scheduleIdentityRefresh() {
         let tries = 0;
