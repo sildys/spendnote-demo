@@ -38,8 +38,8 @@ const renderOrgNamePanel = () => {
     input.value = String(currentOrgName || '').trim();
     const hasName = Boolean(String(currentOrgName || '').trim());
     note.textContent = hasName
-        ? 'Team tagok ezt látják belépéskor, amikor kiválasztják a teamet.'
-        : 'Adj meg egy Team name-et, hogy a tagok belépéskor ki tudják választani.';
+        ? 'Team members will see this when selecting a team at sign in.'
+        : 'Set a Team name so members can select it during sign in.';
     note.style.color = hasName ? 'var(--text-muted)' : '#d97706';
 };
 
@@ -334,17 +334,17 @@ const initTeamPage = async () => {
         const input = document.getElementById('orgNameInput');
         const nextName = String(input?.value || '').trim();
         if (!nextName) {
-            showAlert('Team name kötelező.', { iconType: 'warning' });
+            showAlert('Team name is required.', { iconType: 'warning' });
             return;
         }
         const result = await window.db?.orgMemberships?.updateCurrentOrgName?.(nextName);
         if (!result?.success) {
-            showAlert(result?.error || 'Nem sikerült menteni a Team name-et.', { iconType: 'error' });
+            showAlert(result?.error || 'Could not save Team name.', { iconType: 'error' });
             return;
         }
         currentOrgName = nextName;
         renderOrgNamePanel();
-        showAlert('Team name mentve.', { iconType: 'success' });
+        showAlert('Team name saved.', { iconType: 'success' });
         try {
             if (typeof window.updateUserNav === 'function') window.updateUserNav();
         } catch (_) {}
@@ -364,7 +364,7 @@ const initTeamPage = async () => {
     document.getElementById('inviteModalSubmit')?.addEventListener('click', async () => {
         if (!canManage()) return;
         if (!String(currentOrgName || '').trim()) {
-            showAlert('Előbb add meg a Team name-et, hogy a tagok belépéskor ki tudják választani.', { iconType: 'warning' });
+            showAlert('Set a Team name first so members can select it during sign in.', { iconType: 'warning' });
             return;
         }
         const email = document.getElementById('inviteEmail')?.value?.trim();

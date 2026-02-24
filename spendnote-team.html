@@ -48,23 +48,62 @@
         }
 
         .stats-row {
-            margin-top: 14px;
+            margin-top: 10px;
             margin-bottom: 16px;
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: minmax(240px, 1.25fr) repeat(3, minmax(0, 1fr));
             gap: 10px;
+            align-items: stretch;
         }
 
         .stat-box {
             border-radius: 14px;
             border: 1px solid var(--border);
             background: var(--bg);
-            padding: 12px 10px;
+            padding: 9px 10px;
+            min-height: 84px;
         }
 
         .stat-value {
-            font-size: 20px;
+            font-size: 18px;
             line-height: 1.1;
+        }
+
+        .org-name-panel {
+            margin: 0;
+            padding: 9px 10px;
+            border-radius: 14px;
+            min-height: 84px;
+        }
+
+        .org-name-title {
+            margin-bottom: 6px;
+            font-size: 11px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .org-name-row {
+            gap: 6px;
+        }
+
+        .org-name-row input {
+            flex: 0 1 220px;
+            width: 220px;
+            max-width: 100%;
+            height: 32px;
+        }
+
+        .org-name-row #orgNameSaveBtn {
+            height: 32px;
+            padding: 0 12px;
+            flex-shrink: 0;
+        }
+
+        .org-name-note {
+            margin-top: 6px;
+            font-size: 10px;
         }
 
         .team-header-actions {
@@ -152,38 +191,9 @@
         }
 
         .org-name-panel {
-            margin-top: 10px;
-            margin-bottom: 14px;
-            padding: 12px;
             border: 1px solid var(--border);
-            border-radius: 12px;
             background: var(--bg);
             display: none;
-        }
-
-        .org-name-title {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-
-        .org-name-row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .org-name-row input {
-            flex: 1;
-            min-width: 0;
-            height: 34px;
-        }
-
-        .org-name-note {
-            margin-top: 8px;
-            font-size: 11px;
-            color: var(--text-muted);
         }
 
         /* Invite modal CB checkboxes */
@@ -240,6 +250,11 @@
 
             .stats-row {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .org-name-row input {
+                flex-basis: 100%;
+                width: 100%;
             }
         }
 
@@ -369,16 +384,15 @@
                     </div>
                 </div>
 
-                <div class="org-name-panel" id="orgNamePanel">
-                    <div class="org-name-title">Team name</div>
-                    <div class="org-name-row">
-                        <input type="text" id="orgNameInput" placeholder="e.g. Acme Finance Team">
-                        <button type="button" class="btn btn-primary btn-small" id="orgNameSaveBtn">Save</button>
-                    </div>
-                    <div class="org-name-note" id="orgNameNote">Team tagok ezt látják belépéskor, amikor kiválasztják a teamet.</div>
-                </div>
-
                 <div class="stats-row">
+                    <div class="org-name-panel stat-box" id="orgNamePanel">
+                        <div class="org-name-title">Team name</div>
+                        <div class="org-name-row">
+                            <input type="text" id="orgNameInput" placeholder="e.g. Acme Finance Team">
+                            <button type="button" class="btn btn-primary btn-small" id="orgNameSaveBtn">Save</button>
+                        </div>
+                        <div class="org-name-note" id="orgNameNote">Team members will see this when selecting a team at sign in.</div>
+                    </div>
                     <div class="stat-box">
                         <div class="stat-label">Total Members</div>
                         <div class="stat-value" id="statTotalMembers">—</div>
@@ -507,6 +521,6 @@
 <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=31"></script>
-<script src="assets/js/team-page.js?v=20260223-2315"></script>
+<script src="assets/js/team-page.js?v=20260224-2019"></script>
 </body>
 </html>
