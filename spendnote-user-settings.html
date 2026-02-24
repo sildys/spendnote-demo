@@ -22,7 +22,7 @@
         <div class="page-header">
             <div class="page-title-group">
                 <h1 class="page-title">Account Settings</h1>
-                <p class="page-subtitle">Manage your profile, team, subscription, and preferences.</p>
+                <p class="page-subtitle">Manage your profile, receipts, and subscription.</p>
             </div>
         </div>
 
@@ -96,58 +96,6 @@
                     </form>
                 </div>
 
-                <!-- RECEIPT IDENTITY -->
-                <div class="settings-card">
-                    <div class="settings-card-header">
-                        <div>
-                            <div class="settings-card-title">Receipt Identity</div>
-                            <div class="settings-card-subtitle">Information displayed on your receipts</div>
-                        </div>
-                    </div>
-                    <div class="logo-compact">
-                        <div class="logo-compact-label">Receipt Logo</div>
-                        <div class="logo-compact-row">
-                            <div class="logo-compact-preview" id="logoEditorCanvas">
-                                <div class="logo-compact-placeholder" id="logoEditorPlaceholder"><i class="fas fa-image"></i></div>
-                                <img class="logo-compact-img" id="logoEditorImage" alt="Logo" draggable="false">
-                            </div>
-                            <div class="logo-compact-controls">
-                                <div class="logo-compact-zoom">
-                                    <button type="button" class="logo-compact-btn" id="logoZoomOut" title="Smaller"><i class="fas fa-minus"></i></button>
-                                    <span class="logo-compact-pct" id="logoEditorInfo">100%</span>
-                                    <button type="button" class="logo-compact-btn" id="logoZoomIn" title="Bigger"><i class="fas fa-plus"></i></button>
-                                </div>
-                                <div class="logo-compact-actions">
-                                    <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
-                                    <button type="button" class="btn btn-secondary btn-small" id="logoUploadBtn"><i class="fas fa-upload"></i> Upload</button>
-                                    <button type="button" class="btn btn-secondary btn-small" id="logoRemoveBtn"><i class="fas fa-trash"></i> Remove</button>
-                                </div>
-                                <div class="logo-compact-hint">1200×600px PNG/JPG</div>
-                            </div>
-                        </div>
-                    </div>
-                    <form id="receiptForm">
-                        <div class="form-grid">
-                            <div class="form-group span-2">
-                                <label for="receiptDisplayName">Display Name</label>
-                                <input type="text" id="receiptDisplayName" placeholder="Name shown on receipts (e.g. your business name)">
-                            </div>
-                            <div class="form-group span-2">
-                                <label for="receiptOtherId">Other ID</label>
-                                <input type="text" id="receiptOtherId" placeholder="Optional">
-                            </div>
-                            <div class="form-group span-2">
-                                <label for="receiptAddress">Address</label>
-                                <textarea id="receiptAddress" rows="2" placeholder="Street, City, State, ZIP"></textarea>
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" id="receiptResetBtn">Reset</button>
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
-                        </div>
-                    </form>
-                </div>
-
                 <!-- SECURITY -->
                 <div class="settings-card">
                     <div class="settings-card-header">
@@ -212,15 +160,56 @@
 
             <!-- RIGHT COLUMN -->
             <div>
-                <!-- TEAM MANAGEMENT LINK -->
+                <!-- RECEIPT IDENTITY -->
                 <div class="settings-card">
                     <div class="settings-card-header">
                         <div>
-                            <div class="settings-card-title">Team Management <span class="badge badge-warning">PRO</span></div>
-                            <div class="settings-card-subtitle">Invite members, assign roles, and manage Cash Box access</div>
+                            <div class="settings-card-title">Receipt Identity</div>
+                            <div class="settings-card-subtitle">Information displayed on your receipts</div>
                         </div>
                     </div>
-                    <a href="spendnote-team.html" class="btn btn-primary" style="display:inline-flex;align-items:center;gap:8px;margin-top:4px;"><i class="fas fa-users"></i> Manage your team &rarr;</a>
+                    <div class="logo-compact">
+                        <div class="logo-compact-label">Receipt Logo</div>
+                        <div class="logo-compact-row">
+                            <div class="logo-compact-preview" id="logoEditorCanvas">
+                                <div class="logo-compact-placeholder" id="logoEditorPlaceholder"><i class="fas fa-image"></i></div>
+                                <img class="logo-compact-img" id="logoEditorImage" alt="Logo" draggable="false">
+                            </div>
+                            <div class="logo-compact-controls">
+                                <div class="logo-compact-zoom">
+                                    <button type="button" class="logo-compact-btn" id="logoZoomOut" title="Smaller"><i class="fas fa-minus"></i></button>
+                                    <span class="logo-compact-pct" id="logoEditorInfo">100%</span>
+                                    <button type="button" class="logo-compact-btn" id="logoZoomIn" title="Bigger"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <div class="logo-compact-actions">
+                                    <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
+                                    <button type="button" class="btn btn-secondary btn-small" id="logoUploadBtn"><i class="fas fa-upload"></i> Upload</button>
+                                    <button type="button" class="btn btn-secondary btn-small" id="logoRemoveBtn"><i class="fas fa-trash"></i> Remove</button>
+                                </div>
+                                <div class="logo-compact-hint">1200×600px PNG/JPG</div>
+                            </div>
+                        </div>
+                    </div>
+                    <form id="receiptForm">
+                        <div class="form-grid">
+                            <div class="form-group span-2">
+                                <label for="receiptDisplayName">Display Name</label>
+                                <input type="text" id="receiptDisplayName" placeholder="Name shown on receipts (e.g. your business name)">
+                            </div>
+                            <div class="form-group span-2">
+                                <label for="receiptOtherId">Other ID</label>
+                                <input type="text" id="receiptOtherId" placeholder="Optional">
+                            </div>
+                            <div class="form-group span-2">
+                                <label for="receiptAddress">Address</label>
+                                <textarea id="receiptAddress" rows="2" placeholder="Street, City, State, ZIP"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="receiptResetBtn">Reset</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- SUBSCRIPTION & BILLING -->
