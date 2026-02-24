@@ -148,11 +148,27 @@ async function ensureAuthenticatedNavOnPublicPage(options = {}) {
     const containerId = options.containerId || 'nav-container';
     const includeBottomNav = options.includeBottomNav === true;
 
+    const ensureAppNavStyles = () => {
+        try {
+            if (document.querySelector('link[href*="assets/css/app-layout.css"]')) {
+                return;
+            }
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'assets/css/app-layout.css?v=21';
+            document.head.appendChild(link);
+        } catch (_) {
+            // ignore
+        }
+    };
+
     try {
         if (!window.supabaseClient?.auth?.getSession) return false;
         const { data } = await window.supabaseClient.auth.getSession();
         const session = data?.session || null;
         if (!session) return false;
+
+        ensureAppNavStyles();
 
         let container = document.getElementById(containerId);
         if (!container) {
