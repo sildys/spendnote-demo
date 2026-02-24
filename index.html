@@ -83,8 +83,14 @@
       ]
     }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    <link rel="preload" as="image" href="assets/images/spendnote-dashboard.png" fetchpriority="high">
     <link rel="stylesheet" href="assets/css/main.css?v=23">
     <script>
     (function () {
@@ -645,6 +651,17 @@
             width: 100%;
             height: auto;
             display: block;
+        }
+
+        .screenshot-slide {
+            aspect-ratio: 16 / 9;
+            background: #f8fafc;
+        }
+
+        .screenshot-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .slide-caption-bar {
@@ -1678,21 +1695,21 @@ function togglePreviewDetails() {
             <!-- Slide 1: Dashboard -->
             <div class="carousel-slide active">
                 <div class="screenshot-slide">
-                    <img src="assets/images/spendnote-dashboard.png" alt="SpendNote dashboard screenshot showing team cash visibility" title="SpendNote dashboard screenshot" loading="lazy">
+                    <img src="assets/images/spendnote-dashboard.png" alt="SpendNote dashboard screenshot showing team cash visibility" title="SpendNote dashboard screenshot" loading="eager" fetchpriority="high" decoding="async" width="1600" height="900">
                 </div>
             </div>
 
             <!-- Slide 2: Transaction History -->
             <div class="carousel-slide">
                 <div class="screenshot-slide">
-                    <img src="assets/images/spendnote-transaction history.png" alt="SpendNote transaction history screenshot with searchable records" title="SpendNote transaction history screenshot" loading="lazy">
+                    <img src="assets/images/spendnote-transaction history.png" alt="SpendNote transaction history screenshot with searchable records" title="SpendNote transaction history screenshot" loading="lazy" decoding="async" width="1600" height="900">
                 </div>
             </div>
 
             <!-- Slide 3: Receipt -->
             <div class="carousel-slide">
                 <div class="screenshot-slide">
-                    <img src="assets/images/spendnote-receipt.png" alt="SpendNote cash receipt screenshot for print and sharing" title="SpendNote cash receipt screenshot" loading="lazy">
+                    <img src="assets/images/spendnote-receipt.png" alt="SpendNote cash receipt screenshot for print and sharing" title="SpendNote cash receipt screenshot" loading="lazy" decoding="async" width="1600" height="900">
                 </div>
             </div>
         </div>
