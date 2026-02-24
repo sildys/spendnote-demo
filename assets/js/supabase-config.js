@@ -542,7 +542,7 @@ try {
                 }
 
                 if (token_hash && type) {
-                    if (type !== 'signup') {
+                    if (type !== 'signup' && type !== 'recovery') {
                         return { handled: false, success: false, type, error: null };
                     }
                     const { data, error } = await supabaseClient.auth.verifyOtp({ token_hash, type });
@@ -1048,13 +1048,23 @@ var auth = {
     // Reset password
     async resetPassword(email) {
         const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/spendnote-login.html`
+            redirectTo: `${window.location.origin}/spendnote-reset-password.html`
         });
         if (error) {
             if (window.SpendNoteDebug) console.error('Error resetting password:', error);
             return { success: false, error: error.message };
         }
         return { success: true };
+    },
+
+    async updatePassword(nextPassword) {
+        const password = String(nextPassword || '');
+        const { data, error } = await supabaseClient.auth.updateUser({ password });
+        if (error) {
+            if (window.SpendNoteDebug) console.error('Error updating password:', error);
+            return { success: false, error: error.message };
+        }
+        return { success: true, data };
     },
 
     async resendSignupConfirmation(email, options = {}) {

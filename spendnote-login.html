@@ -571,6 +571,27 @@
             window.location.href = getSafeReturnTo();
         };
 
+        const redirectRecoveryToResetPage = () => {
+            try {
+                const sp = new URLSearchParams(window.location.search);
+                const hp = new URLSearchParams(String(window.location.hash || '').replace(/^#/, ''));
+                const type = String(sp.get('type') || hp.get('type') || '').trim().toLowerCase();
+                const hasRecoveryToken = Boolean(
+                    sp.get('token_hash') ||
+                    hp.get('token_hash') ||
+                    hp.get('access_token')
+                );
+                if (type !== 'recovery' || !hasRecoveryToken) return;
+
+                const next = `spendnote-reset-password.html${window.location.search || ''}${window.location.hash || ''}`;
+                window.location.replace(next);
+            } catch (_) {
+                // ignore
+            }
+        };
+
+        redirectRecoveryToResetPage();
+
         (async () => {
             try {
                 try {
