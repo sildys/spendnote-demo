@@ -313,13 +313,20 @@ const applyAvatar = (fullName) => {
 
     if (stored) {
         wrap.classList.add('has-image');
+        img.classList.remove('avatar-img-ready');
         if (img.src !== stored) {
+            img.onload = () => {
+                img.classList.add('avatar-img-ready');
+            };
             img.src = stored;
+        } else {
+            img.classList.add('avatar-img-ready');
         }
         applyAvatarTransform();
     } else {
         wrap.classList.remove('dragging');
         wrap.classList.remove('has-image');
+        img.classList.remove('avatar-img-ready');
         img.removeAttribute('src');
         img.style.transform = 'translate(0px, 0px) scale(1)';
         if (pct) pct.textContent = '100%';
