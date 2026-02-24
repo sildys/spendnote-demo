@@ -136,15 +136,41 @@ async function ensureAuthenticatedNavOnPublicPage(options = {}) {
 
     const ensureAppNavStyles = () => {
         try {
-            if (document.querySelector('link[href*="assets/css/app-layout.css"]')) {
-                return;
+            const existing = document.querySelector('link[href*="assets/css/app-layout.css"]');
+            if (existing) {
+                // If stylesheet is already loaded (or has no sheet info yet), continue.
+                if (existing.sheet) return Promise.resolve();
+                return new Promise((resolve) => {
+                    let done = false;
+                    const finish = () => {
+                        if (done) return;
+                        done = true;
+                        resolve();
+                    };
+                    existing.addEventListener('load', finish, { once: true });
+                    existing.addEventListener('error', finish, { once: true });
+                    setTimeout(finish, 1200);
+                });
             }
+
             const link = document.createElement('link');
             link.rel = 'stylesheet';
             link.href = 'assets/css/app-layout.css?v=21';
             document.head.appendChild(link);
+
+            return new Promise((resolve) => {
+                let done = false;
+                const finish = () => {
+                    if (done) return;
+                    done = true;
+                    resolve();
+                };
+                link.addEventListener('load', finish, { once: true });
+                link.addEventListener('error', finish, { once: true });
+                setTimeout(finish, 1200);
+            });
         } catch (_) {
-            // ignore
+            return Promise.resolve();
         }
     };
 
@@ -154,7 +180,7 @@ async function ensureAuthenticatedNavOnPublicPage(options = {}) {
         const session = data?.session || null;
         if (!session) return false;
 
-        ensureAppNavStyles();
+        await ensureAppNavStyles();
 
         let container = document.getElementById(containerId);
         if (!container) {
