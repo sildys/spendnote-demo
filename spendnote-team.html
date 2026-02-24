@@ -79,14 +79,16 @@
             gap: 8px;
         }
 
-        .stat-box {
+        .stats-row .stat-box {
             border-radius: 12px;
             border: 1px solid var(--border);
             background: var(--bg);
             padding: 12px 14px;
-            display: flex;
-            align-items: center;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
             gap: 12px;
+            text-align: left !important;
         }
 
         .stat-box-icon {
@@ -109,18 +111,20 @@
             justify-content: center;
         }
 
-        .stat-value {
-            font-size: 20px;
+        .stats-row .stat-value {
+            font-size: 20px !important;
             font-weight: 900;
             line-height: 1.1;
             color: var(--text);
+            margin-bottom: 0 !important;
         }
 
-        .stat-label {
+        .stats-row .stat-label {
             font-size: 11px;
             font-weight: 600;
             color: var(--text-muted);
             margin-top: 3px;
+            margin-bottom: 0 !important;
             text-transform: uppercase;
             letter-spacing: 0.04em;
         }
