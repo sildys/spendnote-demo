@@ -35,8 +35,8 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **L1** Onboarding UI: registration success state + post-login next steps (Cash Box → Transaction → Receipt), invite explanation, role-based messaging
 - [ ] **L2** Email pack (4 only): define copy + triggers + recipients (Welcome/Account created; Email confirmation; You’ve been invited; Invite accepted/user activated → admin)
 - [ ] **L3** Email delivery implementation: Resend + Edge Functions/hooks + templates
-- [ ] **L4** Role-based Settings UI: Owner/Admin vs User (hide non-owned sections)
-- [ ] **L5** Access control UX: user sees only assigned cash boxes; admin can assign/revoke cash box access in UI
+- [x] **L4** Role-based Settings UI: Owner/Admin vs User (hide non-owned sections) — **kész** (`user-settings` + `team` oldalon role-alapú megjelenítés/tiltás).
+- [x] **L5** Access control UX: user sees only assigned cash boxes; admin can assign/revoke cash box access in UI — **kész** (`spendnote-team.html` cash box grant/revoke, user scope szűrés).
 - [ ] **DB-TEAM-1** Team/org/invite DB versioning alignment: ensure `org_memberships`/`invites`/`cash_box_memberships` tables + RLS policies + `spendnote_create_invite` RPC are all versioned in `supabase-migrations/` (not only README snippets), and align `database/schema.sql` + `database/SCHEMA-DOCUMENTATION.md` with the current org/invite model
 - [x] **M1** Mobile strategy + responsive MVP completed (2026-02-18)
 - [ ] **S1** Subscription rules spec: trial model (14 days and/or 20 receipts), expiry behavior, receipt/user limits, data handling on user delete (matrix)
