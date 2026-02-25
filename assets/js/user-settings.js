@@ -444,13 +444,15 @@ const computeAndApplyRole = async () => {
 
         // Role-based settings behavior:
         // - user: Receipt Identity visible but read-only, Billing hidden
-        // - owner/admin: full edit access + Billing visible
+        // - admin: Receipt Identity editable, Billing hidden
+        // - owner: full edit access + Billing visible
         try {
             const isUserRole = currentRole === 'user';
+            const isOwnerRole = currentRole === 'owner';
 
             const billingCard = document.getElementById('billingSettingsCard');
             if (billingCard) {
-                billingCard.style.display = isUserRole ? 'none' : '';
+                billingCard.style.display = isOwnerRole ? '' : 'none';
             }
 
             const readOnlyNote = document.getElementById('receiptIdentityReadOnlyNote');
