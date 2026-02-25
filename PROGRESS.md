@@ -105,8 +105,8 @@ If a chat thread freezes / context is lost: in the new thread say:
   - OUT tranzakciónál: company = FROM, contact = TO.
   - `isIncome` boolean alapján kondicionális logika minden receipt template-ben.
   - company/contact `otherId` is felcserélve a típus alapján.
-- **Onboarding wizard Other ID mentés:**
-  - `spendnote-welcome.html`: `receiptOtherId` mező értéke `phone` mezőként mentve a profilba.
+- **Onboarding wizard Other ID mentés bugfix:**
+  - `spendnote-welcome.html` (már meglévő wizard): a `receiptOtherId` mező értéke korábban nem mentődött el. Javítva: most `phone` mezőként kerül a profilba.
 - **Cash box settings preview — live profil adat:**
   - `spendnote-cash-box-settings.html`: `DUMMY_PROFILE` helyett a valódi DB profil töltődik be a preview-ba.
   - `demoCompanyId` URL param most a `profile.phone` értékét kapja.

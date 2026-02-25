@@ -16,8 +16,8 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - IN transactions: contact = FROM (sender), company = TO (receiver).
   - OUT transactions: company = FROM (sender), contact = TO (receiver).
   - `isIncome` boolean drives conditional `fromName`/`toName`/`fromAddress`/`toAddress`/`fromOtherId`/`toOtherId` assignment.
-- **Onboarding wizard Other ID persistence:**
-  - `spendnote-welcome.html`: `receiptOtherId` field now saved as `phone` in profile on setup completion.
+- **Onboarding wizard Other ID persistence bugfix:**
+  - `spendnote-welcome.html` (existing wizard): `receiptOtherId` field was not being saved. Fixed — now persisted as `phone` in profile on setup completion.
 - **Cash box settings preview — live profile data:**
   - `spendnote-cash-box-settings.html`: receipt preview now loads real DB profile instead of `DUMMY_PROFILE` placeholder.
   - `demoCompanyId` URL param now populated from `profile.phone`.
