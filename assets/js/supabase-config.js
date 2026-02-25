@@ -2022,51 +2022,13 @@ var db = {
                     return { success: false, error: 'Not authenticated' };
                 }
 
-                // Prefer atomic server-side delete when available.
-                try {
-                    const rpc = await supabaseClient.rpc('spendnote_delete_cash_box', {
-                        p_cash_box_id: id
-                    });
-                    if (!rpc.error) {
-                        return { success: true };
-                    }
-                } catch (_) {
-                    // fallback to legacy client-side cascade below
+                const rpc = await supabaseClient.rpc('spendnote_delete_cash_box', {
+                    p_cash_box_id: id
+                });
+                if (rpc.error) {
+                    console.error('Error deleting cash box:', rpc.error);
+                    return { success: false, error: rpc.error.message };
                 }
-
-                // 1) Delete related transactions
-                const txDelete = await supabaseClient
-                    .from('transactions')
-                    .delete()
-                    .eq('cash_box_id', id);
-
-                if (txDelete.error) {
-                    console.error('Error deleting cash box transactions:', txDelete.error);
-                    return { success: false, error: txDelete.error.message };
-                }
-
-                // 2) Delete related access rows
-                const membershipDelete = await supabaseClient
-                    .from('cash_box_memberships')
-                    .delete()
-                    .eq('cash_box_id', id);
-
-                if (membershipDelete.error) {
-                    console.error('Error deleting cash box memberships:', membershipDelete.error);
-                    return { success: false, error: membershipDelete.error.message };
-                }
-
-                // 3) Delete the cash box itself
-                const boxDelete = await supabaseClient
-                    .from('cash_boxes')
-                    .delete()
-                    .eq('id', id);
-
-                if (boxDelete.error) {
-                    console.error('Error deleting cash box:', boxDelete.error);
-                    return { success: false, error: boxDelete.error.message };
-                }
-
                 return { success: true };
             } catch (err) {
                 console.error('Error deleting cash box:', err);
@@ -2785,17 +2747,6 @@ var db = {
             return { success: true, data };
         },
 
-        async delete(id) {
-            const { error } = await supabaseClient
-                .from('transactions')
-                .delete()
-                .eq('id', id);
-            if (error) {
-                console.error('Error deleting transaction:', error);
-                return { success: false, error: error.message };
-            }
-            return { success: true };
-        }
     },
 
     // Profiles

@@ -310,12 +310,12 @@ These support `?publicToken=`, `?demo=1`, and `?bootstrap=1` for iframe/tab sess
 | # | Gap | Impact | Recommendation |
 |---|---|---|---|
 | M1 | **No onboarding flow** | New user lands on empty dashboard with no guidance | Add first-run wizard or empty-state CTAs |
-| M2 | **No transaction edit** | Transactions can only be voided, not edited (amount, description, date) | Consider allowing edit for recent/draft transactions, or document this as by-design |
-| M3 | **No transaction delete** | `db.transactions.delete()` exists in API but no UI exposes it | Either expose with confirmation or remove the API method |
+| M2 | ~~No transaction edit~~ | **By design.** Transactions are immutable; only void is allowed. | RESOLVED — no action needed |
+| M3 | ~~No transaction delete~~ | **By design.** Only void is allowed. Dead `transactions.delete()` API method removed. | RESOLVED — dead code removed |
 | M4 | **No export/download** | Transaction history has no CSV/PDF export | Add export functionality |
 | M5 | **No search on contacts page** | Contact list loads all contacts with no search/filter | Add search input |
 | M6 | **Receipt limit hardcoded to 200** | `PREVIEW_RECEIPT_LIMIT = 200` with localStorage override — no server enforcement | Enforce limit server-side via RPC or RLS |
-| M7 | **No cash box archive** | Cash boxes can only be deleted, not archived/deactivated (despite `is_active` column existing) | Expose archive functionality using `is_active` |
+| M7 | ~~No cash box archive~~ | **Rejected.** No archiving; cash boxes are active or deleted. `is_active` column dropped. | RESOLVED — column removed |
 | M8 | **Profile email is read-only** | No way to change email address after signup | Add email change flow via Supabase `updateUser()` |
 | M9 | **No 2FA/MFA support** | Only email+password authentication | Consider adding TOTP or Supabase MFA |
 | M10 | **`team_members` + `cash_box_access` tables are legacy** | Frontend uses `org_memberships` + `cash_box_memberships` but old tables still exist in schema | Remove or mark deprecated; clean up schema.sql |

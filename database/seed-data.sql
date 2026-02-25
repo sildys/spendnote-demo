@@ -4,10 +4,10 @@
 -- Note: You need to replace USER_ID_HERE with actual user UUID after signup
 
 -- Sample Cash Boxes
-INSERT INTO public.cash_boxes (id, user_id, name, description, initial_balance, current_balance, color, is_active) VALUES
-('11111111-1111-1111-1111-111111111111', 'USER_ID_HERE', 'Main Office', 'Primary cash box for daily operations', 5000.00, 5000.00, '#10b981', true),
-('22222222-2222-2222-2222-222222222222', 'USER_ID_HERE', 'Event Fund', 'Special events and activities budget', 2000.00, 2000.00, '#f59e0b', true),
-('33333333-3333-3333-3333-333333333333', 'USER_ID_HERE', 'Petty Cash', 'Small daily expenses', 500.00, 500.00, '#3b82f6', true);
+INSERT INTO public.cash_boxes (id, user_id, name, description, initial_balance, current_balance, color) VALUES
+('11111111-1111-1111-1111-111111111111', 'USER_ID_HERE', 'Main Office', 'Primary cash box for daily operations', 5000.00, 5000.00, '#10b981'),
+('22222222-2222-2222-2222-222222222222', 'USER_ID_HERE', 'Event Fund', 'Special events and activities budget', 2000.00, 2000.00, '#f59e0b'),
+('33333333-3333-3333-3333-333333333333', 'USER_ID_HERE', 'Petty Cash', 'Small daily expenses', 500.00, 500.00, '#3b82f6');
 
 -- Sample Contacts
 INSERT INTO public.contacts (id, user_id, name, email, phone, address, notes) VALUES

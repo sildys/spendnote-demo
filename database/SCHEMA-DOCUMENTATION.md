@@ -69,7 +69,6 @@ Stores cash box information with full receipt customization.
 - `cash_box_logo_url` (TEXT) - Overrides account logo
 
 **Other:**
-- `is_active` (BOOLEAN)
 - `created_at` (TIMESTAMP)
 - `updated_at` (TIMESTAMP)
 
