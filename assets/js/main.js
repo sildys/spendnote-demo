@@ -908,6 +908,74 @@ SpendNote.updateMenuColors = updateMenuColors;
 window.SpendNote = SpendNote;
 
 // ========================================
+// S2: LOCK / UPGRADE UI HELPER
+// ========================================
+window.SpendNoteUpgrade = {
+    _overlayId: 'sn-upgrade-overlay',
+
+    _planLabel: { free: 'Free', standard: 'Standard', pro: 'Pro' },
+
+    _planUrl: '/spendnote-pricing.html',
+
+    showLockOverlay(opts) {
+        const { feature = '', requiredPlan = 'standard', anchorEl = null } = opts || {};
+
+        const existing = document.getElementById(this._overlayId);
+        if (existing) existing.remove();
+
+        const planLabel = this._planLabel[requiredPlan] || 'a paid plan';
+        const overlay = document.createElement('div');
+        overlay.id = this._overlayId;
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,0.55);display:flex;align-items:center;justify-content:center;padding:20px;';
+        overlay.innerHTML = `
+          <div style="background:#fff;border-radius:16px;box-shadow:0 24px 60px rgba(15,23,42,0.18);max-width:400px;width:100%;padding:32px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:center;">
+            <div style="width:56px;height:56px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div style="font-size:18px;font-weight:800;color:#0f172a;margin-bottom:8px;">Upgrade Required</div>
+            <div style="font-size:14px;color:#64748b;margin-bottom:24px;line-height:1.5;">${feature ? `<strong>${feature}</strong> is` : 'This feature is'} available on the <strong>${planLabel}</strong> plan and above.</div>
+            <div style="display:flex;gap:10px;justify-content:center;">
+              <a href="${this._planUrl}" style="display:inline-flex;align-items:center;gap:8px;background:#0f172a;color:#fff;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:700;text-decoration:none;">
+                View Plans
+              </a>
+              <button type="button" id="sn-upgrade-overlay-close" style="appearance:none;border:1px solid #cbd5e1;background:#fff;color:#64748b;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;">
+                Cancel
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const close = () => overlay.remove();
+        document.getElementById('sn-upgrade-overlay-close').addEventListener('click', close);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+    },
+
+    showLockBadge(el, requiredPlan) {
+        if (!el) return;
+        el.style.position = 'relative';
+        const old = el.querySelector('.sn-lock-badge');
+        if (old) old.remove();
+        const badge = document.createElement('span');
+        badge.className = 'sn-lock-badge';
+        const label = this._planLabel[requiredPlan] || 'Pro';
+        badge.style.cssText = 'position:absolute;top:6px;right:6px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;color:#64748b;display:flex;align-items:center;gap:4px;pointer-events:none;';
+        badge.innerHTML = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>${label}`;
+        el.appendChild(badge);
+    },
+
+    async guardFeature(flag, featureLabel, requiredPlan) {
+        if (!window.SpendNoteFeatures) return true;
+        const allowed = await window.SpendNoteFeatures.can(flag);
+        if (!allowed) {
+            this.showLockOverlay({ feature: featureLabel, requiredPlan: requiredPlan || 'standard' });
+            return false;
+        }
+        return true;
+    }
+};
+
+// ========================================
 // DUPLICATE TRANSACTION HANDLER
 // ========================================
 document.addEventListener('click', function(e) {

@@ -940,6 +940,48 @@ window.SpendNotePasswordPolicy = {
     }
 };
 
+// S2: Feature flag helper (S1-SPEC.md)
+window.SpendNoteFeatures = {
+    _tier: null,
+
+    _FLAGS: {
+        free:     { can_create_transaction: true,  can_export_csv: false, can_export_pdf: false, can_send_email_receipt: false, can_upload_logo: false, can_customize_labels: false, can_invite_members: false, can_add_cash_box: false,  max_cash_boxes: 1,  max_users: 1 },
+        standard: { can_create_transaction: true,  can_export_csv: true,  can_export_pdf: true,  can_send_email_receipt: false, can_upload_logo: true,  can_customize_labels: false, can_invite_members: false, can_add_cash_box: true,   max_cash_boxes: 2,  max_users: 1 },
+        pro:      { can_create_transaction: true,  can_export_csv: true,  can_export_pdf: true,  can_send_email_receipt: true,  can_upload_logo: true,  can_customize_labels: true,  can_invite_members: true,  can_add_cash_box: true,   max_cash_boxes: Infinity, max_users: Infinity }
+    },
+
+    async getTier() {
+        if (this._tier) return this._tier;
+        try {
+            const { data: { user } } = await supabaseClient.auth.getUser();
+            if (!user) { this._tier = 'free'; return 'free'; }
+            const { data } = await supabaseClient.from('profiles').select('subscription_tier').eq('id', user.id).single();
+            this._tier = String(data?.subscription_tier || 'free').toLowerCase();
+        } catch (_) {
+            this._tier = 'free';
+        }
+        return this._tier;
+    },
+
+    invalidate() { this._tier = null; },
+
+    async can(flag) {
+        const tier = await this.getTier();
+        return Boolean((this._FLAGS[tier] || this._FLAGS.free)[flag]);
+    },
+
+    async getAll() {
+        const tier = await this.getTier();
+        return { ...(this._FLAGS[tier] || this._FLAGS.free), tier };
+    },
+
+    async isAtLeast(minTier) {
+        const order = { free: 0, standard: 1, pro: 2 };
+        const tier = await this.getTier();
+        return (order[tier] ?? 0) >= (order[minTier] ?? 0);
+    }
+};
+
 // Auth helper functions
 var auth = {
     // Get current user
