@@ -61,6 +61,18 @@
             box-shadow: 0 2px 16px rgba(15,23,42,0.06);
             overflow: hidden; margin-bottom: 20px;
         }
+        .section-card.primary {
+            border-color: var(--primary);
+            box-shadow: 0 4px 24px rgba(16,185,129,0.13);
+        }
+        .section-card.primary .section-card-header {
+            background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+            border-bottom-color: #d1fae5;
+        }
+        .section-card.primary .section-num {
+            width: 34px; height: 34px; font-size: 15px;
+            box-shadow: 0 2px 8px rgba(16,185,129,0.3);
+        }
         .section-card-header {
             display: flex; align-items: center; gap: 14px;
             padding: 18px 24px; border-bottom: 1px solid #f1f5f9;
@@ -250,7 +262,7 @@
 <div class="page-wrap">
 
     <div class="welcome-tag"><i class="fas fa-hand-wave"></i> Welcome aboard</div>
-    <h1 class="welcome-title">Let's get you set up <span>in 60 seconds</span></h1>
+    <h1 class="welcome-title">Set up your receipt identity <span>in 60 seconds</span></h1>
     <p class="welcome-sub">Two quick things — then your dashboard is ready to go.</p>
 
     <!-- BLOCK 1: Profile -->
@@ -298,7 +310,7 @@
     </div>
 
     <!-- BLOCK 2: Receipt Identity + preview -->
-    <div class="section-card">
+    <div class="section-card primary">
         <div class="section-card-header">
             <div class="section-num">2</div>
             <div>
@@ -349,7 +361,7 @@
         <button class="btn-skip" onclick="window.location.href='dashboard.html'">Skip for now</button>
         <button class="btn-primary" id="saveBtn" onclick="saveSetup()">
             <span class="saving-spinner" id="spin"><i class="fas fa-circle-notch fa-spin"></i></span>
-            Save &amp; Go to Dashboard <i class="fas fa-arrow-right"></i>
+            Start Creating Receipts <i class="fas fa-arrow-right"></i>
         </button>
     </div>
 
