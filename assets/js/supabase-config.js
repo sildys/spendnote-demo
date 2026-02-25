@@ -2003,6 +2003,18 @@ var db = {
                     return { success: false, error: 'Not authenticated' };
                 }
 
+                // Prefer atomic server-side delete when available.
+                try {
+                    const rpc = await supabaseClient.rpc('spendnote_delete_cash_box', {
+                        p_cash_box_id: id
+                    });
+                    if (!rpc.error) {
+                        return { success: true };
+                    }
+                } catch (_) {
+                    // fallback to legacy client-side cascade below
+                }
+
                 // 1) Delete related transactions
                 const txDelete = await supabaseClient
                     .from('transactions')
@@ -2064,10 +2076,15 @@ var db = {
                 return [];
             }
 
-            const { data, error } = await supabaseClient
+            const ctx = await getMyOrgContext();
+
+            let query = supabaseClient
                 .from('contacts')
-                .select('*')
-                .order('name', { ascending: true });
+                .select('*');
+            if (ctx?.orgId) {
+                query = query.eq('org_id', ctx.orgId);
+            }
+            const { data, error } = await query.order('name', { ascending: true });
             if (error) {
                 console.error('Error fetching contacts:', error);
                 return [];
@@ -2076,11 +2093,15 @@ var db = {
         },
 
         async getById(id) {
-            const { data, error } = await supabaseClient
+            const ctx = await getMyOrgContext();
+            let query = supabaseClient
                 .from('contacts')
                 .select('*')
-                .eq('id', id)
-                .single();
+                .eq('id', id);
+            if (ctx?.orgId) {
+                query = query.eq('org_id', ctx.orgId);
+            }
+            const { data, error } = await query.single();
             if (error) {
                 console.error('Error fetching contact:', error);
                 return null;
@@ -2127,7 +2148,7 @@ var db = {
                 if (user) {
                     const ctx = await getMyOrgContext();
                     if (ctx?.orgId && !payload.org_id) payload.org_id = ctx.orgId;
-                    if (!payload.user_id) payload.user_id = ctx?.ownerUserId || user.id;
+                    if (!payload.user_id) payload.user_id = user.id;
                 }
             } catch (_) {
                 // ignore
@@ -2182,7 +2203,7 @@ var db = {
             }
 
             const createPayload = {
-                user_id: ctx?.ownerUserId || user.id,
+                user_id: user.id,
                 org_id: ctx?.orgId || null,
                 name,
                 email,
@@ -2245,12 +2266,18 @@ var db = {
                 return [];
             }
 
+            const ctx = await getMyOrgContext();
+
             const runQuery = async ({ select, withCreatedAtOrder }) => {
                 let query = supabaseClient
                     .from('transactions')
                     .select(select)
                     .order('created_at', { ascending: false })
                     .order('transaction_date', { ascending: false });
+
+                if (ctx?.orgId) {
+                    query = query.eq('org_id', ctx.orgId);
+                }
 
                 if (!filters.includeSystem) {
                     query = query.or('is_system.is.null,is_system.eq.false');
@@ -2302,6 +2329,8 @@ var db = {
                 return { data: [], count: 0 };
             }
 
+            const ctx = await getMyOrgContext();
+
             const select = (options && typeof options.select === 'string' && options.select.trim())
                 ? options.select
                 : '*';
@@ -2316,6 +2345,10 @@ var db = {
                     .from('transactions')
                     .select(sel, { count: 'exact' })
                     ;
+
+                if (ctx?.orgId) {
+                    query = query.eq('org_id', ctx.orgId);
+                }
 
                 if (!options.includeSystem) {
                     query = query.or('is_system.is.null,is_system.eq.false');
@@ -2431,10 +2464,16 @@ var db = {
                 return { count: 0, totalIn: null, totalOut: null };
             }
 
+            const ctx = await getMyOrgContext();
+
             let query = supabaseClient
                 .from('transactions')
                 .select('id,type,amount,status,is_system', { count: 'exact' })
                 .or('is_system.is.null,is_system.eq.false');
+
+            if (ctx?.orgId) {
+                query = query.eq('org_id', ctx.orgId);
+            }
 
             // Fallback stats should ignore voided transactions (the reversal handles balance)
             if (!options.status) {
@@ -2504,20 +2543,24 @@ var db = {
         async getById(id) {
             const txId = String(id || '').trim();
             if (!txId) return null;
+            const ctx = await getMyOrgContext();
             // #region agent log
             if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] start', { txId });
             // #endregion
 
             if (transactionsJoinSupported) {
-                const attemptJoined = await supabaseClient
+                let joinedQuery = supabaseClient
                     .from('transactions')
                     .select(`
                         *,
                         cash_box:cash_boxes(id, name, color, currency, icon, sequence_number),
                         contact:contacts(id, name, email, phone, address, sequence_number)
                     `)
-                    .eq('id', txId)
-                    .single();
+                    .eq('id', txId);
+                if (ctx?.orgId) {
+                    joinedQuery = joinedQuery.eq('org_id', ctx.orgId);
+                }
+                const attemptJoined = await joinedQuery.single();
 
                 if (!attemptJoined.error && attemptJoined.data) {
                     // #region agent log
@@ -2565,11 +2608,14 @@ var db = {
                 }
             }
 
-            const fallback = await supabaseClient
+            let fallbackQuery = supabaseClient
                 .from('transactions')
                 .select('*')
-                .eq('id', txId)
-                .single();
+                .eq('id', txId);
+            if (ctx?.orgId) {
+                fallbackQuery = fallbackQuery.eq('org_id', ctx.orgId);
+            }
+            const fallback = await fallbackQuery.single();
 
             if (fallback.error) {
                 // #region agent log

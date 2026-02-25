@@ -64,11 +64,94 @@ CREATE POLICY "Users can insert their own profile"
     WITH CHECK (auth.uid() = id);
 
 -- =====================================================
+-- ORGS + MEMBERSHIPS TABLES
+-- =====================================================
+CREATE TABLE IF NOT EXISTS public.orgs (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name TEXT NOT NULL DEFAULT 'My Team',
+    owner_user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS public.org_memberships (
+    org_id UUID REFERENCES public.orgs(id) ON DELETE CASCADE NOT NULL,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('owner', 'admin', 'user')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    PRIMARY KEY (org_id, user_id)
+);
+
+-- Enable Row Level Security
+ALTER TABLE public.orgs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.org_memberships ENABLE ROW LEVEL SECURITY;
+
+-- orgs policies
+CREATE POLICY "Org members can view org"
+    ON public.orgs FOR SELECT
+    USING (
+        EXISTS (
+            SELECT 1
+            FROM public.org_memberships m
+            WHERE m.org_id = orgs.id
+              AND m.user_id = auth.uid()
+        )
+    );
+
+CREATE POLICY "Org owner admin can update name"
+    ON public.orgs FOR UPDATE
+    USING (
+        EXISTS (
+            SELECT 1
+            FROM public.org_memberships m
+            WHERE m.org_id = orgs.id
+              AND m.user_id = auth.uid()
+              AND lower(coalesce(m.role, '')) IN ('owner', 'admin')
+        )
+    )
+    WITH CHECK (
+        EXISTS (
+            SELECT 1
+            FROM public.org_memberships m
+            WHERE m.org_id = orgs.id
+              AND m.user_id = auth.uid()
+              AND lower(coalesce(m.role, '')) IN ('owner', 'admin')
+        )
+    );
+
+CREATE POLICY "Users can view own org memberships"
+    ON public.org_memberships FOR SELECT
+    USING (auth.uid() = user_id);
+
+CREATE POLICY "Owners can manage org memberships"
+    ON public.org_memberships FOR ALL
+    USING (
+        EXISTS (
+            SELECT 1
+            FROM public.org_memberships m
+            WHERE m.org_id = org_memberships.org_id
+              AND m.user_id = auth.uid()
+              AND lower(coalesce(m.role, '')) = 'owner'
+        )
+    )
+    WITH CHECK (
+        EXISTS (
+            SELECT 1
+            FROM public.org_memberships m
+            WHERE m.org_id = org_memberships.org_id
+              AND m.user_id = auth.uid()
+              AND lower(coalesce(m.role, '')) = 'owner'
+        )
+    );
+
+-- =====================================================
 -- CASH BOXES TABLE
 -- =====================================================
 CREATE TABLE IF NOT EXISTS public.cash_boxes (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    org_id UUID REFERENCES public.orgs(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     currency TEXT DEFAULT 'USD' NOT NULL,
     color TEXT DEFAULT '#10b981' NOT NULL,
@@ -110,22 +193,77 @@ ALTER TABLE public.cash_boxes ENABLE ROW LEVEL SECURITY;
 -- Cash boxes policies
 CREATE POLICY "Users can view their own cash boxes" 
     ON public.cash_boxes FOR SELECT 
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = cash_boxes.org_id
+                  AND m.user_id = auth.uid()
+            )
+        )
+    );
 
 CREATE POLICY "Users can insert their own cash boxes" 
     ON public.cash_boxes FOR INSERT 
-    WITH CHECK (auth.uid() = user_id);
+    WITH CHECK (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = cash_boxes.org_id
+                  AND m.user_id = auth.uid()
+                  AND lower(coalesce(m.role, '')) IN ('owner', 'admin')
+            )
+        )
+    );
 
 CREATE POLICY "Users can update their own cash boxes" 
     ON public.cash_boxes FOR UPDATE 
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = cash_boxes.org_id
+                  AND m.user_id = auth.uid()
+                  AND lower(coalesce(m.role, '')) IN ('owner', 'admin')
+            )
+        )
+    );
 
 CREATE POLICY "Users can delete their own cash boxes" 
     ON public.cash_boxes FOR DELETE 
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = cash_boxes.org_id
+                  AND m.user_id = auth.uid()
+                  AND lower(coalesce(m.role, '')) IN ('owner', 'admin')
+            )
+        )
+    );
 
 -- Index for faster queries
 CREATE INDEX IF NOT EXISTS idx_cash_boxes_user_id ON public.cash_boxes(user_id);
+CREATE INDEX IF NOT EXISTS idx_cash_boxes_org_id ON public.cash_boxes(org_id);
+
+CREATE TABLE IF NOT EXISTS public.cash_box_memberships (
+    cash_box_id UUID REFERENCES public.cash_boxes(id) ON DELETE CASCADE NOT NULL,
+    user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    PRIMARY KEY (cash_box_id, user_id)
+);
 
 -- =====================================================
 -- CONTACTS TABLE
@@ -133,6 +271,7 @@ CREATE INDEX IF NOT EXISTS idx_cash_boxes_user_id ON public.cash_boxes(user_id);
 CREATE TABLE IF NOT EXISTS public.contacts (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    org_id UUID REFERENCES public.orgs(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     email TEXT,
     phone TEXT,
@@ -148,22 +287,67 @@ ALTER TABLE public.contacts ENABLE ROW LEVEL SECURITY;
 -- Contacts policies
 CREATE POLICY "Users can view their own contacts" 
     ON public.contacts FOR SELECT 
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = contacts.org_id
+                  AND m.user_id = auth.uid()
+            )
+        )
+    );
 
 CREATE POLICY "Users can insert their own contacts" 
     ON public.contacts FOR INSERT 
-    WITH CHECK (auth.uid() = user_id);
+    WITH CHECK (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = contacts.org_id
+                  AND m.user_id = auth.uid()
+            )
+        )
+    );
 
 CREATE POLICY "Users can update their own contacts" 
     ON public.contacts FOR UPDATE 
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = contacts.org_id
+                  AND m.user_id = auth.uid()
+            )
+        )
+    );
 
 CREATE POLICY "Users can delete their own contacts" 
     ON public.contacts FOR DELETE 
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = contacts.org_id
+                  AND m.user_id = auth.uid()
+            )
+        )
+    );
 
 -- Index for faster queries
 CREATE INDEX IF NOT EXISTS idx_contacts_user_id ON public.contacts(user_id);
+CREATE INDEX IF NOT EXISTS idx_contacts_org_id ON public.contacts(org_id);
 CREATE INDEX IF NOT EXISTS idx_contacts_name ON public.contacts(name);
 
 -- =====================================================
@@ -172,6 +356,7 @@ CREATE INDEX IF NOT EXISTS idx_contacts_name ON public.contacts(name);
 CREATE TABLE IF NOT EXISTS public.transactions (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
+    org_id UUID REFERENCES public.orgs(id) ON DELETE CASCADE,
     cash_box_id UUID REFERENCES public.cash_boxes(id) ON DELETE CASCADE NOT NULL,
     contact_id UUID REFERENCES public.contacts(id) ON DELETE SET NULL,
     
@@ -216,22 +401,67 @@ ALTER TABLE public.transactions ENABLE ROW LEVEL SECURITY;
 -- Transactions policies
 CREATE POLICY "Users can view their own transactions" 
     ON public.transactions FOR SELECT 
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = transactions.org_id
+                  AND m.user_id = auth.uid()
+            )
+        )
+    );
 
 CREATE POLICY "Users can insert their own transactions" 
     ON public.transactions FOR INSERT 
-    WITH CHECK (auth.uid() = user_id);
+    WITH CHECK (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = transactions.org_id
+                  AND m.user_id = auth.uid()
+            )
+        )
+    );
 
 CREATE POLICY "Users can update their own transactions" 
     ON public.transactions FOR UPDATE 
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = transactions.org_id
+                  AND m.user_id = auth.uid()
+            )
+        )
+    );
 
 CREATE POLICY "Users can delete their own transactions" 
     ON public.transactions FOR DELETE 
-    USING (auth.uid() = user_id);
+    USING (
+        auth.uid() = user_id
+        OR (
+            org_id IS NOT NULL
+            AND EXISTS (
+                SELECT 1
+                FROM public.org_memberships m
+                WHERE m.org_id = transactions.org_id
+                  AND m.user_id = auth.uid()
+            )
+        )
+    );
 
 -- Indexes for faster queries
 CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON public.transactions(user_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_org_id ON public.transactions(org_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_cash_box_id ON public.transactions(cash_box_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_contact_id ON public.transactions(contact_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_date ON public.transactions(transaction_date DESC);

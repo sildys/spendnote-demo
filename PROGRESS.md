@@ -56,19 +56,19 @@ If a chat thread freezes / context is lost: in the new thread say:
 
 ### Kritikus (kötelező)
 
-- [ ] **AUDIT-C1** Org-aware RLS bevezetése `cash_boxes` táblára (`org_memberships` alapú hozzáférés, ne csak `user_id = auth.uid()`).
-- [ ] **AUDIT-C2** Org-aware RLS bevezetése `contacts` táblára (`org_memberships` alapú hozzáférés, ne csak `user_id = auth.uid()`).
-- [ ] **AUDIT-C3** Org-aware RLS bevezetése `transactions` táblára (`org_memberships` alapú hozzáférés, ne csak `user_id = auth.uid()`).
-- [ ] **AUDIT-C4** `orgs` RLS és policy-k visszaemelése a kanonikus `database/schema.sql` fájlba (migrációval szinkronban).
+- [x] **AUDIT-C1** Org-aware RLS bevezetése `cash_boxes` táblára (`org_memberships` alapú hozzáférés, ne csak `user_id = auth.uid()`).
+- [x] **AUDIT-C2** Org-aware RLS bevezetése `contacts` táblára (`org_memberships` alapú hozzáférés, ne csak `user_id = auth.uid()`).
+- [x] **AUDIT-C3** Org-aware RLS bevezetése `transactions` táblára (`org_memberships` alapú hozzáférés, ne csak `user_id = auth.uid()`).
+- [x] **AUDIT-C4** `orgs` RLS és policy-k visszaemelése a kanonikus `database/schema.sql` fájlba (migrációval szinkronban).
 
 ### Magas prioritás
 
 - [ ] **AUDIT-H1** Email megerősítés enforce ellenőrzése és UI visszajelzés megerősítetlen accountokra.
 - [ ] **AUDIT-H2** Jelszó erősség validáció (signup + password change) minimum policy-val.
-- [ ] **AUDIT-H3** Cash box törlés áthelyezése atomi szerver oldali RPC-be (kliens oldali többlépcsős delete helyett).
+- [x] **AUDIT-H3** Cash box törlés áthelyezése atomi szerver oldali RPC-be (kliens oldali többlépcsős delete helyett).
 - [ ] **AUDIT-H4** Audit log bevezetése kritikus eseményekre (role change, member remove, cash box update, void).
-- [ ] **AUDIT-H5** Void tranzakció role-korlát szigorítása (legalább Owner/Admin), vagy kötelező részletes naplózás.
-- [ ] **AUDIT-H6** Contact CRUD konzisztencia javítása User role esetben (owner-id mismatch + RLS következmények rendezése).
+- [x] **AUDIT-H5** Void tranzakció role-korlát szigorítása (legalább Owner/Admin), vagy kötelező részletes naplózás.
+- [x] **AUDIT-H6** Contact CRUD konzisztencia javítása User role esetben (owner-id mismatch + RLS következmények rendezése).
 
 ### Közepes prioritás
 
@@ -94,6 +94,23 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
 ## Where we are now (last updated: 2026-02-25 — auth/account lifecycle hardening kör lezárva)
+
+### 2026-02-25 frissítés — Audit 2. kör security hardening (KÉSZ)
+
+**Lezárt és pushra kész változtatások (mai kör):**
+
+- Új migráció: `supabase-migrations/026_org_security_and_atomic_delete.sql`
+  - org-aware RLS policy-k `cash_boxes` / `contacts` / `transactions` táblákra,
+  - `spendnote_void_transaction` auth átállítás `org_memberships` owner/admin modellre,
+  - új atomi RPC: `spendnote_delete_cash_box`.
+- Frontend jogosultsági javítás:
+  - `transaction-detail-ui.js`: void gomb role-check átállítva `orgMemberships.getMyRole()` logikára (Owner/Admin).
+- Frontend adatszűrés hardening:
+  - `supabase-config.js`: org scope szűrés hozzáadva transactions és contacts lekérdezésekhez (`getAll`/`getPage`/`getStats`/`getById`).
+- Contact CRUD konzisztencia:
+  - contact create/getOrCreate `user_id` most a bejelentkezett felhasználóra áll.
+- Kanonikus schema szinkron:
+  - `database/schema.sql` frissítve org táblákkal, `org_id` oszlopokkal és org-aware policy-kkel.
 
 ### 2026-02-25 frissítés — Password reset + dropdown context + account deletion (KÉSZ)
 

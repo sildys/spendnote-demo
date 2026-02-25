@@ -1073,7 +1073,7 @@ html, body { height: auto !important; overflow: auto !important; }
             }
 
             voidBtn.disabled = !isAdmin;
-            voidNote.textContent = isAdmin ? 'Admin verified' : 'Admin required';
+            voidNote.textContent = isAdmin ? 'Owner/Admin verified' : 'Owner/Admin required';
         };
 
         (async () => {
@@ -1081,24 +1081,13 @@ html, body { height: auto !important; overflow: auto !important; }
             const user = await window.auth?.getCurrentUser?.();
 
             if (user) {
-                // Default to admin for single-user mode; refine if team role data exists
-                isAdmin = true;
-
                 try {
-                    const rows = await window.db?.teamMembers?.getAll?.();
-                    if (Array.isArray(rows) && rows.length) {
-                        const me = rows.find(r => r?.member_id === user.id || r?.member?.id === user.id);
-                        if (me && typeof me.role === 'string') {
-                            isAdmin = me.role.toLowerCase() === 'admin';
-                        } else {
-                            // If I'm the owner in any row, treat as admin; otherwise assume not admin
-                            const isOwner = rows.some(r => r?.owner_id === user.id);
-                            isAdmin = Boolean(isOwner);
-                        }
-                    }
-                } catch (_) {}
-            } else {
-                isAdmin = false;
+                    const rawRole = await window.db?.orgMemberships?.getMyRole?.();
+                    const role = String(rawRole || '').trim().toLowerCase();
+                    isAdmin = !role || role === 'owner' || role === 'admin';
+                } catch (_) {
+                    isAdmin = false;
+                }
             }
 
             setVoidAccessUi(isAdmin);
