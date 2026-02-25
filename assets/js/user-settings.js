@@ -293,7 +293,6 @@ const loadProfile = async () => {
 
     try {
         authUser = await window.auth?.getCurrentUser?.({ force: true });
-        setAvatarStorageUserId(authUser?.id || '');
         const meta = (authUser?.user_metadata && typeof authUser.user_metadata === 'object') ? authUser.user_metadata : null;
         if (meta) {
             if (!mergedProfile) mergedProfile = {};
@@ -308,11 +307,6 @@ const loadProfile = async () => {
             }
         }
     } catch (_) {
-        setAvatarStorageUserId('');
-    }
-
-    if (!authUser) {
-        setAvatarStorageUserId('');
     }
 
     fillProfile(mergedProfile);
@@ -1182,10 +1176,10 @@ const initUserSettingsPage = async () => {
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        initUserSettingsPage().catch(() => {});
+        initUserSettingsPage().catch((e) => console.error('[UserSettings] init error:', e));
     }, { once: true });
 } else {
-    initUserSettingsPage().catch(() => {});
+    initUserSettingsPage().catch((e) => console.error('[UserSettings] init error:', e));
 }
 
 window.addEventListener('pageshow', () => {
