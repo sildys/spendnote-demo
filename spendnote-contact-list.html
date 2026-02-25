@@ -1471,33 +1471,89 @@
                 overlay.id = contactsPdfOverlayId;
                 overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(15,23,42,0.6);display:none;padding:20px;overflow-y:auto;';
                 overlay.innerHTML = `
-                  <div id="${contactsPdfOverlayId}Panel" style="max-width:1080px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.2);overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
-                    <div style="background:#fff;padding:20px 24px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                      <div>
-                        <div style="font-size:18px;font-weight:800;color:#0f172a;">Contacts Export</div>
-                        <div id="${contactsPdfOverlayId}Meta" style="font-size:12px;color:#64748b;margin-top:4px;"></div>
-                      </div>
-                      <div style="display:flex;gap:10px;">
-                        <button type="button" id="${contactsPdfOverlayId}Print" style="appearance:none;border:none;background:#0f172a;color:#fff;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;">Print / Save as PDF</button>
-                        <button type="button" id="${contactsPdfOverlayId}Close" style="appearance:none;border:1px solid #cbd5e1;background:#fff;color:#64748b;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:700;cursor:pointer;">Close</button>
+                  <div id="${contactsPdfOverlayId}Panel" style="max-width:1000px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,0.2);overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+                    <!-- Header with Logo -->
+                    <div style="background:#fff;padding:24px 32px;border-bottom:2px solid #e2e8f0;">
+                      <div style="display:flex;align-items:center;justify-content:space-between;">
+                        <div style="display:flex;align-items:center;gap:12px;">
+                          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#cntPdfLogoGrad)"/>
+                            <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                            <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                            <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                            <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                            <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                            <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs><linearGradient id="cntPdfLogoGrad" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#10b981"/></linearGradient></defs>
+                          </svg>
+                          <div>
+                            <div style="font-size:22px;font-weight:800;color:#0f172a;letter-spacing:-0.02em;">SpendNote</div>
+                            <div style="font-size:12px;color:#64748b;font-weight:600;margin-top:1px;">Contacts Report</div>
+                          </div>
+                        </div>
+                        <div style="text-align:right;">
+                          <div id="${contactsPdfOverlayId}Brand" style="font-size:11px;color:#94a3b8;font-weight:600;"></div>
+                          <div style="font-size:14px;font-weight:700;color:#0f172a;margin-top:2px;"><span id="${contactsPdfOverlayId}Count">0</span> contacts</div>
+                        </div>
                       </div>
                     </div>
-                    <div id="${contactsPdfOverlayId}Content" style="padding:18px 24px;max-height:70vh;overflow:auto;background:#fff;">
-                      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                    <!-- Report Title -->
+                    <div style="background:linear-gradient(to bottom,#f8fafc 0%,#fff 100%);padding:20px 32px;border-bottom:1px solid #e2e8f0;">
+                      <div style="font-size:18px;font-weight:700;color:#0f172a;">Selected Contacts Export</div>
+                      <div id="${contactsPdfOverlayId}Meta" style="font-size:12px;color:#64748b;margin-top:4px;"></div>
+                    </div>
+                    <!-- Hint (screen only) -->
+                    <div id="${contactsPdfOverlayId}Hint" style="background:#fef3c7;border-bottom:1px solid #fde68a;padding:14px 32px;display:flex;align-items:center;gap:12px;">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                      <span style="font-size:13px;color:#92400e;font-weight:500;">Click <strong>Print / Save as PDF</strong> below, then choose <strong>Save as PDF</strong> in your browser's print dialog.</span>
+                    </div>
+                    <!-- Actions -->
+                    <div id="${contactsPdfOverlayId}Actions" style="padding:18px 32px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;gap:12px;align-items:center;">
+                      <button type="button" id="${contactsPdfOverlayId}Print" style="appearance:none;border:none;background:#0f172a;color:#fff;border-radius:8px;padding:12px 24px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(15,23,42,0.15);">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        Print / Save as PDF
+                      </button>
+                      <button type="button" id="${contactsPdfOverlayId}Close" style="appearance:none;border:1px solid #cbd5e1;background:#fff;color:#64748b;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:700;cursor:pointer;">Close</button>
+                    </div>
+                    <!-- Table -->
+                    <div id="${contactsPdfOverlayId}Content" style="padding:24px 32px;max-height:55vh;overflow:auto;background:#fff;">
+                      <table style="width:100%;border-collapse:collapse;">
                         <thead>
-                          <tr style="background:#f8fafc;">
-                            <th style="text-align:left;padding:10px;border:1px solid #e2e8f0;">Contact ID</th>
-                            <th style="text-align:left;padding:10px;border:1px solid #e2e8f0;">Name</th>
-                            <th style="text-align:left;padding:10px;border:1px solid #e2e8f0;">Address</th>
-                            <th style="text-align:left;padding:10px;border:1px solid #e2e8f0;">Email</th>
-                            <th style="text-align:left;padding:10px;border:1px solid #e2e8f0;">Cash Boxes</th>
-                            <th style="text-align:left;padding:10px;border:1px solid #e2e8f0;">Transactions</th>
-                            <th style="text-align:left;padding:10px;border:1px solid #e2e8f0;">Last TX</th>
-                            <th style="text-align:left;padding:10px;border:1px solid #e2e8f0;">Last TX Date</th>
+                          <tr style="background:#f1f5f9;">
+                            <th style="text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:14px 12px;border-bottom:2px solid #cbd5e1;">ID</th>
+                            <th style="text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:14px 12px;border-bottom:2px solid #cbd5e1;">Name</th>
+                            <th style="text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:14px 12px;border-bottom:2px solid #cbd5e1;">Address</th>
+                            <th style="text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:14px 12px;border-bottom:2px solid #cbd5e1;">Email</th>
+                            <th style="text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:14px 12px;border-bottom:2px solid #cbd5e1;">Cash Boxes</th>
+                            <th style="text-align:right;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:14px 12px;border-bottom:2px solid #cbd5e1;">#</th>
+                            <th style="text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:14px 12px;border-bottom:2px solid #cbd5e1;">Last TX</th>
+                            <th style="text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;padding:14px 12px;border-bottom:2px solid #cbd5e1;">Last TX Date</th>
                           </tr>
                         </thead>
                         <tbody id="${contactsPdfOverlayId}Body"></tbody>
                       </table>
+                    </div>
+                    <!-- Footer -->
+                    <div style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;">
+                      <div style="display:flex;align-items:center;gap:10px;">
+                        <svg width="28" height="28" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#cntPdfFootGrad)"/>
+                          <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                          <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                          <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                          <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                          <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                          <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                          <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                          <defs><linearGradient id="cntPdfFootGrad" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#10b981"/></linearGradient></defs>
+                        </svg>
+                        <div>
+                          <div style="font-size:13px;font-weight:700;color:#0f172a;">SpendNote</div>
+                          <div style="font-size:10px;color:#64748b;margin-top:-1px;">Cash management made simple</div>
+                        </div>
+                      </div>
+                      <div style="font-size:11px;color:#94a3b8;">spendnote.app</div>
                     </div>
                   </div>
                 `;
@@ -1515,7 +1571,7 @@
                     #${contactsPdfOverlayId} { display: block !important; position: static !important; inset: auto !important; background: #fff !important; padding: 0 !important; overflow: visible !important; }
                     #${contactsPdfOverlayId}Panel { box-shadow: none !important; border-radius: 0 !important; max-width: none !important; }
                     #${contactsPdfOverlayId}Content { max-height: none !important; overflow: visible !important; }
-                    #${contactsPdfOverlayId}Print, #${contactsPdfOverlayId}Close { display: none !important; }
+                    #${contactsPdfOverlayId}Print, #${contactsPdfOverlayId}Close, #${contactsPdfOverlayId}Hint, #${contactsPdfOverlayId}Actions { display: none !important; }
                   }
                 `;
                 document.head.appendChild(printStyle);
@@ -1525,24 +1581,35 @@
             const bodyEl = document.getElementById(`${contactsPdfOverlayId}Body`);
             const printBtn = document.getElementById(`${contactsPdfOverlayId}Print`);
             const closeBtn = document.getElementById(`${contactsPdfOverlayId}Close`);
+            const hintEl = document.getElementById(`${contactsPdfOverlayId}Hint`);
+            const actionsEl = document.getElementById(`${contactsPdfOverlayId}Actions`);
 
-            const exportedAt = new Date().toLocaleString('en-US');
-            if (metaEl) {
-                metaEl.textContent = `Selected contacts: ${items.length} • Exported: ${exportedAt}`;
-            }
+            const brandEl = document.getElementById(`${contactsPdfOverlayId}Brand`);
+            const countEl = document.getElementById(`${contactsPdfOverlayId}Count`);
+            const dt = new Date();
+            const pad2 = (n) => String(n).padStart(2, '0');
+            const stamp = `${dt.getFullYear()}-${pad2(dt.getMonth()+1)}-${pad2(dt.getDate())} ${pad2(dt.getHours())}:${pad2(dt.getMinutes())}`;
+            if (brandEl) brandEl.textContent = `Generated ${stamp}`;
+            if (countEl) countEl.textContent = String(items.length);
+
+            if (metaEl) metaEl.textContent = `Exported: ${stamp}`;
+
             if (bodyEl) {
-                bodyEl.innerHTML = items.map((r, idx) => `
-                  <tr style="${idx % 2 ? 'background:#fcfcfd;' : ''}">
-                    <td style="padding:8px;border:1px solid #e2e8f0;">${escapeHtml(r.id || '—')}</td>
-                    <td style="padding:8px;border:1px solid #e2e8f0;">${escapeHtml(r.name || '—')}</td>
-                    <td style="padding:8px;border:1px solid #e2e8f0;">${escapeHtml(r.address || '—')}</td>
-                    <td style="padding:8px;border:1px solid #e2e8f0;">${escapeHtml(r.email || '—')}</td>
-                    <td style="padding:8px;border:1px solid #e2e8f0;">${escapeHtml(r.cashBoxes || '—')}</td>
-                    <td style="padding:8px;border:1px solid #e2e8f0;">${escapeHtml(r.txCount || '—')}</td>
-                    <td style="padding:8px;border:1px solid #e2e8f0;">${escapeHtml(r.lastTxId || '—')}</td>
-                    <td style="padding:8px;border:1px solid #e2e8f0;">${escapeHtml(r.lastTxDate || '—')}</td>
-                  </tr>
-                `).join('');
+                bodyEl.innerHTML = items.map((r, idx) => {
+                    const bg = idx % 2 === 1 ? 'background:#f8fafc;' : '';
+                    return `
+                      <tr style="${bg}">
+                        <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px;font-weight:600;color:#64748b;">${escapeHtml(r.id || '—')}</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px;font-weight:700;color:#0f172a;">${escapeHtml(r.name || '—')}</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px;color:#475569;">${escapeHtml(r.address || '—')}</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px;color:#475569;">${escapeHtml(r.email || '—')}</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px;color:#475569;">${escapeHtml(r.cashBoxes || '—')}</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px;text-align:right;font-weight:700;color:#0f172a;">${escapeHtml(r.txCount || '—')}</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px;font-weight:600;color:#0f172a;">${escapeHtml(r.lastTxId || '—')}</td>
+                        <td style="padding:10px 12px;border-bottom:1px solid #f1f5f9;font-size:12px;color:#475569;">${escapeHtml(r.lastTxDate || '—')}</td>
+                      </tr>
+                    `;
+                }).join('');
             }
 
             const close = () => {
