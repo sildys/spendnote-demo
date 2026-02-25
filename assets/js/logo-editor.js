@@ -103,9 +103,10 @@ const LogoEditor = (() => {
     };
 
     const loadFromProfile = (profile) => {
-        if (!profile) return;
-        if (hasUserEdited) return;
+        if (!profile) { console.warn('[LogoEditor] loadFromProfile: no profile'); return; }
+        if (hasUserEdited) { console.warn('[LogoEditor] loadFromProfile: skipped (user edited)'); return; }
         const dbLogo = profile.account_logo_url || '';
+        console.log('[LogoEditor] loadFromProfile: logo=' + (dbLogo ? dbLogo.slice(0, 40) + '...' : '(empty)'), 'preview=' + Boolean(preview), 'image=' + Boolean(image));
         if (dbLogo) _logoDataUrl = dbLogo;
         const ls = profile.logo_settings;
         if (ls && typeof ls === 'object') {
@@ -147,7 +148,17 @@ const LogoEditor = (() => {
 
     const loadLogo = () => {
         const stored = readLogo();
+        console.log('[LogoEditor] loadLogo: hasData=' + Boolean(stored), 'hasImage=' + Boolean(image), 'hasPreview=' + Boolean(preview));
         if (stored && image && preview) {
+            image.onload = () => {
+                preview.classList.add('has-logo');
+                updateInfo();
+                console.log('[LogoEditor] image onload OK, naturalWidth=' + image.naturalWidth);
+            };
+            image.onerror = () => {
+                console.warn('[LogoEditor] image onerror');
+                preview.classList.remove('has-logo');
+            };
             if (!image.src || image.src !== stored) {
                 image.src = stored;
             }
@@ -158,12 +169,15 @@ const LogoEditor = (() => {
             currentY = pos.y;
             updateInfo();
 
-            if (image.complete && image.naturalWidth === 0) {
-                preview.classList.remove('has-logo');
+            // If already loaded and broken, hide
+            if (image.complete) {
+                if (image.naturalWidth > 0) {
+                    preview.classList.add('has-logo');
+                } else {
+                    console.warn('[LogoEditor] image complete but naturalWidth=0');
+                    preview.classList.remove('has-logo');
+                }
             }
-            image.onerror = () => {
-                preview.classList.remove('has-logo');
-            };
         } else if (preview) {
             preview.classList.remove('has-logo');
             if (image) image.removeAttribute('src');
