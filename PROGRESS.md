@@ -95,6 +95,30 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
+## Where we are now (last updated: 2026-02-25 este — receipt FROM/TO fix + settings oldal regressziók javítva)
+
+### 2026-02-25 esti zárás — Receipt FROM/TO swap + Account Settings regresszió fix (KÉSZ)
+
+- **Receipt FROM/TO swap (IN tranzakcióknál):**
+  - `spendnote-receipt-print-two-copies.html`, `spendnote-pdf-receipt.html`, `spendnote-email-receipt.html` javítva.
+  - IN tranzakciónál: contact = FROM, company = TO.
+  - OUT tranzakciónál: company = FROM, contact = TO.
+  - `isIncome` boolean alapján kondicionális logika minden receipt template-ben.
+  - company/contact `otherId` is felcserélve a típus alapján.
+- **Onboarding wizard Other ID mentés:**
+  - `spendnote-welcome.html`: `receiptOtherId` mező értéke `phone` mezőként mentve a profilba.
+- **Cash box settings preview — live profil adat:**
+  - `spendnote-cash-box-settings.html`: `DUMMY_PROFILE` helyett a valódi DB profil töltődik be a preview-ba.
+  - `demoCompanyId` URL param most a `profile.phone` értékét kapja.
+- **Account Settings regresszió fix (`setAvatarStorageUserId` undefined):**
+  - `user-settings.js`: `setAvatarStorageUserId()` hívások eltávolítva (függvény nem létezett → `ReferenceError` → az egész init csendben összeomlott).
+  - Eredmény: Full Name, Email, Display Name, Address, logo mind helyesen töltődik be.
+- **Logo editor preview fix:**
+  - Preview box mostantól mindig `scale(1)`-en mutatja a logót (nem overflowl ki a dobozból).
+  - A zoom % kijelző továbbra is mutatja a valódi értéket.
+  - A zoom/drag beállítások csak a receipten érvényesülnek.
+- **Commitok:** `f77f6e3`, `366642b`, `df45b99`, `9008084`, `6c03a40`, `4725ca4`, `e2d7229`, `068ff7a`, `c608ef6`, `0b97055`, `7a744dd`
+
 ## Where we are now (last updated: 2026-02-25 — összes magas prioritású audit feladat lezárva)
 
 ### 2026-02-25 frissítés — AUDIT-H1/H2/H4 implementáció (KÉSZ)

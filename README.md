@@ -7,6 +7,28 @@ SpendNote is a **cash box + transaction + contacts** web app.
 
 This repository is meant to be deployable as a static site (e.g. Vercel).
 
+## Current status (2026-02-25 evening — receipt FROM/TO fix + Account Settings regression fixed)
+
+### Receipt FROM/TO swap + Account Settings fix (2026-02-25 evening)
+
+- **Receipt FROM/TO direction fix (all 3 templates):**
+  - `spendnote-receipt-print-two-copies.html`, `spendnote-pdf-receipt.html`, `spendnote-email-receipt.html` corrected.
+  - IN transactions: contact = FROM (sender), company = TO (receiver).
+  - OUT transactions: company = FROM (sender), contact = TO (receiver).
+  - `isIncome` boolean drives conditional `fromName`/`toName`/`fromAddress`/`toAddress`/`fromOtherId`/`toOtherId` assignment.
+- **Onboarding wizard Other ID persistence:**
+  - `spendnote-welcome.html`: `receiptOtherId` field now saved as `phone` in profile on setup completion.
+- **Cash box settings preview — live profile data:**
+  - `spendnote-cash-box-settings.html`: receipt preview now loads real DB profile instead of `DUMMY_PROFILE` placeholder.
+  - `demoCompanyId` URL param now populated from `profile.phone`.
+- **Account Settings regression fix (root cause: `setAvatarStorageUserId` undefined):**
+  - `user-settings.js`: removed calls to non-existent `setAvatarStorageUserId()` which caused a silent `ReferenceError` crashing the entire `initUserSettingsPage` init.
+  - Result: Full Name, Email, Display Name, Address, logo all load correctly again.
+- **Logo editor preview fix:**
+  - Preview box now always shows logo at `scale(1)` — no overflow outside container.
+  - Zoom % label still reflects the actual saved zoom value.
+  - Zoom/drag settings only affect receipt rendering, not the settings page preview.
+
 ## Current status (2026-02-25 — all high-priority audit items shipped)
 
 ### Email verification + password policy + audit log (2026-02-25)
