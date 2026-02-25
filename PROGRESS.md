@@ -73,12 +73,12 @@ If a chat thread freezes / context is lost: in the new thread say:
 ### Közepes prioritás
 
 - [ ] **AUDIT-M1** Onboarding/empty-state flow első belépésre (első cash box → első tranzakció → első receipt).
-- [ ] **AUDIT-M2** Tranzakció szerkesztés döntés: implementáció vagy explicit "by design" dokumentáció.
-- [ ] **AUDIT-M3** Tranzakció törlés útvonal egységesítése (UI kitárolás vagy API metódus eltávolítás).
+- [x] **AUDIT-M2** ~~Tranzakció szerkesztés~~ — **by design: nincs.** Tranzakciók immutábilisak, kizárólag void lehetséges.
+- [x] **AUDIT-M3** ~~Tranzakció törlés~~ — **by design: nincs.** Kizárólag void használható, törlés nem lehetséges.
 - [ ] **AUDIT-M4** Tranzakció export (CSV/PDF) a history nézetből.
 - [ ] **AUDIT-M5** Kontakt kereső/szűrő hozzáadása contact list oldalon.
 - [ ] **AUDIT-M6** Receipt limit szerver oldali enforce (ne csak kliens/localStorage szint).
-- [ ] **AUDIT-M7** Cash box archiválás bevezetése az `is_active` mező tényleges használatával.
+- [x] **AUDIT-M7** ~~Cash box archiválás~~ — **elvetve.** Nem lesz archiválás, cash box törölhető vagy aktív.
 - [ ] **AUDIT-M8** Email change flow hozzáadása (`auth.updateUser()` + verify flow).
 - [ ] **AUDIT-M9** 2FA/MFA opció értékelése és roadmap döntés.
 - [x] **AUDIT-M10** Legacy táblák (`team_members`, `cash_box_access`) deprecate + schema cleanup terv.
