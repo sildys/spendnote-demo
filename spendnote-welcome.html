@@ -443,6 +443,7 @@ async function saveSetup() {
     showError('');
     const name    = document.getElementById('profileName').value.trim();
     const rName   = document.getElementById('receiptName').value.trim();
+    const otherId = document.getElementById('receiptOtherId').value.trim();
     const address = document.getElementById('receiptAddress').value.trim();
 
     if (!name) { showError('Please enter your name.'); return; }
@@ -455,6 +456,7 @@ async function saveSetup() {
             full_name: name,
             avatar_color: selectedColor,
             company_name: rName,
+            phone: otherId || null,
             address: address || null
         });
         if (!result?.success) throw new Error(result?.error || 'Failed to save.');
