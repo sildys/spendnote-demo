@@ -125,7 +125,7 @@ const LogoEditor = (() => {
 
     const applyTransform = () => {
         if (image) {
-            image.style.transform = `translate(${currentX}px, ${currentY}px) scale(${currentScale})`;
+            image.style.transform = `translate(calc(-50% + ${currentX}px), calc(-50% + ${currentY}px)) scale(${currentScale})`;
         }
     };
 

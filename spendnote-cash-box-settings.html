@@ -876,7 +876,7 @@ function applyCashBoxLogoTransform() {
         cbLogoInfo.textContent = `${Math.round(settings.scale * 100)}%`;
     }
     if (cbLogoImage) {
-        cbLogoImage.style.transform = `translate(${settings.x}px, ${settings.y}px) scale(${settings.scale})`;
+        cbLogoImage.style.transform = `translate(calc(-50% + ${settings.x}px), calc(-50% + ${settings.y}px)) scale(${settings.scale})`;
     }
 }
 
@@ -1083,6 +1083,6 @@ window.addEventListener('beforeunload', () => {
 <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=33"></script>
-<script src="assets/js/cash-box-settings-data.js?v=48"></script>
+<script src="assets/js/cash-box-settings-data.js?v=49"></script>
 </body>
 </html>
