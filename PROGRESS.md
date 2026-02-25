@@ -25,12 +25,13 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Signup success: in-page vs new `spendnote-welcome.html`
   - Next steps: success only vs success + dismissable dashboard panel
 - [x] **DEC-TRIAL** Trial without card upfront (decision): **14 days OR 20 transactions** (whichever comes first). At limit: **view-only**, **no export**. Invites: **Pro only**.
-- [ ] **P0** Production-ready acceptance criteria (baseline)
-  - [ ] Client error tracking (e.g. Sentry)
-  - [ ] Edge Function logging + surfacing non-2xx errors clearly
+- [x] **P0** Production-ready acceptance criteria (baseline)
+  - [x] Client error tracking: Sentry CDN loader + `captureException` backend hibákra
+  - [x] Edge Function logging: strukturált error response-ok, Supabase Dashboard Logs
   - [x] Smoke test checklist documented (`SMOKE_CHECKLIST.md`: auth, create transaction, receipt print/PDF/email, invite)
-  - [ ] Abuse protection: basic rate limiting on email/invite endpoints
-  - [ ] Cloudflare baseline protection: bot/WAF rules (minimal, safe defaults)
+  - [x] Abuse protection: `send-invite-email` rate limit RPC (3/target, 12/caller per 10 perc); Supabase Auth beépített rate limit
+  - [x] Cloudflare baseline: `RL-HighRisk-Paths` rate limit rule aktív (free tier max); Managed Rules → Cloudflare Pro-val később
+  - ⚠️ **TODO premier előtt:** Cloudflare Pro előfizetés + Managed Ruleset bekapcsolás + további WAF szabályok bővítése
 - [ ] **L1** Onboarding UI: registration success state + post-login next steps (Cash Box → Transaction → Receipt), invite explanation, role-based messaging
 - [ ] **L2** Email pack (4 only): define copy + triggers + recipients (Welcome/Account created; Email confirmation; You’ve been invited; Invite accepted/user activated → admin)
 - [ ] **L3** Email delivery implementation: Resend + Edge Functions/hooks + templates
