@@ -972,7 +972,6 @@ body {
     border: 1.5px dashed #d1d5db;
     position: relative;
     overflow: hidden;
-    transform: translateZ(0);
     flex-shrink: 0;
     display: flex;
     align-items: center;

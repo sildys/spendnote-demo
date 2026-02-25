@@ -125,7 +125,9 @@ const LogoEditor = (() => {
 
     const applyTransform = () => {
         if (image) {
-            image.style.transform = `translate(${currentX}px, ${currentY}px) scale(${currentScale})`;
+            // Preview always shows logo at natural fit (scale 1, centered).
+            // The zoom/drag settings only affect the receipt render.
+            image.style.transform = '';
         }
     };
 
