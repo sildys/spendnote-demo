@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Welcome to SpendNote</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #10b981; --primary-dark: #059669;
+            --bg: #f0fdf4; --surface: #fff; --border: #e2e8f0;
+            --text: #0f172a; --text-muted: #64748b;
+            --radius: 14px; --shadow: 0 8px 32px rgba(15,23,42,0.10);
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; color: var(--text); }
+        .wizard-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; font-size: 20px; font-weight: 800; color: var(--primary-dark); }
+        .wizard-logo svg { width: 28px; height: 28px; }
+        .wizard-progress-wrap { width: 100%; max-width: 480px; margin-bottom: 20px; }
+        .wizard-progress { display: flex; align-items: center; }
+        .wizard-step-dot { width: 30px; height: 30px; border-radius: 50%; background: var(--border); color: var(--text-muted); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s, color 0.2s; position: relative; }
+        .wizard-step-dot.active { background: var(--primary); color: #fff; box-shadow: 0 0 0 4px rgba(16,185,129,0.15); }
+        .wizard-step-dot.done { background: var(--primary-dark); color: #fff; }
+        .wizard-step-dot.done .dot-num { display: none; }
+        .wizard-step-dot.done::after { content: ''; display: block; width: 9px; height: 5px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg) translate(1px,-1px); }
+        .wizard-step-line { flex: 1; height: 3px; background: var(--border); transition: background 0.3s; }
+        .wizard-step-line.done { background: var(--primary-dark); }
+        .wizard-labels { display: flex; justify-content: space-between; margin-top: 8px; }
+        .wizard-label-item { font-size: 11px; font-weight: 600; color: var(--text-muted); text-align: center; flex: 1; transition: color 0.2s; }
+        .wizard-label-item.active { color: var(--primary); }
+        .wizard-label-item.done { color: var(--primary-dark); }
+        .wizard-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; max-width: 480px; padding: 36px 32px 28px; }
+        @media (max-width: 520px) { .wizard-card { padding: 28px 20px 22px; } }
+        .step-panel { display: none; }
+        .step-panel.active { display: block; }
+        .step-tag { font-size: 11px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+        .step-title { font-size: 22px; font-weight: 800; line-height: 1.2; margin-bottom: 6px; }
+        .step-subtitle { font-size: 14px; color: var(--text-muted); line-height: 1.5; margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+        .form-group label .opt { font-weight: 400; color: var(--text-muted); font-size: 12px; }
+        .form-group input, .form-group textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; font-family: inherit; color: var(--text); background: #fff; outline: none; transition: border-color 0.15s; }
+        .form-group input:focus, .form-group textarea:focus { border-color: var(--primary); }
+        .form-group textarea { resize: vertical; min-height: 72px; }
+        .color-swatches { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+        .color-swatch { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: border-color 0.15s, transform 0.1s; }
+        .color-swatch:hover { transform: scale(1.1); }
+        .color-swatch.active { border-color: var(--text); }
+        .avatar-preview-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .avatar-preview { width: 64px; height: 64px; border-radius: 50%; border: 3px solid var(--primary); background: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: var(--primary); overflow: hidden; flex-shrink: 0; transition: border-color 0.2s, color 0.2s; }
+        .avatar-label { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+        .avatar-label strong { display: block; font-size: 14px; color: var(--text); }
+        .icon-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .icon-btn { width: 40px; height: 40px; border-radius: 8px; border: 2px solid var(--border); background: #f8fafc; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted); transition: border-color 0.15s, background 0.15s, color 0.15s; }
+        .icon-btn:hover { border-color: var(--primary); color: var(--primary); background: #f0fdf4; }
+        .icon-btn.active { border-color: var(--primary); background: var(--primary); color: #fff; }
+        .wizard-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 28px; gap: 12px; }
+        .btn { display: inline-flex; align-items: center; gap: 6px; padding: 11px 22px; border-radius: 8px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: background 0.15s, opacity 0.15s; text-decoration: none; }
+        .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
+        .btn-ghost { background: transparent; color: var(--text-muted); padding-left: 0; }
+        .btn-ghost:hover { color: var(--text); }
+        .saving-spinner { display: none; }
+        .saving-spinner.show { display: inline-block; }
+        .done-screen { text-align: center; padding: 12px 0 4px; }
+        .done-icon { width: 72px; height: 72px; border-radius: 50%; background: #f0fdf4; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--primary); margin: 0 auto 20px; }
+        .done-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+        .done-subtitle { font-size: 15px; color: var(--text-muted); line-height: 1.5; margin-bottom: 28px; }
+        .done-screen .btn { width: 100%; justify-content: center; font-size: 15px; padding: 14px; }
+        .error-msg { font-size: 13px; color: #dc2626; margin-top: 12px; display: none; }
+        .error-msg.show { display: block; }
+    </style>
+</head>
+<body>
+
+<div class="wizard-logo">
+    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 6 C10 4.89543 10.8954 4 12 4 L36 4 C37.1046 4 38 4.89543 38 6 L38 38 L36 40 L34 38 L32 40 L30 38 L28 40 L26 38 L24 40 L22 38 L20 40 L18 38 L16 40 L14 38 L12 40 L10 38 Z" fill="url(#wg)"/>
+        <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="14" y1="20" x2="34" y2="20" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="14" y1="26" x2="28" y2="26" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><linearGradient id="wg" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#10b981"/></linearGradient></defs>
+    </svg>
+    SpendNote
+</div>
+
+<div class="wizard-progress-wrap">
+    <div class="wizard-progress">
+        <div class="wizard-step-dot active" id="dot1"><span class="dot-num">1</span></div>
+        <div class="wizard-step-line" id="line1"></div>
+        <div class="wizard-step-dot" id="dot2"><span class="dot-num">2</span></div>
+        <div class="wizard-step-line" id="line2"></div>
+        <div class="wizard-step-dot" id="dot3"><span class="dot-num">3</span></div>
+    </div>
+    <div class="wizard-labels">
+        <div class="wizard-label-item active" id="lbl1">Profile</div>
+        <div class="wizard-label-item" id="lbl2">Receipt Identity</div>
+        <div class="wizard-label-item" id="lbl3">Cash Box</div>
+    </div>
+</div>
+
+<div class="wizard-card">
+
+    <!-- STEP 1: Profile -->
+    <div class="step-panel active" id="step1">
+        <div class="step-tag">Step 1 of 3</div>
+        <div class="step-title">Set up your profile</div>
+        <div class="step-subtitle">Your name and avatar color appear across the app and on receipts.</div>
+        <div class="avatar-preview-wrap">
+            <div class="avatar-preview" id="avatarPreview"><span id="avatarInitials">?</span></div>
+            <div class="avatar-label">
+                <strong id="avatarPreviewName">Your name</strong>
+                Pick a color below
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="profileName">Full Name</label>
+            <input type="text" id="profileName" placeholder="Jane Smith" autocomplete="name">
+        </div>
+        <div class="form-group">
+            <label>Avatar Color <span class="opt">(optional)</span></label>
+            <div class="color-swatches" id="avatarColorSwatches">
+                <div class="color-swatch active" data-color="#10b981" style="background:#10b981;"></div>
+                <div class="color-swatch" data-color="#3b82f6" style="background:#3b82f6;"></div>
+                <div class="color-swatch" data-color="#8b5cf6" style="background:#8b5cf6;"></div>
+                <div class="color-swatch" data-color="#ec4899" style="background:#ec4899;"></div>
+                <div class="color-swatch" data-color="#f59e0b" style="background:#f59e0b;"></div>
+                <div class="color-swatch" data-color="#ef4444" style="background:#ef4444;"></div>
+                <div class="color-swatch" data-color="#06b6d4" style="background:#06b6d4;"></div>
+                <div class="color-swatch" data-color="#64748b" style="background:#64748b;"></div>
+            </div>
+        </div>
+        <div class="error-msg" id="err1"></div>
+        <div class="wizard-actions">
+            <button class="btn btn-ghost" onclick="skipStep(1)">Skip for now</button>
+            <button class="btn btn-primary" id="btn1" onclick="saveStep1()">
+                <span class="saving-spinner" id="spin1"><i class="fas fa-circle-notch fa-spin"></i></span>
+                Continue <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 2: Receipt Identity -->
+    <div class="step-panel" id="step2">
+        <div class="step-tag">Step 2 of 3</div>
+        <div class="step-title">Receipt Identity</div>
+        <div class="step-subtitle">This info appears on every receipt — your business or personal name and address.</div>
+        <div class="form-group">
+            <label for="receiptName">Display Name</label>
+            <input type="text" id="receiptName" placeholder="e.g. Acme Corp or Jane Smith">
+        </div>
+        <div class="form-group">
+            <label for="receiptOtherId">Tax ID / Other ID <span class="opt">(optional)</span></label>
+            <input type="text" id="receiptOtherId" placeholder="VAT, EIN, or leave blank">
+        </div>
+        <div class="form-group">
+            <label for="receiptAddress">Address <span class="opt">(optional)</span></label>
+            <textarea id="receiptAddress" rows="2" placeholder="Street, City, State, ZIP"></textarea>
+        </div>
+        <div class="error-msg" id="err2"></div>
+        <div class="wizard-actions">
+            <button class="btn btn-ghost" onclick="skipStep(2)">Skip for now</button>
+            <button class="btn btn-primary" id="btn2" onclick="saveStep2()">
+                <span class="saving-spinner" id="spin2"><i class="fas fa-circle-notch fa-spin"></i></span>
+                Continue <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 3: Cash Box -->
+    <div class="step-panel" id="step3">
+        <div class="step-tag">Step 3 of 3</div>
+        <div class="step-title">Create your first Cash Box</div>
+        <div class="step-subtitle">A Cash Box groups your cash transactions. You can create more later.</div>
+        <div class="form-group">
+            <label for="cbName">Cash Box Name</label>
+            <input type="text" id="cbName" placeholder="e.g. Main Office, Petty Cash">
+        </div>
+        <div class="form-group">
+            <label>Color</label>
+            <div class="color-swatches" id="cbColorSwatches">
+                <div class="color-swatch active" data-color="#10b981" style="background:#10b981;"></div>
+                <div class="color-swatch" data-color="#3b82f6" style="background:#3b82f6;"></div>
+                <div class="color-swatch" data-color="#8b5cf6" style="background:#8b5cf6;"></div>
+                <div class="color-swatch" data-color="#ec4899" style="background:#ec4899;"></div>
+                <div class="color-swatch" data-color="#f59e0b" style="background:#f59e0b;"></div>
+                <div class="color-swatch" data-color="#ef4444" style="background:#ef4444;"></div>
+                <div class="color-swatch" data-color="#06b6d4" style="background:#06b6d4;"></div>
+                <div class="color-swatch" data-color="#0f172a" style="background:#0f172a;"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Icon <span class="opt">(optional)</span></label>
+            <div class="icon-grid" id="cbIconGrid">
+                <button type="button" class="icon-btn active" data-icon="building"><i class="fas fa-building"></i></button>
+                <button type="button" class="icon-btn" data-icon="store"><i class="fas fa-store"></i></button>
+                <button type="button" class="icon-btn" data-icon="briefcase"><i class="fas fa-briefcase"></i></button>
+                <button type="button" class="icon-btn" data-icon="cash-register"><i class="fas fa-cash-register"></i></button>
+                <button type="button" class="icon-btn" data-icon="wallet"><i class="fas fa-wallet"></i></button>
+                <button type="button" class="icon-btn" data-icon="box"><i class="fas fa-box"></i></button>
+                <button type="button" class="icon-btn" data-icon="landmark"><i class="fas fa-landmark"></i></button>
+                <button type="button" class="icon-btn" data-icon="truck"><i class="fas fa-truck"></i></button>
+            </div>
+        </div>
+        <div class="error-msg" id="err3"></div>
+        <div class="wizard-actions">
+            <button class="btn btn-ghost" onclick="skipStep(3)">Skip for now</button>
+            <button class="btn btn-primary" id="btn3" onclick="saveStep3()">
+                <span class="saving-spinner" id="spin3"><i class="fas fa-circle-notch fa-spin"></i></span>
+                Create &amp; Continue <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- DONE -->
+    <div class="step-panel" id="stepDone">
+        <div class="done-screen">
+            <div class="done-icon"><i class="fas fa-check"></i></div>
+            <div class="done-title">You're all set!</div>
+            <div class="done-subtitle">Your account is ready. Head to your dashboard to start tracking cash.</div>
+            <a href="dashboard.html" class="btn btn-primary">Go to Dashboard <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js?v=20260225-2000"></script>
+<script>
+let selectedAvatarColor = '#10b981';
+let selectedCbColor = '#10b981';
+let selectedCbIcon = 'building';
+
+function setStep(n) {
+    for (let i = 1; i <= 3; i++) {
+        const panel = document.getElementById('step' + i);
+        const dot   = document.getElementById('dot' + i);
+        const lbl   = document.getElementById('lbl' + i);
+        if (!panel) continue;
+        panel.classList.toggle('active', i === n);
+        dot.classList.toggle('active', i === n);
+        dot.classList.toggle('done', i < n);
+        lbl.classList.toggle('active', i === n);
+        lbl.classList.toggle('done', i < n);
+        if (i < 3) {
+            document.getElementById('line' + i).classList.toggle('done', i < n);
+        }
+    }
+    if (n > 3) {
+        document.getElementById('step3').classList.remove('active');
+        document.getElementById('stepDone').classList.add('active');
+        ['dot1','dot2','dot3'].forEach(id => {
+            const d = document.getElementById(id);
+            d.classList.remove('active');
+            d.classList.add('done');
+        });
+        document.getElementById('line1').classList.add('done');
+        document.getElementById('line2').classList.add('done');
+        ['lbl1','lbl2','lbl3'].forEach(id => {
+            const l = document.getElementById(id);
+            l.classList.remove('active');
+            l.classList.add('done');
+        });
+    }
+}
+
+function showError(n, msg) {
+    const el = document.getElementById('err' + n);
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.toggle('show', Boolean(msg));
+}
+
+function setBusy(n, busy) {
+    const btn  = document.getElementById('btn' + n);
+    const spin = document.getElementById('spin' + n);
+    if (btn)  btn.disabled = busy;
+    if (spin) spin.classList.toggle('show', busy);
+}
+
+function getInitials(name) {
+    const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '?';
+    return (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+}
+
+function updateAvatarPreview() {
+    const name = document.getElementById('profileName').value;
+    const preview = document.getElementById('avatarPreview');
+    document.getElementById('avatarInitials').textContent = getInitials(name);
+    document.getElementById('avatarPreviewName').textContent = name.trim() || 'Your name';
+    preview.style.borderColor = selectedAvatarColor;
+    preview.style.color = selectedAvatarColor;
+}
+
+document.getElementById('profileName').addEventListener('input', updateAvatarPreview);
+
+function initSwatches(containerId, onSelect) {
+    document.getElementById(containerId).querySelectorAll('.color-swatch').forEach(sw => {
+        sw.addEventListener('click', () => {
+            document.getElementById(containerId).querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+            sw.classList.add('active');
+            onSelect(sw.dataset.color);
+        });
+    });
+}
+initSwatches('avatarColorSwatches', color => { selectedAvatarColor = color; updateAvatarPreview(); });
+initSwatches('cbColorSwatches', color => { selectedCbColor = color; });
+
+document.getElementById('cbIconGrid').querySelectorAll('.icon-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.getElementById('cbIconGrid').querySelectorAll('.icon-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedCbIcon = btn.dataset.icon;
+    });
+});
+
+function skipStep(n) { setStep(n >= 3 ? 4 : n + 1); }
+
+function waitForDb() {
+    return new Promise(resolve => {
+        const check = () => window.db ? resolve() : setTimeout(check, 50);
+        check();
+    });
+}
+
+async function saveStep1() {
+    showError(1, '');
+    const name = document.getElementById('profileName').value.trim();
+    if (!name) { showError(1, 'Please enter your full name.'); return; }
+    setBusy(1, true);
+    try {
+        await waitForDb();
+        const result = await window.db.profiles.update({ full_name: name, avatar_color: selectedAvatarColor });
+        if (!result?.success) throw new Error(result?.error || 'Failed to save profile.');
+        try { await window.supabaseClient.auth.updateUser({ data: { full_name: name, avatar_color: selectedAvatarColor } }); } catch (_) {}
+        setStep(2);
+    } catch (e) {
+        showError(1, String(e?.message || 'Something went wrong. Please try again.'));
+    } finally {
+        setBusy(1, false);
+    }
+}
+
+async function saveStep2() {
+    showError(2, '');
+    const name    = document.getElementById('receiptName').value.trim();
+    const otherId = document.getElementById('receiptOtherId').value.trim();
+    const address = document.getElementById('receiptAddress').value.trim();
+    if (!name) { showError(2, 'Please enter a display name for your receipts.'); return; }
+    setBusy(2, true);
+    try {
+        await waitForDb();
+        const result = await window.db.profiles.update({ company_name: name || null, phone: otherId || null, address: address || null });
+        if (!result?.success) throw new Error(result?.error || 'Failed to save receipt identity.');
+        setStep(3);
+    } catch (e) {
+        showError(2, String(e?.message || 'Something went wrong. Please try again.'));
+    } finally {
+        setBusy(2, false);
+    }
+}
+
+async function saveStep3() {
+    showError(3, '');
+    const name = document.getElementById('cbName').value.trim();
+    if (!name) { showError(3, 'Please enter a name for your Cash Box.'); return; }
+    setBusy(3, true);
+    try {
+        await waitForDb();
+        const result = await window.db.cashBoxes.create({ name, color: selectedCbColor, icon: selectedCbIcon, currency: 'USD' });
+        if (!result) throw new Error('Failed to create Cash Box.');
+        setStep(4);
+    } catch (e) {
+        showError(3, String(e?.message || 'Something went wrong. Please try again.'));
+    } finally {
+        setBusy(3, false);
+    }
+}
+
+// Pre-fill name from auth on load
+(async () => {
+    try {
+        await waitForDb();
+        const user = await window.auth?.getCurrentUser?.();
+        if (!user) { window.location.href = 'spendnote-login.html'; return; }
+        const name = String(user.user_metadata?.full_name || '').trim();
+        if (name) {
+            document.getElementById('profileName').value = name;
+            updateAvatarPreview();
+        }
+        // Pre-fill receipt name from profile
+        try {
+            const profile = await window.db.profiles.getCurrent();
+            if (profile?.company_name) document.getElementById('receiptName').value = profile.company_name;
+            if (profile?.phone) document.getElementById('receiptOtherId').value = profile.phone;
+            if (profile?.address) document.getElementById('receiptAddress').value = profile.address;
+            if (profile?.avatar_color) {
+                selectedAvatarColor = profile.avatar_color;
+                const match = document.querySelector(`#avatarColorSwatches .color-swatch[data-color="${profile.avatar_color}"]`);
+                if (match) {
+                    document.querySelectorAll('#avatarColorSwatches .color-swatch').forEach(s => s.classList.remove('active'));
+                    match.classList.add('active');
+                }
+                updateAvatarPreview();
+            }
+        } catch (_) {}
+    } catch (_) {}
+})();
+</script>
+</body>
+</html>

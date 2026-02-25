@@ -985,10 +985,10 @@ function togglePreviewDetails() {
 
                     // Success
                     successMessage.classList.add('show');
-                    successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Account created! Redirecting to settings...';
+                    successMessage.innerHTML = '<i class="fas fa-check-circle"></i> Account created! Redirecting...';
                     
                     setTimeout(() => {
-                        window.location.href = 'spendnote-user-settings.html';
+                        window.location.href = 'spendnote-welcome.html';
                     }, 1000);
                 } else {
                     // Error
@@ -1068,8 +1068,8 @@ function togglePreviewDetails() {
                 const sp = new URLSearchParams(window.location.search);
                 const inviteToken = sp.get('inviteToken');
                 const redirectTo = inviteToken
-                    ? `${window.location.origin}/spendnote-user-settings.html?inviteToken=${encodeURIComponent(inviteToken)}`
-                    : `${window.location.origin}/spendnote-user-settings.html`;
+                    ? `${window.location.origin}/spendnote-welcome.html?inviteToken=${encodeURIComponent(inviteToken)}`
+                    : `${window.location.origin}/spendnote-welcome.html`;
                 const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
