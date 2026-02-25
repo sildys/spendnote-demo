@@ -17,11 +17,12 @@
 
 This will create:
 - `profiles` table (extends Supabase Auth users with subscription info)
+- `orgs` table (team/workspace container)
+- `org_memberships` table (user role per org)
 - `cash_boxes` table (with receipt customization settings)
+- `cash_box_memberships` table (per-user cash box access)
 - `contacts` table
 - `transactions` table (with contact snapshots and team tracking)
-- `team_members` table (Pro feature)
-- `cash_box_access` table (Pro team feature)
 - All necessary indexes, triggers, and Row Level Security policies
 
 ### 2. Optional: Add Sample Data
@@ -45,18 +46,20 @@ WHERE table_schema = 'public';
 
 You should see:
 - profiles
+- orgs
+- org_memberships
 - cash_boxes
+- cash_box_memberships
 - contacts
 - transactions
-- cash_box_contacts
 
 ## Row Level Security (RLS)
 
 All tables have RLS enabled to ensure users can only access their own data:
 - Users can only view/edit their own profiles
-- Users can only view/edit their own cash boxes
-- Users can only view/edit their own contacts
-- Users can only view/edit their own transactions
+- Users can only access org-scoped data where they have membership
+- Owner/Admin can manage org-scoped cash boxes
+- Team access is controlled by `org_memberships` + `cash_box_memberships`
 
 ## Automatic Features
 

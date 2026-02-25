@@ -131,38 +131,46 @@ Stores all cash in/out transactions with contact snapshots.
 
 ---
 
-### 5. `team_members` (Pro Feature)
-Manages team members and their roles.
+### 5. `orgs` (Organization)
+Stores workspace/team entity.
 
 **Fields:**
 - `id` (UUID, PK)
-- `owner_id` (UUID, FK → profiles)
-- `member_id` (UUID, FK → profiles)
-- `role` (TEXT) - 'admin' or 'member'
-- `status` (TEXT) - 'active', 'pending', or 'inactive'
-- `invited_email` (TEXT)
+- `name` (TEXT)
+- `owner_user_id` (UUID, FK → profiles)
 - `created_at` (TIMESTAMP)
 - `updated_at` (TIMESTAMP)
 
-**Roles:**
-- **Owner**: Full access, can delete transactions, sees all cash boxes
-- **Admin**: Sees all cash boxes, can delete transactions
-- **Member**: Only sees assigned cash boxes, cannot delete transactions
+---
+
+### 6. `org_memberships` (User Role in Org)
+Maps users to organizations with roles.
+
+**Fields:**
+- `org_id` (UUID, FK → orgs)
+- `user_id` (UUID, FK → profiles)
+- `role` (TEXT) - 'owner', 'admin', or 'user'
+- `created_at` (TIMESTAMP)
+- `updated_at` (TIMESTAMP)
 
 ---
 
-### 6. `cash_box_access` (Pro Team Feature)
-Controls which team members can access which cash boxes.
+### 7. `cash_box_memberships` (Per-cash-box access)
+Controls which users can access which cash boxes.
 
 **Fields:**
 - `cash_box_id` (UUID, FK → cash_boxes)
 - `user_id` (UUID, FK → profiles)
-- `granted_by` (UUID, FK → profiles)
 - `created_at` (TIMESTAMP)
 
 **Access Control:**
-- Admins see all cash boxes automatically
-- Members only see cash boxes they're granted access to
+- Owner/Admin can manage access
+- User sees assigned cash boxes only
+
+---
+
+### Legacy note
+`team_members` and `cash_box_access` are deprecated legacy tables and no longer part of the canonical model.
 
 ---
 
@@ -189,9 +197,9 @@ Automatically creates profile when user signs up via Supabase Auth.
 ## Row Level Security (RLS)
 
 All tables have RLS enabled with policies ensuring:
-- Users only see their own data
-- Team members see data they have access to
-- Owners can manage team members and access
+- Users only see data in organizations where they have membership
+- Owner/Admin can manage org-scoped resources
+- Cash box-level access is controlled by `cash_box_memberships`
 
 ---
 

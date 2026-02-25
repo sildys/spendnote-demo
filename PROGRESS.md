@@ -81,7 +81,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-M7** Cash box archiválás bevezetése az `is_active` mező tényleges használatával.
 - [ ] **AUDIT-M8** Email change flow hozzáadása (`auth.updateUser()` + verify flow).
 - [ ] **AUDIT-M9** 2FA/MFA opció értékelése és roadmap döntés.
-- [ ] **AUDIT-M10** Legacy táblák (`team_members`, `cash_box_access`) deprecate + schema cleanup terv.
+- [x] **AUDIT-M10** Legacy táblák (`team_members`, `cash_box_access`) deprecate + schema cleanup terv.
 
 ### Alacsony prioritás
 
@@ -118,6 +118,19 @@ If a chat thread freezes / context is lost: in the new thread say:
 - `_redirects` frissítve 301 átirányítással:
   - `/spendnote-faq-old` -> `/spendnote-faq.html`
   - `/spendnote-faq-old.html` -> `/spendnote-faq.html`
+
+### 2026-02-25 frissítés — Legacy team/access DB cleanup (KÉSZ)
+
+- Új migráció: `supabase-migrations/027_deprecate_legacy_team_tables.sql`
+  - `cash_box_access` -> `cash_box_memberships` adatmigráció (idempotens `ON CONFLICT DO NOTHING`),
+  - legacy táblák törlése: `cash_box_access`, `team_members`.
+- `database/schema.sql` kanonikus séma tisztítva: legacy táblák/policy-k eltávolítva.
+- Dokumentáció frissítve org-alapú modellre:
+  - `database/README.md`
+  - `database/SCHEMA-DOCUMENTATION.md`
+- Kód cleanup:
+  - `assets/js/supabase-config.js` legacy `cash_box_access` törlési fallback eltávolítva.
+  - `supabase/functions/delete-account/index.ts` komment frissítve a kanonikus modellel.
 
 ### 2026-02-25 frissítés — Password reset + dropdown context + account deletion (KÉSZ)
 

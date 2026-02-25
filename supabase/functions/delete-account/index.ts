@@ -92,7 +92,7 @@ Deno.serve(async (req: Request) => {
 
     // Delete the auth user — this cascades:
     // auth.users → profiles (CASCADE) → cash_boxes, contacts, transactions,
-    // team_members, cash_box_access (all CASCADE)
+    // org_memberships, cash_box_memberships (all CASCADE)
     // transactions.created_by_user_id → SET NULL (name text preserved)
     const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(userId);
 

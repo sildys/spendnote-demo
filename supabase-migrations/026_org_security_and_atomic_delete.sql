@@ -468,7 +468,6 @@ BEGIN
 
   DELETE FROM public.transactions WHERE cash_box_id = p_cash_box_id;
   DELETE FROM public.cash_box_memberships WHERE cash_box_id = p_cash_box_id;
-  DELETE FROM public.cash_box_access WHERE cash_box_id = p_cash_box_id;
   DELETE FROM public.cash_boxes WHERE id = p_cash_box_id;
 
   RETURN QUERY SELECT true;

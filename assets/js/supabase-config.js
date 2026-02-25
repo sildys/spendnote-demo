@@ -2037,17 +2037,6 @@ var db = {
                     return { success: false, error: membershipDelete.error.message };
                 }
 
-                try {
-                    const legacyDelete = await supabaseClient
-                        .from('cash_box_access')
-                        .delete()
-                        .eq('cash_box_id', id);
-
-                    void legacyDelete;
-                } catch (_) {
-
-                }
-
                 // 3) Delete the cash box itself
                 const boxDelete = await supabaseClient
                     .from('cash_boxes')
