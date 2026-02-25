@@ -52,6 +52,7 @@ You should see:
 - cash_box_memberships
 - contacts
 - transactions
+- audit_log
 
 ## Row Level Security (RLS)
 

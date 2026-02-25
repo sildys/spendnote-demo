@@ -233,6 +233,17 @@
     }
     
     if (session && !error) {
+        // AUDIT-H1: defense-in-depth email confirmation check
+        try {
+            if (session.user && !session.user.email_confirmed_at) {
+                try { await window.supabaseClient.auth.signOut(); } catch (_) {}
+                window.location.href = '/spendnote-login.html?emailUnconfirmed=1';
+                return;
+            }
+        } catch (_) {
+            // ignore — let app continue
+        }
+
         try {
             if (window.SpendNoteOrgContext?.getSelectionState) {
                 const state = await window.SpendNoteOrgContext.getSelectionState();

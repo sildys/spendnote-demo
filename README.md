@@ -7,9 +7,24 @@ SpendNote is a **cash box + transaction + contacts** web app.
 
 This repository is meant to be deployable as a static site (e.g. Vercel).
 
-## Current status (2026-02-25 — security audit hardening shipped)
+## Current status (2026-02-25 — all high-priority audit items shipped)
 
-### Latest security audit remediation (2026-02-25)
+### Email verification + password policy + audit log (2026-02-25)
+
+- **Email verification enforce (AUDIT-H1):**
+  - `auth-guard.js` now checks `email_confirmed_at` on session; unconfirmed users are signed out and redirected to login with resend UI.
+  - Login page auto-shows resend confirmation UI when `?emailUnconfirmed=1` is present.
+- **Password strength policy (AUDIT-H2):**
+  - Shared `window.SpendNotePasswordPolicy` in `supabase-config.js` (min 8 chars, uppercase, lowercase, number/symbol).
+  - Applied consistently on signup, reset-password, and user settings password change.
+- **Audit log (AUDIT-H4):**
+  - New migration: `supabase-migrations/028_audit_log.sql`.
+  - `audit_log` table with owner-only RLS read access.
+  - `spendnote_void_transaction` and `spendnote_delete_cash_box` RPCs now write audit entries.
+  - `org_memberships` trigger logs role changes and member removals.
+  - Frontend API: `window.auditLog.getEntries(orgId)` for owner-only audit log reading.
+
+### Security audit remediation round 1 (2026-02-25)
 
 - **Org-aware RLS policies deployed (AUDIT-C1/C2/C3/C4):**
   - `cash_boxes`, `contacts`, `transactions` tables now enforce access via `org_memberships` (not just `user_id = auth.uid()`).
@@ -192,10 +207,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 
 ## Near-term execution plan (next sessions)
 
-1. **Security audit — remaining high-priority items:**
-   - **AUDIT-H1** Email verification enforce + UI feedback for unconfirmed accounts.
-   - **AUDIT-H2** Password strength validation (signup + password change) with minimum policy.
-   - **AUDIT-H4** Audit log table + event logging for critical actions (role change, member remove, cash box update, void).
+1. **Security audit — all high-priority items are now complete (C1–C4, H1–H6).**
 2. Onboarding + registration wizard specification and implementation prep.
 3. Team/org/invite model alignment (DB-TEAM-1) and role-based settings plan.
 4. Billing/subscription + Stripe prep alignment with the team/onboarding model.

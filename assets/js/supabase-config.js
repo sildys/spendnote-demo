@@ -921,6 +921,25 @@ try {
 
 }
 
+// Shared password strength policy (AUDIT-H2)
+window.SpendNotePasswordPolicy = {
+    minLength: 8,
+    rules: [
+        'At least 8 characters',
+        'At least one uppercase letter (A\u2013Z)',
+        'At least one lowercase letter (a\u2013z)',
+        'At least one number or special character'
+    ],
+    validate: function(password) {
+        var pw = String(password || '');
+        if (pw.length < 8) return { valid: false, message: 'Password must be at least 8 characters.' };
+        if (!/[a-z]/.test(pw)) return { valid: false, message: 'Password must include at least one lowercase letter.' };
+        if (!/[A-Z]/.test(pw)) return { valid: false, message: 'Password must include at least one uppercase letter.' };
+        if (!/\d/.test(pw) && !/[^a-zA-Z0-9]/.test(pw)) return { valid: false, message: 'Password must include at least one number or special character.' };
+        return { valid: true, message: '' };
+    }
+};
+
 // Auth helper functions
 var auth = {
     // Get current user
@@ -3338,7 +3357,31 @@ var db = {
     }
 };
 
+// Audit log API (AUDIT-H4) — owner-only read via RPC
+var auditLog = {
+    async getEntries(orgId, options = {}) {
+        const limit = Number(options.limit) || 50;
+        const offset = Number(options.offset) || 0;
+        try {
+            const { data, error } = await supabaseClient.rpc('spendnote_get_audit_log', {
+                p_org_id: orgId,
+                p_limit: limit,
+                p_offset: offset
+            });
+            if (error) {
+                console.error('Error fetching audit log:', error);
+                return { success: false, error: error.message, data: [] };
+            }
+            return { success: true, data: data || [] };
+        } catch (e) {
+            console.error('Audit log fetch exception:', e);
+            return { success: false, error: String(e?.message || 'Failed to fetch audit log.'), data: [] };
+        }
+    }
+};
+
 // Export for use in other files
 window.supabaseClient = supabaseClient;
 window.auth = auth;
 window.db = db;
+window.auditLog = auditLog;

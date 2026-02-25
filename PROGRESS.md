@@ -63,10 +63,10 @@ If a chat thread freezes / context is lost: in the new thread say:
 
 ### Magas prioritás
 
-- [ ] **AUDIT-H1** Email megerősítés enforce ellenőrzése és UI visszajelzés megerősítetlen accountokra.
-- [ ] **AUDIT-H2** Jelszó erősség validáció (signup + password change) minimum policy-val.
+- [x] **AUDIT-H1** Email megerősítés enforce ellenőrzése és UI visszajelzés megerősítetlen accountokra.
+- [x] **AUDIT-H2** Jelszó erősség validáció (signup + password change) minimum policy-val.
 - [x] **AUDIT-H3** Cash box törlés áthelyezése atomi szerver oldali RPC-be (kliens oldali többlépcsős delete helyett).
-- [ ] **AUDIT-H4** Audit log bevezetése kritikus eseményekre (role change, member remove, cash box update, void).
+- [x] **AUDIT-H4** Audit log bevezetése kritikus eseményekre (role change, member remove, cash box update, void).
 - [x] **AUDIT-H5** Void tranzakció role-korlát szigorítása (legalább Owner/Admin), vagy kötelező részletes naplózás.
 - [x] **AUDIT-H6** Contact CRUD konzisztencia javítása User role esetben (owner-id mismatch + RLS következmények rendezése).
 
@@ -93,13 +93,26 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-02-25 — security audit hardening + legacy cleanup lezárva)
+## Where we are now (last updated: 2026-02-25 — összes magas prioritású audit feladat lezárva)
 
-### Következő tervezett kör — Audit magas prioritású maradék (PENDING)
+### 2026-02-25 frissítés — AUDIT-H1/H2/H4 implementáció (KÉSZ)
 
-- **AUDIT-H1** Email megerősítés enforce + UI visszajelzés megerősítetlen accountokra.
-- **AUDIT-H2** Jelszó erősség validáció (signup + password change) minimum policy-val.
-- **AUDIT-H4** Audit log tábla + eseménylogika kritikus műveletekre (role change, member remove, cash box update, void).
+- **AUDIT-H1 — Email verification enforce:**
+  - `auth-guard.js`: defense-in-depth `email_confirmed_at` ellenőrzés session szinten; ha null, sign-out + redirect `/spendnote-login.html?emailUnconfirmed=1`.
+  - `spendnote-login.html`: `emailUnconfirmed=1` paramra automatikus resend UI megjelenítés + hibaüzenet.
+- **AUDIT-H2 — Jelszó erősség policy:**
+  - Közös `window.SpendNotePasswordPolicy` bevezetése `supabase-config.js`-ben (min 8 karakter, uppercase, lowercase, szám/speciális).
+  - Policy alkalmazva: `spendnote-signup.html`, `spendnote-reset-password.html`, `assets/js/user-settings.js`.
+  - Hint szöveg frissítve reset-password oldalon.
+- **AUDIT-H4 — Audit log:**
+  - Új migráció: `supabase-migrations/028_audit_log.sql`.
+  - `audit_log` tábla: org-scoped, owner-only SELECT, append-only.
+  - `spendnote_write_audit_log()` belső SECURITY DEFINER helper (nem hívható közvetlenül kliensből).
+  - `spendnote_get_audit_log()` RPC owner-only olvasásra.
+  - `spendnote_void_transaction` és `spendnote_delete_cash_box` RPC-k frissítve audit log írással.
+  - `org_memberships` trigger: role change és member remove automatikus naplózás.
+  - Frontend: `window.auditLog.getEntries(orgId)` API wrapper.
+  - Dokumentáció frissítve: `database/schema.sql`, `database/README.md`, `database/SCHEMA-DOCUMENTATION.md`.
 
 ### 2026-02-25 frissítés — Audit 2. kör security hardening (KÉSZ)
 

@@ -903,7 +903,10 @@ function togglePreviewDetails() {
                 return;
             }
 
-            if (password.length < 8) {
+            if (window.SpendNotePasswordPolicy) {
+                const pv = window.SpendNotePasswordPolicy.validate(password);
+                if (!pv.valid) { showError(pv.message); return; }
+            } else if (password.length < 8) {
                 showError('Password must be at least 8 characters');
                 return;
             }

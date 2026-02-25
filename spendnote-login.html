@@ -645,6 +645,15 @@
             } catch (_) {}
         })();
 
+        // AUDIT-H1: auto-show resend UI when redirected from auth-guard
+        try {
+            const sp1 = new URLSearchParams(window.location.search);
+            if (sp1.get('emailUnconfirmed') === '1') {
+                showError('Your email address is not yet confirmed. Please check your inbox or resend the confirmation email.');
+                if (resendWrap) resendWrap.style.display = 'block';
+            }
+        } catch (_) {}
+
         const isUnconfirmedEmailError = (msg) => {
             const s = String(msg || '').toLowerCase();
             return s.includes('email not confirmed') || (s.includes('confirm') && s.includes('email'));

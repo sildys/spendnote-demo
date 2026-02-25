@@ -472,6 +472,37 @@ CREATE INDEX IF NOT EXISTS idx_transactions_type ON public.transactions(type);
 -- `org_memberships` + `cash_box_memberships`.
 
 -- =====================================================
+-- AUDIT LOG (AUDIT-H4)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS public.audit_log (
+    id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+    org_id uuid REFERENCES public.orgs(id) ON DELETE CASCADE,
+    actor_id uuid REFERENCES auth.users(id) ON DELETE SET NULL,
+    action text NOT NULL,
+    target_type text,
+    target_id uuid,
+    meta jsonb DEFAULT '{}'::jsonb,
+    created_at timestamptz DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_audit_log_org_id ON public.audit_log(org_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_org_created ON public.audit_log(org_id, created_at DESC);
+
+ALTER TABLE public.audit_log ENABLE ROW LEVEL SECURITY;
+
+-- Owner-only read
+CREATE POLICY "audit_log_owner_select" ON public.audit_log
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM public.org_memberships m
+            WHERE m.org_id = audit_log.org_id
+              AND m.user_id = auth.uid()
+              AND lower(coalesce(m.role, '')) = 'owner'
+        )
+    );
+
+-- =====================================================
 -- FUNCTIONS AND TRIGGERS
 -- =====================================================
 

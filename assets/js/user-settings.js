@@ -991,11 +991,12 @@ const initUserSettingsPage = async () => {
         e.preventDefault();
         const pw = document.getElementById('newPassword')?.value;
         const pw2 = document.getElementById('confirmPassword')?.value;
-        // Match signup strength expectations: >=8 chars, and at least one number OR symbol
-        if (!pw || pw.length < 8) { showAlert('Password must be at least 8 characters.', { iconType: 'warning' }); return; }
-        const hasNumber = /\d/.test(pw);
-        const hasSymbol = /[^a-zA-Z0-9]/.test(pw);
-        if (!hasNumber && !hasSymbol) { showAlert('Password must include at least 1 number or symbol.', { iconType: 'warning' }); return; }
+        if (window.SpendNotePasswordPolicy) {
+            const pv = window.SpendNotePasswordPolicy.validate(pw);
+            if (!pv.valid) { showAlert(pv.message, { iconType: 'warning' }); return; }
+        } else if (!pw || pw.length < 8) {
+            showAlert('Password must be at least 8 characters.', { iconType: 'warning' }); return;
+        }
         if (pw !== pw2) { showAlert('Passwords do not match.', { iconType: 'warning' }); return; }
         try {
             const { error } = await window.supabaseClient.auth.updateUser({ password: pw });

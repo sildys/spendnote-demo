@@ -169,6 +169,25 @@ Controls which users can access which cash boxes.
 
 ---
 
+### 8. `audit_log` (Audit Trail)
+Append-only log of critical org-level events. Owner-only read access.
+
+**Fields:**
+- `id` (UUID, PK)
+- `org_id` (UUID, FK → orgs)
+- `actor_id` (UUID, FK → auth.users, SET NULL on delete)
+- `action` (TEXT) — event key, e.g. `transaction.void`, `cash_box.delete`, `member.role_change`, `member.remove`
+- `target_type` (TEXT) — entity type, e.g. `transaction`, `cash_box`, `user`
+- `target_id` (UUID) — entity id
+- `meta` (JSONB) — event-specific payload
+- `created_at` (TIMESTAMPTZ)
+
+**Access Control:**
+- Owner-only SELECT via RLS
+- No direct INSERT/UPDATE/DELETE for clients — writes via SECURITY DEFINER functions only
+
+---
+
 ### Legacy note
 `team_members` and `cash_box_access` are deprecated legacy tables and no longer part of the canonical model.
 
@@ -191,6 +210,9 @@ Automatically updates `cash_boxes.current_balance` when:
 
 ### 3. `handle_new_user()`
 Automatically creates profile when user signs up via Supabase Auth.
+
+### 4. `audit_org_membership_change()`
+Writes to `audit_log` when an `org_memberships` row is updated (role change) or deleted (member remove).
 
 ---
 
