@@ -154,7 +154,34 @@ Maps users to organizations with roles.
 
 ---
 
-### 7. `cash_box_memberships` (Per-cash-box access)
+### 7. `invites` (Team Invitations)
+Stores pending and accepted team invitations. Invite tokens are stored as plaintext (`token`) and their SHA-256 hash (`token_hash`) for lookup. The `send-invite-email` Edge Function uses the hash to validate tokens without exposing plaintext.
+
+**Fields:**
+- `id` (UUID, PK)
+- `org_id` (UUID, FK → orgs)
+- `invited_email` (TEXT) — lowercase-normalised target email
+- `role` (TEXT) — 'owner', 'admin', or 'user'
+- `status` (TEXT) — 'pending', 'active', 'accepted', 'expired', 'cancelled'
+- `token` (TEXT) — plaintext invite token (returned to caller once)
+- `token_hash` (TEXT) — SHA-256 hex of token, used for secure lookup
+- `accepted_by` (UUID, FK → profiles, SET NULL on delete)
+- `expires_at` (TIMESTAMP, nullable)
+- `created_at` (TIMESTAMP)
+
+**Access Control:**
+- Owner/Admin can SELECT, INSERT, UPDATE, DELETE invites for their org
+- Accept/auto-accept RPCs run as SECURITY DEFINER, bypassing client RLS
+
+**Related RPCs:**
+- `spendnote_create_invite` — creates or refreshes a pending invite, returns the row
+- `spendnote_accept_invite_v2` — accepts by token hash, creates `org_memberships` row
+- `spendnote_auto_accept_my_invites` — accepts all pending invites matching the auth user's email
+- `spendnote_delete_invite` — Owner/Admin hard-delete of an invite row
+
+---
+
+### 8. `cash_box_memberships` (Per-cash-box access)
 Controls which users can access which cash boxes.
 
 **Fields:**
@@ -168,7 +195,7 @@ Controls which users can access which cash boxes.
 
 ---
 
-### 8. `audit_log` (Audit Trail)
+### 9. `audit_log` (Audit Trail)
 Append-only log of critical org-level events. Owner-only read access.
 
 **Fields:**

@@ -146,6 +146,70 @@ CREATE POLICY "Owners can manage org memberships"
     );
 
 -- =====================================================
+-- INVITES TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS public.invites (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    org_id       UUID NOT NULL REFERENCES public.orgs(id) ON DELETE CASCADE,
+    invited_email TEXT NOT NULL,
+    role         TEXT NOT NULL DEFAULT 'user'
+                   CHECK (lower(role) IN ('owner', 'admin', 'user')),
+    status       TEXT NOT NULL DEFAULT 'pending'
+                   CHECK (status IN ('pending', 'active', 'accepted', 'expired', 'cancelled')),
+    token        TEXT,
+    token_hash   TEXT,
+    accepted_by  UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+    expires_at   TIMESTAMP WITH TIME ZONE,
+    created_at   TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_invites_org_id        ON public.invites (org_id);
+CREATE INDEX IF NOT EXISTS idx_invites_invited_email ON public.invites (lower(invited_email));
+CREATE INDEX IF NOT EXISTS idx_invites_token_hash    ON public.invites (token_hash);
+
+ALTER TABLE public.invites ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "invites_org_admin_select" ON public.invites
+    FOR SELECT USING (
+        EXISTS (
+            SELECT 1 FROM public.org_memberships m
+            WHERE m.org_id = invites.org_id
+              AND m.user_id = auth.uid()
+              AND lower(coalesce(m.role, '')) IN ('owner', 'admin')
+        )
+    );
+
+CREATE POLICY "invites_org_admin_insert" ON public.invites
+    FOR INSERT WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.org_memberships m
+            WHERE m.org_id = invites.org_id
+              AND m.user_id = auth.uid()
+              AND lower(coalesce(m.role, '')) IN ('owner', 'admin')
+        )
+    );
+
+CREATE POLICY "invites_org_admin_update" ON public.invites
+    FOR UPDATE USING (
+        EXISTS (
+            SELECT 1 FROM public.org_memberships m
+            WHERE m.org_id = invites.org_id
+              AND m.user_id = auth.uid()
+              AND lower(coalesce(m.role, '')) IN ('owner', 'admin')
+        )
+    );
+
+CREATE POLICY "invites_org_admin_delete" ON public.invites
+    FOR DELETE USING (
+        EXISTS (
+            SELECT 1 FROM public.org_memberships m
+            WHERE m.org_id = invites.org_id
+              AND m.user_id = auth.uid()
+              AND lower(coalesce(m.role, '')) IN ('owner', 'admin')
+        )
+    );
+
+-- =====================================================
 -- CASH BOXES TABLE
 -- =====================================================
 CREATE TABLE IF NOT EXISTS public.cash_boxes (

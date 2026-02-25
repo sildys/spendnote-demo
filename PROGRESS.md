@@ -37,7 +37,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **L3** Email delivery implementation: Resend + Edge Functions/hooks + templates
 - [x] **L4** Role-based Settings UI: Owner/Admin vs User (hide non-owned sections) — **kész** (`user-settings` + `team` oldalon role-alapú megjelenítés/tiltás).
 - [x] **L5** Access control UX: user sees only assigned cash boxes; admin can assign/revoke cash box access in UI — **kész** (`spendnote-team.html` cash box grant/revoke, user scope szűrés).
-- [ ] **DB-TEAM-1** Team/org/invite DB versioning alignment: ensure `org_memberships`/`invites`/`cash_box_memberships` tables + RLS policies + `spendnote_create_invite` RPC are all versioned in `supabase-migrations/` (not only README snippets), and align `database/schema.sql` + `database/SCHEMA-DOCUMENTATION.md` with the current org/invite model
+- [x] **DB-TEAM-1** Team/org/invite DB versioning alignment: `invites` tábla + `spendnote_create_invite` RPC + RLS policies → `supabase-migrations/030_invites_table_and_create_invite_rpc.sql`; `database/schema.sql` + `database/SCHEMA-DOCUMENTATION.md` frissítve a kanonikus modellel.
 - [x] **M1** Mobile strategy + responsive MVP completed (2026-02-18)
 - [ ] **S1** Subscription rules spec (**előfeltétel L1b-hez**): trial model (14 days and/or 20 receipts), expiry behavior, receipt/user limits, data handling on user delete (matrix)
 - [ ] **S2** Stripe prep (ready to plug in): subscription state data model + feature flags + UI placeholders + webhook handling plan
