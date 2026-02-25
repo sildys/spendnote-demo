@@ -31,53 +31,66 @@
         .nav-skip:hover { color: var(--text); }
 
         /* ── Layout ── */
-        .page-body {
-            flex: 1; display: grid;
-            grid-template-columns: 1fr 1fr;
-            max-width: 1100px; width: 100%;
-            margin: 0 auto; padding: 56px 32px;
-            gap: 64px; align-items: start;
+        .page-wrap {
+            flex: 1; width: 100%; max-width: 860px;
+            margin: 0 auto; padding: 48px 24px 60px;
         }
-        @media (max-width: 768px) {
-            .page-body { grid-template-columns: 1fr; padding: 32px 20px; gap: 40px; }
-            .right-panel { display: none; }
-        }
+        @media (max-width: 600px) { .page-wrap { padding: 28px 16px 48px; } }
 
-        /* ── Left: form ── */
         .welcome-tag {
             display: inline-flex; align-items: center; gap: 6px;
             background: #ecfdf5; color: var(--primary-dark);
             font-size: 12px; font-weight: 700; text-transform: uppercase;
             letter-spacing: 0.08em; padding: 5px 12px; border-radius: 20px;
-            border: 1px solid #a7f3d0; margin-bottom: 20px;
+            border: 1px solid #a7f3d0; margin-bottom: 16px;
         }
         .welcome-title {
-            font-size: 32px; font-weight: 900; line-height: 1.15;
-            letter-spacing: -0.5px; margin-bottom: 10px;
+            font-size: 28px; font-weight: 900; line-height: 1.15;
+            letter-spacing: -0.5px; margin-bottom: 8px;
         }
         .welcome-title span { color: var(--primary-dark); }
         .welcome-sub {
             font-size: 15px; color: var(--text-muted); line-height: 1.6;
-            margin-bottom: 36px; max-width: 400px;
+            margin-bottom: 32px;
         }
 
-        /* ── Form card ── */
-        .form-card {
-            background: #fff; border-radius: 16px;
+        /* ── Section cards ── */
+        .section-card {
+            background: #fff; border-radius: 14px;
             border: 1px solid var(--border);
-            box-shadow: 0 4px 24px rgba(15,23,42,0.07);
-            overflow: hidden;
+            box-shadow: 0 2px 16px rgba(15,23,42,0.06);
+            overflow: hidden; margin-bottom: 20px;
         }
-        .form-card-header {
-            padding: 20px 24px 16px;
-            border-bottom: 1px solid #f1f5f9;
-            background: linear-gradient(135deg, #f0fdf4, #f8fafc);
+        .section-card-header {
+            display: flex; align-items: center; gap: 14px;
+            padding: 18px 24px; border-bottom: 1px solid #f1f5f9;
+            background: #fafafa;
         }
-        .form-card-header h3 {
-            font-size: 15px; font-weight: 800; margin-bottom: 3px;
+        .section-num {
+            width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
+            background: var(--primary); color: #fff;
+            font-size: 13px; font-weight: 900;
+            display: flex; align-items: center; justify-content: center;
         }
-        .form-card-header p { font-size: 13px; color: var(--text-muted); }
-        .form-card-body { padding: 24px; }
+        .section-title { font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+        .section-desc { font-size: 13px; color: var(--text-muted); }
+        .section-body { padding: 24px; }
+
+        /* Two-col for name + color */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 540px) { .two-col { grid-template-columns: 1fr; } }
+
+        /* Receipt section: fields left, preview right */
+        .receipt-section-body {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start;
+        }
+        @media (max-width: 640px) { .receipt-section-body { grid-template-columns: 1fr; } }
+
+        /* Submit row */
+        .submit-row {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; padding-top: 8px;
+        }
 
         .form-group { margin-bottom: 20px; }
         .form-group:last-of-type { margin-bottom: 0; }
@@ -234,34 +247,34 @@
 </nav>
 
 <!-- Body -->
-<div class="page-body">
+<div class="page-wrap">
 
-    <!-- LEFT: Form -->
-    <div class="left-panel">
-        <div class="welcome-tag"><i class="fas fa-hand-wave"></i> Welcome aboard</div>
-        <h1 class="welcome-title">Let's get you<br>set up in <span>60 seconds</span></h1>
-        <p class="welcome-sub">Just two things — your name and how you want to appear on receipts. Everything else is already ready to go.</p>
+    <div class="welcome-tag"><i class="fas fa-hand-wave"></i> Welcome aboard</div>
+    <h1 class="welcome-title">Let's get you set up <span>in 60 seconds</span></h1>
+    <p class="welcome-sub">Two quick things — then your dashboard is ready to go.</p>
 
-        <div class="form-card">
-            <div class="form-card-header">
-                <h3><i class="fas fa-user-circle" style="color:var(--primary);margin-right:6px;"></i> Your details</h3>
-                <p>This info appears in the app and on your cash receipts.</p>
+    <!-- BLOCK 1: Profile -->
+    <div class="section-card">
+        <div class="section-card-header">
+            <div class="section-num">1</div>
+            <div>
+                <div class="section-title">Your Profile</div>
+                <div class="section-desc">Your name and avatar color shown in the app.</div>
             </div>
-            <div class="form-card-body">
-
-                <div class="avatar-inline">
-                    <div class="avatar-circle" id="avatarCircle"><span id="avatarInitials">?</span></div>
-                    <div class="avatar-inline-text">
-                        <strong id="avatarName">Your name</strong>
-                        Pick a color for your avatar
-                    </div>
+        </div>
+        <div class="section-body">
+            <div class="avatar-inline">
+                <div class="avatar-circle" id="avatarCircle"><span id="avatarInitials">?</span></div>
+                <div class="avatar-inline-text">
+                    <strong id="avatarName">Your name</strong>
+                    This is how you appear to teammates
                 </div>
-
+            </div>
+            <div class="two-col">
                 <div class="form-group">
-                    <label for="profileName">Your Full Name</label>
-                    <input type="text" id="profileName" placeholder="e.g. Jane Smith" autocomplete="name">
+                    <label for="profileName">Full Name</label>
+                    <input type="text" id="profileName" placeholder="Jane Smith" autocomplete="name">
                 </div>
-
                 <div class="form-group">
                     <label>Avatar Color</label>
                     <div class="color-row" id="colorRow">
@@ -275,87 +288,79 @@
                         <div class="color-dot" data-color="#64748b" style="background:#64748b;"></div>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label for="receiptName">Receipt Display Name</label>
-                    <input type="text" id="receiptName" placeholder="e.g. Acme Corp or Jane Smith">
-                    <div class="field-hint">This is the name that appears on every receipt you generate.</div>
-                </div>
-
-                <div class="form-group">
-                    <label for="receiptAddress">Address <span class="opt">(optional)</span></label>
-                    <input type="text" id="receiptAddress" placeholder="e.g. 123 Main St, New York">
-                    <div class="field-hint">Shown on receipts under your display name.</div>
-                </div>
-
-            </div>
-            <div class="error-msg" id="errMsg"></div>
-            <div class="form-footer">
-                <button class="btn-skip" onclick="window.location.href='dashboard.html'">Skip for now</button>
-                <button class="btn-primary" id="saveBtn" onclick="saveSetup()">
-                    <span class="saving-spinner" id="spin"><i class="fas fa-circle-notch fa-spin"></i></span>
-                    Go to Dashboard <i class="fas fa-arrow-right"></i>
-                </button>
             </div>
         </div>
     </div>
 
-    <!-- RIGHT: Visual -->
-    <div class="right-panel">
-        <div class="receipt-preview-label"><i class="fas fa-receipt"></i> Receipt preview</div>
-        <div class="receipt-mock">
-            <div class="receipt-mock-header">
-                <div>
-                    <div class="receipt-mock-title">Cash Receipt</div>
-                    <div style="font-size:10px;color:#666;">Proof of cash handoff</div>
-                </div>
-                <div style="text-align:right;">
-                    <div class="receipt-mock-ids">Cash Box ID: SN-001<br>Receipt ID: SN1-001<br>02/25/2026</div>
-                </div>
-            </div>
-
-            <div class="receipt-mock-highlight">
-                <div class="mock-label">From (your organization)</div>
-                <div class="mock-value" id="mockCompany" style="color:#d1d5db;font-style:italic;font-weight:400;">Your display name</div>
-                <div style="font-size:11px;color:#9ca3af;margin-top:2px;" id="mockAddress"></div>
-            </div>
-
-            <div class="receipt-mock-highlight">
-                <div class="mock-label">To (contact)</div>
-                <div class="mock-value">John Doe</div>
-                <div style="font-size:11px;color:#6b7280;margin-top:2px;">456 Oak Ave, Chicago</div>
-            </div>
-
-            <div class="receipt-mock-row">
-                <span>Office supplies</span><span>$45.00</span>
-            </div>
-            <div class="receipt-mock-row">
-                <span>Taxi fare</span><span>$23.50</span>
-            </div>
-            <div class="receipt-mock-row total">
-                <span>Total</span><span>$68.50</span>
-            </div>
-
-            <div class="receipt-mock-disclaimer">
-                Proof of cash handoff. Not a tax document.<br>
-                © SpendNote • spendnote.app
+    <!-- BLOCK 2: Receipt Identity + preview -->
+    <div class="section-card">
+        <div class="section-card-header">
+            <div class="section-num">2</div>
+            <div>
+                <div class="section-title">Receipt Identity</div>
+                <div class="section-desc">How your organization appears on every receipt.</div>
             </div>
         </div>
+        <div class="section-body receipt-section-body">
 
-        <div class="tip-list">
-            <div class="tip-item">
-                <div class="tip-icon"><i class="fas fa-box"></i></div>
-                <div class="tip-text"><strong>Cash Box ready.</strong> We've already set one up for you — start recording transactions right away.</div>
+            <!-- Fields -->
+            <div class="receipt-fields">
+                <div class="form-group">
+                    <label for="receiptName">Display Name</label>
+                    <input type="text" id="receiptName" placeholder="e.g. Acme Corp or Jane Smith">
+                    <div class="field-hint">Appears as sender on every receipt.</div>
+                </div>
+                <div class="form-group">
+                    <label for="receiptOtherId">Other ID <span class="opt">(optional)</span></label>
+                    <input type="text" id="receiptOtherId" placeholder="e.g. registration number, reference">
+                </div>
+                <div class="form-group">
+                    <label for="receiptAddress">Address <span class="opt">(optional)</span></label>
+                    <input type="text" id="receiptAddress" placeholder="e.g. 123 Main St, New York">
+                </div>
             </div>
-            <div class="tip-item">
-                <div class="tip-icon"><i class="fas fa-print"></i></div>
-                <div class="tip-text"><strong>Instant receipts.</strong> Print, PDF or email receipts for every transaction, no extra setup needed.</div>
+
+            <!-- Live preview -->
+            <div class="receipt-preview-col">
+                <div class="receipt-preview-label"><i class="fas fa-eye"></i> Live preview</div>
+                <div class="receipt-mock">
+                    <div class="receipt-mock-header">
+                        <div>
+                            <div class="receipt-mock-title">Cash Receipt</div>
+                            <div style="font-size:10px;color:#666;">Proof of cash handoff</div>
+                        </div>
+                        <div class="receipt-mock-ids">SN-001<br>SN1-001<br>02/25/2026</div>
+                    </div>
+                    <div class="receipt-mock-highlight">
+                        <div class="mock-label">From</div>
+                        <div class="mock-value" id="mockCompany" style="color:#d1d5db;font-style:italic;font-weight:400;">Your display name</div>
+                        <div style="font-size:10px;color:#9ca3af;margin-top:1px;" id="mockOtherId"></div>
+                        <div style="font-size:10px;color:#9ca3af;margin-top:1px;" id="mockAddress"></div>
+                    </div>
+                    <div class="receipt-mock-highlight">
+                        <div class="mock-label">To</div>
+                        <div class="mock-value">John Doe</div>
+                        <div style="font-size:10px;color:#6b7280;margin-top:1px;">456 Oak Ave, Chicago</div>
+                    </div>
+                    <div class="receipt-mock-row"><span>Office supplies</span><span>$45.00</span></div>
+                    <div class="receipt-mock-row"><span>Taxi fare</span><span>$23.50</span></div>
+                    <div class="receipt-mock-row total"><span>Total</span><span>$68.50</span></div>
+                    <div class="receipt-mock-disclaimer">Proof of cash handoff. Not a tax document.<br>© SpendNote • spendnote.app</div>
+                </div>
             </div>
-            <div class="tip-item">
-                <div class="tip-icon"><i class="fas fa-cog"></i></div>
-                <div class="tip-text"><strong>More settings later.</strong> Logo, colors and team members can all be configured in Settings.</div>
-            </div>
+
         </div>
+    </div>
+
+    <div class="error-msg" id="errMsg"></div>
+
+    <!-- Submit -->
+    <div class="submit-row">
+        <button class="btn-skip" onclick="window.location.href='dashboard.html'">Skip for now</button>
+        <button class="btn-primary" id="saveBtn" onclick="saveSetup()">
+            <span class="saving-spinner" id="spin"><i class="fas fa-circle-notch fa-spin"></i></span>
+            Save &amp; Go to Dashboard <i class="fas fa-arrow-right"></i>
+        </button>
     </div>
 
 </div>
@@ -372,9 +377,10 @@ function getInitials(name) {
 }
 
 function updatePreview() {
-    const name = document.getElementById('profileName').value;
-    const rName = document.getElementById('receiptName').value;
-    const addr = document.getElementById('receiptAddress').value;
+    const name    = document.getElementById('profileName').value;
+    const rName   = document.getElementById('receiptName').value;
+    const otherId = document.getElementById('receiptOtherId').value;
+    const addr    = document.getElementById('receiptAddress').value;
 
     document.getElementById('avatarInitials').textContent = getInitials(name);
     document.getElementById('avatarName').textContent = name.trim() || 'Your name';
@@ -389,11 +395,13 @@ function updatePreview() {
         mockCompany.textContent = 'Your display name';
         mockCompany.style.cssText = 'color:#d1d5db;font-style:italic;font-weight:400;';
     }
+    document.getElementById('mockOtherId').textContent = otherId.trim();
     document.getElementById('mockAddress').textContent = addr.trim();
 }
 
 document.getElementById('profileName').addEventListener('input', updatePreview);
 document.getElementById('receiptName').addEventListener('input', updatePreview);
+document.getElementById('receiptOtherId').addEventListener('input', updatePreview);
 document.getElementById('receiptAddress').addEventListener('input', updatePreview);
 
 document.getElementById('colorRow').querySelectorAll('.color-dot').forEach(dot => {
