@@ -24,6 +24,11 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - `org_memberships` trigger logs role changes and member removals.
   - Frontend API: `window.auditLog.getEntries(orgId)` for owner-only audit log reading.
 
+### Dead code cleanup (2026-02-25)
+
+- **M2/M3 rejected by design:** Transaction edit/delete not supported — only void. Removed dead `transactions.delete()` method and legacy cascade delete fallback from `cashBoxes.delete()`.
+- **M7 rejected:** Cash box archiving will not be implemented. Dropped `is_active` column from DB (`029_drop_is_active_and_dead_code_cleanup.sql`), schema, docs, and seed data.
+
 ### Security audit remediation round 1 (2026-02-25)
 
 - **Org-aware RLS policies deployed (AUDIT-C1/C2/C3/C4):**

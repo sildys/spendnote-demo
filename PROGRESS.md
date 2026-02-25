@@ -114,6 +114,16 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Frontend: `window.auditLog.getEntries(orgId)` API wrapper.
   - Dokumentáció frissítve: `database/schema.sql`, `database/README.md`, `database/SCHEMA-DOCUMENTATION.md`.
 
+### 2026-02-25 frissítés — Dead code cleanup: M2/M3/M7 (KÉSZ)
+
+- **M2/M3 — Tranzakció szerkesztés/törlés by design elvetve:**
+  - `transactions.delete()` halott metódus eltávolítva `supabase-config.js`-ből.
+  - Legacy cascade delete fallback eltávolítva `cashBoxes.delete()`-ből (kizárólag RPC marad).
+- **M7 — Cash box archiválás elvetve:**
+  - `is_active` oszlop eltávolítva: `database/schema.sql`, `database/SCHEMA-DOCUMENTATION.md`, `database/seed-data.sql`.
+  - Új migráció: `supabase-migrations/029_drop_is_active_and_dead_code_cleanup.sql` — oszlop droppolva live DB-ből.
+- Audit dokumentumok (`APP_AUDIT.md`, `APP_AUDIT_HU.md`) frissítve: M2/M3/M7 „by design / elvetve" státuszra.
+
 ### 2026-02-25 frissítés — Audit 2. kör security hardening (KÉSZ)
 
 **Lezárt és pushra kész változtatások (mai kör):**
