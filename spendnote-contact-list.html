@@ -1350,17 +1350,207 @@
             }
         }
 
+        function escapeCsv(value) {
+            const s = value == null ? '' : String(value);
+            const escaped = s.replace(/"/g, '""');
+            return /[\n\r",]/.test(s) ? `"${escaped}"` : escaped;
+        }
+
+        function downloadTextFile(content, filename, mime) {
+            const blob = new Blob([content], { type: mime || 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function getSelectedContactRows() {
+            const selected = [];
+            document.querySelectorAll('.row-checkbox:checked').forEach((cb) => {
+                const row = cb.closest('tr');
+                if (row) selected.push(row);
+            });
+            return selected;
+        }
+
+        function readContactRow(row) {
+            const id = String(row.querySelector('td:nth-child(2) .Contact-contact')?.textContent || '').trim();
+            const name = String(row.querySelector('td:nth-child(3) .Contact-name')?.textContent || '').trim();
+
+            const contactParts = Array.from(row.querySelectorAll('td:nth-child(4) .Contact-contact, td:nth-child(4) .Contact-address'))
+                .map((el) => String(el.textContent || '').trim())
+                .filter((v) => v && v !== '—');
+
+            let address = '';
+            let email = '';
+            contactParts.forEach((part) => {
+                if (!email && /@/.test(part)) {
+                    email = part;
+                } else if (!address) {
+                    address = part;
+                }
+            });
+
+            const cashBoxNameSet = new Set();
+            row.querySelectorAll('td:nth-child(5) [title]').forEach((el) => {
+                const t = String(el.getAttribute('title') || '').trim();
+                if (!t || t === '—') return;
+                t.split(',').map((s) => s.trim()).filter(Boolean).forEach((namePart) => cashBoxNameSet.add(namePart));
+            });
+            const cashBoxes = Array.from(cashBoxNameSet).join('; ');
+
+            const txCount = String(row.querySelector('td:nth-child(6) .Contact-contact')?.textContent || '').trim();
+            const lastTxParts = Array.from(row.querySelectorAll('td:nth-child(7) .Contact-contact')).map((el) => String(el.textContent || '').trim()).filter(Boolean);
+            const lastTxId = lastTxParts[0] || '';
+            const lastTxDate = lastTxParts[1] || '';
+
+            const href = String(row.querySelector('a.btn-view')?.href || '').trim();
+
+            return {
+                id,
+                name,
+                address,
+                email,
+                cashBoxes,
+                txCount,
+                lastTxId,
+                lastTxDate,
+                href
+            };
+        }
+
+        function exportSelectedContactsCsv() {
+            const rows = getSelectedContactRows();
+            if (!rows.length) {
+                showAlert('Select at least one contact to export.', { iconType: 'warning' });
+                return;
+            }
+
+            const header = [
+                'Contact ID',
+                'Name',
+                'Address',
+                'Email',
+                'Cash Boxes',
+                'Transactions',
+                'Last TX',
+                'Last TX Date',
+                'Detail URL'
+            ].join(',');
+
+            const lines = [header];
+            rows.forEach((row) => {
+                const r = readContactRow(row);
+                lines.push([
+                    escapeCsv(r.id),
+                    escapeCsv(r.name),
+                    escapeCsv(r.address),
+                    escapeCsv(r.email),
+                    escapeCsv(r.cashBoxes),
+                    escapeCsv(r.txCount),
+                    escapeCsv(r.lastTxId),
+                    escapeCsv(r.lastTxDate),
+                    escapeCsv(r.href)
+                ].join(','));
+            });
+
+            downloadTextFile(lines.join('\n'), 'contacts_selected.csv', 'text/csv;charset=utf-8');
+        }
+
+        function exportSelectedContactsPdf() {
+            const rows = getSelectedContactRows();
+            if (!rows.length) {
+                showAlert('Select at least one contact to export.', { iconType: 'warning' });
+                return;
+            }
+
+            const exportedAt = new Date().toLocaleString('en-US');
+            const bodyRows = rows.map((row) => {
+                const r = readContactRow(row);
+                return `<tr>
+                    <td>${escapeHtml(r.id || '—')}</td>
+                    <td>${escapeHtml(r.name || '—')}</td>
+                    <td>${escapeHtml(r.address || '—')}</td>
+                    <td>${escapeHtml(r.email || '—')}</td>
+                    <td>${escapeHtml(r.cashBoxes || '—')}</td>
+                    <td>${escapeHtml(r.txCount || '—')}</td>
+                    <td>${escapeHtml(r.lastTxId || '—')}</td>
+                    <td>${escapeHtml(r.lastTxDate || '—')}</td>
+                </tr>`;
+            }).join('');
+
+            const w = window.open('', '_blank', 'noopener,noreferrer,width=1200,height=800');
+            if (!w) {
+                showAlert('Pop-up blocked. Allow pop-ups and try PDF export again.', { iconType: 'warning' });
+                return;
+            }
+
+            w.document.open();
+            w.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Contacts Export</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 20px; color: #111827; }
+    h1 { margin: 0 0 4px; font-size: 20px; }
+    .meta { margin-bottom: 16px; color: #6b7280; font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td { border: 1px solid #d1d5db; padding: 8px; text-align: left; vertical-align: top; }
+    th { background: #f3f4f6; font-weight: 700; }
+    @media print {
+      body { margin: 10mm; }
+      h1 { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Contacts Export</h1>
+  <div class="meta">Selected contacts: ${rows.length} • Exported: ${escapeHtml(exportedAt)}</div>
+  <table>
+    <thead>
+      <tr>
+        <th>Contact ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Email</th>
+        <th>Cash Boxes</th>
+        <th>Transactions</th>
+        <th>Last TX</th>
+        <th>Last TX Date</th>
+      </tr>
+    </thead>
+    <tbody>${bodyRows}</tbody>
+  </table>
+</body>
+</html>`);
+            w.document.close();
+
+            const doPrint = () => {
+                try {
+                    w.focus();
+                    w.print();
+                } catch (_) {
+                    // ignore
+                }
+            };
+
+            if (w.document.readyState === 'complete') {
+                doPrint();
+            } else {
+                w.addEventListener('load', doPrint, { once: true });
+            }
+        }
+
         // Bulk Export CSV
-        document.getElementById('bulkExportCSV').addEventListener('click', () => {
-            const checked = document.querySelectorAll('.row-checkbox:checked').length;
-            showAlert(`Export CSV - ${checked} SELECTED CONTACTS\n\nIn production:\n- Generate CSV file with selected contact data\n- Download file: contacts_selected.csv`, { iconType: 'info' });
-        });
+        document.getElementById('bulkExportCSV').addEventListener('click', exportSelectedContactsCsv);
 
         // Bulk Export PDF
-        document.getElementById('bulkExportPDF').addEventListener('click', () => {
-            const checked = document.querySelectorAll('.row-checkbox:checked').length;
-            showAlert(`Export PDF - ${checked} SELECTED CONTACTS\n\nIn production:\n- Generate PDF report with selected contact data\n- Download file: contacts_selected.pdf`, { iconType: 'info' });
-        });
+        document.getElementById('bulkExportPDF').addEventListener('click', exportSelectedContactsPdf);
 
         // Bulk Delete
         document.getElementById('bulkDelete').addEventListener('click', async () => {
