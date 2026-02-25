@@ -1111,14 +1111,32 @@ body {
 
           const companyName = safeText(profile?.company_name || profile?.full_name || tx.cash_box_name_snapshot || tx.cash_box?.name, '—');
           const companyAddress = safeText(profile?.address, '');
+          const companyOtherId = safeText(profile?.phone, '');
 
-          setTextAll('.company-name', companyName);
-          if (companyAddress) {
-            setHtmlAll('.company-address', addressToHtml(companyAddress));
+          // IN = money received: contact is FROM (sender), company is TO (receiver)
+          // OUT = money paid: company is FROM (sender), contact is TO (receiver)
+          const isIncome = String(tx?.type || '').toLowerCase() === 'income';
+          const fromName    = isIncome ? (contactName || '—')  : companyName;
+          const fromAddress = isIncome ? contactAddress        : companyAddress;
+          const fromOtherId = isIncome ? contactOtherId        : companyOtherId;
+          const toName      = isIncome ? companyName           : (contactName || '—');
+          const toAddress   = isIncome ? companyAddress        : contactAddress;
+          const toOtherId   = isIncome ? companyOtherId        : contactOtherId;
+
+          setTextAll('.company-name', fromName);
+          if (fromAddress) {
+            setHtmlAll('.company-address', addressToHtml(fromAddress));
             document.querySelectorAll('.company-address').forEach((el) => (el.style.display = shouldShowAddresses ? '' : 'none'));
           } else {
             setHtmlAll('.company-address', '');
             document.querySelectorAll('.company-address').forEach((el) => (el.style.display = 'none'));
+          }
+          if (fromOtherId) {
+            setTextAll('.company-id', fromOtherId);
+            document.querySelectorAll('.company-id').forEach((el) => (el.style.display = ''));
+          } else {
+            setTextAll('.company-id', '');
+            document.querySelectorAll('.company-id').forEach((el) => (el.style.display = 'none'));
           }
 
           renderA4Items(tx, currency);
@@ -1143,21 +1161,17 @@ body {
           const d = formatDateShort(txDate);
           setHtmlAll('.meta', `Date: ${d || '—'}`);
 
-          setTextAll('.contact-name', contactName || '—');
-          if (contactAddress) {
-            setHtmlAll('.contact-address', addressToHtml(contactAddress));
+          setTextAll('.contact-name', toName);
+          if (toAddress) {
+            setHtmlAll('.contact-address', addressToHtml(toAddress));
             document.querySelectorAll('.contact-address').forEach((el) => (el.style.display = shouldShowAddresses ? '' : 'none'));
           } else {
             setHtmlAll('.contact-address', '');
             document.querySelectorAll('.contact-address').forEach((el) => (el.style.display = 'none'));
           }
 
-          // company-id is not a cash box id; keep hidden unless a real company identifier exists.
-          setTextAll('.company-id', '');
-          document.querySelectorAll('.company-id').forEach((el) => (el.style.display = 'none'));
-
-          if (contactOtherId) {
-            setTextAll('.contact-id', contactOtherId);
+          if (toOtherId) {
+            setTextAll('.contact-id', toOtherId);
             document.querySelectorAll('.contact-id').forEach((el) => (el.style.display = ''));
           } else {
             setTextAll('.contact-id', '');
