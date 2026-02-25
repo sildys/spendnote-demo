@@ -93,7 +93,13 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-02-25 — auth/account lifecycle hardening kör lezárva)
+## Where we are now (last updated: 2026-02-25 — security audit hardening + legacy cleanup lezárva)
+
+### Következő tervezett kör — Audit magas prioritású maradék (PENDING)
+
+- **AUDIT-H1** Email megerősítés enforce + UI visszajelzés megerősítetlen accountokra.
+- **AUDIT-H2** Jelszó erősség validáció (signup + password change) minimum policy-val.
+- **AUDIT-H4** Audit log tábla + eseménylogika kritikus műveletekre (role change, member remove, cash box update, void).
 
 ### 2026-02-25 frissítés — Audit 2. kör security hardening (KÉSZ)
 

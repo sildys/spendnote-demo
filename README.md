@@ -7,37 +7,38 @@ SpendNote is a **cash box + transaction + contacts** web app.
 
 This repository is meant to be deployable as a static site (e.g. Vercel).
 
-## Current status (2026-02-25 — auth/account lifecycle hardening shipped)
+## Current status (2026-02-25 — security audit hardening shipped)
 
-### Latest auth + account lifecycle progress (2026-02-25)
+### Latest security audit remediation (2026-02-25)
 
-- **Password reset flow is now fully operational end-to-end:**
-  - `spendnote-forgot-password.html` sends real Supabase reset emails,
-  - `spendnote-reset-password.html` handles setting the new password,
-  - login callback handling redirects recovery flows to the reset-password page,
-  - Supabase email template placeholder issue was identified/fixed (`{{ .ConfirmationURL }}`), restoring clickable reset links.
-- **User dropdown org-context reliability + UX polish shipped:**
-  - fixed early-return path so org/team context is refreshed even when identity nodes are temporarily absent,
-  - compact dropdown context layout now uses clearer visual hierarchy:
-    - user name (strong),
-    - role + team on one muted line (`Role · Team`).
-- **Account deletion feature shipped (frontend + backend + deploy):**
-  - new Edge Function: `supabase/functions/delete-account/index.ts`,
-  - new frontend API wrapper: `auth.deleteAccount()` in `assets/js/supabase-config.js`,
-  - Settings page delete flow now supports:
-    - `DELETE` confirmation,
-    - 5-second destructive countdown,
-    - role-aware warning text (Owner vs Admin/User behavior),
-    - post-delete local/session storage cleanup and redirect.
-  - transaction history created-by filter now supports deleted users via `created_by_user_name` fallback when `created_by_user_id` is null.
-- **Deployed to Supabase:**
-  - Edge Function `delete-account` deployed on project `zrnnharudlgxuvewqryj`.
+- **Org-aware RLS policies deployed (AUDIT-C1/C2/C3/C4):**
+  - `cash_boxes`, `contacts`, `transactions` tables now enforce access via `org_memberships` (not just `user_id = auth.uid()`).
+  - New migration: `supabase-migrations/026_org_security_and_atomic_delete.sql`.
+  - Canonical `database/schema.sql` updated with org tables, `org_id` columns, and org-aware policies.
+- **Atomic cash box delete RPC (AUDIT-H3):**
+  - `spendnote_delete_cash_box` replaces multi-step client-side delete with a single atomic server-side RPC.
+  - Auth check uses `org_memberships` owner/admin model.
+- **Void transaction auth hardened (AUDIT-H5):**
+  - `spendnote_void_transaction` RPC now checks `org_memberships` for owner/admin role.
+  - Frontend void button role check updated to use `orgMemberships.getMyRole()`.
+- **Contact CRUD consistency (AUDIT-H6):**
+  - Contact create/getOrCreate now sets `user_id` to the authenticated user consistently.
+  - Frontend org-scope filtering added to contacts and transactions queries.
+- **Legacy DB cleanup (AUDIT-M10):**
+  - New migration: `supabase-migrations/027_deprecate_legacy_team_tables.sql`.
+  - `cash_box_access` data migrated to `cash_box_memberships`; legacy tables (`team_members`, `cash_box_access`) dropped.
+  - `database/schema.sql`, `database/README.md`, `database/SCHEMA-DOCUMENTATION.md` updated to canonical org model.
+  - Frontend legacy `cash_box_access` cleanup code removed from `supabase-config.js`.
+  - `delete-account` Edge Function comments updated to reflect canonical tables.
+- **Legacy FAQ cleanup (AUDIT-L5):**
+  - `spendnote-faq-old.html` deleted; 301 redirects added in `_redirects`.
 
-### Recent commits (2026-02-25)
+### Previous auth + account lifecycle progress (2026-02-25)
 
-- `e6891da` - always refresh dropdown org context when nav identity nodes are absent
-- `e8393c6` - compact dropdown context design (`name + role·team`)
-- `3dfc68b` - account deletion feature set (Edge Function, countdown UX, deleted-user filter fix)
+- **Password reset flow** fully operational end-to-end.
+- **User dropdown org-context** reliability + compact UX shipped.
+- **Account deletion** feature shipped (Edge Function + frontend + deploy).
+- **Transaction history** created-by filter supports deleted users.
 
 ### Latest team/org context progress (2026-02-24)
 
@@ -191,11 +192,10 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 
 ## Near-term execution plan (next sessions)
 
-1. P0 production baseline hardening:
-   - Cloudflare minimum baseline complete on current plan,
-   - invite backend throttling complete,
-   - org context safety complete for Pro multi-org login flow (no in-app switching),
-   - optional next step: apply same backend-side throttling pattern to other edge endpoints (e.g. receipt email) where source/deploy flow is available.
+1. **Security audit — remaining high-priority items:**
+   - **AUDIT-H1** Email verification enforce + UI feedback for unconfirmed accounts.
+   - **AUDIT-H2** Password strength validation (signup + password change) with minimum policy.
+   - **AUDIT-H4** Audit log table + event logging for critical actions (role change, member remove, cash box update, void).
 2. Onboarding + registration wizard specification and implementation prep.
 3. Team/org/invite model alignment (DB-TEAM-1) and role-based settings plan.
 4. Billing/subscription + Stripe prep alignment with the team/onboarding model.
