@@ -248,7 +248,7 @@ async function updateOrgContextIndicator() {
         if (!userLabel) userLabel = roleLabel;
 
         if (dropInfo) {
-            dropInfo.innerHTML = `<span class="org-context-dropdown-user">${userLabel}</span><span class="org-context-dropdown-role">${roleLabel}</span><span class="org-context-dropdown-org">Team: ${identityLabel}</span>`;
+            dropInfo.innerHTML = `<span class="org-context-dropdown-user">${userLabel}</span><span class="org-context-dropdown-meta"><span class="org-context-dropdown-role">${roleLabel}</span> &middot; <span class="org-context-dropdown-org">${identityLabel}</span></span>`;
             dropInfo.style.display = 'flex';
         }
 
