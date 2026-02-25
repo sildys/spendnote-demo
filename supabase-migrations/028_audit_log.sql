@@ -1,6 +1,10 @@
 -- AUDIT-H4: Audit log table + event logging for critical actions
 -- Events logged: transaction.void, cash_box.delete, member.role_change, member.remove
 
+-- Pre-drop functions whose parameter names changed (CREATE OR REPLACE cannot rename params)
+DROP FUNCTION IF EXISTS public.spendnote_void_transaction(uuid, text);
+DROP FUNCTION IF EXISTS public.spendnote_delete_cash_box(uuid);
+
 BEGIN;
 
 -- 1) Create audit_log table
