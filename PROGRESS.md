@@ -95,7 +95,20 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-02-25 este — receipt FROM/TO fix + settings oldal regressziók javítva)
+## Where we are now (last updated: 2026-02-26 — Stripe S3 skeleton + server-side preview guard)
+
+### 2026-02-26 frissítés — Billing/Stripe előkészítés + guard hardening (RÉSZBEN VALIDÁLVA)
+
+- **S3 Stripe skeleton állapot (kód kész):**
+  - `create-checkout-session`, `create-portal-session`, `stripe-webhook` Edge Function implementálva és frontendről meghívva.
+  - Hiányzó lépések: production Stripe secret-ek, webhook endpoint beállítás, end-to-end live teszt.
+- **Upgrade UX flow javítás:**
+  - Lock overlay "View Plans" most `minPlan` + `feature` contextet ad át a pricing oldalnak.
+  - Pricing oldal a javasolt csomagot kiemeli (`recommended` highlight), toggle váltás után is.
+- **Server-side enforcement (Stripe előtt):**
+  - Új migráció: `supabase-migrations/032_spendnote_create_transaction_preview_server_guard.sql`.
+  - `spendnote_create_transaction` RPC-ben preview cap guard: limit felett `PREVIEW_RECEIPT_LIMIT_REACHED`.
+  - SQL manuálisan lefuttatva Supabase-ben; végső runtime validáció (célzott preview profillal) következő sessionben lezárandó.
 
 ### 2026-02-25 esti zárás — Receipt FROM/TO swap + Account Settings regresszió fix (KÉSZ)
 
