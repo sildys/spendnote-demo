@@ -442,7 +442,8 @@ const DUMMY_PROFILE = {
     full_name: '',
     address: '',
     phone: '',
-    account_logo_url: ''
+    account_logo_url: '',
+    logo_settings: null
 };
 
 async function loadLiveProfileIntoDummy() {
@@ -456,6 +457,9 @@ async function loadLiveProfileIntoDummy() {
             DUMMY_PROFILE.address = profile.address || '';
             DUMMY_PROFILE.phone = profile.phone || '';
             DUMMY_PROFILE.account_logo_url = String(profile.account_logo_url || '').trim();
+            DUMMY_PROFILE.logo_settings = (profile.logo_settings && typeof profile.logo_settings === 'object')
+                ? profile.logo_settings
+                : null;
         }
     } catch (_) {}
 }
@@ -485,6 +489,7 @@ let displayOptions = { ...QUICK_PRESET };
 const LOGO_SCALE_KEY = 'spendnote.receipt.logoScale.v1';
 const LOGO_ALIGN_KEY = 'spendnote.receipt.logoAlign.v1';
 const LOGO_POSITION_KEY = 'spendnote.receipt.logoPosition.v1';
+const PROFILE_PREVIEW_LOGO_KEY = 'spendnote.profileLogo.current';
 const LOGO_SETTINGS_MIN_SCALE = 0.5;
 const LOGO_SETTINGS_MAX_SCALE = 3.0;
 
@@ -564,7 +569,7 @@ function buildReceiptUrl(format) {
     };
     
     const params = new URLSearchParams();
-    params.append('v', 'settings-preview-10');
+    params.append('v', 'settings-preview-12');
     params.append('demo', '1');
     
     // Display options
@@ -576,6 +581,7 @@ function buildReceiptUrl(format) {
     params.append('recordedBy', '0');
 
     // Cash box logo takes priority over user settings logo
+    let usingProfileLogoFallback = false;
     try {
         const cbLogo = typeof window.getCashBoxLogo === 'function' ? window.getCashBoxLogo() : '';
         if (cbLogo) {
@@ -583,19 +589,35 @@ function buildReceiptUrl(format) {
             const tempKey = 'spendnote.cbLogo.' + cbId;
             try { localStorage.setItem(tempKey, cbLogo); } catch (_) {}
             params.delete('logo');
+            params.delete('logoUrl');
             params.append('logoKey', tempKey);
         } else {
-            try { localStorage.removeItem('spendnote.proLogoDataUrl'); } catch (_) {}
-            params.delete('logoKey');
-            params.set('logo', '0');
+            const profileLogo = String(DUMMY_PROFILE.account_logo_url || '').trim();
+            if (profileLogo) {
+                usingProfileLogoFallback = true;
+                try { localStorage.setItem(PROFILE_PREVIEW_LOGO_KEY, profileLogo); } catch (_) {}
+                params.delete('logo');
+                params.delete('logoUrl');
+                params.set('logoKey', PROFILE_PREVIEW_LOGO_KEY);
+            } else {
+                try { localStorage.removeItem(PROFILE_PREVIEW_LOGO_KEY); } catch (_) {}
+                params.delete('logoKey');
+                params.delete('logoUrl');
+                params.set('logo', '0');
+            }
         }
     } catch (e) {}
 
     try {
-        const keyId = String(currentCashBoxData?.id || '').trim();
-        const logoSettings = (typeof window.getCashBoxLogoSettings === 'function')
-            ? window.getCashBoxLogoSettings()
-            : readStoredCashBoxLogoSettings(keyId, true);
+        let logoSettings = null;
+        if (usingProfileLogoFallback) {
+            logoSettings = normalizeLogoSettings(DUMMY_PROFILE.logo_settings || null);
+        } else {
+            const keyId = String(currentCashBoxData?.id || '').trim();
+            logoSettings = (typeof window.getCashBoxLogoSettings === 'function')
+                ? window.getCashBoxLogoSettings()
+                : readStoredCashBoxLogoSettings(keyId, true);
+        }
 
         const scale = Number(logoSettings?.scale);
         if (Number.isFinite(scale) && scale > 0) {
