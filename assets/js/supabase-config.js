@@ -30,6 +30,47 @@ const __spendnoteGetResponseRequestId = (resp) => {
     }
 };
 
+const __spendnoteEnsureDefaultCashBoxForCurrentUser = async () => {
+    try {
+        const { data: { user }, error } = await supabaseClient.auth.getUser();
+        if (error || !user) return;
+        const userId = String(user?.id || '').trim();
+        if (!userId) return;
+
+        try {
+            if (typeof isUuid === 'function' && !isUuid(userId)) {
+                return;
+            }
+        } catch (_) {
+            // ignore
+        }
+
+        try {
+            const { data: existing, error: selErr } = await supabaseClient
+                .from('cash_boxes')
+                .select('id')
+                .eq('user_id', userId)
+                .limit(1);
+            if (!selErr && Array.isArray(existing) && existing.length > 0) return;
+        } catch (_) {
+            // ignore read failures
+        }
+
+        await supabaseClient
+            .from('cash_boxes')
+            .insert([{
+                user_id: userId,
+                name: 'Main Cash Box',
+                currency: 'USD',
+                color: '#059669',
+                icon: 'building',
+                current_balance: 0
+            }]);
+    } catch (_) {
+        // ignore
+    }
+};
+
 // S2: Billing state helper (Stripe-prep; no checkout/webhook calls here)
 window.SpendNoteBilling = {
     _state: null,
@@ -541,6 +582,12 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
 
     if (!token) {
         // No explicit invite token -> do not call acceptance RPCs on normal app pages.
+        try {
+            await __spendnoteEnsureProfileForCurrentUser();
+            await __spendnoteEnsureDefaultCashBoxForCurrentUser();
+        } catch (_) {
+            // ignore
+        }
         __spendnoteInviteAcceptAttemptedToken = '';
         return;
     }
