@@ -123,7 +123,7 @@ Webhook handler: new Supabase Edge Function `stripe-webhook/index.ts`
 - [x] Implement `stripe-webhook` Edge Function (skeleton)
 - [x] Wire up "Upgrade" buttons on pricing page → checkout (skeleton call)
 - [x] Wire up "Manage Subscription" in User Settings (skeleton call)
-- [ ] Connect lock overlay "View Plans" → checkout flow (optional: direct to checkout)
-- [ ] Enforce `can_create_transaction` server-side in `spendnote_create_transaction` RPC
+- [x] Connect lock overlay "View Plans" → pricing flow with plan hint (`minPlan`, `feature`) and recommended-card highlight
+- [x] Enforce `can_create_transaction` server-side in `spendnote_create_transaction` RPC (`032_spendnote_create_transaction_preview_server_guard.sql`)
 - [ ] Test full checkout → webhook → tier update → feature unlock flow (with real Stripe keys)
 - [ ] Live mode rollout + smoke test
