@@ -770,6 +770,7 @@
 
             for (let i = 1; i <= count; i++) {
                 modalLineItemCount++;
+                const currencySymbol = resolveModalCurrencySymbol(getCurrentModalCurrencyCode());
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'form-row-line-item';
                 itemDiv.style.marginBottom = '10px';
@@ -785,7 +786,7 @@
                     </div>
                     <div class="form-group">
                         <div class="input-with-prefix">
-                            <span class="input-prefix">$</span>
+                            <span class="input-prefix">${currencySymbol}</span>
                             <input 
                                 type="number" 
                                 class="form-input line-item-input line-item-amount" 
@@ -1124,6 +1125,7 @@
                         id: card.dataset.id,
                         name: card.querySelector('.register-name')?.textContent || 'Cash Box',
                         displayId,
+                        currency: String(card.dataset.currency || 'USD').toUpperCase(),
                         color: card.dataset.color || '#059669',
                         rgb: card.dataset.rgb || '5, 150, 105',
                         icon: renderedIconClass || card.dataset.icon || 'fa-cash-register'
@@ -1186,6 +1188,9 @@
             if (idInput) {
                 idInput.value = cashbox.id;
             }
+
+            applyModalCurrencyUi();
+            updateLineItemsTotal();
             
             // Update active color
             if (cashbox.color && cashbox.rgb) {
@@ -1541,6 +1546,37 @@
             return Number.isFinite(num) ? num : 0;
         }
 
+        function getCurrentModalCurrencyCode() {
+            const current = modalCashBoxes[modalCashBoxIndex];
+            const raw = String(current?.currency || 'USD').trim().toUpperCase();
+            return /^[A-Z]{3}$/.test(raw) ? raw : 'USD';
+        }
+
+        function resolveModalCurrencySymbol(currencyCode) {
+            const code = String(currencyCode || 'USD').trim().toUpperCase();
+            try {
+                const locale = code === 'HUF' ? 'hu-HU' : 'en-US';
+                const parts = new Intl.NumberFormat(locale, {
+                    style: 'currency',
+                    currency: code,
+                    currencyDisplay: 'narrowSymbol'
+                }).formatToParts(1);
+                const part = parts.find((p) => p.type === 'currency');
+                const symbol = String(part?.value || '').trim();
+                if (symbol) return symbol;
+            } catch (_) {}
+            return code === 'HUF' ? 'Ft' : code;
+        }
+
+        function applyModalCurrencyUi() {
+            const symbol = resolveModalCurrencySymbol(getCurrentModalCurrencyCode());
+            const mainPrefix = document.querySelector('#modalAmount')?.closest('.input-with-prefix')?.querySelector('.input-prefix');
+            if (mainPrefix) mainPrefix.textContent = symbol;
+            document.querySelectorAll('#modalLineItemsContainer .input-with-prefix .input-prefix, #modalLineItemsContainer .currency-symbol').forEach((el) => {
+                el.textContent = symbol;
+            });
+        }
+
         function updateLineItemsTotal() {
             const lineItemsTotal = document.getElementById('lineItemsTotal');
             const lineItemsTotalAmount = document.getElementById('lineItemsTotalAmount');
@@ -1562,11 +1598,13 @@
             }
 
             const total = baseAmount + extrasTotal;
+            const currency = getCurrentModalCurrencyCode();
+            const locale = currency === 'HUF' ? 'hu-HU' : 'en-US';
 
             lineItemsTotal.style.display = 'flex';
-            lineItemsTotalAmount.textContent = new Intl.NumberFormat('en-US', {
+            lineItemsTotalAmount.textContent = new Intl.NumberFormat(locale, {
                 style: 'currency',
-                currency: 'USD'
+                currency
             }).format(total);
         }
 
@@ -1594,9 +1632,9 @@
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=33"></script>
     <script src="assets/js/dashboard-ui.js?v=8"></script>
-    <script src="assets/js/dashboard-modal.js?v=20260219-0230"></script>
+    <script src="assets/js/dashboard-modal.js?v=20260226-2018"></script>
     <script src="assets/js/dashboard-form.js?v=20260221-2245"></script>
-    <script src="assets/js/dashboard-data.js?v=20260220-1648"></script>
+    <script src="assets/js/dashboard-data.js?v=20260226-2018"></script>
 
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>

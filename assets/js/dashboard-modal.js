@@ -18,6 +18,72 @@ let Contacts = [];
 let contactsLoaded = false;
 let contactsLoadPromise = null;
 
+const MODAL_CURRENCY_LOCALE = Object.freeze({
+    HUF: 'hu-HU',
+    EUR: 'de-DE',
+    GBP: 'en-GB',
+    USD: 'en-US'
+});
+
+function normalizeModalCurrencyCode(value) {
+    const raw = String(value || '').trim().toUpperCase();
+    return /^[A-Z]{3}$/.test(raw) ? raw : 'USD';
+}
+
+function getModalCurrencyLocale(code) {
+    return MODAL_CURRENCY_LOCALE[normalizeModalCurrencyCode(code)] || 'en-US';
+}
+
+function resolveModalCurrencySymbol(code) {
+    const currency = normalizeModalCurrencyCode(code);
+    try {
+        const parts = new Intl.NumberFormat(getModalCurrencyLocale(currency), {
+            style: 'currency',
+            currency,
+            currencyDisplay: 'narrowSymbol'
+        }).formatToParts(1);
+        const currencyPart = parts.find(function(p) { return p && p.type === 'currency'; });
+        const sym = currencyPart ? String(currencyPart.value || '').trim() : '';
+        if (sym) return sym;
+    } catch (_) {
+        // ignore
+    }
+    if (currency === 'HUF') return 'Ft';
+    return currency;
+}
+
+function getCurrentModalCurrencyCode() {
+    const active = modalCashBoxes[modalCashBoxIndex];
+    if (active && active.currency) {
+        return normalizeModalCurrencyCode(active.currency);
+    }
+
+    const idInput = getEl('modalCashBoxId');
+    const activeId = String(idInput?.value || '').trim();
+    if (activeId) {
+        const card = document.querySelector('.register-card[data-id="' + activeId + '"]');
+        const cardCurr = String(card?.dataset?.currency || '').trim();
+        if (cardCurr) return normalizeModalCurrencyCode(cardCurr);
+    }
+
+    return 'USD';
+}
+
+function applyModalCurrencyUi() {
+    const symbol = resolveModalCurrencySymbol(getCurrentModalCurrencyCode());
+
+    const mainAmountInput = getEl('modalAmount');
+    const mainPrefix = mainAmountInput
+        ? mainAmountInput.closest('.input-with-prefix')?.querySelector('.input-prefix')
+        : null;
+    if (mainPrefix) mainPrefix.textContent = symbol;
+
+    document.querySelectorAll('#modalLineItemsContainer .input-with-prefix .input-prefix, #modalLineItemsContainer .amount-input-wrapper .currency-symbol')
+        .forEach(function(el) {
+            el.textContent = symbol;
+        });
+}
+
 function formatContactDisplayId(sequenceNumber) {
     try {
         if (window.SpendNoteIds && typeof window.SpendNoteIds.formatContactDisplayId === 'function') {
@@ -168,10 +234,11 @@ function renderDetailedExtraItems(count) {
 
     for (let i = 1; i <= count; i++) {
         modalLineItemCount++;
+        const currencySymbol = resolveModalCurrencySymbol(getCurrentModalCurrencyCode());
         const div = document.createElement('div');
         div.className = 'form-row-line-item';
         div.style.marginBottom = '10px';
-        div.innerHTML = '<div class="form-group"><input type="text" class="form-input line-item-input" placeholder="Item description" autocomplete="off" data-item-index="' + modalLineItemCount + '"></div><div class="form-group"><div class="input-with-prefix"><span class="input-prefix">$</span><input type="number" class="form-input line-item-input line-item-amount" placeholder="0.00" step="0.01" min="0" data-amount-index="' + modalLineItemCount + '"></div></div>';
+        div.innerHTML = '<div class="form-group"><input type="text" class="form-input line-item-input" placeholder="Item description" autocomplete="off" data-item-index="' + modalLineItemCount + '"></div><div class="form-group"><div class="input-with-prefix"><span class="input-prefix">' + currencySymbol + '</span><input type="number" class="form-input line-item-input line-item-amount" placeholder="0.00" step="0.01" min="0" data-amount-index="' + modalLineItemCount + '"></div></div>';
         container.appendChild(div);
         div.querySelectorAll('.line-item-amount').forEach(function(input) { input.addEventListener('input', updateLineItemsTotal); });
     }
@@ -244,6 +311,7 @@ function initModalCashboxCarousel() {
             id: card.dataset.id,
             name: card.querySelector('.register-name') ? card.querySelector('.register-name').textContent : 'Cash Box',
             displayId: displayId,
+            currency: normalizeModalCurrencyCode(card.dataset.currency || 'USD'),
             color: card.dataset.color || '#059669',
             rgb: card.dataset.rgb || '5, 150, 105',
             icon: iconClass || card.dataset.icon || 'fa-cash-register'
@@ -312,6 +380,9 @@ function updateModalCashboxDisplay() {
         balanceEl.textContent = balanceText ? 'Balance: ' + balanceText : '';
     }
     if (idInput) idInput.value = cashbox.id;
+
+    applyModalCurrencyUi();
+    if (typeof updateLineItemsTotal === 'function') updateLineItemsTotal();
 
     let synced = false;
     try {
@@ -504,12 +575,14 @@ function openModal(preset) {
         if (itemsContainer) {
             itemsContainer.innerHTML = '';
             options.lineItems.forEach(function(item, idx) {
+                const currencySymbol = resolveModalCurrencySymbol(getCurrentModalCurrencyCode());
                 const row = document.createElement('div');
                 row.className = 'form-row-line-item';
-                row.innerHTML = '<div class="form-group"><input type="text" class="line-item-input" data-item-index="' + (idx + 1) + '" placeholder="Item description" value="' + (item.description || '').replace(/"/g, '&quot;') + '"></div><div class="form-group"><div class="amount-input-wrapper"><span class="currency-symbol">$</span><input type="text" class="line-item-input line-item-amount" data-amount-index="' + (idx + 1) + '" placeholder="0.00" value="' + (item.amount || '') + '"></div></div>';
+                row.innerHTML = '<div class="form-group"><input type="text" class="line-item-input" data-item-index="' + (idx + 1) + '" placeholder="Item description" value="' + (item.description || '').replace(/"/g, '&quot;') + '"></div><div class="form-group"><div class="amount-input-wrapper"><span class="currency-symbol">' + currencySymbol + '</span><input type="text" class="line-item-input line-item-amount" data-amount-index="' + (idx + 1) + '" placeholder="0.00" value="' + (item.amount || '') + '"></div></div>';
                 itemsContainer.appendChild(row);
             });
             setDetailedItemsExpanded(true);
+            applyModalCurrencyUi();
         }
     }
 
@@ -604,8 +677,10 @@ function updateLineItemsTotal() {
     }
 
     const total = baseAmount + extrasTotal;
+    const currency = getCurrentModalCurrencyCode();
+    const locale = getModalCurrencyLocale(currency);
     totalEl.style.display = 'flex';
-    amountEl.textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(total);
+    amountEl.textContent = new Intl.NumberFormat(locale, { style: 'currency', currency: currency }).format(total);
 }
 
 window.parseModalAmount = parseModalAmount;

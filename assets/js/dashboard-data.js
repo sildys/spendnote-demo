@@ -670,6 +670,7 @@ async function loadDashboardData() {
                             <div class="register-card ${isActive}" 
                                  data-id="${box.id}" 
                                  data-name="${box.name}" 
+                                 data-currency="${String(box.currency || 'USD').toUpperCase()}"
                                  data-color="${color}" 
                                   data-rgb="${rgb}"
                                  data-display-code="${displayCode}"
