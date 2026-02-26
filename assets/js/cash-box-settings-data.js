@@ -1,4 +1,4 @@
-a // Cash Box Settings Data Handler - Create/Update cash boxes
+// Cash Box Settings Data Handler - Create/Update cash boxes
 const DEBUG = window.SpendNoteDebug || false;
 let isEditMode = false;
 let currentCashBoxId = null;
