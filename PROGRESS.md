@@ -116,6 +116,9 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **Receipt preview placeholder leakage fix (KÉSZ):**
   - `spendnote-receipt-print-two-copies.html`, `spendnote-pdf-receipt.html`, `spendnote-email-receipt.html`: `demoCompany` fallback `Acme Corporation` -> `—`.
   - Eredmény: ha nincs valós cégnév/profilnév, nem jelenik meg mesterséges cégadat a FROM blokkban.
+- **Cash box settings logo toggle regresszió fix (KÉSZ):**
+  - `spendnote-cash-box-settings.html`: a preview URL építés most tiszteletben tartja a `displayOptions.logo=0` állapotot.
+  - Logo kikapcsoláskor kötelezően `logo=0` megy a receipt preview-ba, és a `logoKey` fallback nem írja felül.
 
 ## Where we are now (last updated: 2026-02-26 — Stripe S3 skeleton + server-side preview guard)
 

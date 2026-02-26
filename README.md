@@ -29,6 +29,9 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - **Receipt preview/company placeholder leakage fix (all receipt templates):**
   - Removed hardcoded `Acme Corporation` fallback for `demoCompany` in print/PDF/email templates.
   - Cash box settings preview now shows `—` when company name is missing instead of synthetic placeholder organization text.
+- **Cash box settings logo toggle fix:**
+  - `spendnote-cash-box-settings.html` preview URL builder now respects `displayOptions.logo = 0`.
+  - Disabling the Logo toggle now forces `logo=0` and blocks `logoKey` fallback re-injection, so logo is actually hidden in preview.
 
 ## Current status (2026-02-25 evening — receipt FROM/TO fix + Account Settings regression fixed)
 

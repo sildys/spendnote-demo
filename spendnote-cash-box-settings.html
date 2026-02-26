@@ -576,60 +576,70 @@ function buildReceiptUrl(format) {
     for (const [key, value] of Object.entries(displayOptions)) {
         params.append(key, value);
     }
+    const isLogoEnabled = String(displayOptions?.logo || '1') !== '0';
 
     params.append('itemsMode', receiptMode === 'quick' ? 'single' : 'full');
     params.append('recordedBy', '0');
 
     // Cash box logo takes priority over user settings logo
     let usingProfileLogoFallback = false;
-    try {
-        const cbLogo = typeof window.getCashBoxLogo === 'function' ? window.getCashBoxLogo() : '';
-        if (cbLogo) {
-            const cbId = currentCashBoxData?.id || 'temp';
-            const tempKey = 'spendnote.cbLogo.' + cbId;
-            try { localStorage.setItem(tempKey, cbLogo); } catch (_) {}
-            params.delete('logo');
-            params.delete('logoUrl');
-            params.append('logoKey', tempKey);
-        } else {
-            const profileLogo = String(DUMMY_PROFILE.account_logo_url || '').trim();
-            if (profileLogo) {
-                usingProfileLogoFallback = true;
-                try { localStorage.setItem(PROFILE_PREVIEW_LOGO_KEY, profileLogo); } catch (_) {}
+    if (!isLogoEnabled) {
+        try { localStorage.removeItem(PROFILE_PREVIEW_LOGO_KEY); } catch (_) {}
+        params.delete('logoKey');
+        params.delete('logoUrl');
+        params.set('logo', '0');
+    } else {
+        try {
+            const cbLogo = typeof window.getCashBoxLogo === 'function' ? window.getCashBoxLogo() : '';
+            if (cbLogo) {
+                const cbId = currentCashBoxData?.id || 'temp';
+                const tempKey = 'spendnote.cbLogo.' + cbId;
+                try { localStorage.setItem(tempKey, cbLogo); } catch (_) {}
                 params.delete('logo');
                 params.delete('logoUrl');
-                params.set('logoKey', PROFILE_PREVIEW_LOGO_KEY);
+                params.append('logoKey', tempKey);
             } else {
-                try { localStorage.removeItem(PROFILE_PREVIEW_LOGO_KEY); } catch (_) {}
-                params.delete('logoKey');
-                params.delete('logoUrl');
-                params.set('logo', '0');
+                const profileLogo = String(DUMMY_PROFILE.account_logo_url || '').trim();
+                if (profileLogo) {
+                    usingProfileLogoFallback = true;
+                    try { localStorage.setItem(PROFILE_PREVIEW_LOGO_KEY, profileLogo); } catch (_) {}
+                    params.delete('logo');
+                    params.delete('logoUrl');
+                    params.set('logoKey', PROFILE_PREVIEW_LOGO_KEY);
+                } else {
+                    try { localStorage.removeItem(PROFILE_PREVIEW_LOGO_KEY); } catch (_) {}
+                    params.delete('logoKey');
+                    params.delete('logoUrl');
+                    params.set('logo', '0');
+                }
             }
-        }
-    } catch (e) {}
+        } catch (e) {}
+    }
 
-    try {
-        let logoSettings = null;
-        if (usingProfileLogoFallback) {
-            logoSettings = normalizeLogoSettings(DUMMY_PROFILE.logo_settings || null);
-        } else {
-            const keyId = String(currentCashBoxData?.id || '').trim();
-            logoSettings = (typeof window.getCashBoxLogoSettings === 'function')
-                ? window.getCashBoxLogoSettings()
-                : readStoredCashBoxLogoSettings(keyId, true);
-        }
+    if (isLogoEnabled) {
+        try {
+            let logoSettings = null;
+            if (usingProfileLogoFallback) {
+                logoSettings = normalizeLogoSettings(DUMMY_PROFILE.logo_settings || null);
+            } else {
+                const keyId = String(currentCashBoxData?.id || '').trim();
+                logoSettings = (typeof window.getCashBoxLogoSettings === 'function')
+                    ? window.getCashBoxLogoSettings()
+                    : readStoredCashBoxLogoSettings(keyId, true);
+            }
 
-        const scale = Number(logoSettings?.scale);
-        if (Number.isFinite(scale) && scale > 0) {
-            params.append('logoScale', String(scale));
-        }
-        if (Number.isFinite(Number(logoSettings?.x))) {
-            params.append('logoX', String(Number(logoSettings.x)));
-        }
-        if (Number.isFinite(Number(logoSettings?.y))) {
-            params.append('logoY', String(Number(logoSettings.y)));
-        }
-    } catch (e) {}
+            const scale = Number(logoSettings?.scale);
+            if (Number.isFinite(scale) && scale > 0) {
+                params.append('logoScale', String(scale));
+            }
+            if (Number.isFinite(Number(logoSettings?.x))) {
+                params.append('logoX', String(Number(logoSettings.x)));
+            }
+            if (Number.isFinite(Number(logoSettings?.y))) {
+                params.append('logoY', String(Number(logoSettings.y)));
+            }
+        } catch (e) {}
+    }
 
     try {
         const storedAlign = String(localStorage.getItem(LOGO_ALIGN_KEY) || '').trim().toLowerCase();
