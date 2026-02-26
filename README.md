@@ -445,16 +445,16 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - [x] **L1a** Onboarding UI (core): registration success state + post-login next steps — **done** (`spendnote-welcome.html`)
 - [ ] **L2** Email pack (4 only): define copy + triggers + recipients (Welcome/Account created; Email confirmation; You’ve been invited; Invite accepted/user activated → admin)
 - [ ] **L3** Email delivery implementation: Resend + Edge Functions/hooks + templates
-- [ ] **L4** Role-based Settings UI: Owner/Admin vs User (hide non-owned sections)
-- [ ] **L5** Access control UX: user sees only assigned cash boxes; admin can assign/revoke cash box access in UI
-- [ ] **M1** Mobile strategy + responsive MVP: maximize mobile functionality; tables → cards/collapsible, off-canvas filters (decide exclusions during build)
-- [ ] **S1** Subscription rules spec: trial model (14 days and/or 20 receipts), expiry behavior, receipt/user limits, data handling on user delete (matrix)
+- [x] **L4** Role-based Settings UI: Owner/Admin vs User (hide non-owned sections) — **done** (`user-settings` + `team` role-based visibility/disable)
+- [x] **L5** Access control UX: user sees only assigned cash boxes; admin can assign/revoke cash box access in UI — **done** (`spendnote-team.html` cash box grant/revoke + user scope filtering)
+- [x] **M1** Mobile strategy + responsive MVP — **done** (bottom nav, card lists, modal bottom sheet, tx detail 2×2 grid)
+- [x] **S1** Subscription rules spec — **done** (`S1-SPEC.md`)
 - [x] **S2** Stripe prep (ready to plug in): subscription state data model + feature flags + UI placeholders + webhook handling plan — done (`031_profiles_billing_state_and_preview_tier.sql`, `SpendNoteBilling`, User Settings billing summary)
 - [x] **DEPLOY-1** Migration plan: move from Vercel/demo domain to Cloudflare on `spendnote.app` (hosting target, caching rules)
 - [x] **DEPLOY-2** Cloudflare DNS + SSL + redirects: decide canonical host (`spendnote.app` vs `www`), configure 301s and safe HSTS
 - [x] **DEPLOY-3** Supabase for new domain: update Site URL + allowed redirect URLs; test login/signup/invite flows on `spendnote.app`
 - [x] **DEPLOY-4** Cutover rehearsal + go-live checklist: staging URL, smoke tests, rollback plan
-- [ ] **S3** Stripe integration: checkout, customer portal, webhooks, live mode rollout + enforcement activation
+- [ ] **S3** Stripe integration: checkout, customer portal, webhooks, live mode rollout + enforcement activation — **skeleton in place** (`create-checkout-session`, `create-portal-session`, `stripe-webhook`), production secrets/live test pending
 - [ ] **O1** Google OAuth (later): Supabase OAuth + account linking rules + UX
 - [ ] **MKT-1** Market scan + positioning: direct/adjacent alternatives + SpendNote differentiation + keyword list
 - [ ] **MKT-2** SEO content plan: 3 landing pages (petty cash misspellings/alternatives) + “cash handoff receipt” positioning + CTA alignment to onboarding (L1/L2)
