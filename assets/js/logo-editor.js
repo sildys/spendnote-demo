@@ -22,7 +22,6 @@ const LogoEditor = (() => {
     let dragStartY = 0;
     let imgStartX = 0;
     let imgStartY = 0;
-    let snapshotTimer = null;
     let hasUserEdited = false;
 
     const clampScale = (value) => {
@@ -63,19 +62,11 @@ const LogoEditor = (() => {
         } catch (_) {}
     };
 
-    const scheduleSnapshot = () => {
-        try {
-            if (snapshotTimer) clearTimeout(snapshotTimer);
-            snapshotTimer = setTimeout(() => { renderSnapshot(); }, 160);
-        } catch (_) {}
-    };
-
     const readScale = () => currentScale;
 
     const writeScale = (value) => {
         currentScale = clampScale(value);
         persistLogoSettings();
-        scheduleSnapshot();
     };
 
     const persistLogoSettings = () => {
@@ -117,16 +108,9 @@ const LogoEditor = (() => {
             
             ctx.drawImage(image, x, y, displayW * canvasScale, displayH * canvasScale);
             const snapshotUrl = canvas.toDataURL('image/jpeg', 0.75);
-            _logoDataUrl = snapshotUrl;
-            persistLogoUrlToLocalStorage(snapshotUrl);
-            if (window.db?.profiles?.update) {
-                try {
-                    await window.db.profiles.update({ account_logo_url: snapshotUrl });
-                } catch (err) {
-                    if (window.SpendNoteDebug) console.warn('Logo snapshot DB update failed:', err);
-                }
-            }
+            return snapshotUrl;
         } catch (_) {}
+        return null;
     };
 
     const loadFromProfile = (profile) => {
@@ -150,7 +134,47 @@ const LogoEditor = (() => {
 
     const writePosition = () => {
         persistLogoSettings();
-        scheduleSnapshot();
+    };
+
+    const commitBaseline = async () => {
+        try {
+            const hasLogo = String(_logoDataUrl || image?.src || '').trim();
+            if (!hasLogo) return { success: true };
+
+            const snapshotUrl = await renderSnapshot();
+            if (!snapshotUrl) return { success: false, error: 'Could not build logo snapshot.' };
+
+            _logoDataUrl = snapshotUrl;
+            currentScale = 1.0;
+            currentX = 0;
+            currentY = 0;
+            hasUserEdited = false;
+
+            persistLogoUrlToLocalStorage(snapshotUrl);
+            persistLogoSettingsToLocalStorage();
+
+            if (image) {
+                image.src = snapshotUrl;
+            }
+            if (preview) {
+                preview.classList.add('has-logo');
+            }
+            updateInfo();
+
+            if (window.db?.profiles?.update) {
+                const result = await window.db.profiles.update({
+                    account_logo_url: snapshotUrl,
+                    logo_settings: { scale: 1, x: 0, y: 0 }
+                });
+                if (result?.success === false) {
+                    return { success: false, error: result.error || 'Failed to save logo.' };
+                }
+            }
+
+            return { success: true };
+        } catch (err) {
+            return { success: false, error: String(err?.message || err || 'Failed to save logo.') };
+        }
     };
 
     const applyTransform = () => {
@@ -248,7 +272,6 @@ const LogoEditor = (() => {
             if (image && preview) {
                 image.onload = () => {
                     updateInfo();
-                    scheduleSnapshot();
                     image.onload = null;
                 };
                 image.src = dataUrl;
@@ -335,7 +358,7 @@ const LogoEditor = (() => {
         loadLogo();
     };
 
-    return { init, loadLogo, removeLogo, uploadLogo, loadFromProfile };
+    return { init, loadLogo, removeLogo, uploadLogo, loadFromProfile, commitBaseline };
 })();
 
 // Export for manual initialization

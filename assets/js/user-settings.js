@@ -1037,6 +1037,15 @@ const initUserSettingsPage = async () => {
             showAlert('Receipt Identity is read-only for User role.', { iconType: 'info' });
             return;
         }
+
+        if (window.LogoEditor?.commitBaseline) {
+            const logoCommit = await window.LogoEditor.commitBaseline();
+            if (logoCommit && logoCommit.success === false) {
+                showAlert(logoCommit.error || 'Failed to save receipt logo.', { iconType: 'error' });
+                return;
+            }
+        }
+
         const payload = {
             company_name: document.getElementById('receiptDisplayName')?.value?.trim() || null,
             phone: document.getElementById('receiptOtherId')?.value?.trim() || null,
