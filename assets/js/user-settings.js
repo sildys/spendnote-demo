@@ -393,8 +393,15 @@ const loadProfile = async () => {
         const meta = (authUser?.user_metadata && typeof authUser.user_metadata === 'object') ? authUser.user_metadata : null;
         if (meta) {
             if (!mergedProfile) mergedProfile = {};
-            if (!Object.prototype.hasOwnProperty.call(mergedProfile, 'avatar_url') && typeof meta.avatar_url === 'string') {
-                mergedProfile.avatar_url = meta.avatar_url;
+            const metaAvatarUrl = String(meta.avatar_url || meta.picture || '').trim();
+            const profileAvatarUrl = String(mergedProfile.avatar_url || '').trim();
+            const profileLogoUrl = String(mergedProfile.account_logo_url || '').trim();
+
+            if (!profileAvatarUrl && metaAvatarUrl) {
+                mergedProfile.avatar_url = metaAvatarUrl;
+            }
+            if (!profileLogoUrl && metaAvatarUrl) {
+                mergedProfile.account_logo_url = metaAvatarUrl;
             }
             if (!Object.prototype.hasOwnProperty.call(mergedProfile, 'avatar_settings') && meta.avatar_settings && typeof meta.avatar_settings === 'object') {
                 mergedProfile.avatar_settings = meta.avatar_settings;
