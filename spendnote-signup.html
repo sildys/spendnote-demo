@@ -1064,24 +1064,46 @@ function togglePreviewDetails() {
 
         // Google sign up
         document.getElementById('googleBtn').addEventListener('click', async function() {
+            const googleBtn = document.getElementById('googleBtn');
+            const termsChecked = Boolean(document.getElementById('terms')?.checked);
+            const previewChecked = Boolean(document.getElementById('previewDisclaimer')?.checked);
+
+            if (!termsChecked || !previewChecked) {
+                showError('Please accept Terms and the preview notice before continuing with Google.');
+                return;
+            }
+
+            const originalText = googleBtn.textContent;
+            googleBtn.disabled = true;
+            googleBtn.textContent = 'Redirecting...';
+
             try {
                 const sp = new URLSearchParams(window.location.search);
                 const inviteToken = sp.get('inviteToken');
-                const redirectTo = inviteToken
-                    ? `${window.location.origin}/spendnote-welcome.html?inviteToken=${encodeURIComponent(inviteToken)}`
-                    : `${window.location.origin}/spendnote-welcome.html`;
-                const { data, error } = await window.supabaseClient.auth.signInWithOAuth({
+                const redirectUrl = new URL(`${window.location.origin}/spendnote-welcome.html`);
+                if (inviteToken) {
+                    redirectUrl.searchParams.set('inviteToken', inviteToken);
+                }
+
+                const { error } = await window.supabaseClient.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo
+                        redirectTo: redirectUrl.toString(),
+                        queryParams: {
+                            prompt: 'select_account'
+                        }
                     }
                 });
-                
+
                 if (error) {
-                    showError('Google sign up failed. Please try again.');
+                    showError(error.message || 'Google sign up failed. Please try again.');
+                    googleBtn.disabled = false;
+                    googleBtn.textContent = originalText;
                 }
             } catch (error) {
                 showError('Google sign up failed. Please try again.');
+                googleBtn.disabled = false;
+                googleBtn.textContent = originalText;
             }
         });
         }); // Close DOMContentLoaded

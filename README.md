@@ -456,7 +456,7 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
 - [x] **DEPLOY-3** Supabase for new domain: update Site URL + allowed redirect URLs; test login/signup/invite flows on `spendnote.app`
 - [x] **DEPLOY-4** Cutover rehearsal + go-live checklist: staging URL, smoke tests, rollback plan
 - [ ] **S3** Stripe integration: checkout, customer portal, webhooks, live mode rollout + enforcement activation — **skeleton in place** (`create-checkout-session`, `create-portal-session`, `stripe-webhook`), production secrets/live test pending (runtime E2E still pending)
-- [ ] **O1** Google OAuth (later): Supabase OAuth + account linking rules + UX
+- [ ] **O1** Google OAuth: signup/login UI flow wired (Google buttons + Supabase OAuth redirect), pending Supabase provider credentials + redirect whitelist + account-linking policy hardening
 - [ ] **MKT-1** Market scan + positioning: direct/adjacent alternatives + SpendNote differentiation + keyword list
 - [ ] **MKT-2** SEO content plan: 3 landing pages (petty cash misspellings/alternatives) + “cash handoff receipt” positioning + CTA alignment to onboarding (L1/L2)
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish

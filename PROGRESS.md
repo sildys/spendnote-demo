@@ -48,7 +48,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [x] **M1** Mobile redesign complete: bottom nav bar, card lists, modal bottom sheet, tx detail 2×2 grid (2026-02-18)
 - [x] **DEPLOY-4** Cutover rehearsal + go-live checklist: staging URL, smoke tests, rollback plan
 - [ ] **S3** Stripe integration: checkout, customer portal, webhooks, live mode rollout + enforcement activation — **skeleton in place** (`create-checkout-session`, `create-portal-session`, `stripe-webhook`), production secrets/live test pending
-- [ ] **O1** Google OAuth (later): Supabase OAuth + account linking rules + UX
+- [ ] **O1** Google OAuth: signup/login UI flow wired (Google buttons + Supabase OAuth redirect), pending provider credentials + redirect whitelist + account-linking policy
 - [ ] **MKT-1** Market scan + positioning: direct/adjacent alternatives + SpendNote differentiation + keyword list
 - [ ] **MKT-2** SEO content plan: 3 landing pages (petty cash misspellings/alternatives) + “cash handoff receipt” positioning + CTA alignment to onboarding (L1/L2)
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
@@ -109,6 +109,9 @@ If a chat thread freezes / context is lost: in the new thread say:
   - Új migráció: `supabase-migrations/032_spendnote_create_transaction_preview_server_guard.sql`.
   - `spendnote_create_transaction` RPC-ben preview cap guard: limit felett `PREVIEW_RECEIPT_LIMIT_REACHED`.
   - SQL manuálisan lefuttatva Supabase-ben; végső runtime validáció (célzott preview profillal) következő sessionben lezárandó.
+- **Google regisztráció flow hardening:**
+  - `spendnote-signup.html`: Google OAuth indítás előtt kötelező Terms + preview checkbox ellenőrzés.
+  - Redirect/loading állapot javítva; OAuth opciókhoz `prompt=select_account` hozzáadva.
 
 ### 2026-02-25 esti zárás — Receipt FROM/TO swap + Account Settings regresszió fix (KÉSZ)
 
