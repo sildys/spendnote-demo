@@ -111,6 +111,8 @@ If a chat thread freezes / context is lost: in the new thread say:
   - `assets/js/dashboard-modal.js`: `applyModalCurrencyUi` export `window` alá a standalone oldal számára.
   - `spendnote-new-transaction.html`: cash box váltásnál és preset line-item injektálás után explicit currency UI refresh.
   - Eredmény: fő összeg prefix, line item prefixek és total a kiválasztott cash box pénznemét követik (nem fix `$`).
+- **Stripe go-live előkészítő dokumentáció elkészült:**
+  - Új fájl: `STRIPE-GO-LIVE-CHECKLIST.md` (secret mapping, webhook eseménylista, E2E teszt script, rollout guardrail).
 
 ## Where we are now (last updated: 2026-02-26 — Stripe S3 skeleton + server-side preview guard)
 

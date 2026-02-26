@@ -24,6 +24,8 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - `assets/js/dashboard-modal.js`: `applyModalCurrencyUi` exposed on `window` for standalone mobile page reuse.
   - `spendnote-new-transaction.html`: explicit currency UI refresh runs on cash box change and after preset line-item injection.
   - Result: main amount prefix, line items, and total now follow the selected cash box currency (e.g. Ft / € / $) instead of sticking to `$`.
+- **Stripe pre-go-live checklist prepared:**
+  - Added `STRIPE-GO-LIVE-CHECKLIST.md` with secret mapping, webhook event wiring, and end-to-end billing validation script.
 
 ## Current status (2026-02-25 evening — receipt FROM/TO fix + Account Settings regression fixed)
 
