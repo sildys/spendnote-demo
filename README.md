@@ -26,6 +26,9 @@ This repository is meant to be deployable as a static site (e.g. Vercel).
   - Result: main amount prefix, line items, and total now follow the selected cash box currency (e.g. Ft / € / $) instead of sticking to `$`.
 - **Stripe pre-go-live checklist prepared:**
   - Added `STRIPE-GO-LIVE-CHECKLIST.md` with secret mapping, webhook event wiring, and end-to-end billing validation script.
+- **Receipt preview/company placeholder leakage fix (all receipt templates):**
+  - Removed hardcoded `Acme Corporation` fallback for `demoCompany` in print/PDF/email templates.
+  - Cash box settings preview now shows `—` when company name is missing instead of synthetic placeholder organization text.
 
 ## Current status (2026-02-25 evening — receipt FROM/TO fix + Account Settings regression fixed)
 
