@@ -632,7 +632,6 @@ async function updateUserNav() {
         profile?.avatar_url
         || user?.user_metadata?.avatar_url
         || user?.user_metadata?.picture
-        || profile?.account_logo_url
         || ''
     ).trim();
     const avatarColorFromDb = String(profile?.avatar_color || user?.user_metadata?.avatar_color || '').trim();
