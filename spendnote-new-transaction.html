@@ -851,6 +851,9 @@
                     row.innerHTML = '<div class="form-group"><input type="text" class="line-item-input" data-item-index="' + (idx + 1) + '" placeholder="Item description" value="' + String(item && item.description ? item.description : '').replace(/"/g, '&quot;') + '"></div><div class="form-group"><div class="amount-input-wrapper"><span class="currency-symbol">$</span><input type="text" class="line-item-input line-item-amount" data-amount-index="' + (idx + 1) + '" placeholder="0.00" value="' + String(item && item.amount ? item.amount : '') + '"></div></div>';
                     itemsContainer.appendChild(row);
                 });
+                if (typeof window.applyModalCurrencyUi === 'function') {
+                    window.applyModalCurrencyUi();
+                }
             }
             if (typeof window.setDetailedItemsExpanded === 'function') {
                 window.setDetailedItemsExpanded(true);
@@ -939,6 +942,7 @@
             card.dataset.id = cb.id;
             card.dataset.color = color;
             card.dataset.rgb = rgb;
+            card.dataset.currency = String(cb.currency || 'USD').toUpperCase();
             card.dataset.displayCode = displayCode;
             card.dataset.sequenceNumber = Number.isFinite(seq) ? String(seq) : '';
             card.dataset.icon = iconClass;
@@ -982,6 +986,13 @@
         if (idDisplayEl) idDisplayEl.textContent = cashbox.displayId || '';
         if (balanceEl) balanceEl.textContent = cashbox.balance ? 'Balance: ' + cashbox.balance : '';
         if (idInput) idInput.value = cashbox.id;
+
+        if (typeof window.applyModalCurrencyUi === 'function') {
+            window.applyModalCurrencyUi();
+        }
+        if (typeof window.updateLineItemsTotal === 'function') {
+            window.updateLineItemsTotal();
+        }
 
         // Update theme color
         document.documentElement.style.setProperty('--active', cashbox.color);
@@ -1093,6 +1104,7 @@
                     id: cb.id,
                     name: cb.name || 'Cash Box',
                     displayId: displayId,
+                    currency: String(cb.currency || 'USD').toUpperCase(),
                     color: cb.color || '#059669',
                     rgb: hexToRgb(cb.color || '#059669'),
                     icon: getIconClass(cb.icon),
