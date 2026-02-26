@@ -71,13 +71,6 @@ const LogoEditor = (() => {
 
     const persistLogoSettings = () => {
         persistLogoSettingsToLocalStorage();
-        try {
-            if (window.db?.profiles?.update) {
-                window.db.profiles.update({
-                    logo_settings: { scale: currentScale, x: currentX, y: currentY }
-                }).catch(() => {});
-            }
-        } catch (_) {}
     };
 
     const renderSnapshot = async () => {
