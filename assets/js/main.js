@@ -628,7 +628,13 @@ async function updateUserNav() {
     }
 
     const displayName = profile?.full_name || user?.user_metadata?.full_name || user?.email || 'Account';
-    const avatarUrl = String(profile?.avatar_url || user?.user_metadata?.avatar_url || '').trim();
+    const avatarUrl = String(
+        profile?.avatar_url
+        || user?.user_metadata?.avatar_url
+        || user?.user_metadata?.picture
+        || profile?.account_logo_url
+        || ''
+    ).trim();
     const avatarColorFromDb = String(profile?.avatar_color || user?.user_metadata?.avatar_color || '').trim();
     const avatarSettings = profile?.avatar_settings || user?.user_metadata?.avatar_settings || null;
 
