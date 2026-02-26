@@ -30,6 +30,8 @@ function normalizeModalCurrencyCode(value) {
     return /^[A-Z]{3}$/.test(raw) ? raw : 'USD';
 }
 
+window.applyModalCurrencyUi = applyModalCurrencyUi;
+
 function getModalCurrencyLocale(code) {
     return MODAL_CURRENCY_LOCALE[normalizeModalCurrencyCode(code)] || 'en-US';
 }
