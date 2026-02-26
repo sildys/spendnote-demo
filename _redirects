@@ -6,11 +6,10 @@
 /signup /spendnote-signup.html 200
 /pricing /spendnote-pricing.html 200
 /pricing/ /spendnote-pricing.html 200
-/faq /spendnote-faq.html 200
-/faq/ /spendnote-faq.html 200
-/spendnote-faq https://spendnote.app/faq 301
-/spendnote-faq/ https://spendnote.app/faq 301
-/spendnote-faq.html https://spendnote.app/faq 301
+/faq /spendnote-faq 301
+/faq/ /spendnote-faq 301
+/spendnote-faq /spendnote-faq.html 200
+/spendnote-faq/ /spendnote-faq.html 200
 /spendnote-faq-old /spendnote-faq.html 301
 /spendnote-faq-old.html /spendnote-faq.html 301
 /settings /spendnote-user-settings.html 200
