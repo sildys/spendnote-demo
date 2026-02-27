@@ -82,7 +82,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [x] **AUDIT-M6** ~~Receipt limit szerver oldali enforce~~ — **kész:** preview cap server-side enforce a `spendnote_create_transaction` RPC-ben (`032_spendnote_create_transaction_preview_server_guard.sql`), kliens oldali ellenőrzés továbbra is UX előellenőrzés.
 - [x] **AUDIT-M7** ~~Cash box archiválás~~ — **elvetve.** Nem lesz archiválás, cash box törölhető vagy aktív.
 - [x] **AUDIT-M8** ~~Email change flow~~ — **elvetve.** Nem szükséges; account törlés + újraregisztráció elérhető.
-- [ ] **AUDIT-M9** 2FA/MFA opció értékelése és roadmap döntés.
+- [~] **AUDIT-M9** 2FA/MFA opció értékelése és roadmap döntés — **halasztva**, lehetséges hogy később kerül rá sor.
 - [x] **AUDIT-M10** Legacy táblák (`team_members`, `cash_box_access`) deprecate + schema cleanup terv.
 
 ### Alacsony prioritás
