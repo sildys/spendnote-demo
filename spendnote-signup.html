@@ -723,6 +723,9 @@ function togglePreviewDetails() {
                 const r = await window.supabaseClient.rpc('spendnote_accept_invite_v2', { p_token: inviteToken });
                 console.warn('[signup-invite] v2 result:', JSON.stringify({ data: r?.data, error: r?.error }));
                 if (r?.error) throw r.error;
+                try {
+                    await window.auth?.sendUserEventEmail?.({ eventType: 'invite_accepted_admin', inviteToken });
+                } catch (_) {}
                 console.warn('[signup-invite] SUCCESS v2');
             } catch (e1) {
                 console.error('[signup-invite] v2 failed:', e1?.message || e1);
@@ -730,6 +733,9 @@ function togglePreviewDetails() {
                     const r2 = await window.supabaseClient.rpc('spendnote_accept_invite', { p_token: inviteToken });
                     console.warn('[signup-invite] fallback result:', JSON.stringify({ data: r2?.data, error: r2?.error }));
                     if (r2?.error) throw r2.error;
+                    try {
+                        await window.auth?.sendUserEventEmail?.({ eventType: 'invite_accepted_admin', inviteToken });
+                    } catch (_) {}
                     console.warn('[signup-invite] SUCCESS fallback');
                 } catch (e2) {
                     console.error('[signup-invite] BOTH FAILED v2:', e1?.message || e1, 'fb:', e2?.message || e2);

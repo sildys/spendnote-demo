@@ -36,12 +36,12 @@ This folder contains the 6 canonical HTML email templates:
 - **Password changed**
   - Trigger: user successfully changes password (via reset flow or settings)
   - Recipient: user email
-  - Supabase Auth handles sending automatically
+  - Sent by runtime event email Edge Function (`send-user-event-email`)
 
 ## Notes
 
 - Keep legal footer line consistent:
   - `Cash handoff documentation only. Not a tax or accounting tool.`
-  - ` SpendNote • spendnote.app`
+  - `© SpendNote • spendnote.app`
 - Keep button labels explicit and action-driven.
 - Avoid marketing claims or fake social proof in transactional emails.

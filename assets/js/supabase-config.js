@@ -262,6 +262,41 @@ window.SpendNoteBackendErrors = {
     logBackendError: __spendnoteLogBackendError
 };
 
+const __spendnoteSendUserEventEmail = async (payload = {}) => {
+    try {
+        const { data: { session }, error: sessErr } = await supabaseClient.auth.getSession();
+        if (sessErr || !session?.access_token) {
+            return { success: false, error: 'Not authenticated.' };
+        }
+
+        const resp = await fetch(`${SUPABASE_URL}/functions/v1/send-user-event-email`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`,
+                'apikey': SUPABASE_ANON_KEY
+            },
+            body: JSON.stringify(payload || {})
+        });
+
+        if (!resp.ok) {
+            const parsed = await __spendnoteParseFetchError(resp, { defaultMessage: 'Email event send failed.' });
+            __spendnoteLogBackendError('userEventEmail.send', parsed, { payload });
+            return { success: false, error: __spendnoteBuildUserMessage('Email event send failed', parsed) };
+        }
+
+        let data = null;
+        try {
+            data = await resp.json();
+        } catch (_) {
+            data = null;
+        }
+        return { success: true, data };
+    } catch (e) {
+        return { success: false, error: String(e?.message || 'Email event send failed.') };
+    }
+};
+
 window.SpendNoteStripe = {
     async _invoke(functionName, payload, defaultMessage) {
         try {
@@ -622,6 +657,11 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
             console.warn('[invite-accept] v2 result:', JSON.stringify({ data: r?.data, error: r?.error }));
         }
         if (r?.error) throw r.error;
+        try {
+            await __spendnoteSendUserEventEmail({ eventType: 'invite_accepted_admin', inviteToken: token });
+        } catch (_) {
+            // ignore email side-effect errors
+        }
         try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
         __spendnoteInviteAcceptAttemptedToken = '';
         if (__spendnoteInviteDebug) {
@@ -641,6 +681,11 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
                 console.warn('[invite-accept] fallback result:', JSON.stringify({ data: r2?.data, error: r2?.error }));
             }
             if (r2?.error) throw r2.error;
+            try {
+                await __spendnoteSendUserEventEmail({ eventType: 'invite_accepted_admin', inviteToken: token });
+            } catch (_) {
+                // ignore email side-effect errors
+            }
             try { localStorage.removeItem(__spendnoteInviteTokenKey); } catch (_) {}
             __spendnoteInviteAcceptAttemptedToken = '';
             if (__spendnoteInviteDebug) {
@@ -1232,6 +1277,13 @@ var auth = {
             auth.__userCache.ts = 0;
             auth.__userCache.promise = null;
         }
+        if (data?.session?.access_token) {
+            try {
+                await __spendnoteSendUserEventEmail({ eventType: 'welcome_account_created' });
+            } catch (_) {
+                // ignore email side-effect errors
+            }
+        }
         return { success: true, user: data.user, session: data.session || null, needsEmailConfirmation: !data.session };
     },
 
@@ -1300,7 +1352,16 @@ var auth = {
             if (window.SpendNoteDebug) console.error('Error updating password:', error);
             return { success: false, error: error.message };
         }
+        try {
+            await __spendnoteSendUserEventEmail({ eventType: 'password_changed' });
+        } catch (_) {
+            // ignore email side-effect errors
+        }
         return { success: true, data };
+    },
+
+    async sendUserEventEmail(payload = {}) {
+        return await __spendnoteSendUserEventEmail(payload);
     },
 
     async deleteAccount() {
