@@ -296,6 +296,22 @@
             opacity: 1;
         }
 
+        .illustration-crop {
+            display: inline-block;
+            overflow: hidden;
+            width: 100%;
+            max-width: 560px;
+            height: 320px;
+            border-radius: 12px;
+        }
+
+        .illustration-crop img {
+            display: block;
+            width: 140%;
+            margin-left: -18%;
+            margin-top: -6%;
+        }
+
         .seo-content {
             max-width: 750px;
             margin: 0 auto;
@@ -434,6 +450,28 @@
         .cta-box .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .related-links-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            margin: 2rem 0 0;
+        }
+
+        .related-links-box h3 {
+            margin: 0 0 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .related-links-box ul {
+            margin: 0;
+            padding-left: 1.25rem;
+        }
+
+        .related-links-box li {
+            margin-bottom: 0.4rem;
         }
 
         .site-footer {
@@ -591,6 +629,16 @@
                 padding: 2.5rem 0;
             }
 
+            .illustration-crop {
+                height: 260px;
+            }
+
+            .illustration-crop img {
+                width: 155%;
+                margin-left: -26%;
+                margin-top: -4%;
+            }
+
             .seo-content {
                 padding: 2rem var(--page-gutter);
             }
@@ -697,7 +745,7 @@ function togglePreviewDetails() {
 
     <section class="seo-hero">
         <div class="seo-hero-content">
-            <h1>Small Business Cash Receipt Tool</h1>
+            <h1>Small Business Cash Receipt Tool for Small Teams</h1>
             <p>Document every cash handoff, keep a clean transaction history, and give your team a clear paper trail — without accounting software.</p>
             <a href="spendnote-signup.html" class="hero-btn">Start for Free</a>
             <p class="hero-pricing-note">Start free. Paid plans from $19/month. No credit card required.</p>
@@ -710,12 +758,12 @@ function togglePreviewDetails() {
         <p>SpendNote is built for exactly this: a lightweight, fast tool for generating cash receipts and keeping a searchable history of every handoff. No accounting, no bookkeeping, no tax module.</p>
 
         <figure style="margin: 2rem 0; text-align: center;">
-            <div style="display:inline-block; overflow:hidden; width:100%; max-width:560px; height:320px; border-radius:12px;">
+            <div class="illustration-crop">
                 <img src="assets/images/small-business-cash-handling-illustration.svg"
                      alt="Person counting cash at a desk with a cash box — small business cash management"
                      title="Small business cash management illustration"
                      loading="lazy"
-                     style="width:140%; margin-left:-18%; margin-top:-6%;">
+                     >
             </div>
         </figure>
 
@@ -808,6 +856,15 @@ function togglePreviewDetails() {
 
         <h3>Does SpendNote work for cash in and cash out?</h3>
         <p>Yes. SpendNote records both incoming and outgoing cash transactions with separate receipt flows for each direction.</p>
+
+        <div class="related-links-box">
+            <h3>Related guides</h3>
+            <ul>
+                <li><a href="petty-cash-receipt-generator.html">Petty cash receipt generator examples</a></li>
+                <li><a href="cash-handoff-receipt.html">Cash handoff receipt format and best practices</a></li>
+                <li><a href="spendnote-faq.html">Frequently asked questions</a></li>
+            </ul>
+        </div>
 
         <p style="margin-top: 2.5rem; text-align: center;">Want to see more? Try our <a href="petty-cash-receipt-generator.html">petty cash receipt generator</a> or read about <a href="cash-handoff-receipt.html">cash handoff receipts</a>. See our <a href="spendnote-pricing.html">pricing</a> or visit the <a href="spendnote-faq.html">FAQ</a>.</p>
     </div>
