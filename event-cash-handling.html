@@ -4,34 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index, follow">
-    <meta name="description" content="Event cash handling made simple. Issue receipts at the door, track cash by booth or table, and close out every event with a complete paper trail.">
+    <meta name="description" content="Complete guide to event cash handling for festivals, stalls, and markets. Learn how to track stall floats, issue receipts, and run a secure event till.">
     <link rel="canonical" href="https://spendnote.app/event-cash-handling">
 
     <!-- Open Graph -->
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://spendnote.app/event-cash-handling">
-    <meta property="og:title" content="Event Cash Handling — Receipts & Tracking for Events | SpendNote">
-    <meta property="og:description" content="Issue receipts at the door, track cash by booth or table, and close out every event with a complete paper trail.">
+    <meta property="og:title" content="Event Cash Handling & Stall Float Management | SpendNote">
+    <meta property="og:description" content="Complete guide to event cash handling for festivals, stalls, and markets. Learn how to track stall floats, issue receipts, and run a secure event till.">
     <meta property="og:image" content="https://spendnote.app/assets/images/spendnote-transaction-history-1280.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://spendnote.app/event-cash-handling">
-    <meta property="twitter:title" content="Event Cash Handling — Receipts & Tracking for Events | SpendNote">
-    <meta property="twitter:description" content="Issue receipts at the door, track cash by booth or table, and close out every event with a complete paper trail.">
+    <meta property="twitter:title" content="Event Cash Handling & Stall Float Management | SpendNote">
+    <meta property="twitter:description" content="Complete guide to event cash handling for festivals, stalls, and markets. Learn how to track stall floats, issue receipts, and run a secure event till.">
     <meta property="twitter:image" content="https://spendnote.app/assets/images/spendnote-transaction-history-1280.jpg">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
-    <title>Event Cash Handling — Receipts & Tracking for Events | SpendNote</title>
+    <title>Event Cash Handling & Stall Float Management | SpendNote</title>
 
     <!-- Structured Data -->
     <script type="application/ld+json">
     [{
       "@context": "https://schema.org",
       "@type": "Article",
-      "headline": "Event Cash Handling — Receipts & Tracking for Events",
-      "description": "Issue receipts at the door, track cash by booth or table, and close out every event with a complete paper trail.",
+      "headline": "Event Cash Handling Guide for Teams",
+      "description": "Learn how to set up cash boxes per booth, track every transaction, and close out with a clean log.",
       "image": "https://spendnote.app/assets/images/spendnote-transaction-history-1280.jpg",
       "datePublished": "2026-02-27",
       "dateModified": "2026-02-27",
@@ -41,6 +41,18 @@
         "name": "SpendNote",
         "logo": { "@type": "ImageObject", "url": "https://spendnote.app/favicon.svg" }
       }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Handle Cash at an Event or Festival",
+      "description": "Standard operating procedure for setting up stall floats, tracking transactions, and closing out event tills securely.",
+      "step": [
+        { "@type": "HowToStep", "name": "Document the opening float", "text": "Before the event starts, count and document the starting cash for each stall, signed by the organizer and handler." },
+        { "@type": "HowToStep", "name": "Issue transaction receipts", "text": "Generate a receipt for every cash-in or cash-out during the festival." },
+        { "@type": "HowToStep", "name": "Manage mid-event handoffs", "text": "If cash moves between boxes or to a safe drop, require a signed handoff receipt." },
+        { "@type": "HowToStep", "name": "Count and close the till", "text": "At close: count physical cash, compare to the transaction total, and document any variance." }
+      ]
     },
     {
       "@context": "https://schema.org",
@@ -141,6 +153,24 @@
             font-size: 1rem; flex-shrink: 0; margin-top: 2px;
         }
 
+        .step-list { list-style: none; padding: 0; margin: 1.5rem 0; counter-reset: steps; }
+        .step-list li {
+            counter-increment: steps;
+            display: flex; gap: 1rem; align-items: flex-start;
+            padding: 1rem 1.25rem; margin-bottom: 0.75rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+        .step-list li::before {
+            content: counter(steps);
+            min-width: 28px; height: 28px;
+            background: var(--primary); color: white;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 0.875rem; font-weight: 800; flex-shrink: 0;
+        }
+        .step-list li span { font-size: 1rem; line-height: 1.6; color: var(--text-muted); padding-top: 2px; }
+        .step-list li strong { color: var(--text); }
+
         .receipt-showcase { margin: 2rem 0 2.25rem; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
         .receipt-showcase img { display: block; width: 100%; max-width: 520px; max-height: 340px; object-fit: cover; object-position: top; margin: 0 auto; border-radius: 12px; border: 1px solid rgba(15,23,42,0.12); box-shadow: 0 8px 24px rgba(15,23,42,0.1); }
         .receipt-showcase figcaption { margin-top: 0.75rem; text-align: center; font-size: 0.9rem; color: var(--text-muted); }
@@ -206,16 +236,17 @@
     <section class="seo-hero">
         <div class="seo-hero-content">
             <h1>Event Cash Handling</h1>
-            <p>Issue receipts at the door, track cash across every booth and table, and close out every event with a clean paper trail. Built for teams who handle cash at events.</p>
-            <a href="spendnote-signup.html" class="hero-btn">Start Tracking Event Cash</a>
+            <p>Run secure cash points at festivals, markets, and events. Issue receipts from any phone, track stall floats, and close out with a perfect audit trail.</p>
+            <p style="font-size: 0.9375rem; opacity: 0.9; margin-bottom: 1.5rem; color: white;">No shared spreadsheets. No lost paper logs.<br>Real-time visibility into every event till.</p>
+            <a href="spendnote-signup.html" class="hero-btn">Start Tracking Event Cash Free</a>
             <p class="hero-pricing-note">Free to start. Paid plans from $19/month. No credit card required.</p>
         </div>
     </section>
 
     <div class="seo-content">
 
-        <h2>Who Needs Event Cash Handling?</h2>
-        <p>Any event that takes cash needs a system. The difference between a smooth close and a missing-money argument is documentation — a receipt for every transaction, every time.</p>
+        <h2>Why Event Cash Handling Breaks Down</h2>
+        <p>Festivals, markets, and temporary events are chaotic. Cash moves fast, volunteers swap shifts, and the environment isn't controlled. When things go wrong, it's usually because of these three vulnerabilities in the event till:</p>
 
         <div class="event-type-grid">
             <div class="event-type-card">
@@ -251,28 +282,26 @@
         <h2>Event Cash Handling Checklist</h2>
         <p>Use this checklist for every event that handles cash:</p>
 
-        <ul class="checklist">
-            <li>Assign a named person to each cash box or booth — they're responsible for that float</li>
-            <li>Document the opening float before the event starts — signed by both the organizer and the handler</li>
-            <li>Issue a receipt for every cash transaction during the event</li>
-            <li>Keep cash boxes locked when not in active use</li>
-            <li>Never allow cash to move between boxes without a handoff receipt</li>
-            <li>Count cash at mid-event if the event runs more than 4 hours</li>
-            <li>At close: count physical cash, compare to transaction total, document any variance</li>
-            <li>Sign a closing handoff receipt when cash is transferred to the event organizer or bank bag</li>
+        <ul class="step-list">
+            <li><span><strong>Document the opening float.</strong> Before the event starts, count the starting cash — signed by both the organizer and the handler.</span></li>
+            <li><span><strong>Issue a receipt for every transaction.</strong> Every payment in or out needs a digital or physical record.</span></li>
+            <li><span><strong>Lock boxes when idle.</strong> Keep festival cash boxes closed and secured when not actively handling a transaction.</span></li>
+            <li><span><strong>Require handoff receipts.</strong> Never allow cash to move between stalls or to a manager without a signed transfer receipt.</span></li>
+            <li><span><strong>Perform mid-event drops.</strong> If a stall float gets too high, transfer excess cash to a safe with a documented drop.</span></li>
+            <li><span><strong>Count and close.</strong> At close: count physical cash, compare to the transaction log, document variance, and sign the closing handoff.</span></li>
         </ul>
 
         <figure class="receipt-showcase">
             <img src="assets/images/spendnote-transaction-history-1280.jpg"
-                 alt="SpendNote transaction history — full cash log for event reconciliation"
+                 alt="SpendNote transaction history — real-time cash log for festival stalls and event till management"
                  loading="lazy" width="520" height="340">
-            <figcaption>SpendNote transaction history: every cash movement logged, filterable by booth, date, and amount.</figcaption>
+            <figcaption>SpendNote transaction history: track every stall float in real-time, filterable by booth, date, and amount.</figcaption>
         </figure>
 
         <div class="cta-box">
             <h3>Receipts for Every Event Transaction</h3>
-            <p>Set up a cash box per booth in minutes. Your team issues receipts from any device. You close out with a complete log.</p>
-            <a href="spendnote-signup.html" class="btn">Try SpendNote Free</a>
+            <p>Set up a festival cash box per stall in minutes. Your team issues receipts from any phone. You close out with a complete, searchable log.</p>
+            <a href="spendnote-signup.html" class="btn">Try SpendNote Free — No Card Required</a>
         </div>
 
         <h2>How SpendNote Works for Events</h2>
