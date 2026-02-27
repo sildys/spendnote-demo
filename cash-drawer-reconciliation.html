@@ -44,6 +44,19 @@
     },
     {
       "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Reconcile a Cash Drawer",
+      "description": "The standard process to count, document, and close your cash register at the end of a shift.",
+      "step": [
+        { "@type": "HowToStep", "name": "Record opening float", "text": "Before the shift starts, count and document the cash you're starting with." },
+        { "@type": "HowToStep", "name": "Document every transaction", "text": "Every cash-in and cash-out gets a receipt during the shift." },
+        { "@type": "HowToStep", "name": "Count the physical cash", "text": "At shift end, count the till (bills and coins separately) and write down the total." },
+        { "@type": "HowToStep", "name": "Compare to expected balance", "text": "Opening float + cash in - cash out = expected closing balance." },
+        { "@type": "HowToStep", "name": "Document any discrepancy", "text": "If the count is off, record the overage or shortage." }
+      ]
+    },
+    {
+      "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
         {
@@ -214,7 +227,7 @@
     <div class="seo-content">
 
         <h2>What Is Cash Drawer Reconciliation?</h2>
-        <p>Cash drawer reconciliation is the process of comparing the actual cash in your drawer to the expected amount based on your recorded transactions. You do it at the end of every shift — or any time you hand the drawer to someone else.</p>
+        <p>Cash drawer reconciliation (often called balancing the register) is the process of comparing the actual till count in your drawer to the expected amount based on your recorded transactions. You do it at the end of every shift, or when generating your end of day cash report.</p>
 
         <p>If the numbers match: clean close. If they don't: you have a documented starting point to find out why.</p>
 
@@ -232,7 +245,7 @@
 
         <div class="use-case-box">
             <h3>Unrecorded Transactions</h3>
-            <p>The most common cause. Someone takes cash out (petty cash, change, refund) without creating a receipt. The transaction happened — it just wasn't documented.</p>
+            <p>The most common cause of an unbalanced till. Someone takes cash out (petty cash, change, vendor refund) without creating a receipt. The transaction happened — it just wasn't documented in the cash log.</p>
         </div>
 
         <div class="use-case-box">
@@ -259,7 +272,7 @@
 
         <div class="cta-box">
             <h3>Close Every Shift With a Clean Count</h3>
-            <p>SpendNote receipts every transaction as it happens. When shift end comes, your reconciliation log is already complete.</p>
+            <p>SpendNote receipts every transaction as it happens. When it's time to balance the register, your reconciliation log is already complete.</p>
             <a href="spendnote-signup.html" class="btn">Try SpendNote Free — No Card Required</a>
         </div>
 
