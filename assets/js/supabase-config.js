@@ -2820,9 +2820,7 @@ var db = {
             const txId = String(id || '').trim();
             if (!txId) return null;
             const ctx = await getMyOrgContext();
-            // #region agent log
             if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] start', { txId });
-            // #endregion
 
             if (transactionsJoinSupported) {
                 let joinedQuery = supabaseClient
@@ -2839,20 +2837,16 @@ var db = {
                 const attemptJoined = await joinedQuery.single();
 
                 if (!attemptJoined.error && attemptJoined.data) {
-                    // #region agent log
                     if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] joined success', { txId });
-                    // #endregion
                     return applyTxCashBoxSnapshot(attemptJoined.data);
                 }
 
                 if (attemptJoined.error) {
-                    // #region agent log
                     if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] joined error', {
                         txId,
                         message: attemptJoined.error?.message || null,
                         code: attemptJoined.error?.code || null
                     });
-                    // #endregion
                     const msg = String(attemptJoined.error?.message || '');
                     const detail = String(attemptJoined.error?.details || '');
                     const code = String(attemptJoined.error?.code || '');
@@ -2894,13 +2888,11 @@ var db = {
             const fallback = await fallbackQuery.single();
 
             if (fallback.error) {
-                // #region agent log
                 if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] fallback error', {
                     txId,
                     message: fallback.error?.message || null,
                     code: fallback.error?.code || null
                 });
-                // #endregion
                 console.error('Error fetching transaction:', fallback.error);
                 return null;
             }
