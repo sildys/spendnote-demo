@@ -2170,44 +2170,6 @@ table.transactions-table td,
 .table-transactions .col-action,
 .recent-transactions .col-action { width: 8% !important; }
 
-/* If there is any leftover forced scrollbar, hide it (last resort) */
-.recent-transactions,
-.recent-transactions .card,
-.recent-transactions .card-body {
-  overflow-x: hidden !important;
-}
-
-/* 2) Remove hover-only "category" labels/tags/badges on rows (not used in Spendnote) */
-.category,
-.category-tag,
-.category-badge,
-.row-category,
-.badge-category,
-.tag-category,
-.hover-category,
-[class*="categoryTag"],
-[class*="category-tag"],
-[class*="category_badge"],
-[data-category],
-[data-category-tag] {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-}
-
-/* If they are shown only on hover, ensure hover doesn't reveal anything */
-tr:hover .category,
-tr:hover .category-tag,
-tr:hover .category-badge,
-tr:hover .row-category,
-tr:hover [data-category],
-tr:hover [data-category-tag] {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-}
-
-
 /* === v24 FIXES: no horizontal scroll + proper row selection === */
 
 /* Hide any remaining tooltip UI */
@@ -2215,6 +2177,8 @@ tr:hover [data-category-tag] {
 
 /* Ensure the container never shows a horizontal scrollbar */
 .recent-transactions,
+.recent-transactions .card,
+.recent-transactions .card-body,
 .table-container,
 .table-wrap,
 .transactions-table-wrap {
