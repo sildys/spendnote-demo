@@ -50,7 +50,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **S3** Stripe integration: checkout, customer portal, webhooks, live mode rollout + enforcement activation — **skeleton in place** (`create-checkout-session`, `create-portal-session`, `stripe-webhook`), production secrets/live test pending
 - [x] **O1** Google OAuth: signup/login UI flow + provider/dashboard whitelist + account-linking policy validálva/lezárva (2026-02-26)
 - [ ] **MKT-1** Market scan + positioning: direct/adjacent alternatives + SpendNote differentiation + keyword list
-- [ ] **MKT-2** SEO content plan: 3 landing pages (petty cash misspellings/alternatives) + “cash handoff receipt” positioning + CTA alignment to onboarding (L1/L2)
+- [x] **MKT-2** SEO content plan: 3 landing pages kész — `petty-cash-receipt-generator`, `cash-handoff-receipt`, `small-business-cash-receipt` (2026-02-27); sitemap frissítve, noindex → index, IRS/adó framing eltávolítva, cash handoff pozícionálás
 - [ ] **CLEAN-1** Codebase cleanup pass: remove unused/dead code, dedupe helpers, normalize versioned assets, performance + reliability polish
 - [ ] **P3-1** Polish: Landing/FAQ/Terms refinements + edge cases + final UX consistency pass
 
