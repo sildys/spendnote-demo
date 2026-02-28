@@ -292,7 +292,11 @@ function initGoogleAnalytics() {
 
     const measurementId = 'G-QPFM30F86Q';
 
-    if (!document.querySelector('script[data-spendnote-gtag="1"]')) {
+    const existingGtagScript = document.querySelector(
+        `script[src*="googletagmanager.com/gtag/js?id=${measurementId}"]`
+    );
+
+    if (!existingGtagScript && !document.querySelector('script[data-spendnote-gtag="1"]')) {
         const s = document.createElement('script');
         s.async = true;
         s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
