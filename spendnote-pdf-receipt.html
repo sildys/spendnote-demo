@@ -415,14 +415,14 @@
       <div class="header-left">
         <div class="title">Cash Receipt</div>
         <div class="meta">
-          <span class="recorded-by">Recorded by: -</span><br>
-          <span class="receipt-date">Date: -</span>
+          <span class="recorded-by"></span><br>
+          <span class="receipt-date">Date:</span>
         </div>
       </div>
       <div class="header-right">
         <div class="identifiers">
-          <strong class="register-id">Cash Box ID:</strong> <span class="register-id">-</span><br>
-          <strong class="receipt-id-line">Receipt ID:</strong> <span class="receipt-id-line">-</span><br>
+          <strong class="register-id">Cash Box ID:</strong> <span class="register-id"></span><br>
+          <strong class="receipt-id-line">Receipt ID:</strong> <span class="receipt-id-line"></span><br>
         </div>
         <svg class="logo" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 4 C10.895 4 10 4.895 10 6 L10 38 L12 36 L14 38 L16 36 L18 38 L20 36 L22 38 L24 36 L26 38 L28 36 L30 38 L32 36 L34 38 L36 36 L38 38 L38 6 C38 4.895 37.105 4 36 4 Z" fill="url(#pdf-logo-gradient)"/>
@@ -447,13 +447,13 @@
     <div class="parties">
       <div>
         <div class="party-label">From</div>
-        <div class="party-name company-name">-</div>
+        <div class="party-name company-name"></div>
         <div class="party-info company-address from-address"></div>
         <div class="party-id company-id"></div>
       </div>
       <div>
         <div class="party-label">To</div>
-        <div class="party-name contact-name">-</div>
+        <div class="party-name contact-name"></div>
         <div class="party-info contact-address to-address"></div>
         <div class="party-id contact-id"></div>
       </div>
@@ -481,7 +481,7 @@
     <!-- TOTAL -->
     <div class="total">
       <div class="total-label">Total handed over</div>
-      <div class="total-amount">-</div>
+      <div class="total-amount"></div>
     </div>
 
     <!-- NOTES -->
@@ -1096,8 +1096,8 @@ if (urlParams.get('signatures') === '0') {
       }
 
       // Immediately clear demo placeholders so they never show up in the preview
-      setTextAll('.company-name', '-');
-      setTextAll('.contact-name', '-');
+      setTextAll('.company-name', '');
+      setTextAll('.contact-name', '');
       setHtmlAll('.company-address', '');
       setHtmlAll('.contact-address', '');
       document.querySelectorAll('.company-address, .contact-address').forEach((el) => (el.style.display = 'none'));
@@ -1106,12 +1106,12 @@ if (urlParams.get('signatures') === '0') {
 
       setTextAll('.contact-id', '');
       document.querySelectorAll('.contact-id').forEach((el) => (el.style.display = 'none'));
-      setTextAll('span.register-id', '-');
-      setTextAll('span.receipt-id-line', '-');
+      setTextAll('span.register-id', '');
+      setTextAll('span.receipt-id-line', '');
       const tbodyInit = document.querySelector('.table-section tbody');
       if (tbodyInit) tbodyInit.innerHTML = EMPTY_ROW_HTML.repeat(5);
       const totalInit = document.querySelector('.total-amount');
-      if (totalInit) totalInit.textContent = '-';
+      if (totalInit) totalInit.textContent = '';
       const notesInit = document.querySelector('.notes');
       if (notesInit) notesInit.style.display = 'none';
 
