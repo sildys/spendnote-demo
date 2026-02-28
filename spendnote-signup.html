@@ -1,4 +1,4 @@
-semmi<!DOCTYPE html>
+ï»¿semmi<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -136,7 +136,7 @@ semmi<!DOCTYPE html>
         }
 
         .preview-benefits-list li::before {
-            content: '•';
+            content: '-';
             position: absolute;
             left: 8px;
             color: #10b981;
@@ -496,7 +496,7 @@ semmi<!DOCTYPE html>
                 <ul class="preview-benefits-list">
                     <li><strong>200 transactions included</strong> (vs. standard 20 in Free plan)</li>
                     <li>Access to all currently available features</li>
-                    <li>Help shape the product with your feedback › <a href="mailto:feedback@spendnote.app" style="color: #10b981; text-decoration: underline;">feedback@spendnote.app</a></li>
+                    <li>Help shape the product with your feedback - <a href="mailto:feedback@spendnote.app" style="color: #10b981; text-decoration: underline;">feedback@spendnote.app</a></li>
                 </ul>
             </div>
             <div class="preview-benefits-section">
@@ -591,7 +591,7 @@ function togglePreviewDetails() {
                         required
                     >
                     <p style="margin-top: 6px; font-size: 0.85rem; color: var(--text-muted);">
-                        If you were invited, use the same email address. The same email cannot create a separate account — it adds access to the invited workspace.
+                        If you were invited, use the same email address. The same email cannot create a separate account - it adds access to the invited workspace.
                     </p>
                 </div>
 
@@ -1021,7 +1021,7 @@ function togglePreviewDetails() {
 
         function showExistingEmailError(email) {
             const emailSafe = String(email || '').trim();
-            errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> This email is already registered. Please log in instead. (If you received an invite for this email, ask to resend it to a different address — the same email can’t be registered twice.)';
+            errorMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> This email is already registered. Please log in instead. (If you received an invite for this email, ask to resend it to a different address - the same email can-t be registered twice.)';
             errorMessage.classList.add('show');
             successMessage.classList.remove('show');
 

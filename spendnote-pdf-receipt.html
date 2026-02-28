@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -415,14 +415,14 @@
       <div class="header-left">
         <div class="title">Cash Receipt</div>
         <div class="meta">
-          <span class="recorded-by">Recorded by: —</span><br>
-          <span class="receipt-date">Date: —</span>
+          <span class="recorded-by">Recorded by: -</span><br>
+          <span class="receipt-date">Date: -</span>
         </div>
       </div>
       <div class="header-right">
         <div class="identifiers">
-          <strong class="register-id">Cash Box ID:</strong> <span class="register-id">—</span><br>
-          <strong class="receipt-id-line">Receipt ID:</strong> <span class="receipt-id-line">—</span><br>
+          <strong class="register-id">Cash Box ID:</strong> <span class="register-id">-</span><br>
+          <strong class="receipt-id-line">Receipt ID:</strong> <span class="receipt-id-line">-</span><br>
         </div>
         <svg class="logo" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 4 C10.895 4 10 4.895 10 6 L10 38 L12 36 L14 38 L16 36 L18 38 L20 36 L22 38 L24 36 L26 38 L28 36 L30 38 L32 36 L34 38 L36 36 L38 38 L38 6 C38 4.895 37.105 4 36 4 Z" fill="url(#pdf-logo-gradient)"/>
@@ -447,13 +447,13 @@
     <div class="parties">
       <div>
         <div class="party-label">From</div>
-        <div class="party-name company-name">—</div>
+        <div class="party-name company-name">-</div>
         <div class="party-info company-address from-address"></div>
         <div class="party-id company-id"></div>
       </div>
       <div>
         <div class="party-label">To</div>
-        <div class="party-name contact-name">—</div>
+        <div class="party-name contact-name">-</div>
         <div class="party-info contact-address to-address"></div>
         <div class="party-id contact-id"></div>
       </div>
@@ -481,7 +481,7 @@
     <!-- TOTAL -->
     <div class="total">
       <div class="total-label">Total handed over</div>
-      <div class="total-amount">—</div>
+      <div class="total-amount">-</div>
     </div>
 
     <!-- NOTES -->
@@ -526,7 +526,7 @@
         <span>SpendNote</span>
       </div>
       <div class="footer-disclaimer">
-        • Proof of cash handoff. Not a tax document. • <a class="footer-link" href="https://spendnote.app/" target="_blank" rel="noopener noreferrer">https://spendnote.app/</a><img class="footer-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=64x64&margin=0&data=https%3A%2F%2Fspendnote.app%2F" alt="SpendNote QR" loading="lazy">
+        - Proof of cash handoff. Not a tax document. - <a class="footer-link" href="https://spendnote.app/" target="_blank" rel="noopener noreferrer">https://spendnote.app/</a><img class="footer-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=64x64&margin=0&data=https%3A%2F%2Fspendnote.app%2F" alt="SpendNote QR" loading="lazy">
       </div>
     </div>
 
@@ -655,7 +655,7 @@ async function downloadReceiptPdf() {
     pdf.addImage(imgData, 'PNG', x, y, renderW, renderH, undefined, 'FAST');
 
     const receiptIdRaw = String(document.querySelector('span.receipt-id-line')?.textContent || '').trim();
-    const receiptId = receiptIdRaw && receiptIdRaw !== '—' ? receiptIdRaw : '';
+    const receiptId = receiptIdRaw && receiptIdRaw !== '-' ? receiptIdRaw : '';
     const baseName = receiptId ? `SpendNote_${receiptId}` : `SpendNote_${document.title || 'receipt'}`;
     const fileName = `${toSafeFileName(baseName)}.pdf`;
     pdf.save(fileName);
@@ -830,7 +830,7 @@ if (isDemo) {
     }
   }
 
-  const demoCompany = safeText(urlParams.get('demoCompany'), '—');
+  const demoCompany = safeText(urlParams.get('demoCompany'), '-');
   const demoAddress = safeText(urlParams.get('demoAddress'), '');
   const demoCompanyId = safeText(urlParams.get('demoCompanyId'), '');
 
@@ -847,13 +847,13 @@ if (isDemo) {
   const demoAmount = Number(urlParams.get('demoAmount'));
   const demoNote = safeText(urlParams.get('demoNote'), '');
 
-  setTextAll('span.register-id', demoCashBoxId || '—');
-  setTextAll('span.receipt-id-line', demoReceiptId || '—');
+  setTextAll('span.register-id', demoCashBoxId || '-');
+  setTextAll('span.receipt-id-line', demoReceiptId || '-');
   document.querySelectorAll('.recorded-by').forEach((el) => {
     el.textContent = '';
     el.style.display = 'none';
   });
-  setTextAll('.receipt-date', `Date: ${demoDate || '—'}`);
+  setTextAll('.receipt-date', `Date: ${demoDate || '-'}`);
 
   setTextAll('.company-name', demoCompany);
   setTextAll('.contact-name', demoContact);
@@ -917,9 +917,9 @@ if (isDemo) {
     : items.reduce((sum, it) => sum + (Number.isFinite(it.amount) ? it.amount : 0), 0);
 
   const rowsSource = (() => {
-    const fallback = items.length ? items : [{ description: '—', amount: totalValue }];
+    const fallback = items.length ? items : [{ description: '-', amount: totalValue }];
     if (!isItemsSingle) return fallback.slice(0, 5);
-    const firstDesc = safeText(fallback[0]?.description, '—');
+    const firstDesc = safeText(fallback[0]?.description, '-');
     return [{ description: firstDesc, amount: totalValue }];
   })();
 
@@ -1096,8 +1096,8 @@ if (urlParams.get('signatures') === '0') {
       }
 
       // Immediately clear demo placeholders so they never show up in the preview
-      setTextAll('.company-name', '—');
-      setTextAll('.contact-name', '—');
+      setTextAll('.company-name', '-');
+      setTextAll('.contact-name', '-');
       setHtmlAll('.company-address', '');
       setHtmlAll('.contact-address', '');
       document.querySelectorAll('.company-address, .contact-address').forEach((el) => (el.style.display = 'none'));
@@ -1106,12 +1106,12 @@ if (urlParams.get('signatures') === '0') {
 
       setTextAll('.contact-id', '');
       document.querySelectorAll('.contact-id').forEach((el) => (el.style.display = 'none'));
-      setTextAll('span.register-id', '—');
-      setTextAll('span.receipt-id-line', '—');
+      setTextAll('span.register-id', '-');
+      setTextAll('span.receipt-id-line', '-');
       const tbodyInit = document.querySelector('.table-section tbody');
       if (tbodyInit) tbodyInit.innerHTML = EMPTY_ROW_HTML.repeat(5);
       const totalInit = document.querySelector('.total-amount');
-      if (totalInit) totalInit.textContent = '—';
+      if (totalInit) totalInit.textContent = '-';
       const notesInit = document.querySelector('.notes');
       if (notesInit) notesInit.style.display = 'none';
 
@@ -1136,7 +1136,7 @@ if (urlParams.get('signatures') === '0') {
           }))
           .filter((it) => it.description || Number.isFinite(it.amount));
 
-        const fallbackDesc = safeText(tx?.description, '—');
+        const fallbackDesc = safeText(tx?.description, '-');
         const fallbackAmt = Number(tx?.amount);
 
         const effective = isItemsSingle
@@ -1146,7 +1146,7 @@ if (urlParams.get('signatures') === '0') {
         const fillRows = isItemsSingle ? 1 : 5;
         const maxRows = 5;
         const rows = effective.slice(0, fillRows).map((it) => {
-          const desc = safeText(it.description, '—');
+          const desc = safeText(it.description, '-');
           const amt = formatMoney(it.amount, currency);
           return `<tr><td>${desc}</td><td class="amount">${amt}</td></tr>`;
         });
@@ -1204,9 +1204,9 @@ if (urlParams.get('signatures') === '0') {
 
         const displayId = getDisplayId(tx);
         const cashBoxCode = getCashBoxCode(tx);
-        const createdBy = safeText(tx.created_by_user_name || tx.created_by, '—');
+        const createdBy = safeText(tx.created_by_user_name || tx.created_by, '-');
         const txDate = tx.transaction_date || tx.created_at;
-        const contactName = safeText(tx.contact_name || tx.contact?.name, '—');
+        const contactName = safeText(tx.contact_name || tx.contact?.name, '-');
         const contactAddress = overrideContactAddress || safeText(tx.contact_address || tx.contact?.address, '');
         const contactOtherId = safeText(tx.contact_custom_field_1, '');
 
@@ -1240,22 +1240,22 @@ if (urlParams.get('signatures') === '0') {
           }
         } catch (_) {}
 
-        const companyName = safeText(profile?.company_name || profile?.full_name || tx.cash_box_name_snapshot || tx.cash_box?.name, '—');
+        const companyName = safeText(profile?.company_name || profile?.full_name || tx.cash_box_name_snapshot || tx.cash_box?.name, '-');
         const companyAddress = safeText(profile?.address, '');
         const companyOtherId = safeText(profile?.phone, '');
 
         // IN = money received: contact is FROM (sender), company is TO (receiver)
         // OUT = money paid: company is FROM (sender), contact is TO (receiver)
         const isIncome = String(tx?.type || '').toLowerCase() === 'income';
-        const fromName    = isIncome ? (contactName || '—') : companyName;
+        const fromName    = isIncome ? (contactName || '-') : companyName;
         const fromAddress = isIncome ? contactAddress       : companyAddress;
         const fromOtherId = isIncome ? contactOtherId       : companyOtherId;
-        const toName      = isIncome ? companyName          : (contactName || '—');
+        const toName      = isIncome ? companyName          : (contactName || '-');
         const toAddress   = isIncome ? companyAddress       : contactAddress;
         const toOtherId   = isIncome ? companyOtherId       : contactOtherId;
 
-        setTextAll('span.register-id', cashBoxCode || '—');
-        setTextAll('span.receipt-id-line', displayId || '—');
+        setTextAll('span.register-id', cashBoxCode || '-');
+        setTextAll('span.receipt-id-line', displayId || '-');
 
         setTextAll('.recorded-by', `Recorded by: ${createdBy}`);
         const d = formatDateShort(txDate);

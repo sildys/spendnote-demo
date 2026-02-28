@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -384,12 +384,12 @@ body {
     <div class="topbar">
   <div>
     <div class="title">Cash Receipt</div>
-    <div class="meta">Date: —</div>
+    <div class="meta">Date: -</div>
   </div>
   <div class="right-block">
     <div class="identifiers">
-      <div class="register-id">Cash Box ID: —</div>
-      <div class="receipt-id-line">Receipt ID: —</div>
+      <div class="register-id">Cash Box ID: -</div>
+      <div class="receipt-id-line">Receipt ID: -</div>
     </div>
     <div class="logo-box">Company logo</div>
   </div>
@@ -400,13 +400,13 @@ body {
     <div class="parties">
       <div class="party">
         <strong>FROM</strong>
-        <span class="company-name">—</span><br>
+        <span class="company-name">-</span><br>
         <span class="company-address"></span><br>
         <span class="party-id company-id"></span>
       </div>
       <div class="party right">
         <strong>TO</strong>
-        <span class="contact-name">—</span><br>
+        <span class="contact-name">-</span><br>
         <span class="contact-address"></span><br>
         <span class="party-id contact-id"></span>
       </div>
@@ -426,7 +426,7 @@ body {
       </table>
     </div>
 
-    <div class="total"><span>Total handed over</span><span>—</span></div>
+    <div class="total"><span>Total handed over</span><span>-</span></div>
 
     <div class="notes" style="display: none;"><strong>Notes</strong></div>
 
@@ -452,7 +452,7 @@ body {
             <stop offset="100%" stop-color="#a3a3a3"/>
         </linearGradient>
     </defs>
-</svg></span>SpendNote • Proof of cash handoff. Not a tax document. • https://spendnote.app/<img class="footer-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=64x64&margin=0&data=https%3A%2F%2Fspendnote.app%2F" alt="SpendNote QR" loading="lazy">
+</svg></span>SpendNote - Proof of cash handoff. Not a tax document. - https://spendnote.app/<img class="footer-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=64x64&margin=0&data=https%3A%2F%2Fspendnote.app%2F" alt="SpendNote QR" loading="lazy">
     </div>
   </div>
 
@@ -466,12 +466,12 @@ body {
     <div class="topbar">
   <div>
     <div class="title">Cash Receipt</div>
-    <div class="meta">Date: —</div>
+    <div class="meta">Date: -</div>
   </div>
   <div class="right-block">
     <div class="identifiers">
-      <div class="register-id">Cash Box ID: —</div>
-      <div class="receipt-id-line">Receipt ID: —</div>
+      <div class="register-id">Cash Box ID: -</div>
+      <div class="receipt-id-line">Receipt ID: -</div>
     </div>
     <div class="logo-box">Company logo</div>
   </div>
@@ -482,13 +482,13 @@ body {
     <div class="parties">
       <div class="party">
         <strong>FROM</strong>
-        <span class="company-name">—</span><br>
+        <span class="company-name">-</span><br>
         <span class="company-address"></span><br>
         <span class="party-id company-id"></span>
       </div>
       <div class="party right">
         <strong>TO</strong>
-        <span class="contact-name">—</span><br>
+        <span class="contact-name">-</span><br>
         <span class="contact-address"></span><br>
         <span class="party-id contact-id"></span>
       </div>
@@ -508,7 +508,7 @@ body {
       </table>
     </div>
 
-    <div class="total"><span>Total handed over</span><span>—</span></div>
+    <div class="total"><span>Total handed over</span><span>-</span></div>
 
     <div class="notes" style="display: none;"><strong>Notes</strong></div>
 
@@ -534,7 +534,7 @@ body {
             <stop offset="100%" stop-color="#a3a3a3"/>
         </linearGradient>
     </defs>
-</svg></span>SpendNote • Proof of cash handoff. Not a tax document. • https://spendnote.app/<img class="footer-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=64x64&margin=0&data=https%3A%2F%2Fspendnote.app%2F" alt="SpendNote QR" loading="lazy">
+</svg></span>SpendNote - Proof of cash handoff. Not a tax document. - https://spendnote.app/<img class="footer-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=64x64&margin=0&data=https%3A%2F%2Fspendnote.app%2F" alt="SpendNote QR" loading="lazy">
     </div>
   </div>
 
@@ -676,7 +676,7 @@ body {
       });
     };
 
-    const demoCompany = safeText(urlParams.get('demoCompany'), '—');
+    const demoCompany = safeText(urlParams.get('demoCompany'), '-');
     const demoAddress = safeText(urlParams.get('demoAddress'), '');
     const demoCompanyId = safeText(urlParams.get('demoCompanyId'), '');
 
@@ -772,9 +772,9 @@ body {
       : items.reduce((sum, it) => sum + (Number.isFinite(it.amount) ? it.amount : 0), 0);
 
     const rowsSource = (() => {
-      const fallback = items.length ? items : [{ description: '—', amount: totalValue }];
+      const fallback = items.length ? items : [{ description: '-', amount: totalValue }];
       if (!isItemsSingle) return fallback.slice(0, 5);
-      const firstDesc = safeText(fallback[0]?.description, '—');
+      const firstDesc = safeText(fallback[0]?.description, '-');
       return [{ description: firstDesc, amount: totalValue }];
     })();
 
@@ -974,8 +974,8 @@ body {
         }
 
         // Immediately clear demo placeholders so they never show up in the preview
-        setTextAll('.company-name', '—');
-        setTextAll('.contact-name', '—');
+        setTextAll('.company-name', '-');
+        setTextAll('.contact-name', '-');
         setHtmlAll('.company-address', '');
         setHtmlAll('.contact-address', '');
         document.querySelectorAll('.company-address, .contact-address').forEach((el) => (el.style.display = 'none'));
@@ -984,15 +984,15 @@ body {
 
         setTextAll('.contact-id', '');
         document.querySelectorAll('.contact-id').forEach((el) => (el.style.display = 'none'));
-        setTextAll('.register-id', 'Cash Box ID: —');
-        setTextAll('.receipt-id-line', 'Receipt ID: —');
-        setHtmlAll('.meta', `Date: —`);
+        setTextAll('.register-id', 'Cash Box ID: -');
+        setTextAll('.receipt-id-line', 'Receipt ID: -');
+        setHtmlAll('.meta', `Date: -`);
         document.querySelectorAll('.items tbody').forEach((tbody) => {
           tbody.innerHTML = '<tr><td>&nbsp;</td><td></td></tr>'.repeat(4);
         });
         document.querySelectorAll('.total').forEach((el) => {
           const spans = el.querySelectorAll('span');
-          if (spans.length >= 2) spans[1].textContent = '—';
+          if (spans.length >= 2) spans[1].textContent = '-';
         });
 
         document.querySelectorAll('.notes').forEach((el) => (el.style.display = 'none'));
@@ -1024,7 +1024,7 @@ body {
             }))
             .filter((it) => it.description || Number.isFinite(it.amount));
 
-          const fallbackDesc = safeText(tx?.description, '—');
+          const fallbackDesc = safeText(tx?.description, '-');
           const fallbackAmt = Number(tx?.amount);
 
           const effective = isItemsSingle
@@ -1033,7 +1033,7 @@ body {
 
           const rowsSource = isItemsSingle ? effective.slice(0, 1) : effective.slice(0, 5);
           const rows = rowsSource.map((it) => {
-            const desc = safeText(it.description, '—');
+            const desc = safeText(it.description, '-');
             const amt = formatMoney(it.amount, currency);
             return `<tr><td>${desc}</td><td class="amount">${amt}</td></tr>`;
           });
@@ -1109,17 +1109,17 @@ body {
 
           const currency = safeText(tx.cash_box_currency_snapshot || tx.cash_box?.currency, 'USD');
 
-          const companyName = safeText(profile?.company_name || profile?.full_name || tx.cash_box_name_snapshot || tx.cash_box?.name, '—');
+          const companyName = safeText(profile?.company_name || profile?.full_name || tx.cash_box_name_snapshot || tx.cash_box?.name, '-');
           const companyAddress = safeText(profile?.address, '');
           const companyOtherId = safeText(profile?.phone, '');
 
           // IN = money received: contact is FROM (sender), company is TO (receiver)
           // OUT = money paid: company is FROM (sender), contact is TO (receiver)
           const isIncome = String(tx?.type || '').toLowerCase() === 'income';
-          const fromName    = isIncome ? (contactName || '—')  : companyName;
+          const fromName    = isIncome ? (contactName || '-')  : companyName;
           const fromAddress = isIncome ? contactAddress        : companyAddress;
           const fromOtherId = isIncome ? contactOtherId        : companyOtherId;
-          const toName      = isIncome ? companyName           : (contactName || '—');
+          const toName      = isIncome ? companyName           : (contactName || '-');
           const toAddress   = isIncome ? companyAddress        : contactAddress;
           const toOtherId   = isIncome ? companyOtherId        : contactOtherId;
 
@@ -1155,11 +1155,11 @@ body {
             el.style.display = '';
           });
 
-          setTextAll('.register-id', `Cash Box ID: ${cashBoxCode || '—'}`);
-          setTextAll('.receipt-id-line', `Receipt ID: ${displayId || '—'}`);
+          setTextAll('.register-id', `Cash Box ID: ${cashBoxCode || '-'}`);
+          setTextAll('.receipt-id-line', `Receipt ID: ${displayId || '-'}`);
           
           const d = formatDateShort(txDate);
-          setHtmlAll('.meta', `Date: ${d || '—'}`);
+          setHtmlAll('.meta', `Date: ${d || '-'}`);
 
           setTextAll('.contact-name', toName);
           if (toAddress) {
