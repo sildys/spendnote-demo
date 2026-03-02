@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QPFM30F86Q"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-QPFM30F86Q');
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Petty cash voucher template for documenting cash disbursements. Generate instant receipts with SpendNote—no manual vouchers needed.">
+    <link rel="canonical" href="https://spendnote.app/petty-cash-voucher-template">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://spendnote.app/petty-cash-voucher-template">
+    <meta property="og:title" content="Petty Cash Voucher Template + Digital Receipts - SpendNote">
+    <meta property="og:description" content="Petty cash voucher template guide with instant digital receipt generation for small teams.">
+    <meta property="og:image" content="https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://spendnote.app/petty-cash-voucher-template">
+    <meta property="twitter:title" content="Petty Cash Voucher Template + Digital Receipts - SpendNote">
+    <meta property="twitter:description" content="Petty cash voucher template guide with instant digital receipt generation for small teams.">
+    <meta property="twitter:image" content="https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <title>Petty Cash Voucher Template + Digital Receipts - SpendNote</title>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "SpendNote Petty Cash Voucher",
+      "applicationCategory": "BusinessApplication",
+      "description": "Petty cash voucher template with instant receipt generation for small teams.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "image": "https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png",
+      "operatingSystem": "Web"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Does this petty cash voucher template require signatures?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. SpendNote receipts include signature fields for both the person giving cash and the person receiving it."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I print petty cash vouchers immediately?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Print is the default format and supports a two-copy layout for instant handoff documentation."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I customize voucher fields?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can personalize labels, logo, and visible sections to match your team's voucher process."
+        }
+      }]
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css?v=18">
+    <style>
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        /* PREVIEW BANNER */
+        .preview-banner {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            background: linear-gradient(90deg, #0f172a, #1f2937 45%, #0f766e 100%);
+            color: #ffffff;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+        }
+
+        .preview-banner-inner {
+            max-width: var(--max-width-page);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .preview-banner-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.18);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .preview-banner-text {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preview-banner-toggle {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preview-banner-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .preview-banner-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 0;
+        }
+
+        .preview-banner-details.expanded {
+            max-height: 500px;
+            margin-top: 16px;
+        }
+
+        .preview-banner-details-inner {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preview-benefits-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-benefits-section {
+            margin-bottom: 16px;
+        }
+
+        .preview-benefits-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .preview-benefits-section h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .preview-benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .preview-benefits-list li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .preview-benefits-list li::before {
+            content: '-';
+            position: absolute;
+            left: 8px;
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .preview-banner-text strong {
+            color: #fcd34d;
+        }
+
+        @media (max-width: 860px) {
+            .preview-banner-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        /* HERO */
+        .seo-hero {
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #14b8a6 100%);
+            padding: 3.5rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .seo-hero-content {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 var(--page-gutter);
+        }
+
+        .seo-hero h1 {
+            font-size: clamp(1.875rem, 5vw, 2.75rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            color: white;
+        }
+
+        .seo-hero p {
+            font-size: 1.0625rem;
+            opacity: 0.95;
+            margin-bottom: 1.75rem;
+            color: white;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 0.875rem 2.25rem;
+            font-size: 1.0625rem;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+        
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .hero-pricing-note {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        /* CONTENT */
+        .seo-content {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 2.5rem var(--page-gutter);
+        }
+
+        .seo-content h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .seo-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .seo-content p {
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .seo-content ul, .seo-content ol {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .seo-content li {
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .seo-content strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .seo-content a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .seo-content a:hover {
+            text-decoration: underline;
+        }
+
+        .section-lead {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        /* FEATURE GRID */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card h3 i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .feature-card p {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* CTA BOX */
+        .cta-box {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            border-radius: var(--radius-xl);
+            padding: 2.25rem;
+            text-align: center;
+            margin: 2.5rem 0;
+            color: white;
+        }
+
+        .cta-box h3 {
+            font-size: 1.625rem;
+            font-weight: 800;
+            margin-bottom: 0.875rem;
+            color: white;
+        }
+
+        .cta-box p {
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            opacity: 0.95;
+            color: white;
+        }
+
+        .cta-box .btn {
+            background: white;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 0.875rem 2rem;
+            font-size: 1.0625rem;
+            border-radius: var(--radius-lg);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .cta-box .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* FOOTER */
+        .site-footer {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f766e 100%);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 4rem 0 2rem;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .site-footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.5), transparent);
+        }
+
+        .footer-container {
+            max-width: var(--max-width-page);
+            margin: 0 auto;
+            padding: 0 var(--page-gutter);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand {
+            max-width: 450px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo svg {
+            width: 36px;
+            height: 36px;
+            filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.3));
+        }
+
+        .footer-logo span {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-description {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.7;
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+
+        .footer-links {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .footer-column h4 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-column li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 2px;
+            transition: color 0.2s;
+        }
+
+        .footer-column a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #10b981;
+            transition: width 0.2s ease;
+        }
+
+        .footer-column a:hover {
+            color: #10b981;
+        }
+
+        .footer-column a:hover::after {
+            width: 100%;
+        }
+
+        .footer-disclaimer {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 999px;
+            font-size: 0.8125rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0 auto 2rem;
+            max-width: fit-content;
+            display: flex;
+            font-weight: 600;
+        }
+
+        .footer-disclaimer i {
+            color: #10b981;
+            font-size: 0.9rem;
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .seo-hero {
+                padding: 2.5rem 0;
+            }
+
+            .seo-content {
+                padding: 2rem var(--page-gutter);
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-box {
+                padding: 1.75rem 1.25rem;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .footer-links {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="preview-banner" role="status" aria-live="polite">
+    <div class="preview-banner-inner">
+        <span class="preview-banner-title"><i class="fas fa-flag"></i> Preview</span>
+        <div class="preview-banner-text">
+            <span>You're using early access. <strong>Things might change</strong> as we improve based on your feedback.</span>
+            <button class="preview-banner-toggle" onclick="togglePreviewDetails()">
+                <span id="previewToggleText">Show preview benefits</span>
+                <i class="fas fa-chevron-down" id="previewToggleIcon"></i>
+            </button>
+        </div>
+    </div>
+    <div class="preview-banner-details" id="previewDetails">
+        <div class="preview-banner-details-inner">
+            <div class="preview-benefits-title">
+                <i class="fas fa-gift"></i> Preview Release Benefits
+            </div>
+            <div class="preview-benefits-section">
+                <h4>During Preview:</h4>
+                <ul class="preview-benefits-list">
+                    <li><strong>200 transactions included</strong> (vs. standard 20 in Free plan)</li>
+                    <li>Access to all currently available features</li>
+                    <li>Help shape the product with your feedback - <a href="mailto:feedback@spendnote.app" style="color: #10b981; text-decoration: underline;">feedback@spendnote.app</a></li>
+                </ul>
+            </div>
+            <div class="preview-benefits-section">
+                <h4>At Launch:</h4>
+                <ul class="preview-benefits-list">
+                    <li>Your account converts to Free plan (20 transactions)</li>
+                    <li><strong>Exclusive: 30% discount coupon for 2 years</strong> on any paid plan</li>
+                    <li>Priority support as an early adopter</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function togglePreviewDetails() {
+    const details = document.getElementById('previewDetails');
+    const icon = document.getElementById('previewToggleIcon');
+    const text = document.getElementById('previewToggleText');
+    
+    if (details.classList.contains('expanded')) {
+        details.classList.remove('expanded');
+        icon.className = 'fas fa-chevron-down';
+        text.textContent = 'Show preview benefits';
+    } else {
+        details.classList.add('expanded');
+        icon.className = 'fas fa-chevron-up';
+        text.textContent = 'Hide details';
+    }
+}
+</script>
+    <nav class="site-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4 C10.895 4 10 4.895 10 6 L10 38 L12 36 L14 38 L16 36 L18 38 L20 36 L22 38 L24 36 L26 38 L28 36 L30 38 L32 36 L34 38 L36 36 L38 38 L38 6 C38 4.895 37.105 4 36 4 Z" fill="url(#nav-logo-gradient)"/>
+                    <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                    <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                    <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                    <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                    <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="nav-logo-gradient" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#059669"/>
+                            <stop offset="100%" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>SpendNote</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="spendnote-pricing.html">Pricing</a></li>
+                <li><a href="spendnote-faq.html">FAQ</a></li>
+                <li><a href="spendnote-login.html" class="btn btn-secondary">Log in</a></li>
+                <li><a href="spendnote-signup.html" class="btn btn-primary">Sign up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="seo-hero">
+        <div class="seo-hero-content">
+            <h1>Petty Cash Voucher Template</h1>
+            <p>Generate petty cash vouchers instantly — every receipt documents the handoff with signatures and amounts.</p>
+            <p style="font-size: 0.95rem; margin-top: 0.5rem; opacity: 0.9;">Small teams • Simple tracking • No accounting complexity</p>
+            <a href="spendnote-signup.html" class="hero-btn">Start Free Trial</a>
+            <p class="hero-pricing-note">Start free. Paid plans from $19/month. No credit card required.</p>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <div class="seo-content">
+        <h2>What is a Petty Cash Voucher?</h2>
+        <p>A petty cash voucher is a document that records a cash disbursement from your petty cash fund. Instead of filling out paper vouchers, SpendNote is a lightweight tool for small teams that generates instant receipts with all the voucher details: date, amount, recipient, purpose, and signatures.</p>
+
+        <h2>Simple Voucher Generation for Small Teams</h2>
+        <p>SpendNote isn't a traditional voucher system—it's a receipt generator that creates voucher-style documentation automatically. Here's what you get:</p>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3><i class="fas fa-receipt"></i> Receipt = Voucher</h3>
+                <p>Every cash handoff receipt you create (print, PDF, or email) serves as a petty cash voucher with date, amount, parties, and purpose.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-signature"></i> Signature Fields</h3>
+                <p>Built-in signature fields for both the person giving cash and the person receiving it. Instant accountability.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-file-pdf"></i> Downloadable Record</h3>
+                <p>Export vouchers to CSV or generate a PDF for your records. Simple, no voucher book complexity.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-wallet"></i> Multiple Cash Boxes</h3>
+                <p>Track separate petty cash funds (office, events, departments) with individual running balances.</p>
+            </div>
+        </div>
+
+        <h2>Role-Based Access for Small Teams</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3><i class="fas fa-user-shield"></i> Owners and Admins</h3>
+                <p>See all cash boxes across your team. Manage settings and void transactions when needed.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-user"></i> Assigned Users</h3>
+                <p>Only see the cash boxes they manage. Clean, focused view without unnecessary access.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-sync"></i> Instant Updates</h3>
+                <p>Balance changes sync across devices immediately. Everyone sees the current state.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-users-cog"></i> Team Visibility</h3>
+                <p>Shared access means no single point of failure. Multiple people can track the same cash box.</p>
+            </div>
+        </div>
+
+        <h2>Original Entry Stays Visible</h2>
+        <p>SpendNote uses a void system instead of deletion—every voucher stays in your records permanently. If a mistake is corrected, the original record remains visible for transparency. No deletions, just clear history.</p>
+
+        <div class="cta-box">
+            <h3>Generate Petty Cash Vouchers Instantly</h3>
+            <p>Lightweight tracking for small teams. Your vouchers generate automatically from every receipt you create.</p>
+            <a href="spendnote-signup.html" class="btn">Try SpendNote Free</a>
+        </div>
+
+        <h2>Petty Cash Voucher FAQ</h2>
+        <p><strong>Does this petty cash voucher template require signatures?</strong><br>Yes. SpendNote receipts include signature fields for both the person giving cash and the person receiving it. This creates proper accountability for every disbursement.</p>
+        <p><strong>Can I print petty cash vouchers immediately?</strong><br>Yes. Print is the default format and supports a two-copy layout for instant handoff documentation. One copy for the recipient, one for your records.</p>
+        <p><strong>Can I customize voucher fields?</strong><br>Yes. You can personalize labels, logo, and visible sections to match your team's voucher process and language preferences.</p>
+
+        <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid #e2e8f0; border-radius: 16px; padding: 2.5rem; margin: 3rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.75rem; color: var(--text);">What is SpendNote?</h3>
+                <p style="font-size: 1.0625rem; line-height: 1.6; color: var(--text-muted); max-width: 600px; margin: 0 auto;">A lightweight internal cash tracking tool for small teams</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-top: 2rem;">
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; align-items: flex-start; gap: 1rem; transition: all 0.2s;">
+                    <div style="flex-shrink: 0; width: 40px; height: 40px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-sync" style="color: white; font-size: 1.125rem;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--text); margin: 0 0 0.25rem 0;">Instant balance updates</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0; line-height: 1.5;">Balance updates instantly across devices</p>
+                    </div>
+                </div>
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; align-items: flex-start; gap: 1rem; transition: all 0.2s;">
+                    <div style="flex-shrink: 0; width: 40px; height: 40px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-eye" style="color: white; font-size: 1.125rem;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--text); margin: 0 0 0.25rem 0;">Shared visibility</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0; line-height: 1.5;">Team access across devices</p>
+                    </div>
+                </div>
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; align-items: flex-start; gap: 1rem; transition: all 0.2s;">
+                    <div style="flex-shrink: 0; width: 40px; height: 40px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user-shield" style="color: white; font-size: 1.125rem;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--text); margin: 0 0 0.25rem 0;">Role-based access</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0; line-height: 1.5;">Control who sees what</p>
+                    </div>
+                </div>
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; align-items: flex-start; gap: 1rem; transition: all 0.2s;">
+                    <div style="flex-shrink: 0; width: 40px; height: 40px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-receipt" style="color: white; font-size: 1.125rem;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--text); margin: 0 0 0.25rem 0;">Printable receipts</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0; line-height: 1.5;">Cash handoff documentation</p>
+                    </div>
+                </div>
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; align-items: flex-start; gap: 1rem; transition: all 0.2s;">
+                    <div style="flex-shrink: 0; width: 40px; height: 40px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-check-circle" style="color: white; font-size: 1.125rem;"></i>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 0.9375rem; font-weight: 700; color: var(--text); margin: 0 0 0.25rem 0;">No complexity</h4>
+                        <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0; line-height: 1.5;">Not accounting software</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p style="margin-top: 2rem; text-align: center;">Also see: <a href="petty-cash-log-template.html">Petty cash log template</a>, <a href="petty-cash-reconciliation.html">Petty cash reconciliation</a>, <a href="petty-cash-receipt-generator.html">Petty cash receipt generator</a>.</p>
+        <p style="text-align: center;">Need more info? Visit our <a href="spendnote-pricing.html">pricing page</a> or <a href="spendnote-faq.html">FAQ</a>.</p>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 4 C10.895 4 10 4.895 10 6 L10 38 L12 36 L14 38 L16 36 L18 38 L20 36 L22 38 L24 36 L26 38 L28 36 L30 38 L32 36 L34 38 L36 36 L38 38 L38 6 C38 4.895 37.105 4 36 4 Z" fill="url(#footer-logo-gradient)"/>
+                        <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.15"/>
+                        <path d="M32 4 L32 10 L38 10" stroke="#10b981" stroke-width="1.5" stroke-linejoin="round"/>
+                        <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.95"/>
+                        <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                        <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.95"/>
+                        <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+                        <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#10b981" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="footer-logo-gradient" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#059669"/>
+                                <stop offset="50%" stop-color="#10b981"/>
+                                <stop offset="100%" stop-color="#14b8a6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span>SpendNote</span>
+                </div>
+                <p class="footer-description">Complete cash visibility for your team.<br>Instant receipts, full history.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="spendnote-pricing.html">Pricing</a></li>
+                        <li><a href="spendnote-faq.html">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="spendnote-terms.html">Terms of Service</a></li>
+                        <li><a href="spendnote-privacy.html">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="mailto:hello@spendnote.app">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-disclaimer">
+            <i class="fas fa-info-circle"></i>
+            <span>Cash handoff documentation only. Not a substitute for accounting software or tax advice.</span>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 SpendNote. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
