@@ -232,7 +232,7 @@
                 <i class="fas fa-home"></i>
                 Go to Homepage
             </a>
-            <a href="spendnote-dashboard.html" class="btn btn-secondary">
+            <a href="spendnote-dashboard.html" class="btn btn-secondary" id="btn-dashboard" style="display:none;">
                 <i class="fas fa-th-large"></i>
                 Open Dashboard
             </a>
@@ -257,5 +257,16 @@
         </div>
     </div>
     <script src="assets/js/main.js?v=33"></script>
+    <script src="assets/js/supabase-config.js?v=23"></script>
+    <script>
+        (async () => {
+            try {
+                const { data: { session } } = await window.supabaseClient.auth.getSession();
+                if (session) {
+                    document.getElementById('btn-dashboard').style.display = 'inline-flex';
+                }
+            } catch (e) {}
+        })();
+    </script>
 </body>
 </html>
