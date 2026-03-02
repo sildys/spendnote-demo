@@ -21,14 +21,14 @@
     <meta property="og:url" content="https://spendnote.app/petty-cash-reconciliation">
     <meta property="og:title" content="Petty Cash Reconciliation: Complete Procedure Guide - SpendNote">
     <meta property="og:description" content="Complete petty cash reconciliation guide: step-by-step procedure, common discrepancies, internal controls, and automated solutions.">
-    <meta property="og:image" content="https://spendnote.app/assets/img/og-image.jpg">
+    <meta property="og:image" content="https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://spendnote.app/petty-cash-reconciliation">
     <meta property="twitter:title" content="Petty Cash Reconciliation: Complete Procedure Guide - SpendNote">
     <meta property="twitter:description" content="Complete petty cash reconciliation guide: step-by-step procedure, common discrepancies, internal controls, and automated solutions.">
-    <meta property="twitter:image" content="https://spendnote.app/assets/img/og-image.jpg">
+    <meta property="twitter:image" content="https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
@@ -38,30 +38,57 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Petty Cash Reconciliation: Complete Procedure Guide",
-      "description": "Complete petty cash reconciliation guide: step-by-step procedure, common discrepancies, internal controls, and automated solutions.",
-      "author": {
-        "@type": "Organization",
-        "name": "SpendNote"
+      "@type": "SoftwareApplication",
+      "name": "SpendNote Petty Cash Reconciliation",
+      "applicationCategory": "BusinessApplication",
+      "description": "Complete petty cash reconciliation guide with automatic calculations and discrepancy detection.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
       },
-      "publisher": {
-        "@type": "Organization",
-        "name": "SpendNote",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://spendnote.app/assets/img/logo.png"
+      "image": "https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png",
+      "operatingSystem": "Web"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Can I print receipts immediately?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Print is the default format and supports a two-copy layout for handoff workflows."
         }
-      },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://spendnote.app/petty-cash-reconciliation"
-      }
+      }, {
+        "@type": "Question",
+        "name": "Can I download the receipt as PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Each receipt can be downloaded as a PDF for digital storage and sharing."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I send receipts by email?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Receipts can be sent by email directly after creation."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I customize receipt fields and labels?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can personalize labels, logo, and visible sections to match your team process."
+        }
+      }]
     }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/main.css?v=23">
+    <link rel="stylesheet" href="assets/css/main.css?v=18">
     <style>
         body {
             background: var(--bg);
@@ -211,29 +238,29 @@
         /* HERO */
         .seo-hero {
             background: linear-gradient(135deg, #059669 0%, #10b981 50%, #14b8a6 100%);
-            padding: 4rem 0;
+            padding: 3.5rem 0;
             text-align: center;
             color: white;
         }
 
         .seo-hero-content {
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
             padding: 0 var(--page-gutter);
         }
 
         .seo-hero h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
+            font-size: clamp(1.875rem, 5vw, 2.75rem);
             font-weight: 900;
             letter-spacing: -0.03em;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             color: white;
         }
 
         .seo-hero p {
-            font-size: 1.125rem;
+            font-size: 1.0625rem;
             opacity: 0.95;
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
             color: white;
         }
 
@@ -242,8 +269,8 @@
             background: white;
             color: var(--primary);
             font-weight: 700;
-            padding: 1rem 2.5rem;
-            font-size: 1.125rem;
+            padding: 0.875rem 2.25rem;
+            font-size: 1.0625rem;
             border-radius: 999px;
             text-decoration: none;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
@@ -255,17 +282,23 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
+        .hero-pricing-note {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.85);
+        }
+
         /* CONTENT */
         .seo-content {
-            max-width: 800px;
+            max-width: 750px;
             margin: 0 auto;
-            padding: 3rem var(--page-gutter);
+            padding: 2.5rem var(--page-gutter);
         }
 
         .seo-content h2 {
-            font-size: 1.875rem;
+            font-size: 1.75rem;
             font-weight: 800;
-            margin-top: 3rem;
+            margin-top: 2.5rem;
             margin-bottom: 1rem;
             color: var(--text);
         }
@@ -281,7 +314,7 @@
             color: var(--text-muted);
         }
 
-        .seo-content ul {
+        .seo-content ul, .seo-content ol {
             margin: 1.5rem 0;
             padding-left: 1.5rem;
         }
@@ -308,70 +341,112 @@
             text-decoration: underline;
         }
 
-        /* COMPARISON TABLE */
-        .comparison-table {
+        .section-lead {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        /* FEATURE GRID */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
             margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card h3 i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .feature-card p {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .output-showcase {
+            margin: 2rem 0;
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .output-showcase figure {
+            margin: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             overflow: hidden;
-            border: 1px solid var(--border);
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .comparison-table table {
+        .output-showcase img {
+            display: block;
             width: 100%;
-            border-collapse: collapse;
+            height: auto;
+            background: #f8fafc;
+            max-height: 520px;
+            object-fit: contain;
         }
 
-        .comparison-table th {
-            background: var(--bg-secondary);
-            padding: 1rem;
-            text-align: left;
-            font-weight: 700;
-            font-size: 0.9375rem;
-            color: var(--text);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .comparison-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.9375rem;
+        .output-showcase figcaption {
+            padding: 0.875rem 1rem 1rem;
+            font-size: 0.92rem;
             color: var(--text-muted);
         }
 
-        .comparison-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .comparison-table .check {
-            color: var(--success);
-            font-weight: 700;
-        }
-
-        .comparison-table .cross {
-            color: var(--danger);
-            font-weight: 700;
+        .callout-note {
+            background: #ecfeff;
+            border: 1px solid #99f6e4;
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.125rem;
+            color: #115e59;
+            font-size: 0.95rem;
+            margin: 1.5rem 0;
         }
 
         /* CTA BOX */
         .cta-box {
             background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             border-radius: var(--radius-xl);
-            padding: 2.5rem;
+            padding: 2.25rem;
             text-align: center;
-            margin: 3rem 0;
+            margin: 2.5rem 0;
             color: white;
         }
 
         .cta-box h3 {
-            font-size: 1.75rem;
+            font-size: 1.625rem;
             font-weight: 800;
-            margin-bottom: 1rem;
+            margin-bottom: 0.875rem;
             color: white;
         }
 
         .cta-box p {
-            font-size: 1.0625rem;
-            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
             opacity: 0.95;
             color: white;
         }
@@ -380,8 +455,8 @@
             background: white;
             color: var(--primary);
             font-weight: 700;
-            padding: 1rem 2rem;
-            font-size: 1.125rem;
+            padding: 0.875rem 2rem;
+            font-size: 1.0625rem;
             border-radius: var(--radius-lg);
             border: none;
             cursor: pointer;
@@ -393,35 +468,6 @@
         .cta-box .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        /* FAQ */
-        .seo-faq {
-            margin-top: 3rem;
-            padding-top: 3rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .seo-faq h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .faq-item {
-            margin-bottom: 1.5rem;
-        }
-
-        .faq-item h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: var(--text);
-        }
-
-        .faq-item p {
-            font-size: 1.0625rem;
-            line-height: 1.7;
-            color: var(--text-muted);
         }
 
         /* FOOTER */
@@ -578,24 +624,27 @@
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .seo-hero {
-                padding: 3rem 0;
+                padding: 2.5rem 0;
             }
 
             .seo-content {
                 padding: 2rem var(--page-gutter);
             }
 
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .output-showcase figure {
+                max-width: 100%;
+            }
+
+            .output-showcase img {
+                max-height: 420px;
+            }
+
             .cta-box {
-                padding: 2rem 1.5rem;
-            }
-
-            .comparison-table {
-                font-size: 0.875rem;
-            }
-
-            .comparison-table th,
-            .comparison-table td {
-                padding: 0.75rem;
+                padding: 1.75rem 1.25rem;
             }
 
             .footer-container {
@@ -606,30 +655,6 @@
             .footer-links {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .seo-hero {
-                padding: 2rem 0;
-            }
-
-            .seo-hero h1 {
-                font-size: clamp(1.9rem, 9vw, 2.4rem);
-            }
-
-            .seo-content {
-                padding: 1.5rem 1rem;
-            }
-
-            .cta-box {
-                padding: 1.25rem 1rem;
-            }
-
-            .cta-box .btn,
-            .hero-btn {
-                width: 100%;
-                text-align: center;
             }
         }
     </style>
@@ -724,6 +749,7 @@ function togglePreviewDetails() {
             <h1>Petty Cash Reconciliation: Complete Procedure Guide</h1>
             <p>Learn how to reconcile petty cash properly, resolve discrepancies, and maintain strong internal controls for your office fund.</p>
             <a href="spendnote-signup.html" class="hero-btn">Automate Reconciliation</a>
+            <p class="hero-pricing-note">Start free. Paid plans from $19/month. No credit card required.</p>
         </div>
     </section>
 
@@ -754,78 +780,19 @@ function togglePreviewDetails() {
         <p><strong>Incorrect Change:</strong> Wrong amount given when disbursing. Solution: Count cash twice and have recipient verify.</p>
         <p><strong>Unauthorized Withdrawals:</strong> Cash taken without documentation. Solution: Limit access and require dual signatures for larger amounts.</p>
 
-        <h2>Manual vs. Automated Reconciliation</h2>
-        <div class="comparison-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Feature</th>
-                        <th>Manual</th>
-                        <th>SpendNote</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Time required</strong></td>
-                        <td class="cross"> 30-60 minutes</td>
-                        <td class="check"> Under 1 minute</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Calculations</strong></td>
-                        <td class="cross"> Prone to errors</td>
-                        <td class="check"> Automatic</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Receipt storage</strong></td>
-                        <td class="cross"> Physical sorting</td>
-                        <td class="check"> Digital uploads</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Reports</strong></td>
-                        <td class="cross"> Paper only</td>
-                        <td class="check"> Exportable PDF/CSV</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Historical tracking</strong></td>
-                        <td class="cross"> None</td>
-                        <td class="check"> Full analytics</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- FAQ SECTION -->
-        <div class="seo-faq">
-            <h2>Quick Questions</h2>
-
-            <div class="faq-item">
-                <h3>How often should petty cash be reconciled?</h3>
-                <p>Most organizations reconcile petty cash monthly, but high-volume offices should reconcile weekly. The frequency depends on transaction volume and internal control requirements.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>What causes petty cash discrepancies?</h3>
-                <p>Common causes include: missing receipts, calculation errors in the log, unauthorized withdrawals, incorrect change given, or receipts recorded at wrong amounts. Strong internal controls and regular reconciliation minimize these issues.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>Who should perform petty cash reconciliation?</h3>
-                <p>Best practice is to have someone other than the petty cash custodian perform reconciliation. This separation of duties is a key internal control that prevents fraud and ensures accountability.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>What should I do if petty cash doesn't reconcile?</h3>
-                <p>First, recount the cash and re-verify all receipts. Check for math errors in your log. Review recent transactions for missing or duplicate entries. If the discrepancy persists, document it formally and investigate potential causes.</p>
-            </div>
-            
-            <p style="margin-top: 2rem; text-align: center;"><strong>More questions?</strong> Visit our full <a href="spendnote-faq.html">FAQ page</a> for detailed answers.</p>
-        </div>
+        <h2>Petty Cash Reconciliation FAQ</h2>
+        <p><strong>How often should petty cash be reconciled?</strong><br>Most organizations reconcile petty cash monthly, but high-volume offices should reconcile weekly. The frequency depends on transaction volume and internal control requirements.</p>
+        <p><strong>What causes petty cash discrepancies?</strong><br>Common causes include: missing receipts, calculation errors in the log, unauthorized withdrawals, incorrect change given, or receipts recorded at wrong amounts. Strong internal controls and regular reconciliation minimize these issues.</p>
+        <p><strong>Who should perform petty cash reconciliation?</strong><br>Best practice is to have someone other than the petty cash custodian perform reconciliation. This separation of duties is a key internal control that prevents fraud and ensures accountability.</p>
 
         <div class="cta-box">
             <h3>Stop Manual Reconciliation. Automate Your Petty Cash Tracking.</h3>
             <p>SpendNote automatically calculates balances, flags discrepancies, and generates reconciliation reports in seconds.</p>
             <a href="spendnote-signup.html" class="btn">Try SpendNote Free</a>
         </div>
+
+        <p style="margin-top: 2rem;">Also see: <a href="petty-cash-log-template.html">Petty cash log template</a>, <a href="petty-cash-receipt-generator.html">Petty cash receipt generator</a>.</p>
+        <p style="text-align: center;">Need more info? Visit our <a href="spendnote-pricing.html">pricing page</a> or <a href="spendnote-faq.html">FAQ</a>.</p>
     </div>
 
     <!-- FOOTER -->

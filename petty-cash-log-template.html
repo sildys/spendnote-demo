@@ -21,14 +21,14 @@
     <meta property="og:url" content="https://spendnote.app/petty-cash-log-template">
     <meta property="og:title" content="Petty Cash Log Template + Digital Tracker - SpendNote">
     <meta property="og:description" content="Petty cash log template guide for office expense tracking with a free SpendNote trial for teams.">
-    <meta property="og:image" content="https://spendnote.app/assets/img/og-image.jpg">
+    <meta property="og:image" content="https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://spendnote.app/petty-cash-log-template">
     <meta property="twitter:title" content="Petty Cash Log Template + Digital Tracker - SpendNote">
     <meta property="twitter:description" content="Petty cash log template guide for office expense tracking with a free SpendNote trial for teams.">
-    <meta property="twitter:image" content="https://spendnote.app/assets/img/og-image.jpg">
+    <meta property="twitter:image" content="https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png">
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
@@ -38,30 +38,57 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Petty Cash Log Template + Digital Tracker",
-      "description": "Petty cash log template guide for office expense tracking with a free SpendNote trial for teams.",
-      "author": {
-        "@type": "Organization",
-        "name": "SpendNote"
+      "@type": "SoftwareApplication",
+      "name": "SpendNote Petty Cash Log",
+      "applicationCategory": "BusinessApplication",
+      "description": "Petty cash log template guide for office expense tracking with automatic calculations and reconciliation.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
       },
-      "publisher": {
-        "@type": "Organization",
-        "name": "SpendNote",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://spendnote.app/assets/img/logo.png"
+      "image": "https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png",
+      "operatingSystem": "Web"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Can I print receipts immediately?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Print is the default format and supports a two-copy layout for handoff workflows."
         }
-      },
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "https://spendnote.app/petty-cash-log-template"
-      }
+      }, {
+        "@type": "Question",
+        "name": "Can I download the receipt as PDF?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Each receipt can be downloaded as a PDF for digital storage and sharing."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I send receipts by email?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Receipts can be sent by email directly after creation."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Can I customize receipt fields and labels?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. You can personalize labels, logo, and visible sections to match your team process."
+        }
+      }]
     }
     </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/main.css?v=23">
+    <link rel="stylesheet" href="assets/css/main.css?v=18">
     <style>
         body {
             background: var(--bg);
@@ -211,29 +238,29 @@
         /* HERO */
         .seo-hero {
             background: linear-gradient(135deg, #059669 0%, #10b981 50%, #14b8a6 100%);
-            padding: 4rem 0;
+            padding: 3.5rem 0;
             text-align: center;
             color: white;
         }
 
         .seo-hero-content {
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
             padding: 0 var(--page-gutter);
         }
 
         .seo-hero h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
+            font-size: clamp(1.875rem, 5vw, 2.75rem);
             font-weight: 900;
             letter-spacing: -0.03em;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             color: white;
         }
 
         .seo-hero p {
-            font-size: 1.125rem;
+            font-size: 1.0625rem;
             opacity: 0.95;
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
             color: white;
         }
 
@@ -242,8 +269,8 @@
             background: white;
             color: var(--primary);
             font-weight: 700;
-            padding: 1rem 2.5rem;
-            font-size: 1.125rem;
+            padding: 0.875rem 2.25rem;
+            font-size: 1.0625rem;
             border-radius: 999px;
             text-decoration: none;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
@@ -255,17 +282,23 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
+        .hero-pricing-note {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.85);
+        }
+
         /* CONTENT */
         .seo-content {
-            max-width: 800px;
+            max-width: 750px;
             margin: 0 auto;
-            padding: 3rem var(--page-gutter);
+            padding: 2.5rem var(--page-gutter);
         }
 
         .seo-content h2 {
-            font-size: 1.875rem;
+            font-size: 1.75rem;
             font-weight: 800;
-            margin-top: 3rem;
+            margin-top: 2.5rem;
             margin-bottom: 1rem;
             color: var(--text);
         }
@@ -281,7 +314,7 @@
             color: var(--text-muted);
         }
 
-        .seo-content ul {
+        .seo-content ul, .seo-content ol {
             margin: 1.5rem 0;
             padding-left: 1.5rem;
         }
@@ -308,70 +341,112 @@
             text-decoration: underline;
         }
 
-        /* COMPARISON TABLE */
-        .comparison-table {
+        .section-lead {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+        }
+
+        /* FEATURE GRID */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
             margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card h3 i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .feature-card p {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .output-showcase {
+            margin: 2rem 0;
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .output-showcase figure {
+            margin: 0;
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             overflow: hidden;
-            border: 1px solid var(--border);
+            max-width: 640px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .comparison-table table {
+        .output-showcase img {
+            display: block;
             width: 100%;
-            border-collapse: collapse;
+            height: auto;
+            background: #f8fafc;
+            max-height: 520px;
+            object-fit: contain;
         }
 
-        .comparison-table th {
-            background: var(--bg-secondary);
-            padding: 1rem;
-            text-align: left;
-            font-weight: 700;
-            font-size: 0.9375rem;
-            color: var(--text);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .comparison-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            font-size: 0.9375rem;
+        .output-showcase figcaption {
+            padding: 0.875rem 1rem 1rem;
+            font-size: 0.92rem;
             color: var(--text-muted);
         }
 
-        .comparison-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .comparison-table .check {
-            color: var(--success);
-            font-weight: 700;
-        }
-
-        .comparison-table .cross {
-            color: var(--danger);
-            font-weight: 700;
+        .callout-note {
+            background: #ecfeff;
+            border: 1px solid #99f6e4;
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.125rem;
+            color: #115e59;
+            font-size: 0.95rem;
+            margin: 1.5rem 0;
         }
 
         /* CTA BOX */
         .cta-box {
             background: linear-gradient(135deg, #059669 0%, #10b981 100%);
             border-radius: var(--radius-xl);
-            padding: 2.5rem;
+            padding: 2.25rem;
             text-align: center;
-            margin: 3rem 0;
+            margin: 2.5rem 0;
             color: white;
         }
 
         .cta-box h3 {
-            font-size: 1.75rem;
+            font-size: 1.625rem;
             font-weight: 800;
-            margin-bottom: 1rem;
+            margin-bottom: 0.875rem;
             color: white;
         }
 
         .cta-box p {
-            font-size: 1.0625rem;
-            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
             opacity: 0.95;
             color: white;
         }
@@ -380,8 +455,8 @@
             background: white;
             color: var(--primary);
             font-weight: 700;
-            padding: 1rem 2rem;
-            font-size: 1.125rem;
+            padding: 0.875rem 2rem;
+            font-size: 1.0625rem;
             border-radius: var(--radius-lg);
             border: none;
             cursor: pointer;
@@ -393,35 +468,6 @@
         .cta-box .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        /* FAQ */
-        .seo-faq {
-            margin-top: 3rem;
-            padding-top: 3rem;
-            border-top: 1px solid var(--border);
-        }
-
-        .seo-faq h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .faq-item {
-            margin-bottom: 1.5rem;
-        }
-
-        .faq-item h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: var(--text);
-        }
-
-        .faq-item p {
-            font-size: 1.0625rem;
-            line-height: 1.7;
-            color: var(--text-muted);
         }
 
         /* FOOTER */
@@ -578,24 +624,27 @@
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .seo-hero {
-                padding: 3rem 0;
+                padding: 2.5rem 0;
             }
 
             .seo-content {
                 padding: 2rem var(--page-gutter);
             }
 
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .output-showcase figure {
+                max-width: 100%;
+            }
+
+            .output-showcase img {
+                max-height: 420px;
+            }
+
             .cta-box {
-                padding: 2rem 1.5rem;
-            }
-
-            .comparison-table {
-                font-size: 0.875rem;
-            }
-
-            .comparison-table th,
-            .comparison-table td {
-                padding: 0.75rem;
+                padding: 1.75rem 1.25rem;
             }
 
             .footer-container {
@@ -606,30 +655,6 @@
             .footer-links {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .seo-hero {
-                padding: 2rem 0;
-            }
-
-            .seo-hero h1 {
-                font-size: clamp(1.9rem, 9vw, 2.4rem);
-            }
-
-            .seo-content {
-                padding: 1.5rem 1rem;
-            }
-
-            .cta-box {
-                padding: 1.25rem 1rem;
-            }
-
-            .cta-box .btn,
-            .hero-btn {
-                width: 100%;
-                text-align: center;
             }
         }
     </style>
@@ -724,6 +749,7 @@ function togglePreviewDetails() {
             <h1>Petty Cash Log Template</h1>
             <p>Track office expenses, disbursements, and petty cash reconciliation. Start free with SpendNote and move beyond spreadsheets.</p>
             <a href="spendnote-signup.html" class="hero-btn">Start Free Trial</a>
+            <p class="hero-pricing-note">Start free. Paid plans from $19/month. No credit card required.</p>
         </div>
     </section>
 
@@ -741,43 +767,23 @@ function togglePreviewDetails() {
         <h2>Why Go Digital with Your Petty Cash Log?</h2>
         <p>If you're currently tracking petty cash in Excel or a paper logbook, you know the pain: manual calculations, lost receipts, and time-consuming reconciliation. Here's how a digital petty cash book solves these problems:</p>
 
-        <div class="comparison-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Feature</th>
-                        <th>Paper/Excel Log</th>
-                        <th>SpendNote</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Balance calculations</strong></td>
-                        <td class="cross"> Manual, error-prone</td>
-                        <td class="check"> Automatic</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Receipt storage</strong></td>
-                        <td class="cross"> Lost or damaged</td>
-                        <td class="check"> Digital uploads & cloud backup</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Reconciliation</strong></td>
-                        <td class="cross"> Time-consuming</td>
-                        <td class="check"> One-click reports</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Audit trail</strong></td>
-                        <td class="cross"> No backup</td>
-                        <td class="check"> Complete with timestamps</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Team access</strong></td>
-                        <td class="cross"> Single-user only</td>
-                        <td class="check"> Team collaboration</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3><i class="fas fa-calculator"></i> Automatic Calculations</h3>
+                <p>No more manual math errors - running balances update automatically with each transaction.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-cloud-upload-alt"></i> Digital Receipt Storage</h3>
+                <p>Upload and attach receipts to each entry - no more lost paper or filing cabinets.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-chart-line"></i> One-Click Reconciliation</h3>
+                <p>Generate reconciliation reports instantly instead of spending hours with spreadsheets.</p>
+            </div>
+            <div class="feature-card">
+                <h3><i class="fas fa-users"></i> Team Collaboration</h3>
+                <p>Multiple team members can access and update the log with proper audit trails.</p>
+            </div>
         </div>
 
         <h2>How to Use a Petty Cash Log</h2>
@@ -789,38 +795,19 @@ function togglePreviewDetails() {
             <li><strong>Reconcile Regularly</strong> - Count physical cash and compare to your log balance. Investigate any discrepancies immediately</li>
         </ol>
 
-        <!-- FAQ SECTION -->
-        <div class="seo-faq">
-            <h2>Quick Questions</h2>
-
-            <div class="faq-item">
-                <h3>What should be included in a petty cash log?</h3>
-                <p>Every petty cash log entry should include: transaction date, recipient/employee name, disbursement amount, expense category (e.g., office supplies, team lunch), and a reference to the attached receipt. A running balance helps track remaining petty cash at all times.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>How often should I reconcile my petty cash log?</h3>
-                <p>Most offices reconcile petty cash monthly, but high-volume teams may benefit from weekly reconciliation to catch discrepancies early and maintain accurate records.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>Can I use a petty cash log for employee reimbursements?</h3>
-                <p>Yes! A petty cash log is ideal for tracking small employee reimbursements (typically under $50) for out-of-pocket expenses like parking, postage, or office supplies.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>What's the difference between a petty cash log and a petty cash voucher?</h3>
-                <p>A petty cash voucher is a single-transaction receipt signed by the employee receiving cash. A petty cash log is the master record tracking all vouchers and maintaining the running balance of your office petty cash fund.</p>
-            </div>
-            
-            <p style="margin-top: 2rem; text-align: center;"><strong>More questions?</strong> Visit our full <a href="spendnote-faq.html">FAQ page</a> for detailed answers.</p>
-        </div>
-
         <div class="cta-box">
             <h3>Stop Wrestling with Excel. Start Tracking Petty Cash Properly.</h3>
             <p>Join hundreds of offices using SpendNote's digital petty cash book for automatic calculations, receipt storage, and instant reconciliation.</p>
             <a href="spendnote-signup.html" class="btn">Try SpendNote Free</a>
         </div>
+
+        <h2>Petty Cash Log FAQ</h2>
+        <p><strong>What should be included in a petty cash log?</strong><br>Every petty cash log entry should include: transaction date, recipient/employee name, disbursement amount, expense category (e.g., office supplies, team lunch), and a reference to the attached receipt. A running balance helps track remaining petty cash at all times.</p>
+        <p><strong>How often should I reconcile my petty cash log?</strong><br>Most offices reconcile petty cash monthly, but high-volume teams may benefit from weekly reconciliation to catch discrepancies early and maintain accurate records.</p>
+        <p><strong>Can I use a petty cash log for employee reimbursements?</strong><br>Yes! A petty cash log is ideal for tracking small employee reimbursements (typically under $50) for out-of-pocket expenses like parking, postage, or office supplies.</p>
+
+        <p style="margin-top: 2rem;">Also see: <a href="petty-cash-reconciliation.html">Petty cash reconciliation</a>, <a href="petty-cash-receipt-generator.html">Petty cash receipt generator</a>.</p>
+        <p style="text-align: center;">Need more info? Visit our <a href="spendnote-pricing.html">pricing page</a> or <a href="spendnote-faq.html">FAQ</a>.</p>
     </div>
 
     <!-- FOOTER -->
