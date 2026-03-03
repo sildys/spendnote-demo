@@ -109,6 +109,21 @@
         return dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
+    function formatFilterDate(value) {
+        const raw = safeText(value, '').trim();
+        if (!raw) return '';
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw);
+        if (!m) return raw;
+
+        const year = Number(m[1]);
+        const month = Number(m[2]);
+        const day = Number(m[3]);
+        const dt = new Date(year, month - 1, day);
+        if (Number.isNaN(dt.getTime())) return raw;
+
+        return dt.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
     function getInitials(name) {
         const parts = safeText(name, '')
             .trim()
@@ -128,15 +143,20 @@
         return `data:image/svg+xml,${encodeURIComponent(svg)}`;
     }
 
+    function normalizeIdPrefix(value) {
+        const raw = safeText(value, '').trim().toUpperCase();
+        if (!raw || raw === 'REC-' || raw === '-') return '';
+        if (!/[A-Z0-9]/.test(raw)) return '';
+        return raw;
+    }
+
     function getDisplayId(tx) {
         // Use Supabase sequence numbers if available ({prefix}{cash_box_seq}-{tx_seq})
         const cbSeq = tx?.cash_box_sequence;
         const txSeq = tx?.tx_sequence_in_box;
         if (cbSeq && txSeq) {
-            const snapshotPrefixRaw = safeText(tx?.cash_box_id_prefix_snapshot, '').trim().toUpperCase();
-            const livePrefixRaw = safeText(tx?.cash_box?.id_prefix, '').trim().toUpperCase();
-            const snapshotPrefix = snapshotPrefixRaw && snapshotPrefixRaw !== 'REC-' ? snapshotPrefixRaw : '';
-            const livePrefix = livePrefixRaw && livePrefixRaw !== 'REC-' ? livePrefixRaw : '';
+            const snapshotPrefix = normalizeIdPrefix(tx?.cash_box_id_prefix_snapshot);
+            const livePrefix = normalizeIdPrefix(tx?.cash_box?.id_prefix);
             const prefix = (snapshotPrefix && snapshotPrefix !== 'SN')
                 ? snapshotPrefix
                 : (livePrefix || snapshotPrefix || 'SN');
@@ -1001,7 +1021,7 @@
                           <div style="font-size:10px;color:#64748b;margin-top:-1px;">Cash management made simple</div>
                         </div>
                       </div>
-                      <div style="font-size:11px;color:#94a3b8;">spendnote.com</div>
+                      <div style="font-size:11px;color:#94a3b8;">spendnote.app</div>
                     </div>
                   </div>
                 `;
@@ -1343,8 +1363,8 @@
                 const uiAmtMin = safeText(qs('#filterAmountMin')?.value, '').trim();
                 const uiAmtMax = safeText(qs('#filterAmountMax')?.value, '').trim();
 
-                const fFrom = uiDateFrom || safeText(filters?.dateFrom, '');
-                const fTo = uiDateTo || safeText(filters?.dateTo, '');
+                const fFrom = formatFilterDate(uiDateFrom || safeText(filters?.dateFrom, ''));
+                const fTo = formatFilterDate(uiDateTo || safeText(filters?.dateTo, ''));
                 const rangeText = fFrom && fTo
                     ? `${fFrom} – ${fTo}`
                     : (fFrom ? `from ${fFrom}` : (fTo ? `until ${fTo}` : 'All time'));

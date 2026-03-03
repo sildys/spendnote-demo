@@ -722,13 +722,17 @@ html, body { height: auto !important; overflow: auto !important; }
                 };
 
                 const safeText = (v, fb) => (v === undefined || v === null ? '' : String(v).trim()) || fb || '';
+                const normalizeIdPrefix = (value) => {
+                    const raw = safeText(value, '').trim().toUpperCase();
+                    if (!raw || raw === 'REC-' || raw === '-') return '';
+                    if (!/[A-Z0-9]/.test(raw)) return '';
+                    return raw;
+                };
                 
                 const cbSeq = cashBox?.sequence_number || tx.cash_box_sequence;
                 const txSeq = tx.tx_sequence_in_box;
-                const snapshotPrefixRaw = safeText(tx?.cash_box_id_prefix_snapshot, '').toUpperCase();
-                const livePrefixRaw = safeText(cashBox?.id_prefix, '').toUpperCase();
-                const snapshotPrefix = snapshotPrefixRaw && snapshotPrefixRaw !== 'REC-' ? snapshotPrefixRaw : '';
-                const livePrefix = livePrefixRaw && livePrefixRaw !== 'REC-' ? livePrefixRaw : '';
+                const snapshotPrefix = normalizeIdPrefix(tx?.cash_box_id_prefix_snapshot);
+                const livePrefix = normalizeIdPrefix(cashBox?.id_prefix);
                 const prefix = (snapshotPrefix && snapshotPrefix !== 'SN')
                     ? snapshotPrefix
                     : (livePrefix || snapshotPrefix || 'SN');

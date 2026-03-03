@@ -105,14 +105,19 @@
         return `${date} - ${time}`;
     }
 
+    function normalizeIdPrefix(value) {
+        const raw = safeText(value, '').trim().toUpperCase();
+        if (!raw || raw === 'REC-' || raw === '-') return '';
+        if (!/[A-Z0-9]/.test(raw)) return '';
+        return raw;
+    }
+
     function getDisplayId(tx) {
         const cbSeq = tx?.cash_box_sequence;
         const txSeq = tx?.tx_sequence_in_box;
         if (cbSeq && txSeq) {
-            const snapshotPrefixRaw = safeText(tx?.cash_box_id_prefix_snapshot, '').trim().toUpperCase();
-            const livePrefixRaw = safeText(tx?.cash_box?.id_prefix, '').trim().toUpperCase();
-            const snapshotPrefix = snapshotPrefixRaw && snapshotPrefixRaw !== 'REC-' ? snapshotPrefixRaw : '';
-            const livePrefix = livePrefixRaw && livePrefixRaw !== 'REC-' ? livePrefixRaw : '';
+            const snapshotPrefix = normalizeIdPrefix(tx?.cash_box_id_prefix_snapshot);
+            const livePrefix = normalizeIdPrefix(tx?.cash_box?.id_prefix);
             const prefix = (snapshotPrefix && snapshotPrefix !== 'SN')
                 ? snapshotPrefix
                 : (livePrefix || snapshotPrefix || 'SN');
