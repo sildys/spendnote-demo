@@ -76,20 +76,126 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 - Good baseline: all listed pages have canonical tags and meta descriptions.
 - Current staged strategy: several sitemap-listed pages intentionally remain `noindex, nofollow` until copy/UX is finalized.
 - Positioning cleanup needed on some pages: avoid accounting/tax/POS-replacement phrasing; keep internal cash control + handoff proof framing.
+- **IMPORTANT:** New SEO pages must have `noindex, nofollow` until explicitly approved by user for indexing.
 
-### Public links + current metadata snapshot
+### SEO Content Clusters
 
-| URL | Source file | Current robots | Core topic / intent | Priority action |
-|---|---|---|---|---|
-| https://spendnote.app/ | `index.html` | `index, follow` | Main product page (brand + core value) | Keep indexable; align hero copy to non-accounting positioning |
-| https://spendnote.app/pricing | `spendnote-pricing.html` | `noindex, nofollow` (intentional pre-final) | Plan comparison / conversion page | Keep noindex until final copy and plan details are locked |
-| https://spendnote.app/faq | `spendnote-faq.html` | `index, follow` | Objection handling + product clarification | Expand FAQ around internal cash control use-cases and disclaimers |
-| https://spendnote.app/petty-cash-receipt-template | `petty-cash-receipt-template.html` | `noindex, nofollow` (intentional pre-final) | Template intent keyword | Rework copy, keep noindex during draft stage, then switch to index |
-| https://spendnote.app/petty-cash-receipt-generator | `petty-cash-receipt-generator.html` | `noindex, nofollow` (intentional pre-final) | Tool intent keyword | Rework copy, keep noindex during draft stage, then switch to index |
-| https://spendnote.app/cash-handoff-receipt | `cash-handoff-receipt.html` | `noindex, nofollow` (intentional pre-final) | Internal handoff documentation intent | High-priority ICP page; keep noindex until refinement is complete |
-| https://spendnote.app/cash-receipt-book | `cash-receipt-book.html` | `noindex, nofollow` (intentional pre-final) | Digital vs paper receipt workflow | Refine angle, keep noindex during draft stage, then switch to index |
-| https://spendnote.app/small-business-cash-receipt | `small-business-cash-receipt.html` | `noindex, nofollow` (intentional pre-final) | Small-business receipt management intent | Remove tax/accounting-heavy language, then switch to index |
-| https://spendnote.app/carbonless-receipt-book-alternative | `carbonless-receipt-book-alternative.html` | `noindex, nofollow` (intentional pre-final) | Alternative-intent keyword page | Keep differentiation angle, then switch to index |
+#### Cluster 1: Petty Cash Voucher (Core Template + Supporting Pages)
+**Hub page:** `petty-cash-voucher-template.html` ✅ INDEXABLE
+- **Status:** `index, follow` - Live and indexable
+- **Topic:** Petty cash voucher template with instant digital receipt generation
+- **Schema:** Article + FAQPage
+- **Internal links:** Cross-links to all supporting pages in cluster
+
+**Supporting pages:**
+1. `how-to-fill-out-petty-cash-voucher.html` 🔒 DRAFT
+   - **Status:** `noindex, nofollow` - Awaiting user approval
+   - **Topic:** Step-by-step guide for filling out petty cash vouchers
+   - **Schema:** HowTo + FAQPage
+   - **Key features highlighted:** Receipt label customization, currency localization, instant generation
+
+2. `petty-cash-voucher-sample.html` 🔒 DRAFT
+   - **Status:** `noindex, nofollow` - Awaiting user approval
+   - **Topic:** Real petty cash voucher samples for common business expenses
+   - **Schema:** Article + FAQPage
+   - **Examples:** Office supplies, travel, meals, postage, repairs
+
+3. `petty-cash-policy-template.html` 🔒 DRAFT
+   - **Status:** `noindex, nofollow` - Awaiting user approval
+   - **Topic:** Petty cash policy template with automation benefits
+   - **Schema:** Article + FAQPage
+   - **Focus:** Policy guidelines + how SpendNote automates enforcement
+
+**Cluster strategy:** Template page is the main entry point (indexable), supporting pages provide depth and long-tail coverage. All pages cross-link and funnel to signup CTA.
+
+#### Cluster 2: Petty Cash Receipt & Generator
+**Hub pages:**
+1. `petty-cash-receipt-template.html` 🔒 DRAFT
+   - **Status:** `noindex, nofollow` - Awaiting refinement
+   - **Topic:** Petty cash receipt template
+   
+2. `petty-cash-receipt-generator.html` 🔒 DRAFT
+   - **Status:** `noindex, nofollow` - Awaiting refinement
+   - **Topic:** Instant petty cash receipt generation tool
+
+**Supporting pages:**
+- `petty-cash-reconciliation.html` ✅ INDEXABLE
+  - **Status:** `index, follow` - Live
+  - **Topic:** Petty cash reconciliation process and automation
+
+#### Cluster 3: Cash Handoff & Team Accountability
+**Hub page:** `cash-handoff-receipt.html` 🔒 DRAFT
+- **Status:** `noindex, nofollow` - High-priority ICP page
+- **Topic:** Cash handoff documentation for shift changes and team accountability
+- **Target segment:** Shift-handover teams (ICP priority 2)
+
+#### Cluster 4: Small Business Cash Management
+**Hub page:** `small-business-cash-receipt.html` ✅ INDEXABLE
+- **Status:** `index, follow` - Live
+- **Topic:** Small business cash receipt management
+
+**Supporting pages:**
+- `cash-receipt-book.html` 🔒 DRAFT
+  - **Status:** `noindex, nofollow` - Digital vs paper angle
+- `carbonless-receipt-book-alternative.html` 🔒 DRAFT
+  - **Status:** `noindex, nofollow` - Alternative-intent keyword
+- `cash-receipt-template.html` ✅ INDEXABLE
+  - **Status:** `index, follow` - Live
+
+#### Cluster 5: Specialized Use Cases
+1. `digital-petty-cash-book.html` ✅ INDEXABLE
+   - **Status:** `index, follow` - Live
+   - **Topic:** Digital petty cash book alternative
+
+2. `office-expense-reimbursement-form.html` ✅ INDEXABLE
+   - **Status:** `index, follow` - Live
+   - **Topic:** Office expense reimbursement tracking
+
+3. `petty-cash-log-template.html` ✅ INDEXABLE
+   - **Status:** `index, follow` - Live
+   - **Topic:** Petty cash log and tracking
+
+4. `cash-drawer-reconciliation.html` ✅ INDEXABLE
+   - **Status:** `index, follow` - Live
+   - **Topic:** Cash drawer reconciliation for retail/service
+
+5. `event-cash-handling.html` ✅ INDEXABLE
+   - **Status:** `index, follow` - Live
+   - **Topic:** Event cash handling and documentation
+
+### Core Pages (Non-SEO Landing)
+
+| URL | Source file | Current robots | Purpose |
+|---|---|---|---|
+| https://spendnote.app/ | `index.html` | `index, follow` | Main product page (brand + core value) |
+| https://spendnote.app/pricing | `spendnote-pricing.html` | `noindex, nofollow` | Plan comparison / conversion page |
+| https://spendnote.app/faq | `spendnote-faq.html` | `index, follow` | Objection handling + product clarification |
+
+### Summary: Current Indexing Status
+
+**Indexable pages (index, follow):** 11
+- index.html ✅
+- spendnote-faq.html ✅
+- petty-cash-voucher-template.html ✅
+- petty-cash-reconciliation.html ✅
+- small-business-cash-receipt.html ✅
+- cash-receipt-template.html ✅
+- digital-petty-cash-book.html ✅
+- office-expense-reimbursement-form.html ✅
+- petty-cash-log-template.html ✅
+- cash-drawer-reconciliation.html ✅
+- event-cash-handling.html ✅
+
+**Draft pages (noindex, nofollow - awaiting approval):** 8
+- spendnote-pricing.html 🔒 (intentional - pricing not final)
+- petty-cash-receipt-template.html 🔒
+- petty-cash-receipt-generator.html 🔒
+- cash-handoff-receipt.html 🔒 (high priority for ICP)
+- cash-receipt-book.html 🔒
+- carbonless-receipt-book-alternative.html 🔒
+- how-to-fill-out-petty-cash-voucher.html 🔒 (NEW - awaiting approval)
+- petty-cash-voucher-sample.html 🔒 (NEW - awaiting approval)
+- petty-cash-policy-template.html 🔒 (NEW - awaiting approval)
 
 ### Key notes per page (important details)
 
