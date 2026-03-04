@@ -221,6 +221,60 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
     - **Intent:** Clarify terminology confusion for small business users.
     - **Keywords:** cash slip vs receipt, petty cash slip meaning.
 
+**Idea backlog Round 2 (real small-business pain points):**
+
+*Staff trust & accountability:*
+1. `petty-cash-employee-theft.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Small business owners worried about cash going missing with no trail.
+   - **Keywords:** how to track petty cash so employees don't steal, petty cash theft prevention.
+
+2. `who-took-money-from-cash-box.html` 🔒 IDEA
+   - **Intent:** Identifying who last accessed the cash box when money is missing.
+   - **Keywords:** who took money from cash box, how to know who took petty cash.
+
+*"The cash doesn't add up" situations:*
+3. `petty-cash-does-not-balance.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** End-of-day panic — cash is short and no one knows why.
+   - **Keywords:** petty cash doesn't balance, petty cash doesn't add up, cash box short at end of day.
+
+4. `petty-cash-how-much-to-keep.html` 🔒 IDEA
+   - **Intent:** First-time setup question — how much cash to float.
+   - **Keywords:** how much money to keep in petty cash, petty cash starting amount.
+
+*Industry-specific:*
+5. `restaurant-petty-cash-tips.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Restaurant owners managing daily cash tips and small expenses.
+   - **Keywords:** restaurant petty cash management, restaurant cash tracking tips.
+
+6. `salon-petty-cash-tracking.html` 🔒 IDEA
+   - **Intent:** Hair salon / beauty salon cash management without accounting software.
+   - **Keywords:** salon petty cash tracking, beauty salon cash management.
+
+7. `food-truck-cash-tracking.html` 🔒 IDEA
+   - **Intent:** Mobile business owners tracking cash on the go.
+   - **Keywords:** food truck cash tracking, mobile business cash log.
+
+8. `church-petty-cash-fund.html` 🔒 IDEA
+   - **Intent:** Nonprofit / church cash fund management with minimal overhead.
+   - **Keywords:** church petty cash fund, nonprofit petty cash policy.
+
+*Process & rules:*
+9. `how-often-count-petty-cash.html` 🔒 IDEA
+   - **Intent:** Owners unsure about best practice cash count frequency.
+   - **Keywords:** how often should you count petty cash, petty cash count schedule.
+
+10. `petty-cash-rules-for-employees.html` 🔒 IDEA
+    - **Intent:** Managers/HR looking for simple written rules to hand to staff.
+    - **Keywords:** petty cash rules for employees, simple petty cash policy for staff.
+
+11. `how-to-explain-petty-cash-to-employees.html` 🔒 IDEA
+    - **Intent:** Onboarding new staff on how petty cash works.
+    - **Keywords:** how to explain petty cash to employees, petty cash training guide.
+
+12. `can-employees-take-petty-cash-without-receipt.html` 🔒 IDEA
+    - **Intent:** Owners unsure about the rules — and worried about misuse.
+    - **Keywords:** can employees take petty cash without a receipt, petty cash no receipt policy.
+
 ### Core Pages (Non-SEO Landing)
 
 | URL | Source file | Current robots | Purpose |
