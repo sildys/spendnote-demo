@@ -591,3 +591,411 @@ For each of the 2 pages:
 - Impressions: 20-200
 - Clicks: 1-10
 - If 0 clicks but impressions exist: keep direction, improve snippet + intent match.
+
+---
+
+## ChatGPT SEO terv - kulon megbeszelesi blokk
+
+```text
+Spendnote – Product-Led SEO Stratégia (v1)
+1. Alap pozicionálás (kritikus guardrail)
+
+A Spendnote nem:
+
+accounting software
+
+POS rendszer
+
+invoicing tool
+
+A Spendnote:
+
+Internal cash control + receipt proof + team audit trail
+
+Kulcs üzenetek:
+
+internal cash tracking
+
+handoff proof
+
+team accountability
+
+receipt infrastructure
+
+Ez fontos, mert különben a Google rossz kategóriába sorolja.
+
+2. A SEO Funnel modell
+
+A Spendnote SEO-ja három rétegre épül.
+
+Layer 1 – TOOL oldalak
+
+Cél: traffic generálás
+
+Felhasználó gyors eszközt keres.
+
+Példák:
+
+petty cash calculator
+
+cash receipt generator
+
+deposit receipt generator
+
+petty cash reconciliation tool
+
+Oldal struktúra:
+
+mini tool
+
+instant preview
+
+CTA → Spendnote
+
+Layer 2 – TEMPLATE oldalak
+
+Cél: search intent lefedése
+
+Felhasználó template-et keres.
+
+Példák:
+
+petty cash receipt template
+
+petty cash voucher template
+
+petty cash log template
+
+cash receipt template
+
+rent receipt template
+
+Oldal struktúra:
+
+template preview
+
+rövid magyarázat
+
+generator
+
+CTA
+
+Layer 3 – PROBLEM oldalak
+
+Cél: konverzió
+
+Felhasználó konkrét problémát keres.
+
+Példák:
+
+petty cash does not balance
+
+who took money from cash box
+
+cash discrepancy between shifts
+
+replace petty cash spreadsheet
+
+Oldal struktúra:
+
+probléma
+
+miért történik
+
+megoldás
+
+Spendnote mint eszköz
+
+3. Prioritás – első 15 SEO oldal
+Excel replacement
+
+replace-petty-cash-spreadsheet
+
+petty-cash-app-vs-excel
+
+Pánik keresések
+
+petty-cash-does-not-balance
+
+who-took-money-from-cash-box
+
+cash-discrepancy-between-shifts
+
+Audit / admin
+
+petty-cash-audit-checklist
+
+missing-petty-cash-receipts-tax
+
+Operational use cases
+
+shift-cash-handover-log
+
+cash-paid-out-log
+
+petty-cash-sign-out-sheet
+
+Core template oldalak
+
+petty-cash-voucher-template
+
+petty-cash-log-template
+
+cash-receipt-template
+
+Industry use cases
+
+restaurant-petty-cash-tips
+
+construction-site-petty-cash
+
+4. Generator SEO univerzum
+
+Ez a Spendnote egyik legerősebb SEO iránya.
+
+Receipt Generator oldalak
+
+cash-receipt-generator
+
+petty-cash-receipt-generator
+
+deposit-receipt-generator
+
+payment-received-receipt
+
+cash-handover-receipt-generator
+
+rent-payment-receipt-template
+
+iou-receipt-generator
+
+cash-loan-receipt
+
+Ezek tool intent keresések.
+
+Általában a SERP-ben:
+
+PDF
+
+Word template
+
+SaaS tool ritka → jó SEO lehetőség.
+
+5. Tool SEO oldalak
+
+Mini alkalmazások SEO belépőként.
+
+Petty Cash Calculator
+
+Cél: petty cash fund meghatározása
+
+Input:
+
+employees
+
+daily expenses
+
+transaction frequency
+
+Output:
+
+recommended petty cash float
+
+Petty Cash Reconciliation Tool
+
+Input:
+
+opening balance
+
+receipts
+
+expenses
+
+Output:
+
+expected balance + discrepancy
+
+Cash Handover Receipt Generator
+
+Input:
+
+from
+
+to
+
+amount
+
+reason
+
+Output:
+
+handover receipt preview
+
+6. Industry use-case SEO
+
+Niche oldalak kisvállalkozásoknak.
+
+Példák:
+
+restaurant petty cash management
+
+salon petty cash tracking
+
+food truck cash tracking
+
+construction site petty cash
+
+cleaning business petty cash
+
+market stall cash tracking
+
+Google szereti az industry-specific tartalmat.
+
+7. Panic-query SEO
+
+Nagyon erős konverziós oldalak.
+
+Példák:
+
+petty cash does not balance
+
+petty cash mixed with personal money
+
+petty cash running out
+
+who took money from cash box
+
+Felhasználó:
+
+stresszes
+
+gyors megoldást keres
+
+Konverzió magas.
+
+8. Typo SEO stratégia
+
+Keresések gyakran elírtak.
+
+Példák:
+
+pety cash
+
+petty cash vaucher
+
+peddy cash
+
+Ezeket nem külön oldalakkal, hanem guide oldalakon belül érdemes lefedni.
+
+9. SEO oldal mennyiségi stratégia
+Phase 1
+
+15 oldal
+
+Cél:
+
+~1000 látogató / hó
+
+Phase 2
+
+30 oldal
+
+Cél:
+
+3000–8000 látogató / hó
+
+Phase 3
+
+60 oldal
+
+Cél:
+
+10k+ látogató / hó
+
+10. Traffic becslés
+
+Ha 30 oldal rankel:
+
+átlag:
+
+30–300 látogató / oldal / hó
+
+Összesen:
+
+~900 – 9000 látogató / hó
+
+11. SaaS konverzió becslés
+
+Tipikus SaaS arányok:
+
+signup:
+
+2–4 %
+
+paid conversion:
+
+10–20 %
+
+Példa:
+
+12 000 látogató
+
+signup
+→ 360
+
+paid
+→ 60
+
+Ha $19 csomag:
+
+→ ~1140 USD / hó
+
+SEO-ból.
+
+12. Tartalom publikálási stratégia
+
+Nem érdemes egyszerre sok oldalt kirakni.
+
+Ideális tempó:
+
+heti
+2–3 SEO oldal
+
+Ez stabilabb indexelést ad.
+
+13. Hosszú távú SEO irány
+
+A Spendnote valójában nem csak:
+
+petty cash tool
+
+Hanem:
+
+Receipt infrastructure for small businesses
+
+Ez lehetővé teszi:
+
+több receipt use case
+
+több generator
+
+több template
+
+→ sokkal nagyobb SEO univerzum.
+
+Rövid összefoglaló
+
+A Spendnote SEO modellje három pilléren áll:
+
+1️⃣ Tool SEO (generatorok, kalkulátorok)
+2️⃣ Template SEO (receipt template oldalak)
+3️⃣ Problem SEO (valós problémák)
+
+Ez együtt:
+
+stabil traffic
+
+magas intent
+
+SaaS konverzió
+```
