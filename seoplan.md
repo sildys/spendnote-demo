@@ -620,6 +620,58 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
     - **Keywords:** youth group cash tracker, scout troop fund tracker, youth group money collection.
     - **Framing:** Group leader documents every cash payment from families — receipts and transparency.
 
+**Idea backlog Round 7 (more cash handoff scenarios — vetted for positioning safety):**
+
+> **Positioning guardrail reminder:** SpendNote documents the cash handoff moment. It is NOT a tax invoice, NOT a sales receipt, NOT an accounting document. Pages in this round must explicitly state that tax/invoicing obligations are handled separately. Rejected from this round: private vehicle sale, garage sale, auto mechanic, tow truck, moving company, consignment — all require official invoicing as the primary document.
+
+*Service providers documenting cash received (same framing as contractor round):*
+1. `babysitter-cash-payment-receipt.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Babysitter/nanny receives weekly cash payment — gives the family instant proof of cash received.
+   - **Keywords:** babysitter cash payment receipt, nanny cash receipt, proof of babysitter payment.
+   - **Framing:** The sitter documents cash received from the family — tax reporting is handled separately by each party.
+
+2. `dog-walker-cash-receipt.html` 🔒 IDEA
+   - **Intent:** Dog walker / pet sitter receives regular cash payments — documents each one.
+   - **Keywords:** dog walker cash receipt, pet sitter payment receipt, proof of dog walking payment.
+   - **Framing:** Pet sitter documents cash received — invoicing/tax handled separately.
+
+3. `lawn-care-cash-receipt.html` 🔒 IDEA
+   - **Intent:** Lawn care / landscaping provider receives cash — gives client instant proof.
+   - **Keywords:** lawn care cash receipt, landscaper cash payment proof, yard work cash receipt.
+   - **Framing:** Landscaper documents cash received for the job — official invoice follows if needed.
+
+4. `tutor-cash-payment-receipt.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Private tutor receives cash for lessons — gives parent/student instant proof.
+   - **Keywords:** tutor cash payment receipt, private lesson cash receipt, tutoring payment proof.
+   - **Framing:** Tutor documents cash received per session — tax obligations handled separately.
+
+*Event vendors documenting advance cash received:*
+5. `wedding-vendor-cash-advance.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Wedding vendor (DJ, florist, caterer, photographer) receives cash advance — gives couple instant proof.
+   - **Keywords:** wedding vendor cash advance receipt, wedding deposit cash proof, pay wedding vendor cash.
+   - **Framing:** Vendor documents cash advance received — full invoice issued after the event.
+
+6. `event-vendor-cash-receipt.html` 🔒 IDEA
+   - **Intent:** Any event vendor/supplier receives cash on-site — documents the handoff.
+   - **Keywords:** event vendor cash receipt, event supplier cash advance proof.
+   - **Framing:** Vendor gives instant proof of cash received at the event — invoices separately.
+
+*Internal / operational (no tax issue at all):*
+7. `key-deposit-cash-receipt.html` 🔒 IDEA
+   - **Intent:** Documenting cash received as a key/access deposit (apartment, office, locker, equipment).
+   - **Keywords:** key deposit cash receipt, key deposit proof, refundable deposit cash receipt.
+   - **Framing:** Proof that a refundable deposit was received in cash — returned when key is returned.
+
+8. `cash-float-setup-for-events.html` 🔒 IDEA
+   - **Intent:** Setting up a starting cash float for an event, market stall, or register — documenting who received the float.
+   - **Keywords:** cash float setup, starting cash for event, cash float handoff receipt.
+   - **Framing:** Internal documentation of who received the starting cash — fully internal, no tax.
+
+9. `lost-and-found-cash-log.html` 🔒 IDEA
+   - **Intent:** Documenting cash found on premises or returned to someone — proof of the handoff.
+   - **Keywords:** lost and found cash log, found cash documentation, cash return receipt.
+   - **Framing:** Internal proof that found cash was documented and/or returned.
+
 ### Core Pages (Non-SEO Landing)
 
 | URL | Source file | Current robots | Purpose |
