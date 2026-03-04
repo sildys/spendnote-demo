@@ -88,20 +88,20 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 - **Internal links:** Cross-links to all supporting pages in cluster
 
 **Supporting pages:**
-1. `how-to-fill-out-petty-cash-voucher.html` 🔒 DRAFT
-   - **Status:** `noindex, nofollow` - Awaiting user approval
+1. `how-to-fill-out-petty-cash-voucher.html` ✅ INDEXABLE
+   - **Status:** `index, follow` - Live
    - **Topic:** Step-by-step guide for filling out petty cash vouchers
    - **Schema:** HowTo + FAQPage
    - **Key features highlighted:** Receipt label customization, currency localization, instant generation
 
-2. `petty-cash-voucher-sample.html` 🔒 DRAFT
-   - **Status:** `noindex, nofollow` - Awaiting user approval
+2. `petty-cash-voucher-sample.html` ✅ INDEXABLE
+   - **Status:** `index, follow` - Live
    - **Topic:** Real petty cash voucher samples for common business expenses
    - **Schema:** Article + FAQPage
    - **Examples:** Office supplies, travel, meals, postage, repairs
 
-3. `petty-cash-policy-template.html` 🔒 DRAFT
-   - **Status:** `noindex, nofollow` - Awaiting user approval
+3. `petty-cash-policy-template.html` ✅ INDEXABLE
+   - **Status:** `index, follow` - Live
    - **Topic:** Petty cash policy template with automation benefits
    - **Schema:** Article + FAQPage
    - **Focus:** Policy guidelines + how SpendNote automates enforcement
@@ -173,7 +173,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 
 ### Summary: Current Indexing Status
 
-**Indexable pages (index, follow):** 11
+**Indexable pages (index, follow):** 14
 - index.html ✅
 - spendnote-faq.html ✅
 - petty-cash-voucher-template.html ✅
@@ -185,17 +185,17 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 - petty-cash-log-template.html ✅
 - cash-drawer-reconciliation.html ✅
 - event-cash-handling.html ✅
+- how-to-fill-out-petty-cash-voucher.html ✅
+- petty-cash-voucher-sample.html ✅
+- petty-cash-policy-template.html ✅
 
-**Draft pages (noindex, nofollow - awaiting approval):** 8
+**Draft pages (noindex, nofollow - awaiting approval):** 5
 - spendnote-pricing.html 🔒 (intentional - pricing not final)
 - petty-cash-receipt-template.html 🔒
 - petty-cash-receipt-generator.html 🔒
 - cash-handoff-receipt.html 🔒 (high priority for ICP)
 - cash-receipt-book.html 🔒
 - carbonless-receipt-book-alternative.html 🔒
-- how-to-fill-out-petty-cash-voucher.html 🔒 (NEW - awaiting approval)
-- petty-cash-voucher-sample.html 🔒 (NEW - awaiting approval)
-- petty-cash-policy-template.html 🔒 (NEW - awaiting approval)
 
 ### Key notes per page (important details)
 
