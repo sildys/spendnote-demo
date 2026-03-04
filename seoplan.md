@@ -448,6 +448,79 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
     - **Intent:** Common confusion between petty cash and cash register functions.
     - **Keywords:** petty cash vs cash register, difference between petty cash and till.
 
+**Idea backlog Round 6 (full app capabilities — receipt infrastructure beyond petty cash):**
+
+> **Positioning guardrail:** SpendNote provides instant proof of cash handoff — NOT a tax invoice or official accounting document. The official invoice/receipt comes later; SpendNote gives immediate documentation that cash changed hands. Every page must include this disclaimer.
+
+*Instant cash receipt / proof of payment (core app feature, new contexts):*
+1. `rent-payment-cash-receipt.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Landlords who collect rent in cash and need to give tenants instant proof — the official invoice comes later.
+   - **Keywords:** rent payment cash receipt, proof of rent payment cash, rent cash handoff receipt.
+   - **Framing:** Instant proof that cash rent was received; not a tax document.
+
+2. `deposit-receipt-proof.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Instant proof that a security deposit / advance was received in cash.
+   - **Keywords:** deposit receipt proof, security deposit cash receipt, advance deposit handoff.
+   - **Framing:** Proof of cash handoff for deposits — official documentation follows later.
+
+3. `advance-payment-cash-receipt.html` 🔒 IDEA
+   - **Intent:** Instant proof that an advance/prepayment was received in cash before the invoice is issued.
+   - **Keywords:** advance payment cash receipt, cash prepayment proof, advance cash handoff.
+   - **Framing:** Quick proof of cash advance received — invoice follows.
+
+4. `cash-payment-received-proof.html` 🔒 IDEA
+   - **Intent:** General "I received your cash payment" instant documentation.
+   - **Keywords:** cash payment received receipt, proof of cash payment, cash received confirmation.
+   - **Framing:** Internal proof of cash received — not a final invoice.
+
+5. `cash-refund-receipt.html` 🔒 IDEA
+   - **Intent:** Documenting that a cash refund was given back to someone.
+   - **Keywords:** cash refund receipt, proof of cash refund, refund cash handoff.
+   - **Framing:** Internal proof that cash was returned.
+
+*Multi-cash-box & team features (direct app USP):*
+6. `how-to-manage-multiple-cash-boxes.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Managing multiple cash boxes in one app — direct SpendNote USP.
+   - **Keywords:** manage multiple cash boxes, multiple petty cash boxes one app.
+
+7. `cash-tracking-multiple-locations.html` 🔒 IDEA
+   - **Intent:** Tracking cash across multiple business locations from one dashboard.
+   - **Keywords:** cash tracking multiple locations, multi-location cash management.
+
+8. `team-cash-accountability-app.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Knowing which team member handled cash and when — audit trail showcase.
+   - **Keywords:** team cash accountability, who handled cash app, cash audit trail.
+
+9. `cash-box-for-each-department.html` 🔒 IDEA
+   - **Intent:** Separate cash box per department for cleaner tracking.
+   - **Keywords:** cash box per department, department petty cash tracking.
+
+*Receipt branding & Pro feature showcase:*
+10. `custom-cash-receipt-with-logo.html` 🔒 IDEA ⭐ TOP PICK
+    - **Intent:** Creating branded internal receipts with company logo.
+    - **Keywords:** cash receipt with logo, custom receipt template with branding.
+
+11. `professional-internal-receipt-maker.html` 🔒 IDEA
+    - **Intent:** Professional-looking internal cash receipts for small businesses.
+    - **Keywords:** professional cash receipt maker, business receipt generator.
+
+12. `digital-receipt-vs-paper-receipt.html` 🔒 IDEA
+    - **Intent:** Why switch from paper to digital internal receipts.
+    - **Keywords:** digital receipt vs paper receipt, paperless cash receipts.
+
+*Industry-specific internal cash tracking (not invoicing):*
+13. `cash-tracking-for-property-managers.html` 🔒 IDEA ⭐ TOP PICK
+    - **Intent:** Property managers tracking maintenance/repair cash expenses internally.
+    - **Keywords:** property manager cash tracking, rental property petty cash.
+
+14. `cash-tracking-for-contractors.html` 🔒 IDEA
+    - **Intent:** Contractors tracking cash paid to subcontractors or for materials — internal records.
+    - **Keywords:** contractor cash tracking, subcontractor cash payment log.
+
+15. `cash-tracking-for-event-organizers.html` 🔒 IDEA
+    - **Intent:** Event organizers tracking cash flow during events — vendor payments, door revenue.
+    - **Keywords:** event cash tracking, event cash management app.
+
 ### Core Pages (Non-SEO Landing)
 
 | URL | Source file | Current robots | Purpose |
