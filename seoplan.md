@@ -322,6 +322,68 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
     - **Intent:** Practical issue of losing access to the cash box.
     - **Keywords:** lost key to cash box, petty cash box locked out.
 
+**Idea backlog Round 4 (audit fear, Excel replacement, work environments, daily routines):**
+
+*Audit / tax panic:*
+1. `petty-cash-audit-checklist.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Small business owners afraid of audit with no proper cash documentation.
+   - **Keywords:** petty cash audit checklist, small business petty cash audit.
+
+2. `petty-cash-records-for-tax-time.html` 🔒 IDEA
+   - **Intent:** End-of-year scramble to organize cash records for the accountant.
+   - **Keywords:** petty cash records for tax, organize petty cash before tax season.
+
+3. `petty-cash-missing-receipts-tax.html` 🔒 IDEA
+   - **Intent:** Panic when receipts are missing at tax time.
+   - **Keywords:** missing petty cash receipts tax, lost petty cash receipts what to do.
+
+*Replacing Excel / paper:*
+4. `replace-petty-cash-spreadsheet.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Frustrated Excel users looking for a simpler alternative.
+   - **Keywords:** replace petty cash spreadsheet, petty cash Excel alternative.
+
+5. `petty-cash-app-vs-excel.html` 🔒 IDEA
+   - **Intent:** Comparison content — strong conversion potential.
+   - **Keywords:** petty cash app vs Excel, petty cash software vs spreadsheet.
+
+6. `daily-cash-report-template.html` 🔒 IDEA
+   - **Intent:** People currently writing daily reports by hand or in Word.
+   - **Keywords:** daily cash report template, end of day cash report form.
+
+*Additional work environments:*
+7. `cleaning-business-petty-cash.html` 🔒 IDEA
+   - **Intent:** Cleaning companies with multiple teams and supply purchases.
+   - **Keywords:** cleaning business petty cash, cleaning company cash tracking.
+
+8. `construction-site-petty-cash.html` 🔒 IDEA
+   - **Intent:** Construction crews buying materials with cash on-site.
+   - **Keywords:** construction site petty cash, job site cash tracking.
+
+9. `delivery-driver-cash-tracking.html` 🔒 IDEA
+   - **Intent:** Drivers collecting cash on routes with no immediate reconciliation.
+   - **Keywords:** delivery driver cash tracking, cash on delivery tracking.
+
+10. `market-stall-cash-tracking.html` 🔒 IDEA
+    - **Intent:** Market vendors / flea market sellers with daily cash-only operations.
+    - **Keywords:** market stall cash tracking, flea market cash log.
+
+*Daily routines & shift issues:*
+11. `how-to-replenish-petty-cash.html` 🔒 IDEA
+    - **Intent:** When and how to top up the petty cash fund.
+    - **Keywords:** how to replenish petty cash, petty cash fund top up.
+
+12. `cash-discrepancy-between-shifts.html` 🔒 IDEA ⭐ TOP PICK
+    - **Intent:** Cash doesn't match between shifts — finding where it went wrong.
+    - **Keywords:** cash discrepancy between shifts, shift change cash shortage.
+
+13. `two-person-cash-count-policy.html` 🔒 IDEA
+    - **Intent:** Dual control principle explained simply for small teams.
+    - **Keywords:** two person cash count, dual control cash counting policy.
+
+14. `tip-jar-tracking-small-business.html` 🔒 IDEA
+    - **Intent:** Fair tracking and splitting of tip jar money.
+    - **Keywords:** tip jar tracking, how to track tip jar money fairly.
+
 ### Core Pages (Non-SEO Landing)
 
 | URL | Source file | Current robots | Purpose |
