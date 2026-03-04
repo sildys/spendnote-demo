@@ -163,6 +163,23 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - **Status:** `index, follow` - Live
    - **Topic:** Event cash handling and documentation
 
+#### Cluster 6: Cash Slip & IOU (Small Business Focus)
+**Hub page:** `cash-slip-template.html` 🔒 PLANNED
+- **Status:** To be created
+- **Topic:** Cash slip / petty cash slip alternative with digital tracking.
+- **Target segment:** Small businesses looking for quick, simple cash handoff slips (American terminology).
+
+**Supporting pages (Pain-point & Typos):**
+1. `iou-slip-for-office.html` 🔒 PLANNED
+   - **Status:** To be created
+   - **Topic:** Replacing lost paper IOU slips (post-its) with digital "pending" out-transactions.
+   - **Key angle:** Solving the "who took the 50 bucks?" problem without needing full accounting software.
+
+2. `petty-cash-mistakes-and-terms.html` 🔒 PLANNED
+   - **Status:** To be created
+   - **Topic:** Common petty cash tracking mistakes and everyday terminology.
+   - **SEO Strategy:** Organically capture high-volume typos and phonetic searches common among everyday small business owners (e.g., *pety cash*, *peddy cash log*, *petty cash vaucher*, *pety cash slip*) in a helpful, non-spammy context.
+
 ### Core Pages (Non-SEO Landing)
 
 | URL | Source file | Current robots | Purpose |
