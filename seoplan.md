@@ -521,6 +521,27 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
     - **Intent:** Event organizers tracking cash flow during events — vendor payments, door revenue.
     - **Keywords:** event cash tracking, event cash management app.
 
+*Employee cash advances & reimbursements (very common, internal proof):*
+16. `salary-advance-cash-receipt.html` 🔒 IDEA ⭐ TOP PICK
+    - **Intent:** Boss gives employee a payroll advance in cash — needs instant proof of handoff. Deducted from next paycheck later (not SpendNote's job).
+    - **Keywords:** salary advance cash receipt, payroll advance receipt, pay advance proof.
+    - **Framing:** Instant proof that cash advance was given — payroll reconciliation happens separately.
+
+17. `employee-expense-advance-receipt.html` 🔒 IDEA
+    - **Intent:** Employee receives cash for a business purchase (supplies, travel) — documenting the handoff.
+    - **Keywords:** employee expense advance receipt, cash advance for business expenses.
+    - **Framing:** Proof of cash given for business purposes — receipts for actual purchases collected separately.
+
+18. `per-diem-cash-advance.html` 🔒 IDEA
+    - **Intent:** Daily cash allowance given to workers (construction, travel, field work).
+    - **Keywords:** per diem cash advance receipt, daily allowance cash handoff.
+    - **Framing:** Proof of daily cash allowance disbursed — not a payroll document.
+
+19. `employee-reimbursement-cash-receipt.html` 🔒 IDEA
+    - **Intent:** Employee spent personal money on business expense, getting reimbursed in cash — needs proof of repayment.
+    - **Keywords:** employee reimbursement cash receipt, cash reimbursement proof, out of pocket reimbursement.
+    - **Framing:** Proof that employee was reimbursed in cash for out-of-pocket business expenses.
+
 ### Core Pages (Non-SEO Landing)
 
 | URL | Source file | Current robots | Purpose |
