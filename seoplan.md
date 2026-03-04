@@ -576,6 +576,50 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
     - **Keywords:** service provider cash advance receipt, tradesman cash received proof, give client receipt before invoice.
     - **Framing:** Universal — any tradesman gives instant proof of cash received, invoices later.
 
+*Community & group cash collection (the "class fund treasurer" use case):*
+
+> **Core scenario:** One person collects cash from many people (parents, members, teammates). They need to track who paid, how much, and when — and be able to show proof to the group. SpendNote = each payment is an IN transaction from a contact, full transparency.
+
+26. `class-fund-cash-tracker.html` 🔒 IDEA ⭐ TOP PICK
+    - **Intent:** Parent or teacher collecting class fund money from families — tracking who paid and who didn't.
+    - **Keywords:** class fund tracker, school class money collection, class fund cash log, track class fund payments.
+    - **Framing:** The class fund treasurer uses SpendNote to log every cash payment, give receipts, and show the group where the money went.
+
+27. `pta-cash-collection-tracker.html` 🔒 IDEA
+    - **Intent:** PTA / parent-teacher association collecting dues and fundraiser cash.
+    - **Keywords:** PTA cash collection tracker, PTA dues tracker, parent teacher cash fund.
+    - **Framing:** PTA treasurer tracks cash in and out with full accountability to parents.
+
+28. `sports-team-fund-tracker.html` 🔒 IDEA ⭐ TOP PICK
+    - **Intent:** Sports team manager collecting fees for equipment, travel, uniforms in cash.
+    - **Keywords:** sports team fund tracker, team cash collection, team fee tracker app.
+    - **Framing:** Team manager documents every cash payment — who paid, who owes, what was spent.
+
+29. `club-dues-cash-tracker.html` 🔒 IDEA
+    - **Intent:** Any club or organization collecting membership dues in cash.
+    - **Keywords:** club dues tracker, membership fee cash collection, club fund tracker.
+    - **Framing:** Club treasurer tracks cash dues with receipts for every member.
+
+30. `community-fundraiser-cash-tracker.html` 🔒 IDEA
+    - **Intent:** Tracking cash collected at fundraising events (bake sale, car wash, charity event).
+    - **Keywords:** fundraiser cash tracker, bake sale cash log, charity cash collection tracker.
+    - **Framing:** Event organizer documents every cash amount collected — full transparency for the group.
+
+31. `office-collection-tracker.html` 🔒 IDEA
+    - **Intent:** Office collections for gifts, group lunches, farewell presents — one person collects cash from coworkers.
+    - **Keywords:** office collection tracker, group gift cash collection, office whip-round tracker.
+    - **Framing:** The person collecting cash can show everyone exactly who contributed and how much was spent.
+
+32. `hoa-cash-fee-tracker.html` 🔒 IDEA
+    - **Intent:** HOA or condo association board collecting fees or assessments in cash.
+    - **Keywords:** HOA cash fee tracker, condo association cash collection, HOA dues cash log.
+    - **Framing:** Board treasurer tracks cash payments from residents with full accountability.
+
+33. `youth-group-cash-tracker.html` 🔒 IDEA
+    - **Intent:** Scout leaders, church youth group leaders collecting cash for trips, supplies, activities.
+    - **Keywords:** youth group cash tracker, scout troop fund tracker, youth group money collection.
+    - **Framing:** Group leader documents every cash payment from families — receipts and transparency.
+
 ### Core Pages (Non-SEO Landing)
 
 | URL | Source file | Current robots | Purpose |
