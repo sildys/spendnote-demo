@@ -384,6 +384,70 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
     - **Intent:** Fair tracking and splitting of tip jar money.
     - **Keywords:** tip jar tracking, how to track tip jar money fairly.
 
+**Idea backlog Round 5 (security, remote management, confrontation, comparison, seasonal):**
+
+*Security & storage:*
+1. `where-to-keep-petty-cash.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Basic question about where to physically store petty cash.
+   - **Keywords:** where to keep petty cash, best place to store petty cash in office.
+
+2. `petty-cash-security-tips.html` 🔒 IDEA
+   - **Intent:** Practical security tips for keeping cash safe.
+   - **Keywords:** petty cash security tips, how to keep petty cash safe.
+
+3. `does-insurance-cover-petty-cash-theft.html` 🔒 IDEA
+   - **Intent:** Very specific but high-intent question after a theft incident.
+   - **Keywords:** does insurance cover petty cash theft, business insurance stolen cash.
+
+*Owner not always present:*
+4. `manage-petty-cash-remotely.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Business owners who aren't always on-site but need cash visibility.
+   - **Keywords:** manage petty cash remotely, track petty cash from home.
+
+5. `petty-cash-for-part-time-staff.html` 🔒 IDEA
+   - **Intent:** Managing cash access for part-time or rotating employees.
+   - **Keywords:** petty cash access part time employees, part time staff cash handling.
+
+*Difficult conversations:*
+6. `how-to-confront-employee-about-missing-cash.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Emotionally charged — owner suspects theft but doesn't know how to address it.
+   - **Keywords:** how to talk to employee about missing cash, confront staff about stolen money.
+
+7. `petty-cash-discipline-policy.html` 🔒 IDEA
+   - **Intent:** What consequences to set when petty cash rules are broken.
+   - **Keywords:** petty cash discipline policy, employee broke petty cash rules.
+
+*Comparison & decision support:*
+8. `best-petty-cash-app-for-small-business.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Listicle / review format — strong conversion potential.
+   - **Keywords:** best petty cash app small business, petty cash tracking app 2025.
+
+9. `petty-cash-vs-business-bank-account.html` 🔒 IDEA
+   - **Intent:** Clarifying when to use petty cash vs just using the business account.
+   - **Keywords:** petty cash vs business account, when to use petty cash.
+
+10. `envelope-budgeting-for-business.html` 🔒 IDEA
+    - **Intent:** Popular American budgeting method applied to business cash.
+    - **Keywords:** envelope cash system for business, envelope budgeting small business.
+
+*Seasonal / time-specific:*
+11. `holiday-season-cash-handling.html` 🔒 IDEA
+    - **Intent:** Handling increased cash flow during holiday / Black Friday season.
+    - **Keywords:** holiday season cash handling, Black Friday cash management tips.
+
+12. `seasonal-staff-petty-cash.html` 🔒 IDEA
+    - **Intent:** Giving temporary / seasonal workers quick petty cash access.
+    - **Keywords:** petty cash for seasonal workers, temporary employee cash access.
+
+*Closing & admin:*
+13. `end-of-year-petty-cash-closeout.html` 🔒 IDEA
+    - **Intent:** Year-end petty cash closing procedures.
+    - **Keywords:** how to close out petty cash end of year, year end petty cash.
+
+14. `petty-cash-vs-cash-register.html` 🔒 IDEA
+    - **Intent:** Common confusion between petty cash and cash register functions.
+    - **Keywords:** petty cash vs cash register, difference between petty cash and till.
+
 ### Core Pages (Non-SEO Landing)
 
 | URL | Source file | Current robots | Purpose |
