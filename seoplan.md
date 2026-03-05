@@ -705,7 +705,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 
 ### Summary: Current Indexing Status
 
-**Indexable pages (index, follow):** 14
+**Indexable pages (index, follow):** 17
 - index.html ✅
 - spendnote-faq.html ✅
 - petty-cash-voucher-template.html ✅
@@ -720,8 +720,11 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 - how-to-fill-out-petty-cash-voucher.html ✅
 - petty-cash-voucher-sample.html ✅
 - petty-cash-policy-template.html ✅
+- contractor-advance-payment-receipt.html ✅
+- cash-payment-received-proof.html ✅
+- babysitter-cash-payment-receipt.html ✅
 
-**Draft pages (noindex, nofollow - awaiting approval):** 5
+**Draft pages (noindex, nofollow - awaiting approval):** 6
 - spendnote-pricing.html 🔒 (intentional - pricing not final)
 - petty-cash-receipt-template.html 🔒
 - petty-cash-receipt-generator.html 🔒
@@ -753,6 +756,41 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - Copy needs consistency pass to keep non-accounting positioning.
 
 ### Finish checklist for these SEO pages
+
+### Update log - 2026-03-05
+
+1. **3 new SEO pages finalized and published as indexable:**
+   - `/contractor-advance-payment-receipt`
+   - `/cash-payment-received-proof`
+   - `/babysitter-cash-payment-receipt`
+   - Robots switched from `noindex, nofollow` to `index, follow`.
+
+2. **Sitemap updated (`sitemap.xml`):**
+   - Added all 3 URLs above with `lastmod: 2026-03-05`.
+
+3. **Structured data improvements:**
+   - Added `FAQPage` schema to:
+     - contractor-advance-payment-receipt.html
+     - cash-payment-received-proof.html
+     - babysitter-cash-payment-receipt.html
+   - Added `FAQPage` schema to:
+     - spendnote-pricing.html
+     - petty-cash-receipt-template.html
+
+4. **Social snippet consistency fixes:**
+   - Updated OG/Twitter image targets on the 3 new pages to use scenario-specific screenshots.
+
+5. **Homepage internal-link graph improvement:**
+   - Added link from homepage reassurance line:
+     - "Receipts document the cash handoff - not invoices."
+     - target: `/cash-payment-received-proof`
+
+6. **Bing SEO warning cleanup:**
+   - Shortened title/meta description (and aligned OG/Twitter snippets where needed) for:
+     - contractor-advance-payment-receipt.html
+     - cash-payment-received-proof.html
+     - babysitter-cash-payment-receipt.html
+   - Goal: clear Bing warnings for overly long snippet fields.
 
 1. Normalize positioning language:
    - internal cash control,
