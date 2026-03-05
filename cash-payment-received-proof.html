@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QPFM30F86Q"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-QPFM30F86Q');
+    </script>
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "vqin4v9ift");
+</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Create instant proof of cash payment received. Document the exact amount, who paid, and when — on the spot. Not an invoice or tax receipt, just clear proof that cash changed hands.">
+    <link rel="canonical" href="https://spendnote.app/cash-payment-received-proof">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://spendnote.app/cash-payment-received-proof">
+    <meta property="og:title" content="Proof of Cash Payment Received - Instant Documentation | SpendNote">
+    <meta property="og:description" content="Create instant proof of cash payment received. Document who paid, how much, and when. Not an invoice — just clear proof that cash changed hands.">
+    <meta property="og:image" content="https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://spendnote.app/cash-payment-received-proof">
+    <meta property="twitter:title" content="Proof of Cash Payment Received - Instant Documentation | SpendNote">
+    <meta property="twitter:description" content="Create instant proof of cash payment received. Document who paid, how much, and when.">
+    <meta property="twitter:image" content="https://spendnote.app/assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png">
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <title>Proof of Cash Payment Received - Instant Documentation | SpendNote</title>
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Proof of Cash Payment Received - Instant Documentation",
+      "description": "How to create instant proof of cash payment received for any situation where cash changes hands and both parties need documentation.",
+      "datePublished": "2026-03-05T08:00:00+00:00",
+      "dateModified": "2026-03-05T08:00:00+00:00",
+      "author": {
+        "@type": "Organization",
+        "name": "SpendNote"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "SpendNote",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://spendnote.app/favicon.svg"
+        }
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What counts as proof of cash payment received?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Proof of cash payment received is any document that records the amount, who paid, who received, and when the transaction happened. It can be a written receipt, a digital record, or a signed acknowledgment. The key is that both parties have a copy."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is a cash payment receipt the same as an invoice?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. A cash payment receipt simply confirms that money was received. An invoice is a request for payment that may include tax information, payment terms, and legal requirements. SpendNote generates cash payment receipts as proof of handoff — not invoices or tax documents."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I give proof of cash payment?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Any time cash changes hands and either party might need to reference the transaction later. Common situations include contractor advances, rent deposits, service payments, employee reimbursements, and community fund collections."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can SpendNote receipts be used for tax purposes?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. SpendNote receipts are internal proof of cash handoff only. They document that cash changed hands between two parties. For tax filing, official invoicing, or regulated accounting, use your dedicated accounting or invoicing software."
+          }
+        }
+      ]
+    }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css?v=23">
+    <style>
+        body {
+            background: var(--bg);
+            min-height: 100vh;
+        }
+
+        .preview-banner {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            background: linear-gradient(90deg, #0f172a, #1f2937 45%, #0f766e 100%);
+            color: #ffffff;
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+        }
+
+        .preview-banner-inner {
+            max-width: var(--max-width-page);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            font-size: 0.98rem;
+            font-weight: 700;
+        }
+
+        .preview-banner-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.18);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+        }
+
+        .preview-banner-text {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .preview-banner-toggle {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preview-banner-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .preview-banner-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            margin-top: 0;
+        }
+
+        .preview-banner-details.expanded {
+            max-height: 500px;
+            margin-top: 16px;
+        }
+
+        .preview-banner-details-inner {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .preview-benefits-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-benefits-section {
+            margin-bottom: 16px;
+        }
+
+        .preview-benefits-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .preview-benefits-section h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .preview-benefits-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .preview-benefits-list li {
+            padding: 6px 0;
+            padding-left: 24px;
+            position: relative;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .preview-benefits-list li::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            color: #10b981;
+            font-weight: 700;
+        }
+
+        .preview-banner-text strong {
+            color: #fcd34d;
+        }
+
+        @media (max-width: 860px) {
+            .preview-banner-inner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .seo-hero {
+            background: linear-gradient(135deg, #059669 0%, #10b981 50%, #14b8a6 100%);
+            padding: 3rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .seo-hero-content {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 0 var(--page-gutter);
+        }
+
+        .seo-hero h1 {
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            color: white;
+        }
+
+        .seo-hero p {
+            font-size: 1rem;
+            opacity: 0.95;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            background: white;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            border-radius: 999px;
+            text-decoration: none;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+        
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-pricing-note {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .seo-content {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2.5rem var(--page-gutter);
+        }
+
+        .seo-content h2 {
+            font-size: 1.625rem;
+            font-weight: 800;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .seo-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .seo-content p {
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .seo-content ul {
+            margin: 1.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .seo-content li {
+            font-size: 1.0625rem;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .seo-content strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .seo-content a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .seo-content a:hover {
+            text-decoration: underline;
+        }
+
+        .use-case-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .use-case-box h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--text);
+        }
+
+        .use-case-box p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .receipt-showcase {
+            margin: 2rem 0 2.25rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+        }
+
+        .receipt-showcase img {
+            display: block;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            border-radius: 12px;
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+        }
+
+        .receipt-showcase figcaption {
+            margin-top: 0.75rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            text-align: center;
+            margin: 2.5rem 0;
+            color: white;
+        }
+
+        .cta-box h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: white;
+        }
+
+        .cta-box p {
+            font-size: 1rem;
+            margin-bottom: 1.25rem;
+            opacity: 0.95;
+            color: white;
+        }
+
+        .cta-box .btn {
+            background: white;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 0.875rem 2rem;
+            font-size: 1rem;
+            border-radius: var(--radius-lg);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .cta-box .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .disclaimer-box {
+            background: #fffbeb;
+            border: 1px solid #f59e0b;
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .disclaimer-box p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #92400e;
+            margin: 0;
+        }
+
+        .disclaimer-box strong {
+            color: #78350f;
+        }
+
+        .faq-section {
+            margin-top: 2.5rem;
+        }
+
+        .faq-section h2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .faq-item h3 {
+            font-size: 1.0625rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .faq-item p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .seo-hero {
+                padding: 2.5rem 0;
+            }
+
+            .seo-content {
+                padding: 2rem var(--page-gutter);
+            }
+
+            .cta-box {
+                padding: 1.75rem 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .seo-hero {
+                padding: 2rem 0;
+            }
+
+            .seo-hero h1 {
+                font-size: clamp(1.9rem, 9vw, 2.4rem);
+            }
+
+            .seo-content {
+                padding: 1.5rem 1rem;
+            }
+
+            .cta-box {
+                padding: 1.25rem 1rem;
+            }
+
+            .cta-box .btn,
+            .hero-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="preview-banner" role="status" aria-live="polite">
+    <div class="preview-banner-inner">
+        <span class="preview-banner-title"><i class="fas fa-flag"></i> Preview</span>
+        <div class="preview-banner-text">
+            <span>You're using early access. <strong>Things might change</strong> as we improve based on your feedback.</span>
+            <button class="preview-banner-toggle" onclick="togglePreviewDetails()">
+                <span id="previewToggleText">Show preview benefits</span>
+                <i class="fas fa-chevron-down" id="previewToggleIcon"></i>
+            </button>
+        </div>
+    </div>
+    <div class="preview-banner-details" id="previewDetails">
+        <div class="preview-banner-details-inner">
+            <div class="preview-benefits-title">
+                <i class="fas fa-gift"></i> Preview Release Benefits
+            </div>
+            <div class="preview-benefits-section">
+                <h4>During Preview:</h4>
+                <ul class="preview-benefits-list">
+                    <li><strong>200 transactions included</strong> (vs. standard 20 in Free plan)</li>
+                    <li>Access to all currently available features</li>
+                    <li>Help shape the product with your feedback</li>
+                </ul>
+            </div>
+            <div class="preview-benefits-section">
+                <h4>At Launch:</h4>
+                <ul class="preview-benefits-list">
+                    <li>Your account converts to Free plan (20 transactions)</li>
+                    <li><strong>Exclusive: 30% discount coupon for 2 years</strong> on any paid plan</li>
+                    <li>Priority support as an early adopter</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function togglePreviewDetails() {
+    const details = document.getElementById('previewDetails');
+    const icon = document.getElementById('previewToggleIcon');
+    const text = document.getElementById('previewToggleText');
+    
+    if (details.classList.contains('expanded')) {
+        details.classList.remove('expanded');
+        icon.className = 'fas fa-chevron-down';
+        text.textContent = 'Show preview benefits';
+    } else {
+        details.classList.add('expanded');
+        icon.className = 'fas fa-chevron-up';
+        text.textContent = 'Hide details';
+    }
+}
+</script>
+    <nav class="site-nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <svg width="36" height="36" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4 C10.895 4 10 4.895 10 6 L10 38 L12 36 L14 38 L16 36 L18 38 L20 36 L22 38 L24 36 L26 38 L28 36 L30 38 L32 36 L34 38 L36 36 L38 38 L38 6 C38 4.895 37.105 4 36 4 Z" fill="url(#nav-logo-gradient)"/>
+                    <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                    <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                    <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                    <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                    <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <defs>
+                        <linearGradient id="nav-logo-gradient" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#059669"/>
+                            <stop offset="100%" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>SpendNote</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="spendnote-pricing.html">Pricing</a></li>
+                <li><a href="spendnote-faq.html">FAQ</a></li>
+                <li><a href="spendnote-login.html" class="btn btn-secondary">Log in</a></li>
+                <li><a href="spendnote-signup.html" class="btn btn-primary">Sign up</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="seo-hero">
+        <div class="seo-hero-content">
+            <h1>Proof of Cash Payment Received</h1>
+            <p>Someone hands you cash. You need to prove it happened. Create instant documentation of exactly who paid, how much, and when.</p>
+            <a href="spendnote-signup.html" class="hero-btn">Create Cash Payment Proof</a>
+            <p class="hero-pricing-note">Start free. Paid plans from $19/month. No credit card required.</p>
+        </div>
+    </section>
+
+    <div class="seo-content">
+
+        <div class="disclaimer-box">
+            <p><strong>Important:</strong> SpendNote creates proof that cash changed hands between two parties. This is not an invoice, not a sales receipt, and not a tax document. If your situation requires official invoicing or tax-compliant documentation, handle that separately through your accounting process.</p>
+        </div>
+
+        <h2>The Problem With Cash</h2>
+
+        <p>Cash has no built-in paper trail. When someone hands you $500 in bills, there's no bank record, no transfer confirmation, no automatic log. The money just moves.</p>
+
+        <p>A week later, one side remembers $500. The other side remembers $400. Without proof, it's your word against theirs.</p>
+
+        <p><strong>Proof of cash payment received</strong> is a simple document that records the handoff: who gave the cash, who received it, how much, and when. Both parties get a copy. The dispute never starts.</p>
+
+        <h2>When You Need Proof of Cash Payment</h2>
+
+        <div class="use-case-box">
+            <h3>Contractor &amp; Tradesman Advances</h3>
+            <p>A client gives you cash before the job starts. You give them instant proof of the advance received. The invoice comes later, after the work is done. <a href="contractor-advance-payment-receipt.html">Learn more about contractor advance receipts</a>.</p>
+        </div>
+
+        <div class="use-case-box">
+            <h3>Rent &amp; Deposit Payments</h3>
+            <p>Tenant pays rent or a security deposit in cash. The person receiving the money documents the payment immediately. The formal receipt or invoice follows through the regular process.</p>
+        </div>
+
+        <div class="use-case-box">
+            <h3>Service Provider Payments</h3>
+            <p>Babysitters, tutors, dog walkers, cleaners &mdash; anyone who gets paid in cash regularly. Keeping a receipt for every payment means no confusion about what's been paid and what hasn't. <a href="babysitter-cash-payment-receipt.html">See babysitter cash payment receipt</a>.</p>
+        </div>
+
+        <div class="use-case-box">
+            <h3>Employee Advances &amp; Reimbursements</h3>
+            <p>Giving an employee cash for business expenses, or reimbursing out-of-pocket spending. The receipt proves the handoff &mdash; payroll and accounting handle the rest.</p>
+        </div>
+
+        <div class="use-case-box">
+            <h3>Community &amp; Group Collections</h3>
+            <p>Class fund treasurer, sports team manager, club dues collector. When you're collecting cash from multiple people, you need to show who paid and who didn't.</p>
+        </div>
+
+        <div class="use-case-box">
+            <h3>Internal Cash Transfers</h3>
+            <p>Shift changes, cash float handoffs, moving cash between registers or locations. Both parties need proof the correct amount was transferred. <a href="cash-handoff-receipt.html">See cash handoff receipt</a>.</p>
+        </div>
+
+        <h2>What Your Proof of Payment Should Include</h2>
+        <ul>
+            <li><strong>Amount</strong> &mdash; The exact cash amount received</li>
+            <li><strong>Payer</strong> &mdash; Name of the person who gave the cash</li>
+            <li><strong>Receiver</strong> &mdash; Name or business of the person who received it</li>
+            <li><strong>Date and time</strong> &mdash; When the cash changed hands</li>
+            <li><strong>Purpose or note</strong> &mdash; What the payment was for</li>
+            <li><strong>Receipt number</strong> &mdash; Unique identifier for future reference</li>
+        </ul>
+
+        <p>SpendNote generates all of this automatically when you log a transaction. Print it, save as PDF, or email it &mdash; all from your phone, on the spot.</p>
+
+        <figure class="receipt-showcase">
+            <img src="assets/images/seo/petty-cash-receipt-generator/print-two-copy-receipt.png" alt="Proof of cash payment received - printable receipt example" loading="lazy">
+            <figcaption>Example: printable two-copy receipt &mdash; one for each party.</figcaption>
+        </figure>
+
+        <div class="cta-box">
+            <h3>Stop Relying on Memory</h3>
+            <p>Create instant proof every time cash changes hands. Takes 30 seconds.</p>
+            <a href="spendnote-signup.html" class="btn">Try SpendNote Free</a>
+        </div>
+
+        <h2>Why Not Just Write It on Paper?</h2>
+
+        <p>You can. People have been writing cash receipts on paper for centuries. But paper gets lost, handwriting gets misread, and you can't search through a shoebox of receipts at the end of the year.</p>
+
+        <p>A digital record means every payment is saved automatically. You can search by name, date, or amount. You can pull up the full history of payments from any client in seconds. And both parties get their own copy instantly.</p>
+
+        <h2>This Is Not an Invoice</h2>
+        <p>This is important to understand:</p>
+        <ul>
+            <li><strong>Proof of cash payment received</strong> = confirmation that cash physically changed hands</li>
+            <li><strong>Invoice</strong> = a formal request for payment, often with tax and legal requirements</li>
+        </ul>
+        <p>SpendNote handles the first one. It documents the moment. If your situation also requires an invoice &mdash; issue that separately through your regular accounting or invoicing process. SpendNote fills the gap between "cash changes hands" and "paperwork catches up."</p>
+
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+
+            <div class="faq-item">
+                <h3>What counts as proof of cash payment received?</h3>
+                <p>Proof of cash payment received is any document that records the amount, who paid, who received, and when the transaction happened. It can be a written receipt, a digital record, or a signed acknowledgment. The key is that both parties have a copy.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Is a cash payment receipt the same as an invoice?</h3>
+                <p>No. A cash payment receipt simply confirms that money was received. An invoice is a request for payment that may include tax information, payment terms, and legal requirements. SpendNote generates cash payment receipts as proof of handoff &mdash; not invoices or tax documents.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>When should I give proof of cash payment?</h3>
+                <p>Any time cash changes hands and either party might need to reference the transaction later. Common situations include contractor advances, rent deposits, service payments, employee reimbursements, and community fund collections.</p>
+            </div>
+
+            <div class="faq-item">
+                <h3>Can SpendNote receipts be used for tax purposes?</h3>
+                <p>No. SpendNote receipts are internal proof of cash handoff only. They document that cash changed hands between two parties. For tax filing, official invoicing, or regulated accounting, use your dedicated accounting or invoicing software.</p>
+            </div>
+        </div>
+
+        <p style="margin-top: 2rem;">Also see: <a href="contractor-advance-payment-receipt.html">Contractor advance payment receipt</a>, <a href="babysitter-cash-payment-receipt.html">Babysitter cash payment receipt</a>, <a href="cash-handoff-receipt.html">Cash handoff receipt</a>, <a href="small-business-cash-receipt.html">Small business cash receipt</a>, <a href="cash-receipt-template.html">Cash receipt template</a>.</p>
+        <p style="text-align: center;">See <a href="spendnote-pricing.html">pricing</a> or visit our <a href="spendnote-faq.html">FAQ</a> for more info.</p>
+    </div>
+
+    <footer class="app-footer">
+        <div class="app-footer-container">
+            <div class="app-footer-top">
+                <div class="app-footer-brand">
+                    <a href="index.html" class="app-footer-brand-logo">
+                        <svg width="32" height="32" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4 C10.895 4 10 4.895 10 6 L10 38 L12 36 L14 38 L16 36 L18 38 L20 36 L22 38 L24 36 L26 38 L28 36 L30 38 L32 36 L34 38 L36 36 L38 38 L38 6 C38 4.895 37.105 4 36 4 Z" fill="url(#footer-logo-gradient-proof)"/>
+                            <path d="M32 4 L38 10 L32 10 Z" fill="#000000" opacity="0.25"/>
+                            <path d="M32 4 L32 10 L38 10" stroke="#047857" stroke-width="1.5" stroke-linejoin="round"/>
+                            <line x1="14" y1="14" x2="30" y2="14" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                            <line x1="14" y1="19" x2="26" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.8"/>
+                            <line x1="14" y1="24" x2="30" y2="24" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/>
+                            <line x1="14" y1="29" x2="22" y2="29" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+                            <path d="M10 36 L12 38 L14 36 L16 38 L18 36 L20 38 L22 36 L24 38 L26 36 L28 38 L30 36 L32 38 L34 36 L36 38 L38 36" stroke="#047857" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            <defs>
+                                <linearGradient id="footer-logo-gradient-proof" x1="24" y1="4" x2="24" y2="40" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0%" stop-color="#059669"/>
+                                    <stop offset="100%" stop-color="#10b981"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span>SpendNote</span>
+                    </a>
+                    <p class="app-footer-brand-desc">
+                        Complete cash visibility for your team.<br>Instant receipts, full history.
+                    </p>
+                </div>
+                <div class="app-footer-right">
+                    <div class="app-footer-links-simple">
+                        <a href="index.html#features">Features</a>
+                        <a href="spendnote-pricing.html">Pricing</a>
+                        <a href="spendnote-faq.html">FAQ</a>
+                        <a href="spendnote-terms.html">Terms</a>
+                        <a href="spendnote-privacy.html">Privacy</a>
+                    </div>
+                    <div class="app-footer-brand-disclaimer">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Cash handoff documentation only. Not a tax or accounting tool.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="app-footer-bottom">
+                <div class="app-footer-copyright">
+                    2026 SpendNote. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
