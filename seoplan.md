@@ -4,6 +4,20 @@
 SpendNote is **not** an accounting, tax invoicing, or POS replacement tool.
 SpendNote is for **internal cash control**, **handoff proof**, and **team audit trail**.
 
+## SEO Quality Rules (must follow for every page)
+
+**1. Keyword cannibalization prevention**
+- Before creating a new page, check if an existing page already covers the same search intent.
+- If yes → **expand the existing page** (add H2, FAQ entry, alt text variants) instead of creating a new page.
+- One search intent = one page. Two pages targeting the same intent will hurt both.
+- "Receipt for X" keyword variants should be woven into existing service provider pages, NOT separate pages (e.g. "receipt for babysitting" → `babysitter-cash-payment-receipt.html`).
+- "Cash slip" is a synonym for "cash receipt" — only create a separate page if the target market/context is genuinely different (e.g. UK-specific content). Otherwise, add "cash slip" as a keyword variant to the existing cash receipt page.
+
+**2. Meta description length (Bing compliance)**
+- `<meta name="description">` must be **≤ 160 characters** to avoid Bing Webmaster Tools warnings.
+- `og:description` and `twitter:description` should also stay ≤ 160 characters.
+- Title tags: aim for **≤ 60 characters** where possible.
+
 ---
 
 ## Target Segment Table (ICP v2)
@@ -109,14 +123,10 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 **Cluster strategy:** Template page is the main entry point (indexable), supporting pages provide depth and long-tail coverage. All pages cross-link and funnel to signup CTA.
 
 #### Cluster 2: Petty Cash Receipt & Generator
-**Hub pages:**
-1. `petty-cash-receipt-template.html` 🔒 DRAFT
-   - **Status:** `noindex, nofollow` - Awaiting refinement
-   - **Topic:** Petty cash receipt template
-   
-2. `petty-cash-receipt-generator.html` 🔒 DRAFT
-   - **Status:** `noindex, nofollow` - Awaiting refinement
-   - **Topic:** Instant petty cash receipt generation tool
+**Hub page:** `petty-cash-receipt-generator.html` ✅ INDEXABLE
+- **Status:** `index, follow` - Live
+- **Topic:** Instant petty cash receipt generation tool
+- **Schema:** Article + FAQPage
 
 **Supporting pages:**
 - `petty-cash-reconciliation.html` ✅ INDEXABLE
@@ -124,9 +134,10 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
   - **Topic:** Petty cash reconciliation process and automation
 
 #### Cluster 3: Cash Handoff & Team Accountability
-**Hub page:** `cash-handoff-receipt.html` 🔒 DRAFT
-- **Status:** `noindex, nofollow` - High-priority ICP page
+**Hub page:** `cash-handoff-receipt.html` ✅ INDEXABLE
+- **Status:** `index, follow` - Live
 - **Topic:** Cash handoff documentation for shift changes and team accountability
+- **Schema:** Article + FAQPage
 - **Target segment:** Shift-handover teams (ICP priority 2)
 
 #### Cluster 4: Small Business Cash Management
@@ -135,10 +146,6 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 - **Topic:** Small business cash receipt management
 
 **Supporting pages:**
-- `cash-receipt-book.html` 🔒 DRAFT
-  - **Status:** `noindex, nofollow` - Digital vs paper angle
-- `carbonless-receipt-book-alternative.html` 🔒 DRAFT
-  - **Status:** `noindex, nofollow` - Alternative-intent keyword
 - `cash-receipt-template.html` ✅ INDEXABLE
   - **Status:** `index, follow` - Live
 
@@ -458,9 +465,9 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - **Keywords:** rent payment cash receipt, proof of rent payment cash, rent cash handoff receipt.
    - **Framing:** Instant proof that cash rent was received; not a tax document.
 
-2. `deposit-receipt-proof.html` 🔒 IDEA ⭐ TOP PICK
+2. `cash-deposit-receipt.html` 🔒 IDEA ⭐ TOP PICK
    - **Intent:** Instant proof that a security deposit / advance was received in cash.
-   - **Keywords:** deposit receipt proof, security deposit cash receipt, advance deposit handoff.
+   - **Keywords:** cash deposit receipt, security deposit receipt, deposit receipt.
    - **Framing:** Proof of cash handoff for deposits — official documentation follows later.
 
 3. `advance-payment-cash-receipt.html` 🔒 IDEA
@@ -522,9 +529,9 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
     - **Keywords:** event cash tracking, event cash management app.
 
 *Employee cash advances & reimbursements (very common, internal proof):*
-16. `salary-advance-cash-receipt.html` 🔒 IDEA ⭐ TOP PICK
+16. `employee-cash-advance-receipt.html` 🔒 IDEA ⭐ TOP PICK
     - **Intent:** Boss gives employee a payroll advance in cash — needs instant proof of handoff. Deducted from next paycheck later (not SpendNote's job).
-    - **Keywords:** salary advance cash receipt, payroll advance receipt, pay advance proof.
+    - **Keywords:** employee cash advance receipt, salary advance receipt, cash advance receipt employee.
     - **Framing:** Instant proof that cash advance was given — payroll reconciliation happens separately.
 
 17. `employee-expense-advance-receipt.html` 🔒 IDEA
@@ -580,9 +587,9 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 
 > **Core scenario:** One person collects cash from many people (parents, members, teammates). They need to track who paid, how much, and when — and be able to show proof to the group. SpendNote = each payment is an IN transaction from a contact, full transparency.
 
-26. `class-fund-cash-tracker.html` 🔒 IDEA ⭐ TOP PICK
+26. `school-money-collection-tracker.html` 🔒 IDEA ⭐ TOP PICK
     - **Intent:** Parent or teacher collecting class fund money from families — tracking who paid and who didn't.
-    - **Keywords:** class fund tracker, school class money collection, class fund cash log, track class fund payments.
+    - **Keywords:** school money collection, class fund tracker, school money collection tracker, class fund log.
     - **Framing:** The class fund treasurer uses SpendNote to log every cash payment, give receipts, and show the group where the money went.
 
 27. `pta-cash-collection-tracker.html` 🔒 IDEA
@@ -674,6 +681,30 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 
 ---
 
+#### Strategic SEO Priorities (near-term)
+
+> These themes should be pursued as soon as possible — they represent high-potential angles that can bring in new segments quickly.
+
+**1. "Cash slip" keyword cluster**
+- "Cash slip" is a widely used synonym for cash receipt in many markets (UK, Australia, South Africa, India).
+- Target keywords: `cash slip template`, `cash slip generator`, `printable cash slip`, `cash payment slip`.
+- This is low-hanging fruit — same product, different keyword family.
+- Potential pages: `cash-slip-template.html`, `printable-cash-slip.html`.
+
+**2. Excel replacement / spreadsheet alternative angle**
+- Many target users currently track cash in Excel or Google Sheets — positioning SpendNote as the upgrade.
+- Target keywords: `cash tracking spreadsheet alternative`, `replace excel cash log`, `petty cash excel alternative`.
+- This angle works across ALL segments (small teams, shift teams, treasurers).
+- Potential pages: `petty-cash-excel-alternative.html`, `cash-tracking-spreadsheet-replacement.html`.
+
+**3. "Receipt for [X]" keyword pattern (ChatGPT tip)**
+- The compound pattern `receipt for [service/scenario]` is a natural Google search pattern with massive long-tail potential.
+- Examples: `receipt for babysitting`, `receipt for tutoring`, `receipt for cleaning services`, `receipt for cash payment`, `receipt for dog walking`, `receipt for lawn care`.
+- Every existing service provider page can be supplemented with a "receipt for X" variant or the pages can target both patterns.
+- This pattern scales infinitely — every cash-paid service has a "receipt for [X]" search.
+
+---
+
 #### Future Phase: Multilingual SEO Expansion
 
 > **Key insight:** SpendNote receipts are already fully localizable — custom receipt labels (Pro) + currency selection mean the generated receipt works in ANY language/country. Only the app UI stays English, but the app is simple enough (few screens, few buttons) that non-English speakers can use it easily while their clients receive receipts in their local language.
@@ -705,7 +736,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 
 ### Summary: Current Indexing Status
 
-**Indexable pages (index, follow):** 17
+**Indexable pages (index, follow):** 19
 - index.html ✅
 - spendnote-faq.html ✅
 - petty-cash-voucher-template.html ✅
@@ -723,14 +754,11 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 - contractor-advance-payment-receipt.html ✅
 - cash-payment-received-proof.html ✅
 - babysitter-cash-payment-receipt.html ✅
+- petty-cash-receipt-generator.html ✅
+- cash-handoff-receipt.html ✅
 
-**Draft pages (noindex, nofollow - awaiting approval):** 6
-- spendnote-pricing.html 🔒 (intentional - pricing not final)
-- petty-cash-receipt-template.html 🔒
-- petty-cash-receipt-generator.html 🔒
-- cash-handoff-receipt.html 🔒 (high priority for ICP)
-- cash-receipt-book.html 🔒
-- carbonless-receipt-book-alternative.html 🔒
+**Draft pages (noindex, nofollow - awaiting approval):** 1
+- spendnote-pricing.html 🔒 (intentional - no payment system yet)
 
 ### Key notes per page (important details)
 
@@ -749,13 +777,36 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - Uses FAQPage structured data (important for search visibility).
    - Already contains strong internal-cash wording in key answer(s).
 
-4. **template/generator/landing pages (`/petty-cash-*`, `/cash-handoff-receipt`, `/cash-receipt-book`, `/small-business-cash-receipt`, `/carbonless-receipt-book-alternative`)**
-   - All currently `noindex, nofollow` by intent (draft-stage indexing gate).
+4. **template/generator/landing pages (`/petty-cash-*`, `/cash-handoff-receipt`, `/small-business-cash-receipt`)**
+   - All indexable (`index, follow`).
    - Canonicals are properly set to clean URLs.
-   - Most use Article or SoftwareApplication schema.
-   - Copy needs consistency pass to keep non-accounting positioning.
+   - Most use Article or SoftwareApplication schema + FAQPage.
 
 ### Finish checklist for these SEO pages
+
+### Update log - 2026-03-06
+
+1. **Deleted 3 obsolete draft pages:**
+   - `petty-cash-receipt-template.html` — replaced by petty-cash-receipt-generator
+   - `cash-receipt-book.html` — old initiative, no longer needed
+   - `carbonless-receipt-book-alternative.html` — old initiative, no longer needed
+
+2. **seoplan.md inventory corrected:**
+   - Fixed `petty-cash-receipt-generator.html` status: was listed as 🔒 DRAFT, actually `index, follow` (live).
+   - Fixed `cash-handoff-receipt.html` status: was listed as 🔒 DRAFT, actually `index, follow` (live).
+   - Updated indexable count: 17 → 19.
+   - Removed deleted pages from Cluster 2 and Cluster 4.
+   - Draft pages reduced: 6 → 1 (only spendnote-pricing.html remains intentionally noindex).
+
+3. **FAQPage schema added:**
+   - `cash-handoff-receipt.html` — 3 Q&A pairs based on page content.
+
+4. **OG/Twitter image fixes (generic jpg → seo-specific webp):**
+   - `small-business-cash-receipt.html` → `spendnote-cash-receipt-printable-proof-of-cash-handoff.webp`
+   - `cash-drawer-reconciliation.html` → `spendnote-office-petty-cash-transactions-dashboard.webp`
+   - `event-cash-handling.html` → `spendnote-dashboard-multiple-cash-boxes-overview.webp`
+
+---
 
 ### Update log - 2026-03-05
 
