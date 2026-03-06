@@ -736,7 +736,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 
 ### Summary: Current Indexing Status
 
-**Indexable pages (index, follow):** 19
+**Indexable pages (index, follow):** 25
 - index.html ✅
 - spendnote-faq.html ✅
 - petty-cash-voucher-template.html ✅
@@ -756,15 +756,15 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 - babysitter-cash-payment-receipt.html ✅
 - petty-cash-receipt-generator.html ✅
 - cash-handoff-receipt.html ✅
+- handyman-cash-payment-receipt.html ✅
+- tutor-cash-payment-receipt.html ✅
+- employee-cash-advance-receipt.html ✅
+- school-money-collection-tracker.html ✅
+- cash-deposit-receipt.html ✅
+- custom-cash-receipt-with-logo.html ✅
 
-**Draft pages (noindex, nofollow - awaiting approval):** 7
+**Draft pages (noindex, nofollow - awaiting approval):** 1
 - spendnote-pricing.html 🔒 (intentional - no payment system yet)
-- handyman-cash-payment-receipt.html 🔒 (new - 2026-03-06)
-- tutor-cash-payment-receipt.html 🔒 (new - 2026-03-06)
-- employee-cash-advance-receipt.html 🔒 (new - 2026-03-06)
-- school-money-collection-tracker.html 🔒 (new - 2026-03-06)
-- cash-deposit-receipt.html 🔒 (new - 2026-03-06)
-- custom-cash-receipt-with-logo.html 🔒 (new - 2026-03-06)
 
 ### Key notes per page (important details)
 
