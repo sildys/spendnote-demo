@@ -502,8 +502,8 @@
             color: white;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 60px 56px;
+            justify-content: flex-start;
+            padding: 60px 56px 60px max(calc((100vw - var(--max-width-page)) / 2 + var(--page-gutter)), var(--page-gutter));
             position: relative;
             overflow: hidden;
         }
