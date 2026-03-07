@@ -188,6 +188,18 @@
             max-width: 420px;
             width: 100%;
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+            animation: slideInRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         /* LOGO */
@@ -524,6 +536,18 @@
             max-width: 520px;
             position: relative;
             z-index: 1;
+            animation: slideInLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .signup-value h2 {
