@@ -332,7 +332,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 **Idea backlog Round 4 (audit fear, Excel replacement, work environments, daily routines):**
 
 *Audit / tax panic:*
-1. `petty-cash-audit-checklist.html` 🔒 IDEA ⭐ TOP PICK
+1. `petty-cash-audit-checklist.html` ✅ LIVE (2026-03-08)
    - **Intent:** Small business owners afraid of audit with no proper cash documentation.
    - **Keywords:** petty cash audit checklist, small business petty cash audit.
 
@@ -349,11 +349,11 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - **Intent:** Frustrated Excel users looking for a simpler alternative.
    - **Keywords:** replace petty cash spreadsheet, petty cash Excel alternative.
 
-5. `petty-cash-app-vs-excel.html` 🔒 IDEA
+5. `petty-cash-app-vs-excel.html` ✅ LIVE (2026-03-08)
    - **Intent:** Comparison content — strong conversion potential.
    - **Keywords:** petty cash app vs Excel, petty cash software vs spreadsheet.
 
-6. `daily-cash-report-template.html` 🔒 IDEA
+6. `daily-cash-report-template.html` ✅ LIVE (2026-03-08)
    - **Intent:** People currently writing daily reports by hand or in Word.
    - **Keywords:** daily cash report template, end of day cash report form.
 
@@ -362,7 +362,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - **Intent:** Cleaning companies with multiple teams and supply purchases.
    - **Keywords:** cleaning business petty cash, cleaning company cash tracking.
 
-8. `construction-site-petty-cash.html` 🔒 IDEA
+8. `construction-site-petty-cash.html` ✅ LIVE (2026-03-08)
    - **Intent:** Construction crews buying materials with cash on-site.
    - **Keywords:** construction site petty cash, job site cash tracking.
 
@@ -728,7 +728,7 @@ All pages will be created with `noindex, nofollow` until individually approved f
 | 8 | `cash-receipt-template-excel` | cash receipt template excel | "Looking for Excel? Here's better" |
 | 9 | `petty-cash-template-excel` | petty cash template excel | Excel alternative positioning |
 | 10 | `cash-tracking-spreadsheet` | cash tracking spreadsheet | Spreadsheet replacement |
-| 11 | `petty-cash-app-vs-excel` | petty cash app vs excel | Direct comparison page |
+| 11 | `petty-cash-app-vs-excel` | petty cash app vs excel | Direct comparison page | ✅ LIVE 2026-03-08 |
 
 #### Panic / Problem Searches (3)
 
@@ -742,18 +742,18 @@ All pages will be created with `noindex, nofollow` until individually approved f
 
 | # | Slug | Primary keyword | Content angle |
 |---|---|---|---|
-| 15 | `construction-site-petty-cash` | construction site petty cash | Field/onsite cash management |
+| 15 | `construction-site-petty-cash` | construction site petty cash | Field/onsite cash management | ✅ LIVE 2026-03-08 |
 
 #### Process / Feature Pages (7)
 
 | # | Slug | Primary keyword | Content angle |
 |---|---|---|---|
-| 16 | `daily-cash-report-template` | daily cash report template | End-of-day cash summary |
+| 16 | `daily-cash-report-template` | daily cash report template | End-of-day cash summary | ✅ LIVE 2026-03-08 |
 | 17 | `digital-receipt-book` | digital receipt book | Replace paper receipt books |
 | 18 | `cash-count-sheet-template` | cash count sheet | Cash denomination counting |
 | 19 | `petty-cash-replenishment-form` | petty cash replenishment | Replenishment process |
 | 20 | `cash-refund-receipt` | cash refund receipt | Documenting cash refunds |
-| 21 | `petty-cash-audit-checklist` | petty cash audit checklist | Audit preparation |
+| 21 | `petty-cash-audit-checklist` | petty cash audit checklist | Audit preparation | ✅ LIVE 2026-03-08 |
 | 22 | `cash-paid-out-log` | cash paid out log | Disbursement tracking |
 
 #### Educational / How-To Pages (2)
@@ -836,7 +836,7 @@ The following keyword variants should be woven into existing pages' H2s, alt tag
 
 ### Summary: Current Indexing Status
 
-**Indexable pages (index, follow):** 25
+**Indexable pages (index, follow):** 29
 - index.html ✅
 - spendnote-faq.html ✅
 - petty-cash-voucher-template.html ✅
@@ -862,6 +862,10 @@ The following keyword variants should be woven into existing pages' H2s, alt tag
 - school-money-collection-tracker.html ✅
 - cash-deposit-receipt.html ✅
 - custom-cash-receipt-with-logo.html ✅
+- petty-cash-app-vs-excel.html ✅ (added 2026-03-08)
+- construction-site-petty-cash.html ✅ (added 2026-03-08)
+- petty-cash-audit-checklist.html ✅ (added 2026-03-08)
+- daily-cash-report-template.html ✅ (added 2026-03-08)
 
 **Draft pages (noindex, nofollow - awaiting approval):** 1
 - spendnote-pricing.html 🔒 (intentional - no payment system yet)
@@ -889,6 +893,55 @@ The following keyword variants should be woven into existing pages' H2s, alt tag
    - Most use Article or SoftwareApplication schema + FAQPage.
 
 ### Finish checklist for these SEO pages
+
+### Update log - 2026-03-08
+
+1. **Created 4 new SEO pages — all live (index, follow):**
+   - `petty-cash-app-vs-excel.html` — Excel/Spreadsheet comparison page (Planned #11)
+     - Keywords: petty cash app vs excel, spreadsheet vs app
+     - Images: generic app screenshots (dashboard, transaction modal, receipt, PDF export)
+     - CTA: "Start Free Cash Log" (hero) / "Create Free Account" (mid-page)
+   - `construction-site-petty-cash.html` — Industry-specific page (Planned #15)
+     - Keywords: construction site petty cash, job site cash tracking, crew expenses
+     - Images: contractor folder (dashboard, transaction entry, receipt, history)
+     - CTA: "Start Tracking Site Cash" (hero) / "Track Job Site Cash Free" (mid-page)
+   - `petty-cash-audit-checklist.html` — Process/Feature page (Planned #21)
+     - Keywords: petty cash audit checklist, how to audit petty cash, verify balances
+     - Images: generic app screenshots (filtered report, PDF export, transaction detail)
+     - CTA: "Start Audit-Ready Tracking" (hero) / "Create Free Account" (mid-page)
+   - `daily-cash-report-template.html` — Process/Feature page (Planned #16)
+     - Keywords: daily cash report template, end-of-day cash report, opening/closing balance
+     - Images: generic app screenshots (dashboard, filter modal, PDF export)
+     - CTA: "Start Daily Cash Reports" (hero) / "Create Free Account" (mid-page)
+
+2. **All 4 pages include:**
+   - Article + FAQPage structured data (4 unique FAQ items each)
+   - Meta description ≤ 160 characters, title ≤ 60 characters
+   - Disclaimer box (not accounting/tax/invoicing)
+   - Related Resources internal link block (6 cards each) — boosts internal link network
+   - Keyword-rich hero subtitle (SEO sentence under the marketing hook)
+   - SEO-optimized H2s ("How to Track...", "How to Audit...", "How to Prepare...")
+   - Intent-matching CTA texts (not generic "Try Free")
+   - In-context internal links in body copy (audit page links to log, tracker, reconciliation)
+   - Unique footer SVG gradient IDs
+
+3. **Sitemap updated:** 4 new URLs added with `lastmod: 2026-03-08`.
+
+4. **Indexing status updated:** 25 → 29 indexable pages.
+
+5. **Cannibalization check:**
+   - app-vs-excel ≠ digital-petty-cash-book (comparison angle vs tool showcase)
+   - construction ≠ contractor-advance-receipt (site-level cash management vs single receipt)
+   - audit-checklist ≠ reconciliation (full audit process vs balance matching)
+   - daily-cash-report ≠ cash-drawer-reconciliation (daily summary vs end-of-shift count)
+
+6. **SEO enhancements applied to all 4 pages after initial creation:**
+   - Added keyword-rich hero sentences for better on-page keyword density
+   - Upgraded H2s to match high-volume search queries
+   - Changed CTA texts to intent-matching variants
+   - Added in-context internal links (not just Related Resources block)
+
+---
 
 ### Update log - 2026-03-06 (batch 2)
 
