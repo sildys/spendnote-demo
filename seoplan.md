@@ -204,7 +204,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - **Intent:** Shift-to-shift handover proof.
    - **Keywords:** shift cash handover, till handover log, cash handover form.
 
-5. `cash-paid-out-log.html` 🔒 IDEA
+5. `cash-paid-out-log.html` ✅ LIVE (2026-03-08)
    - **Intent:** Record day-time paid-out cash events.
    - **Keywords:** cash paid out log, paid out slip, petty cash paid out.
 
@@ -235,12 +235,12 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - **Intent:** Small business owners worried about cash going missing with no trail.
    - **Keywords:** how to track petty cash so employees don't steal, petty cash theft prevention.
 
-2. `who-took-money-from-cash-box.html` 🔒 IDEA
+2. `who-took-money-from-cash-box.html` ✅ LIVE (2026-03-08)
    - **Intent:** Identifying who last accessed the cash box when money is missing.
    - **Keywords:** who took money from cash box, how to know who took petty cash.
 
 *"The cash doesn't add up" situations:*
-3. `petty-cash-does-not-balance.html` 🔒 IDEA ⭐ TOP PICK
+3. `petty-cash-does-not-balance.html` ✅ LIVE (2026-03-08)
    - **Intent:** End-of-day panic — cash is short and no one knows why.
    - **Keywords:** petty cash doesn't balance, petty cash doesn't add up, cash box short at end of day.
 
@@ -316,9 +316,9 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - **Intent:** Addressing whether startups need petty cash tracking.
    - **Keywords:** petty cash for startups, do startups need petty cash.
 
-8. `how-to-start-petty-cash-box.html` 🔒 IDEA
-   - **Intent:** Guide for setting up a petty cash box from scratch.
-   - **Keywords:** how to start petty cash box, set up petty cash from scratch.
+8. `how-to-start-petty-cash-box.html` ✅ LIVE (2026-03-08)
+   - **Intent:** First-time petty cash box setup checklist — what to buy, how to fund it, first-week checklist.
+   - **Keywords:** how to start petty cash box, set up petty cash from scratch, first time petty cash setup.
 
 *Unique situations & mistakes:*
 9. `petty-cash-mixed-with-personal.html` 🔒 IDEA ⭐ TOP PICK
@@ -379,7 +379,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
     - **Intent:** When and how to top up the petty cash fund.
     - **Keywords:** how to replenish petty cash, petty cash fund top up.
 
-12. `cash-discrepancy-between-shifts.html` 🔒 IDEA ⭐ TOP PICK
+12. `cash-discrepancy-between-shifts.html` ✅ LIVE (2026-03-08)
     - **Intent:** Cash doesn't match between shifts — finding where it went wrong.
     - **Keywords:** cash discrepancy between shifts, shift change cash shortage.
 
@@ -407,7 +407,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - **Keywords:** does insurance cover petty cash theft, business insurance stolen cash.
 
 *Owner not always present:*
-4. `manage-petty-cash-remotely.html` 🔒 IDEA ⭐ TOP PICK
+4. `manage-petty-cash-remotely.html` ✅ LIVE (2026-03-08)
    - **Intent:** Business owners who aren't always on-site but need cash visibility.
    - **Keywords:** manage petty cash remotely, track petty cash from home.
 
@@ -480,7 +480,7 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
    - **Keywords:** cash payment received receipt, proof of cash payment, cash received confirmation.
    - **Framing:** Internal proof of cash received — not a final invoice.
 
-5. `cash-refund-receipt.html` 🔒 IDEA
+5. `cash-refund-receipt.html` ✅ LIVE (2026-03-08)
    - **Intent:** Documenting that a cash refund was given back to someone.
    - **Keywords:** cash refund receipt, proof of cash refund, refund cash handoff.
    - **Framing:** Internal proof that cash was returned.
@@ -705,9 +705,10 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 
 ---
 
-### Planned SEO Pages (24 pages — approved 2026-03-07)
+### Planned SEO Pages (24 planned + 2 bonus from idea backlog — approved 2026-03-07)
 
-All pages will be created with `noindex, nofollow` until individually approved for indexing.
+All pages created with `noindex, nofollow` until individually approved for indexing.
+**Status: 22 of 24 planned pages LIVE.** Plus 2 bonus pages from idea backlog also LIVE.
 
 #### Persona — Service Providers (7)
 
@@ -734,9 +735,9 @@ All pages will be created with `noindex, nofollow` until individually approved f
 
 | # | Slug | Primary keyword | Content angle |
 |---|---|---|---|
-| 12 | `petty-cash-does-not-balance` | petty cash doesn't balance | Problem → diagnosis → SpendNote as prevention |
-| 13 | `who-took-money-from-cash-box` | who took money from cash box | Trust problem → audit trail → SpendNote |
-| 14 | `cash-discrepancy-between-shifts` | cash discrepancy between shifts | Shift handover problem → SpendNote |
+| 12 | `petty-cash-does-not-balance` | petty cash doesn't balance | Problem → diagnosis → SpendNote as prevention | ✅ LIVE 2026-03-08 |
+| 13 | `who-took-money-from-cash-box` | who took money from cash box | Trust problem → audit trail → SpendNote | ✅ LIVE 2026-03-08 |
+| 14 | `cash-discrepancy-between-shifts` | cash discrepancy between shifts | Shift handover problem → SpendNote | ✅ LIVE 2026-03-08 |
 
 #### Industry-Specific (1)
 
@@ -749,19 +750,19 @@ All pages will be created with `noindex, nofollow` until individually approved f
 | # | Slug | Primary keyword | Content angle |
 |---|---|---|---|
 | 16 | `daily-cash-report-template` | daily cash report template | End-of-day cash summary | ✅ LIVE 2026-03-08 |
-| 17 | `digital-receipt-book` | digital receipt book | Replace paper receipt books |
-| 18 | `cash-count-sheet-template` | cash count sheet | Cash denomination counting |
-| 19 | `petty-cash-replenishment-form` | petty cash replenishment | Replenishment process |
-| 20 | `cash-refund-receipt` | cash refund receipt | Documenting cash refunds |
+| 17 | `digital-receipt-book` | digital receipt book | Replace paper receipt books | ✅ LIVE 2026-03-08 |
+| 18 | `cash-count-sheet-template` | cash count sheet | Cash denomination counting | ✅ LIVE 2026-03-08 |
+| 19 | `petty-cash-replenishment-form` | petty cash replenishment | Replenishment process | ✅ LIVE 2026-03-08 |
+| 20 | `cash-refund-receipt` | cash refund receipt | Documenting cash refunds | ✅ LIVE 2026-03-08 |
 | 21 | `petty-cash-audit-checklist` | petty cash audit checklist | Audit preparation | ✅ LIVE 2026-03-08 |
-| 22 | `cash-paid-out-log` | cash paid out log | Disbursement tracking |
+| 22 | `cash-paid-out-log` | cash paid out log | Disbursement tracking | ✅ LIVE 2026-03-08 |
 
 #### Educational / How-To Pages (2)
 
 | # | Slug | Primary keyword | Content angle |
 |---|---|---|---|
-| 23 | `how-to-track-cash-payments` | how to track cash payments | Educational guide → SpendNote as solution |
-| 24 | `how-to-manage-petty-cash-small-business` | how to manage petty cash small business | Educational cluster hub → SpendNote as tool |
+| 23 | `how-to-track-cash-payments` | how to track cash payments | Educational guide → SpendNote as solution | ✅ LIVE 2026-03-08 |
+| 24 | `how-to-manage-petty-cash-small-business` | how to manage petty cash small business | Educational cluster hub → SpendNote as tool | ✅ LIVE 2026-03-08 |
 
 #### Keyword Expansion Tasks (existing pages — no new pages needed)
 
@@ -836,7 +837,7 @@ The following keyword variants should be woven into existing pages' H2s, alt tag
 
 ### Summary: Current Indexing Status
 
-**Indexable pages (index, follow):** 29
+**Indexable pages (index, follow):** 41
 - index.html ✅
 - spendnote-faq.html ✅
 - petty-cash-voucher-template.html ✅
@@ -866,6 +867,18 @@ The following keyword variants should be woven into existing pages' H2s, alt tag
 - construction-site-petty-cash.html ✅ (added 2026-03-08)
 - petty-cash-audit-checklist.html ✅ (added 2026-03-08)
 - daily-cash-report-template.html ✅ (added 2026-03-08)
+- petty-cash-does-not-balance.html ✅ (added 2026-03-08)
+- how-to-manage-petty-cash-small-business.html ✅ (added 2026-03-08)
+- cash-discrepancy-between-shifts.html ✅ (added 2026-03-08)
+- how-to-track-cash-payments.html ✅ (added 2026-03-08)
+- who-took-money-from-cash-box.html ✅ (added 2026-03-08)
+- cash-refund-receipt.html ✅ (added 2026-03-08)
+- digital-receipt-book.html ✅ (added 2026-03-08)
+- cash-count-sheet-template.html ✅ (added 2026-03-08)
+- petty-cash-replenishment-form.html ✅ (added 2026-03-08)
+- cash-paid-out-log.html ✅ (added 2026-03-08)
+- how-to-start-petty-cash-box.html ✅ (added 2026-03-08)
+- manage-petty-cash-remotely.html ✅ (added 2026-03-08)
 
 **Draft pages (noindex, nofollow - awaiting approval):** 1
 - spendnote-pricing.html 🔒 (intentional - no payment system yet)
@@ -894,7 +907,119 @@ The following keyword variants should be woven into existing pages' H2s, alt tag
 
 ### Finish checklist for these SEO pages
 
-### Update log - 2026-03-08
+### Update log - 2026-03-08 (batch 3 — 6 new pages)
+
+1. **Created 6 new SEO pages — all live (index, follow):**
+   - `digital-receipt-book.html` — Process/Feature page (Planned #17)
+     - Keywords: digital receipt book, paperless receipt book, replace paper receipt book
+     - Images: generic app screenshots (receipt view, transaction modal, dashboard)
+     - CTA: "Start Your Digital Receipt Book" (hero) / "Create Free Account" (mid-page)
+   - `cash-count-sheet-template.html` — Process/Feature page (Planned #18)
+     - Keywords: cash count sheet template, denomination count sheet, bill and coin count
+     - Images: generic app screenshots (dashboard, filter modal, transaction list)
+     - CTA: "Start Counting Digitally" (hero) / "Create Free Account" (mid-page)
+   - `petty-cash-replenishment-form.html` — Process/Feature page (Planned #19)
+     - Keywords: petty cash replenishment form, petty cash top up, refill petty cash
+     - Images: generic app screenshots (transaction entry, receipt, dashboard)
+     - CTA: "Track Replenishments Digitally" (hero) / "Create Free Account" (mid-page)
+   - `cash-paid-out-log.html` — Process/Feature page (Planned #22)
+     - Keywords: cash paid out log, cash disbursement log, paid out slip
+     - Images: generic app screenshots (transaction list, receipt view, PDF export)
+     - CTA: "Start Your Cash Paid Out Log" (hero) / "Create Free Account" (mid-page)
+   - `how-to-start-petty-cash-box.html` — Beginner/Educational page (Idea Round 3 #8)
+     - Keywords: how to start petty cash box, first time petty cash setup, petty cash checklist
+     - Images: generic app screenshots (dashboard, transaction entry, receipt)
+     - CTA: "Start Your Petty Cash Box Digitally" (hero) / "Create Free Account" (mid-page)
+     - **Note:** Rewritten to "first-time setup checklist" angle to avoid cannibalization with `how-to-manage-petty-cash-small-business.html`
+   - `manage-petty-cash-remotely.html` — Feature/USP page (Idea Round 5 #4)
+     - Keywords: manage petty cash remotely, track petty cash from home, remote cash visibility
+     - Images: generic app screenshots (dashboard, mobile view, receipt)
+     - CTA: "Start Remote Cash Tracking" (hero) / "Create Free Account" (mid-page)
+     - **Note:** Also linked from `index.html` landing page ("Access anywhere" feature description)
+
+2. **All 6 pages include:**
+   - Article + FAQPage structured data (4 unique FAQ items each)
+   - Meta description ≤ 160 characters, title ≤ 60 characters
+   - Disclaimer box (not accounting/tax/invoicing)
+   - Related Resources internal link block (6 cards each)
+   - Keyword-rich hero subtitle
+   - SEO-optimized H2s
+   - Intent-matching CTA texts
+   - In-context internal links in body copy
+   - Unique footer SVG gradient IDs
+
+3. **Cannibalization check & resolution:**
+   - digital-receipt-book ≠ digital-petty-cash-book (receipt book replacement vs digital cash book)
+   - cash-count-sheet ≠ cash-drawer-reconciliation (denomination count vs end-of-shift reconciliation)
+   - petty-cash-replenishment ≠ how-to-manage (replenishment form process vs full management guide)
+   - cash-paid-out-log ≠ petty-cash-log-template (outflows only vs full in/out log)
+   - how-to-start-petty-cash-box — **REWRITTEN** to "first-time setup checklist" angle to avoid overlap with how-to-manage-petty-cash-small-business
+   - manage-remotely ≠ any existing page (unique angle: remote/off-site cash visibility)
+
+4. **Internal linking updates:**
+   - Added internal links from 26 existing SEO pages to the 6 new pages
+   - Both "Also see" paragraph style and in-context body links used
+   - Added link from `index.html` landing page to `manage-petty-cash-remotely.html` using `class="feature-inline-link"`
+
+5. **Sitemap updated:** 6 new URLs added with `lastmod: 2026-03-08`.
+
+6. **Indexing status updated:** 35 → 41 indexable pages.
+
+---
+
+### Update log - 2026-03-08 (batch 2 — 6 new pages)
+
+1. **Created 6 new SEO pages — all live (index, follow):**
+   - `petty-cash-does-not-balance.html` — Panic/Problem page (Planned #12)
+     - Keywords: petty cash doesn't balance, petty cash doesn't add up, cash box short
+     - Images: generic app screenshots (dashboard, filtered view, receipt detail)
+     - CTA: "Start Tracking Cash Properly" (hero) / "Create Free Account" (mid-page)
+   - `how-to-manage-petty-cash-small-business.html` — Educational hub page (Planned #24)
+     - Keywords: how to manage petty cash small business, petty cash management guide
+     - Images: generic app screenshots (dashboard, transaction modal, receipt)
+     - CTA: "Start Managing Petty Cash" (hero) / "Create Free Account" (mid-page)
+   - `cash-discrepancy-between-shifts.html` — Panic/Problem page (Planned #14)
+     - Keywords: cash discrepancy between shifts, shift change cash shortage
+     - Images: generic app screenshots (transaction history, receipt, dashboard)
+     - CTA: "Start Shift-Level Cash Tracking" (hero) / "Create Free Account" (mid-page)
+   - `how-to-track-cash-payments.html` — Educational guide (Planned #23)
+     - Keywords: how to track cash payments, cash payment tracking guide
+     - Images: generic app screenshots (receipt, dashboard, PDF export)
+     - CTA: "Start Tracking Cash Payments" (hero) / "Create Free Account" (mid-page)
+   - `who-took-money-from-cash-box.html` — Panic/Problem page (Planned #13)
+     - Keywords: who took money from cash box, petty cash theft, cash box accountability
+     - Images: generic app screenshots (audit trail, transaction detail, dashboard)
+     - CTA: "Start Cash Box Accountability" (hero) / "Create Free Account" (mid-page)
+   - `cash-refund-receipt.html` — Receipt use case page (Idea Round 6 #5)
+     - Keywords: cash refund receipt, proof of cash refund, refund documentation
+     - Images: generic app screenshots (receipt view, transaction entry, dashboard)
+     - CTA: "Create Free Refund Receipt" (hero) / "Create Free Account" (mid-page)
+
+2. **All 6 pages include:**
+   - Article + FAQPage structured data (4 unique FAQ items each)
+   - Meta description ≤ 160 characters, title ≤ 60 characters
+   - Disclaimer box (not accounting/tax/invoicing)
+   - Related Resources internal link block (6 cards each)
+   - Keyword-rich hero subtitle
+   - SEO-optimized H2s
+   - Intent-matching CTA texts
+   - Unique footer SVG gradient IDs
+
+3. **Cannibalization check:**
+   - petty-cash-does-not-balance ≠ petty-cash-reconciliation (panic diagnosis vs scheduled reconciliation process)
+   - how-to-manage ≠ petty-cash-policy-template (full management guide vs policy document)
+   - cash-discrepancy-between-shifts ≠ cash-handoff-receipt (shift mismatch diagnosis vs handoff documentation)
+   - how-to-track-cash ≠ petty-cash-log-template (educational guide vs template showcase)
+   - who-took-money ≠ cash-handoff-receipt (theft/trust problem vs routine handoff)
+   - cash-refund-receipt ≠ cash-payment-received-proof (outgoing refund vs incoming payment)
+
+4. **Sitemap updated:** 6 new URLs added with `lastmod: 2026-03-08`.
+
+5. **Indexing status updated:** 29 → 35 indexable pages.
+
+---
+
+### Update log - 2026-03-08 (batch 1 — 4 new pages)
 
 1. **Created 4 new SEO pages — all live (index, follow):**
    - `petty-cash-app-vs-excel.html` — Excel/Spreadsheet comparison page (Planned #11)
