@@ -544,6 +544,61 @@
             margin: 0;
         }
 
+        .related-resources {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .related-resources h2 {
+            margin-top: 0;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.25rem;
+        }
+
+        .related-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: block;
+        }
+
+        .related-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(5,150,105,0.12);
+            text-decoration: none;
+        }
+
+        .related-card i {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        .related-card h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--text);
+        }
+
+        .related-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.5;
+        }
+
         @media (max-width: 768px) {
             .seo-hero { padding: 2.5rem 0; }
             .seo-content { padding: 2rem var(--page-gutter); }
@@ -561,6 +616,7 @@
             .cta-box .btn,
             .hero-btn { width: 100%; text-align: center; }
             .comparison-table { display: block; overflow-x: auto; }
+            .related-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -652,7 +708,7 @@ function togglePreviewDetails() {
         <div class="seo-hero-content">
             <h1>Petty Cash App vs Excel</h1>
             <p>Your spreadsheet works &mdash; until someone forgets to save, overwrites a formula, or asks "who took the $50?" Compare the two approaches and decide what fits your team.</p>
-            <a href="spendnote-signup.html" class="hero-btn">Try SpendNote Free</a>
+            <a href="spendnote-signup.html" class="hero-btn">Start Free Cash Log</a>
             <p class="hero-pricing-note">Free tier available. Paid plans from $19/month. No credit card required.</p>
         </div>
     </section>
@@ -788,7 +844,7 @@ function togglePreviewDetails() {
         <div class="cta-box">
             <h3>Ready to Replace the Spreadsheet?</h3>
             <p>Start free. Log your first transaction in under 30 seconds. No formula setup required.</p>
-            <a href="spendnote-signup.html" class="btn">Try SpendNote Free</a>
+            <a href="spendnote-signup.html" class="btn">Create Free Account</a>
         </div>
 
         <h2>What Switching Looks Like</h2>
@@ -836,8 +892,42 @@ function togglePreviewDetails() {
             </div>
         </div>
 
-        <p style="margin-top: 2rem;">Also see: <a href="petty-cash-log-template.html">Petty cash log template</a>, <a href="digital-petty-cash-book.html">Digital petty cash book</a>, <a href="petty-cash-receipt-generator.html">Petty cash receipt generator</a>, <a href="petty-cash-reconciliation.html">Petty cash reconciliation</a>, <a href="cash-drawer-reconciliation.html">Cash drawer reconciliation</a>.</p>
-        <p style="text-align: center;">See <a href="spendnote-pricing.html">pricing</a> or visit our <a href="spendnote-faq.html">FAQ</a> for more info.</p>
+        <div class="related-resources">
+            <h2>Related Resources</h2>
+            <div class="related-grid">
+                <a href="petty-cash-log-template.html" class="related-card">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h3>Petty Cash Log Template</h3>
+                    <p>Structured log for tracking every petty cash transaction.</p>
+                </a>
+                <a href="cash-receipt-template.html" class="related-card">
+                    <i class="fas fa-receipt"></i>
+                    <h3>Cash Receipt Template</h3>
+                    <p>Ready-to-use receipt format for cash payments.</p>
+                </a>
+                <a href="cash-drawer-reconciliation.html" class="related-card">
+                    <i class="fas fa-cash-register"></i>
+                    <h3>Cash Drawer Reconciliation</h3>
+                    <p>End-of-day cash count and balance verification.</p>
+                </a>
+                <a href="petty-cash-reconciliation.html" class="related-card">
+                    <i class="fas fa-balance-scale"></i>
+                    <h3>Petty Cash Reconciliation</h3>
+                    <p>Match your records to the actual cash on hand.</p>
+                </a>
+                <a href="digital-petty-cash-book.html" class="related-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Digital Petty Cash Book</h3>
+                    <p>Replace your paper petty cash book with a digital one.</p>
+                </a>
+                <a href="petty-cash-receipt-generator.html" class="related-card">
+                    <i class="fas fa-file-invoice"></i>
+                    <h3>Petty Cash Receipt Generator</h3>
+                    <p>Generate receipts instantly for every petty cash payment.</p>
+                </a>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 2rem;">See <a href="spendnote-pricing.html">pricing</a> or visit our <a href="spendnote-faq.html">FAQ</a> for more info.</p>
     </div>
 
     <footer class="app-footer">
