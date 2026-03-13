@@ -2059,6 +2059,12 @@
                     var dbApi = window.db;
                     if (dbApi && dbApi.transactions && typeof dbApi.transactions.getAll === 'function') {
                         dbApi.transactions.getAll({ select: 'id, type', limit: 50 }).then(function(txs) {
+                            if (txs && txs.length >= 3) {
+                                s.dismissed = true;
+                                writeOB(s);
+                                card.style.display = 'none';
+                                return;
+                            }
                             if (txs && txs.length > 0) {
                                 var hasIn = txs.some(function(t) { return t.type === 'income'; });
                                 var hasOut = txs.some(function(t) { return t.type === 'expense'; });
