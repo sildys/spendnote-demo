@@ -1549,17 +1549,8 @@ Célkulcsszavak:
 
 Framing: "Need proof that you lent or received cash? Create an instant receipt — no app install needed."
 
-#### E) "Cash donation receipt" klaszter (nonprofit/egyház)
-
-Templomok, egyesületek, nonprofit szervezetek gyakran kapnak készpénz adományt és bizonylatot kell adniuk. Nagyon hűséges user bázis, ha egyszer elkezdik használni.
-
-Célkulcsszavak:
-- cash-donation-receipt — készpénz adomány bizonylata
-- donation-receipt-template — adomány sablon
-- charity-cash-donation-receipt — jótékonysági készpénz
-- church-donation-receipt — egyházi adomány (nagy volumen az USA-ban)
-
-Framing: "Give donors instant proof of their cash contribution. Not a tax receipt — just clear documentation."
+#### E) TÖRÖLVE — "Cash donation receipt" klaszter
+Törvényileg szabályozott terület (IRS 501(c)(3), tax deductibility). Nem illik a SpendNote pozícionáláshoz ("not a tax or accounting tool"). Kihagyva.
 
 #### F) "Cash count / till" operatív klaszter
 
