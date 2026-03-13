@@ -347,7 +347,7 @@
     <section class="legal-hero">
         <div class="legal-hero-content">
             <h1>Privacy Policy</h1>
-            <p class="legal-meta">Last updated: <strong>February 24, 2026</strong></p>
+            <p class="legal-meta">Last updated: <strong>March 13, 2026</strong></p>
         </div>
     </section>
 
@@ -361,11 +361,12 @@
                 <li><a href="#sharing">4. Information Sharing</a></li>
                 <li><a href="#security">5. Data Security</a></li>
                 <li><a href="#retention">6. Data Retention</a></li>
-                <li><a href="#rights">7. Your Rights</a></li>
-                <li><a href="#cookies">8. Cookies</a></li>
-                <li><a href="#children">9. Children's Privacy</a></li>
-                <li><a href="#changes">10. Changes to This Policy</a></li>
-                <li><a href="#contact">11. Contact Us</a></li>
+                <li><a href="#international">7. International Data Transfers</a></li>
+                <li><a href="#rights">8. Your Rights</a></li>
+                <li><a href="#cookies">9. Cookies</a></li>
+                <li><a href="#children">10. Children's Privacy</a></li>
+                <li><a href="#changes">11. Changes to This Policy</a></li>
+                <li><a href="#contact">12. Contact Us</a></li>
             </ul>
         </nav>
 
@@ -374,8 +375,8 @@
         </div>
 
         <h2 id="overview">1. Overview</h2>
-        <p>SpendNote ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our service.</p>
-        <p>We are based in the European Union and comply with the General Data Protection Regulation (GDPR) and other applicable data protection laws.</p>
+        <p><strong>Sildsys, LLC</strong>, a Delaware limited liability company ("Company", "we", "our", or "us"), operates the SpendNote service available at <a href="https://spendnote.app">spendnote.app</a>. Sildsys, LLC is the data controller responsible for your personal data.</p>
+        <p>This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Service. We are committed to complying with applicable data protection laws, including the General Data Protection Regulation (GDPR) for users in the European Economic Area, the California Consumer Privacy Act (CCPA) for California residents, and other applicable privacy regulations.</p>
 
         <h2 id="collect">2. Information We Collect</h2>
         
@@ -448,34 +449,46 @@
                 <th>Location</th>
             </tr>
             <tr>
-                <td>Cloudflare</td>
+                <td>Stripe, Inc.</td>
+                <td>Payment processing & subscription billing</td>
+                <td>United States</td>
+            </tr>
+            <tr>
+                <td>Cloudflare, Inc.</td>
                 <td>Website hosting, security, CDN</td>
                 <td>Global</td>
             </tr>
             <tr>
-                <td>Supabase</td>
+                <td>Supabase, Inc.</td>
                 <td>Authentication and database hosting</td>
-                <td>Varies by project region</td>
+                <td>United States</td>
             </tr>
             <tr>
-                <td>Resend</td>
+                <td>Resend, Inc.</td>
                 <td>Transactional email delivery</td>
-                <td>Varies by provider infrastructure</td>
+                <td>United States</td>
             </tr>
             <tr>
-                <td>MailerLite (or equivalent email provider)</td>
-                <td>Waitlist/newsletter subscriptions</td>
-                <td>Varies by provider infrastructure</td>
+                <td>Google LLC</td>
+                <td>Analytics (Google Analytics), OAuth authentication</td>
+                <td>United States</td>
+            </tr>
+            <tr>
+                <td>Microsoft (Clarity)</td>
+                <td>Privacy-focused session analytics</td>
+                <td>United States</td>
             </tr>
         </table>
+        <p>Each service provider is contractually obligated to protect your data and use it only for the purposes described above.</p>
 
         <h2 id="security">5. Data Security</h2>
         <p>We implement industry-standard security measures:</p>
         <ul>
             <li><strong>Encryption:</strong> All data encrypted in transit (TLS 1.3) and at rest (AES-256)</li>
             <li><strong>Access controls:</strong> Role-based access, principle of least privilege</li>
-            <li><strong>Monitoring:</strong> 24/7 security monitoring and intrusion detection</li>
-            <li><strong>Backups:</strong> Regular encrypted backups stored in EU data centers</li>
+            <li><strong>Payment security:</strong> Credit card data is handled exclusively by Stripe (PCI DSS Level 1 certified). We never store your full card number.</li>
+            <li><strong>Monitoring:</strong> Security monitoring and intrusion detection</li>
+            <li><strong>Backups:</strong> Regular encrypted backups</li>
             <li><strong>Password security:</strong> Passwords hashed using bcrypt with salt</li>
         </ul>
 
@@ -485,11 +498,23 @@
             <li><strong>Active accounts:</strong> Data retained while account is active</li>
             <li><strong>Cancelled accounts:</strong> Data available for export for 30 days, then permanently deleted</li>
             <li><strong>Backups:</strong> Removed from backups within 90 days of deletion</li>
+            <li><strong>Payment records:</strong> Transaction records may be retained for up to 7 years as required by tax and financial regulations</li>
             <li><strong>Legal requirements:</strong> Some data may be retained longer if required by law</li>
         </ul>
 
-        <h2 id="rights">7. Your Rights</h2>
-        <p>Under GDPR and other privacy laws, you have the right to:</p>
+        <h2 id="international">7. International Data Transfers</h2>
+        <p>Sildsys, LLC is based in the United States. If you are accessing the Service from outside the United States, please be aware that your data may be transferred to, stored, and processed in the United States and other countries where our service providers operate.</p>
+        <p>For users in the EEA, UK, and Switzerland, we ensure appropriate safeguards for international data transfers through:</p>
+        <ul>
+            <li>Standard Contractual Clauses (SCCs) approved by the European Commission</li>
+            <li>Service providers that participate in recognized data transfer frameworks</li>
+            <li>Contractual obligations requiring equivalent data protection standards</li>
+        </ul>
+
+        <h2 id="rights">8. Your Rights</h2>
+        <p>Depending on your location, you may have the following rights regarding your personal data:</p>
+
+        <h3>8.1 GDPR Rights (EEA, UK, Switzerland)</h3>
         <ul>
             <li><strong>Access:</strong> Request a copy of your personal data</li>
             <li><strong>Rectification:</strong> Correct inaccurate or incomplete data</li>
@@ -499,9 +524,18 @@
             <li><strong>Objection:</strong> Object to certain processing activities</li>
             <li><strong>Withdraw consent:</strong> Withdraw consent for optional processing</li>
         </ul>
-        <p>To exercise these rights, contact us at <a href="mailto:legal@spendnote.app">legal@spendnote.app</a>.</p>
 
-        <h2 id="cookies">8. Cookies</h2>
+        <h3>8.2 CCPA Rights (California Residents)</h3>
+        <ul>
+            <li><strong>Right to know:</strong> What personal information we collect and how we use it</li>
+            <li><strong>Right to delete:</strong> Request deletion of your personal information</li>
+            <li><strong>Right to opt-out:</strong> Opt out of the sale of personal information (we do not sell personal data)</li>
+            <li><strong>Non-discrimination:</strong> We will not discriminate against you for exercising your rights</li>
+        </ul>
+
+        <p>To exercise any of these rights, contact us at <a href="mailto:legal@spendnote.app">legal@spendnote.app</a>. We will respond within 30 days (or as required by applicable law).</p>
+
+        <h2 id="cookies">9. Cookies</h2>
         <p>We use the following types of cookies:</p>
         <ul>
             <li><strong>Essential cookies:</strong> Required for the Service to function (authentication, security)</li>
@@ -513,19 +547,20 @@
         <p><strong>Monitoring note:</strong> We use privacy-focused technical monitoring (for example error tracking) to detect and resolve service issues. In strict-consent regions, this monitoring is treated as non-essential analytics and is loaded only after consent.</p>
         <p>You can also manage cookie preferences in your browser settings. Disabling essential cookies may affect Service functionality.</p>
 
-        <h2 id="children">9. Children's Privacy</h2>
-        <p>SpendNote is not intended for children under 16. We do not knowingly collect personal information from children. If you believe we have collected such information, please contact us immediately.</p>
+        <h2 id="children">10. Children's Privacy</h2>
+        <p>SpendNote is not intended for children under 16 (or under 13 in the United States). We do not knowingly collect personal information from children. If you believe we have collected such information, please contact us immediately and we will promptly delete it.</p>
 
-        <h2 id="changes">10. Changes to This Policy</h2>
-        <p>We may update this Privacy Policy from time to time. We will notify you of material changes by email and/or a prominent notice on the Service. Your continued use after changes become effective constitutes acceptance.</p>
+        <h2 id="changes">11. Changes to This Policy</h2>
+        <p>We may update this Privacy Policy from time to time. We will notify you of material changes by email and/or a prominent notice on the Service at least 30 days before the changes take effect. Your continued use after changes become effective constitutes acceptance of the updated policy.</p>
 
-        <h2 id="contact">11. Contact Us</h2>
+        <h2 id="contact">12. Contact Us</h2>
         <p>For privacy-related questions or concerns:</p>
         <ul>
             <li><strong>Email:</strong> <a href="mailto:legal@spendnote.app">legal@spendnote.app</a></li>
-            <li><strong>Data Protection Officer:</strong> <a href="mailto:legal@spendnote.app">legal@spendnote.app</a></li>
+            <li><strong>Support:</strong> <a href="mailto:support@spendnote.app">support@spendnote.app</a></li>
         </ul>
-        <p>If you're unsatisfied with our response, you have the right to lodge a complaint with your local data protection authority.</p>
+        <p><strong>Sildsys, LLC</strong><br>1111 S Governors Ave, B #45989<br>Dover, DE 19904<br>United States</p>
+        <p>If you are in the EEA and are unsatisfied with our response, you have the right to lodge a complaint with your local data protection authority.</p>
     </main>
 
     <footer class="app-footer">
