@@ -1622,6 +1622,78 @@ Célkulcsszavak:
 
 Framing: "Forgot your receipt book? Generate a professional PDF receipt on your phone in 30 seconds."
 
+#### O) "Cash-Only Business" klaszter (B2B niche, erős konverzió)
+
+Kártyaterminál nélküli vállalkozások (pl. piacok, kisebb szolgáltatók, fejlődő piacokon). Nekik MINDEN tranzakciót dokumentálniuk kell, és nincs POS rendszerük. SpendNote = a POS helyettesítő.
+
+Célkulcsszavak:
+- cash-only-business-receipt — készpénzes vállalkozás bizonylat
+- how-to-track-sales-without-pos — POS nélküli nyilvántartás
+- cash-only-business-record-keeping — nyilvántartás készpénzes vállalkozásnak
+- no-card-terminal-receipt-solution — kártyaterminál nélküli megoldás
+
+Framing: "No card terminal? No problem. SpendNote gives your cash-only business professional receipts and a complete transaction log."
+
+#### P) "Carbon Copy / Receipt Book Replacement" klaszter (Migráció intent)
+
+Rengeteg kisvállalkozás még mindig fizikai indigós/karbonmásolatos nyugtatömböt használ. Aki rákeresett, az éppen váltani akar digitálisra. Erős konverzió.
+
+Célkulcsszavak:
+- digital-receipt-book-alternative — digitális alternatíva
+- replace-carbon-copy-receipt-book — karbonmásolat kiváltása
+- receipt-book-app — az app ami kiváltja a fizikai tömböt
+- printable-receipt-book-replacement — nyomtatható helyettesítő keresése
+
+Framing: "Ditch the carbon copy book. SpendNote gives you numbered, professional receipts — with a searchable digital archive."
+
+#### Q) "Receipt Numbering / Sequential System" klaszter (Funkcionális keresés)
+
+Aki erre keres, az pont azt a funkciót keresi amit a SpendNote alapból tud: automatikus sorszámozás, prefix-szel. Nagyon direkt feature match.
+
+Célkulcsszavak:
+- receipt-numbering-system — bizonylat sorszámozási rendszer
+- how-to-number-receipts — hogyan sorszámozzuk a bizonylatokat
+- sequential-receipt-numbering — szekvenciális sorszámozás
+- auto-numbered-receipt-generator — automatikus sorszámozású generátor
+
+Framing: "SpendNote auto-numbers every receipt with your custom prefix. No duplicates, no gaps, no manual tracking."
+
+#### R) "What is Petty Cash / Basics" klaszter (HATALMAS edukációs volumen)
+
+"What is petty cash" az egyik legnagyobb keresési volumenű kifejezés ebben a szegmensben. Teljesen alap edukációs tartalom, de brutális top-of-funnel belépő. Van már `how-to-start-petty-cash-box.html`, de a "what is" / "meaning" / "for dummies" variánsok hiányoznak.
+
+Célkulcsszavak:
+- what-is-petty-cash — definíció, hatalmas volumen
+- petty-cash-meaning — szinonima
+- petty-cash-explained — magyarázat formátum
+- petty-cash-for-beginners — kezdő guide
+
+Framing: "Petty cash is a small fund kept on hand for everyday business expenses. SpendNote helps you manage it from day one."
+
+#### S) "Cash Register Alternative" klaszter (Tool összehasonlítás)
+
+Kisebb vállalkozások, akiknek nem kell teljes POS rendszer, csak egyszerű készpénz nyilvántartás. A SpendNote pont ez: POS nélküli készpénzkezelés.
+
+Célkulcsszavak:
+- simple-cash-register-app — egyszerű kasszagép alkalmazás
+- cash-register-alternative-small-business — kisvállalkozói alternatíva
+- free-cash-register-app — ingyenes kasszagép app
+- cash-register-without-pos — POS nélküli kasszagép
+
+Framing: "Don't need a full POS? SpendNote is the simple cash register alternative — track every transaction without the complexity."
+
+#### T) "Multi-Currency Cash" klaszter (SpendNote differenciátor)
+
+A SpendNote egyik egyedi funkciója, hogy cash box-onként eltérő pénznemet lehet beállítani. Turistahelyek, import/export, határ menti vállalkozások. Szinte senki nem célozza ezt SEO-val.
+
+Célkulcsszavak:
+- multi-currency-cash-tracking — több pénznemű készpénz követés
+- foreign-currency-receipt — külföldi pénznemű bizonylat
+- multi-currency-receipt-generator — több pénznemű bizonylat generátor
+- cash-tracking-different-currencies — különböző pénznemek nyilvántartása
+
+Framing: "Track cash in USD, EUR, GBP — or any currency. Each SpendNote cash box has its own currency, so nothing gets mixed up."
+
 ---
 
 Általában a SERP-ben:
