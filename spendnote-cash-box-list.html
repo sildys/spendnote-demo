@@ -68,7 +68,7 @@
                 </div>
                 <div>
                     <div class="add-cash-box-title">Add Cash Box</div>
-                    <div class="add-cash-box-subtitle">Keep your cash organized</div>
+                    <div class="add-cash-box-subtitle">Add another box, even in a different currency</div>
                 </div>
                 <!-- Conditional upgrade message - only shown when limit reached -->
                 <div class="add-cash-box-upgrade" data-upgrade-text="standard">Upgrade to Standard for more Cash Boxes</div>
@@ -301,7 +301,8 @@
     <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
     <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
     <script>loadNav();</script>
-    <script src="assets/js/main.js?v=34"></script>
+    <script src="assets/js/main.js?v=36"></script>
+    <script>if (typeof showPageTip === 'function') showPageTip('cashbox-list', 'Drag to <strong>reorder your cash boxes</strong> — the order here is the same on your dashboard.');</script>
     <script src="assets/js/cash-box-list-data.js?v=34"></script>
 </body>
 </html>
