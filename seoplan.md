@@ -1573,6 +1573,55 @@ Célkulcsszavak:
 
 Framing: "Set your opening cash float in SpendNote and track every movement from there."
 
+#### H) "Paperless / No Printer" klaszter (Helyszíni / Mobil intent)
+
+Sokan vannak terepen (piac, ügyfél háza, építkezés, kiszállás), ahol kapnak készpénzt, de nincs náluk nyugtatömb vagy nyomtató. Az intent: "Hogyan adjak bizonylatot most azonnal a telefonomról?"
+
+Célkulcsszavak:
+- how-to-give-a-receipt-without-a-printer — long-tail, probléma-fókuszú
+- paperless-cash-receipt — környezettudatos / modernizáló intent
+- send-receipt-via-email — funkció-keresés
+- make-a-receipt-on-the-go — mobil/terepi intent
+- digital-receipt-pad — a fizikai "receipt pad" digitális alternatívája
+
+Framing: "No printer? No problem. Generate and email a PDF receipt right from your phone before you even leave the client's driveway."
+
+#### I) "Private Sale / Used Item" klaszter (Nagy volumen, C2C / P2P intent)
+
+Magánszemélyek közötti nagyobb készpénzes adásvételek (pl. használt autó, bicikli, bútor). Mindkét félnek kell egy azonnali igazolás, hogy a pénz át lett adva. Ez NEM adásvételi szerződés (bill of sale), hanem a készpénz átadásának elismervénye. Teljesen legális és biztonságos.
+
+Célkulcsszavak:
+- used-car-cash-receipt — hatalmas volumen
+- private-sale-cash-receipt — általánosabb
+- proof-of-purchase-generator — a vásárlás bizonyítása (vevő oldalról keresve)
+- cash-receipt-for-selling-a-car — eladó oldalról keresve
+
+Framing: "Protect yourself when buying or selling items for cash. Generate instant proof that the cash was handed over."
+
+#### J) "Event / Merch Table" klaszter (Niche operatív)
+
+Zenekarok koncert utáni merch pultja, kézműves vásárok, pop-up boltok. Itt a sebesség a lényeg, és az, hogy a végén tudják, mennyi volt az induló váltópénz (float) és a tiszta bevétel.
+
+Célkulcsszavak:
+- merch-table-cash-app — zenekarok, árusok
+- craft-fair-cash-tracker — kézművesek
+- flea-market-cash-tracker — bolhapiaci árusok
+- pop-up-shop-cash-log — időszakos boltok
+
+Framing: "Track your starting float, log cash sales fast, and know exactly what you made at the end of the event."
+
+#### K) "Emergency / Lost Receipt Book" klaszter (Pánik intent)
+
+A felhasználó ügyfélnél van, készpénzt kap, de otthon hagyta a fizikai nyugtatömböt. Gyors, telefonos megoldást keres. Konverzió: nagyon magas.
+
+Célkulcsszavak:
+- forgot-receipt-book-what-to-do — tiszta pánik intent
+- emergency-receipt-generator — azonnali megoldás
+- how-to-issue-a-receipt-from-phone — eszköz alapú keresés
+- instant-receipt-on-phone — azonnali igény
+
+Framing: "Forgot your receipt book? Generate a professional PDF receipt on your phone in 30 seconds."
+
 ---
 
 Általában a SERP-ben:
