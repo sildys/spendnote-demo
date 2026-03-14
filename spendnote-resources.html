@@ -45,7 +45,8 @@
         .resource-list a:hover .resource-arrow{opacity:1}
         .resource-divider{border:none;border-top:1px solid var(--border);margin:0}
         .cta-box{background:linear-gradient(135deg,#059669 0%,#10b981 100%);border-radius:var(--radius-xl);padding:2rem;text-align:center;margin:2.5rem 0;color:#fff}.cta-box h3{font-size:1.5rem;font-weight:800;margin-bottom:.75rem;color:#fff}.cta-box p{font-size:1rem;margin-bottom:1.25rem;opacity:.95;color:#fff}.cta-box .btn{background:#fff;color:var(--primary);font-weight:700;padding:.875rem 2rem;font-size:1rem;border-radius:var(--radius-lg);border:none;cursor:pointer;transition:all .2s;display:inline-block;text-decoration:none}.cta-box .btn:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(0,0,0,.2)}
-        @media(max-width:768px){.seo-hero{padding:2.5rem 0}.resources-content{padding:2rem var(--page-gutter)}}@media(max-width:480px){.seo-hero{padding:2rem 0}.seo-hero h1{font-size:clamp(1.9rem,9vw,2.4rem)}.resources-content{padding:1.5rem 1rem}}
+        .search-box{max-width:760px;margin:-1.5rem auto 0;padding:0 var(--page-gutter);position:relative;z-index:2}.search-box input{width:100%;padding:1rem 1rem 1rem 3rem;font-size:1rem;font-family:inherit;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--bg);color:var(--text);box-shadow:0 4px 20px rgba(0,0,0,.08);outline:none;transition:border-color .2s,box-shadow .2s}.search-box input:focus{border-color:var(--primary);box-shadow:0 4px 20px rgba(5,150,105,.15)}.search-box input::placeholder{color:var(--text-muted)}.search-box i{position:absolute;left:calc(var(--page-gutter) + 1rem);top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:1rem;pointer-events:none}.search-no-results{display:none;text-align:center;padding:2rem 1rem;color:var(--text-muted);font-size:1rem}.search-no-results i{position:static;transform:none;font-size:1.5rem;display:block;margin-bottom:.5rem;color:var(--text-muted)}
+        @media(max-width:768px){.seo-hero{padding:2.5rem 0}.resources-content{padding:2rem var(--page-gutter)}.search-box{margin-top:-1.25rem}}@media(max-width:480px){.seo-hero{padding:2rem 0}.seo-hero h1{font-size:clamp(1.9rem,9vw,2.4rem)}.resources-content{padding:1.5rem 1rem}}
     </style>
     <style>.sn-auth-nav-pending .site-nav { visibility: hidden; }</style>
 </head>
@@ -68,6 +69,11 @@
             <p>Guides, templates, and checklists to help you set up, secure, and manage petty cash in your business.</p>
         </div>
     </section>
+
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="resourceSearch" placeholder="Search guides, templates, checklists..." autocomplete="off">
+    </div>
 
     <div class="resources-content">
 
@@ -175,6 +181,46 @@
 
     </div>
 
+    <script>
+    (function() {
+        const input = document.getElementById('resourceSearch');
+        const categories = document.querySelectorAll('.resource-category');
+        const dividers = document.querySelectorAll('.resource-divider');
+        const content = document.querySelector('.resources-content');
+        let noResults = document.querySelector('.search-no-results');
+        if (!noResults) {
+            noResults = document.createElement('div');
+            noResults.className = 'search-no-results';
+            noResults.innerHTML = '<i class="fas fa-search"></i>No results found. Try a different search term.';
+            content.insertBefore(noResults, content.firstChild);
+        }
+
+        input.addEventListener('input', function() {
+            const q = this.value.toLowerCase().trim();
+            let totalVisible = 0;
+
+            categories.forEach(cat => {
+                const items = cat.querySelectorAll('.resource-list li');
+                let catVisible = 0;
+                items.forEach(li => {
+                    const title = li.querySelector('.resource-title')?.textContent.toLowerCase() || '';
+                    const desc = li.querySelector('.resource-desc')?.textContent.toLowerCase() || '';
+                    const match = !q || title.includes(q) || desc.includes(q);
+                    li.style.display = match ? '' : 'none';
+                    if (match) catVisible++;
+                });
+                cat.style.display = catVisible > 0 ? '' : 'none';
+                totalVisible += catVisible;
+            });
+
+            dividers.forEach(d => {
+                d.style.display = q ? 'none' : '';
+            });
+
+            noResults.style.display = totalVisible === 0 ? 'block' : 'none';
+        });
+    })();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-config.js?v=20260314-1550"></script>
     <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
