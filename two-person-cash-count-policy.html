@@ -227,55 +227,73 @@
         <p style="text-align:center;margin-top:2rem;">See <a href="spendnote-pricing.html">pricing</a> or visit our <a href="spendnote-faq.html">FAQ</a> for more info.</p>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script>
     function downloadCountSheet(){
-        const{jsPDF}=window.jspdf;
-        const doc=new jsPDF({unit:'mm',format:'letter'});
-        const W=doc.internal.pageSize.getWidth();
-        const m=20,lh=7,col2=W/2+5;
-        let y=m;
+        try{
+        var jsPDFClass=window.jspdf?window.jspdf.jsPDF:window.jsPDF;
+        if(!jsPDFClass){alert('PDF library is still loading. Please try again in a moment.');return;}
+        var doc=new jsPDFClass({unit:'mm',format:'letter'});
+        var W=doc.internal.pageSize.getWidth();
+        var H=doc.internal.pageSize.getHeight();
+        var m=20,lh=7,col2=W/2+5;
+        var y=m;
         function bold(t,x,yy){doc.setFont('helvetica','bold');doc.text(t,x,yy);doc.setFont('helvetica','normal');}
-        function line(x1,yy,x2){doc.setDrawColor(180);doc.line(x1,yy+1,x2,yy+1);}
+        function uline(x1,yy,x2){doc.setDrawColor(180);doc.line(x1,yy+1,x2,yy+1);}
+
+        // SpendNote logo top-right
+        var logoX=W-m-30,logoY=m-4;
+        doc.setFillColor(5,150,105);
+        doc.roundedRect(logoX,logoY,8,10,1,1,'F');
+        doc.setDrawColor(255);doc.setLineWidth(0.4);
+        doc.line(logoX+2,logoY+3,logoX+6,logoY+3);
+        doc.line(logoX+2,logoY+4.8,logoX+5,logoY+4.8);
+        doc.line(logoX+2,logoY+6.6,logoX+6,logoY+6.6);
+        doc.line(logoX+2,logoY+8.4,logoX+4.5,logoY+8.4);
+        doc.setDrawColor(0);doc.setLineWidth(0.2);
+        doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(5,150,105);
+        doc.text('SpendNote',logoX+10,logoY+6);
+        doc.setTextColor(0);
 
         doc.setFontSize(13);
         bold('PETTY CASH \u2014 DUAL CONTROL COUNT RECORD',m,y);y+=lh*2;
 
         doc.setFontSize(10);
-        doc.text('Date:',m,y);line(m+12,y,m+55);
-        doc.text('Time:',m+65,y);line(m+77,y,m+120);y+=lh;
-        doc.text('Cash Box ID / Name:',m,y);line(m+38,y,W-m);y+=lh*2;
+        doc.text('Date:',m,y);uline(m+12,y,m+55);
+        doc.text('Time:',m+65,y);uline(m+77,y,m+120);y+=lh;
+        doc.text('Cash Box ID / Name:',m,y);uline(m+38,y,W-m);y+=lh*2;
 
         bold('CASH COUNT BY DENOMINATION',m,y);y+=lh+1;
-        const denoms=[['$100','$50'],['$20','$10'],['$5','$1']];
-        denoms.forEach(pair=>{
-            doc.text(pair[0]+' \u00d7',m,y);line(m+14,y,m+22);doc.text('= $',m+24,y);line(m+30,y,m+55);
-            doc.text(pair[1]+' \u00d7',col2,y);line(col2+12,y,col2+20);doc.text('= $',col2+22,y);line(col2+28,y,col2+53);
+        var denoms=[['$100','$50'],['$20','$10'],['$5','$1']];
+        denoms.forEach(function(pair){
+            doc.text(pair[0]+' \u00d7',m,y);uline(m+14,y,m+22);doc.text('= $',m+24,y);uline(m+30,y,m+55);
+            doc.text(pair[1]+' \u00d7',col2,y);uline(col2+12,y,col2+20);doc.text('= $',col2+22,y);uline(col2+28,y,col2+53);
             y+=lh;
         });
-        doc.text('Coins: $',m,y);line(m+14,y,m+40);y+=lh*2;
+        doc.text('Coins: $',m,y);uline(m+14,y,m+40);y+=lh*2;
 
         doc.setFontSize(11);
-        bold('TOTAL CASH COUNTED: $',m,y);line(m+44,y,W-m);y+=lh+1;
+        bold('TOTAL CASH COUNTED: $',m,y);uline(m+44,y,W-m);y+=lh+1;
         doc.setFontSize(10);
-        doc.text('Total Receipts / Vouchers: $',m,y);line(m+54,y,W-m);y+=lh;
-        doc.text('Cash + Receipts: $',m,y);line(m+36,y,W-m);y+=lh;
-        doc.text('Expected Balance (Float): $',m,y);line(m+54,y,W-m);y+=lh;
-        doc.text('Discrepancy: $',m,y);line(m+30,y,W-m);y+=lh*2;
+        doc.text('Total Receipts / Vouchers: $',m,y);uline(m+54,y,W-m);y+=lh;
+        doc.text('Cash + Receipts: $',m,y);uline(m+36,y,W-m);y+=lh;
+        doc.text('Expected Balance (Float): $',m,y);uline(m+54,y,W-m);y+=lh;
+        doc.text('Discrepancy: $',m,y);uline(m+30,y,W-m);y+=lh*2;
 
         bold('SIGNATURES',m,y);y+=lh+1;
-        doc.text('Counter 1 (Custodian):',m,y);line(m+42,y,m+110);doc.text('Date:',m+115,y);line(m+126,y,W-m);y+=lh;
-        doc.text('Counter 2 (Verifier):',m,y);line(m+42,y,m+110);doc.text('Date:',m+115,y);line(m+126,y,W-m);y+=lh*2;
+        doc.text('Counter 1 (Custodian):',m,y);uline(m+42,y,m+110);doc.text('Date:',m+115,y);uline(m+126,y,W-m);y+=lh;
+        doc.text('Counter 2 (Verifier):',m,y);uline(m+42,y,m+110);doc.text('Date:',m+115,y);uline(m+126,y,W-m);y+=lh*2;
 
-        doc.text('Notes:',m,y);line(m+12,y,W-m);y+=lh;
-        line(m,y,W-m);y+=lh;
-        line(m,y,W-m);
+        doc.text('Notes:',m,y);uline(m+12,y,W-m);y+=lh;
+        uline(m,y,W-m);y+=lh;
+        uline(m,y,W-m);
 
-        y+=lh*3;
+        // Footer branding
         doc.setFontSize(8);doc.setTextColor(140);
-        doc.text('Generated from spendnote.app \u2014 Free petty cash tracking for small teams',m,y);
+        doc.text('Generated from spendnote.app \u2014 Free petty cash tracking for small teams',m,H-15);
 
         doc.save('petty-cash-dual-control-count-record.pdf');
+        }catch(e){alert('Could not generate PDF: '+e.message);console.error(e);}
     }
     </script>
     <script src="assets/js/main.js?v=34"></script>
