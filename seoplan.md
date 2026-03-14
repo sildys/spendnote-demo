@@ -849,7 +849,7 @@ The following keyword variants should be woven into existing pages' H2s, alt tag
 
 ### Summary: Current Indexing Status
 
-**Indexable pages (index, follow):** 46
+**Indexable pages (index, follow):** 47
 - index.html ✅
 - spendnote-faq.html ✅
 - petty-cash-voucher-template.html ✅
@@ -896,6 +896,7 @@ The following keyword variants should be woven into existing pages' H2s, alt tag
 - petty-cash-security-tips.html ✅ (added 2026-03-14)
 - two-person-cash-count-policy.html ✅ (added 2026-03-14)
 - petty-cash-how-much-to-keep.html ✅ (added 2026-03-14)
+- spendnote-resources.html ✅ (added 2026-03-14) — Resource Center hub page
 
 **Draft pages (noindex, nofollow - awaiting approval):** 1
 - spendnote-pricing.html 🔒 (intentional - no payment system yet)
