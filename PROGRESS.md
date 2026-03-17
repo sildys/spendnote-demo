@@ -95,6 +95,33 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
+## Where we are now (last updated: 2026-03-18 — SEO progress + pending tasks)
+
+### 2026-03-18 frissítés — SEO Batch 1 + Resource Center + tervek (KÉSZ + PENDING)
+
+**Elkészült:**
+- **SEO Batch 1 (5 oldal)** — LIVE + indexelve (what-is-petty-cash, where-to-keep-petty-cash, petty-cash-security-tips, two-person-cash-count-policy, petty-cash-how-much-to-keep)
+- **Hub page linkek** — `how-to-manage-petty-cash-small-business.html`-ből 5 in-context link az új oldalakra
+- **Resource Center** — `spendnote-resources.html` létrehozva: 44 cikk, 6 kategória, kereső mező, auth-aware nav, BreadcrumbList structured data
+- **Footer "Resources" link** — hozzáadva mind az 51 HTML oldalhoz
+- **Sitemap** — 47 URL (frissítve)
+- **seoplan.md** — Daily Cash Tracking klaszter beépítve (6 új oldal idea + 5 keyword expansion task meglévő oldalakra)
+- **Indexable oldalak:** 47
+
+**Hétvégére PENDING feladatok:**
+
+1. **SEO Batch 2** — 11 oldal hátra (7 Service Provider + 3 Excel/Spreadsheet + 1 bonus)
+2. **Daily Cash Tracking klaszter** — 3 TOP PICK oldal: `restaurant-cash-count-sheet`, `retail-cash-reconciliation`, `store-daily-cash-log` + keyword expansion meglévő oldalakra
+3. **Stripe bekötés** — kód KÉSZ (Edge Functions: `create-checkout-session`, `create-portal-session`, `stripe-webhook`; frontend: `SpendNoteStripe` wrapper). Hiányzik:
+   - Stripe Dashboard: 4 Price létrehozás (Standard Monthly/Yearly, Pro Monthly/Yearly)
+   - Supabase Edge Function Secrets: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_STANDARD_MONTHLY_PRICE_ID`, `STRIPE_STANDARD_YEARLY_PRICE_ID`, `STRIPE_PRO_MONTHLY_PRICE_ID`, `STRIPE_PRO_YEARLY_PRICE_ID`, `APP_BASE_URL`
+   - Stripe Webhook endpoint → Supabase Edge Function URL
+   - Edge Function-ök deploy
+4. **Google OAuth consent screen** — jelenleg csúnya Supabase project link jelenik meg a Google bejelentkezésnél. Javítás: Google Cloud Console → APIs & Services → OAuth consent screen → rendes SpendNote app név, logó, leírás beállítása
+5. **PDF download funkció** — beépítés az appba
+
+---
+
 ## Where we are now (last updated: 2026-03-13 — Legal docs + cookie consent GDPR compliance)
 
 ### 2026-03-13 frissítés — Legal dokumentumok átírása + cookie consent GDPR szabványosítás (KÉSZ)
