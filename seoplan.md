@@ -715,6 +715,71 @@ SpendNote is for **internal cash control**, **handoff proof**, and **team audit 
 - Every existing service provider page can be supplemented with a "receipt for X" variant or the pages can target both patterns.
 - This pattern scales infinitely — every cash-paid service has a "receipt for [X]" search.
 
+**4. "Daily Cash Tracking / Cash Count / Cash Log" cluster (added 2026-03-17)**
+- This is a separate SEO universe from "petty cash" — targets daily cash register/drawer reconciliation for shops, restaurants, salons, food trucks.
+- NOT POS/cash register software (regulated) — this is **internal cash control** (same category as petty cash).
+- High-volume keywords: `daily cash log`, `cash count sheet`, `cash drawer count sheet`, `end of day cash report`, `cash tally sheet`, `cash reconciliation template`.
+- These searchers need a tool → high conversion potential.
+
+**Already partially covered by existing pages:**
+
+| Keyword | Existing page | Coverage |
+|---|---|---|
+| cash count sheet | `cash-count-sheet-template.html` ✅ | Fully covered |
+| daily cash report, end of day cash report | `daily-cash-report-template.html` ✅ | Fully covered |
+| cash drawer count sheet | `cash-drawer-reconciliation.html` ✅ | Partially (framed as "reconciliation") |
+| cash reconciliation template | `petty-cash-reconciliation.html` ✅ | Partially (petty cash framing) |
+| cash log template | `petty-cash-log-template.html` ✅ | Partially (petty cash framing) |
+| end of day cash sheet, cash up sheet | `cash-up-sheet-template.html` 🔒 IDEA | Already in backlog |
+
+**Genuine gaps — NEW page ideas (industry-specific daily cash tracking):**
+
+1. `restaurant-cash-count-sheet.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Restaurant/café owner counting cash at end of day/shift.
+   - **Keywords:** restaurant cash count sheet, restaurant end of day cash report, café cash reconciliation.
+   - **Framing:** Internal cash control for food service — NOT about tips/POS. Count drawer, compare to expected, document discrepancy.
+   - **Note:** Different from removed `restaurant-petty-cash-tips` (that was IRS tip risk). This is pure cash counting.
+
+2. `retail-cash-reconciliation.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Retail store owner reconciling daily cash drawer.
+   - **Keywords:** retail cash reconciliation, store cash count sheet, retail end of day cash count.
+   - **Framing:** Small retail store daily cash close routine — count, verify, document.
+
+3. `store-daily-cash-log.html` 🔒 IDEA ⭐ TOP PICK
+   - **Intent:** Small shop/store owner tracking daily cash flow.
+   - **Keywords:** store cash log, small business daily cash log, daily cash tracking for shops.
+   - **Framing:** Simple daily IN/OUT cash log for shops that don't use full accounting.
+
+4. `food-truck-cash-count.html` 🔒 IDEA
+   - **Intent:** Food truck / mobile vendor daily cash count.
+   - **Keywords:** food truck cash count, food truck daily cash log, mobile vendor cash tracking.
+   - **Framing:** Fast end-of-day cash close for mobile businesses.
+
+5. `salon-daily-cash-sheet.html` 🔒 IDEA
+   - **Intent:** Salon/barbershop daily cash tracking (many clients pay cash).
+   - **Keywords:** salon cash sheet, barbershop daily cash log, salon cash reconciliation.
+   - **Framing:** Track walk-in cash payments and reconcile at close.
+
+6. `cash-tally-sheet-template.html` 🔒 IDEA
+   - **Intent:** Generic cash tally / denomination counting sheet.
+   - **Keywords:** cash tally sheet, cash tally template, money tally sheet.
+   - **Framing:** Count bills and coins by denomination, compare to expected total. Slight overlap with `cash-count-sheet-template.html` — consider absorbing into existing page instead.
+
+**Keyword expansion tasks for EXISTING pages (no new pages — absorb secondary keywords):**
+
+| Secondary keyword to add | Target existing page | Where to add |
+|---|---|---|
+| daily cash log, daily cash log template | `daily-cash-report-template.html` | H2, meta desc, body |
+| cash drawer count sheet | `cash-drawer-reconciliation.html` | H2, alt tag |
+| cash tally sheet | `cash-count-sheet-template.html` | H2, body text |
+| small business cash log | `petty-cash-log-template.html` | body text, related resources |
+| cash reconciliation sheet, cash reconciliation template | `petty-cash-reconciliation.html` | body text |
+
+**AVOID (POS/cash register territory):**
+- ~~cash register log~~ — POS software overlap
+- ~~cash register software~~ — regulated territory
+- ~~till log template~~ — too close to POS register
+
 ---
 
 ### Planned SEO Pages (24 planned + 2 bonus from idea backlog — approved 2026-03-07)
@@ -924,6 +989,24 @@ The following keyword variants should be woven into existing pages' H2s, alt tag
    - Most use Article or SoftwareApplication schema + FAQPage.
 
 ### Finish checklist for these SEO pages
+
+### Update log - 2026-03-17 (Daily Cash Tracking cluster analysis)
+
+1. **New SEO cluster identified: "Daily Cash Tracking / Cash Count / Cash Log"**
+   - Separate search universe from "petty cash" — targets shops, restaurants, salons, food trucks doing daily cash reconciliation.
+   - NOT POS/cash register (regulated) — this is internal cash control, same category as petty cash.
+
+2. **Analysis of existing coverage:**
+   - 5 keywords already partially/fully covered by existing LIVE pages (cash count sheet, daily cash report, cash drawer reconciliation, petty cash reconciliation, petty cash log).
+   - 6 new industry-specific page ideas added (restaurant, retail, store, food truck, salon, cash tally sheet).
+   - 3 TOP PICKs: `restaurant-cash-count-sheet`, `retail-cash-reconciliation`, `store-daily-cash-log`.
+   - 5 keyword expansion tasks identified for existing pages (absorb secondary keywords like "daily cash log", "cash tally sheet", etc.).
+
+3. **Avoided:** cash register log, cash register software, till log template (POS territory).
+
+4. **Source:** ChatGPT Search Console query analysis + keyword research.
+
+---
 
 ### Update log - 2026-03-14 (weekend batch — 5 new SEO pages, indexed)
 
