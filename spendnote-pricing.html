@@ -1121,6 +1121,7 @@ function togglePreviewDetails() {
         let currentPlan = ''; // '', 'free', 'preview', 'standard', 'pro'
         let currentCycle = ''; // '', 'monthly', 'yearly'
         let hasActiveSubscription = false;
+        let currentExtraSeats = 0;
 
         function getButtonHTML(planKey) {
             if (planKey === 'free') {
@@ -1132,7 +1133,13 @@ function togglePreviewDetails() {
 
             const isCurrent = currentPlan === planKey;
             if (isCurrent) {
-                return '<button type="button" class="btn btn-get-started" disabled style="opacity:0.6;cursor:default;">Current Plan</button>';
+                if (planKey === 'pro') {
+                    const selectedExtra = getProExtraSeats();
+                    if (selectedExtra !== currentExtraSeats) {
+                        return `<button type="button" class="btn btn-get-started" id="proActionBtn" onclick="startPlanSwitch('pro')">Update Seats</button>`;
+                    }
+                }
+                return '<button type="button" class="btn btn-get-started" id="proActionBtn" disabled style="opacity:0.6;cursor:default;">Current Plan</button>';
             }
 
             if (hasActiveSubscription) {
@@ -1435,7 +1442,39 @@ function togglePreviewDetails() {
                             profile.stripe_subscription_id &&
                             (status === 'active' || status === 'trialing' || status === 'past_due')
                         );
+                        const sc = Number(profile.seat_count || 0);
+                        currentExtraSeats = currentPlan === 'pro' ? Math.max(0, sc - 3) : 0;
                         renderPricing(isYearly ? 'yearly' : 'monthly');
+
+                        // Set seat selector to current value and listen for changes
+                        if (currentPlan === 'pro') {
+                            const sel = document.getElementById('proSeatSelect');
+                            if (sel) {
+                                sel.value = String(currentExtraSeats);
+                                sel.addEventListener('change', () => {
+                                    const btnWrap = sel.closest('.pricing-card')?.querySelector('.btn-get-started')?.parentElement;
+                                    if (!btnWrap) return;
+                                    const parent = sel.closest('.pricing-card');
+                                    const oldBtn = parent?.querySelector('#proActionBtn');
+                                    if (oldBtn) {
+                                        const selectedExtra = Number(sel.value) || 0;
+                                        if (selectedExtra !== currentExtraSeats) {
+                                            oldBtn.disabled = false;
+                                            oldBtn.style.opacity = '1';
+                                            oldBtn.style.cursor = 'pointer';
+                                            oldBtn.textContent = 'Update Seats';
+                                            oldBtn.onclick = () => startPlanSwitch('pro');
+                                        } else {
+                                            oldBtn.disabled = true;
+                                            oldBtn.style.opacity = '0.6';
+                                            oldBtn.style.cursor = 'default';
+                                            oldBtn.textContent = 'Current Plan';
+                                            oldBtn.onclick = null;
+                                        }
+                                    }
+                                });
+                            }
+                        }
                     }
                 }
             } catch (_) {}
