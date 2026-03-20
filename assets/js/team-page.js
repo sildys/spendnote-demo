@@ -177,8 +177,17 @@ const updateSeatCounter = () => {
     }
 
     const used = teamMembers.filter(m => m.status === 'active' || m.status === 'pending').length;
-    el.textContent = `${used} / ${seatLimit} seats used`;
-    el.style.color = used >= seatLimit ? '#ef4444' : 'var(--text-muted)';
+    const pct = Math.min(100, Math.round((used / seatLimit) * 100));
+    const atLimit = used >= seatLimit;
+    const barColor = atLimit ? '#ef4444' : '#f59e0b';
+
+    el.innerHTML = `<span style="display:inline-flex;align-items:center;gap:6px;">
+        <i class="fas fa-users" style="color:${atLimit ? '#ef4444' : 'var(--text-muted)'};font-size:11px;"></i>
+        <strong>${used}</strong> of <strong>${seatLimit}</strong> seats used
+    </span>
+    <div style="margin-top:4px;height:4px;border-radius:2px;background:var(--bg-tertiary, #e5e7eb);overflow:hidden;max-width:180px;">
+        <div style="height:100%;width:${pct}%;background:${barColor};border-radius:2px;transition:width .3s;"></div>
+    </div>`;
     el.style.display = '';
 };
 
