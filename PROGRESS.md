@@ -117,7 +117,12 @@ If a chat thread freezes / context is lost: in the new thread say:
    - Supabase Edge Function Secrets: `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_STANDARD_MONTHLY_PRICE_ID`, `STRIPE_STANDARD_YEARLY_PRICE_ID`, `STRIPE_PRO_MONTHLY_PRICE_ID`, `STRIPE_PRO_YEARLY_PRICE_ID`, `APP_BASE_URL`
    - Stripe Webhook endpoint → Supabase Edge Function URL
    - Edge Function-ök deploy
-4. **Google OAuth consent screen** — jelenleg csúnya Supabase project link jelenik meg a Google bejelentkezésnél. Javítás: Google Cloud Console → APIs & Services → OAuth consent screen → rendes SpendNote app név, logó, leírás beállítása
+4. ~~**Google OAuth consent screen**~~ — KÉSZ (2026-03-20):
+   - Google Cloud Console Branding: app név → SpendNote, logó, privacy/terms linkek
+   - Google Groups: SpendNote Support csoport (support@spendnote.app)
+   - Supabase Custom Domain AKTÍV: `api.spendnote.app` → a Google login most `spendnote.app`-ot mutat
+   - Google Cloud Credentials: `https://api.spendnote.app/auth/v1/callback` redirect URI hozzáadva
+   - Cloudflare DNS: CNAME `api` → `zrnnharudlgxuvewqryj.supabase.co` + TXT `_acme-challenge.api`
 5. ~~**PDF download funkció**~~ — TÖRÖLVE: már rég működik (`spendnote-pdf-receipt.html` + Transaction Detail PDF gomb)
 6. ~~**Receipt Preview**~~ — ELVETVA (2026-03-20): nem éri meg, a Cash Box Settings preview már lefedi, a form maga a preview, a 30 mp-es gyors nyomtatási flow-t nem szabad bonyolítani
 
