@@ -112,20 +112,39 @@ If a chat thread freezes / context is lost: in the new thread say:
 
 1. **SEO Batch 2** — 11 oldal hátra (7 Service Provider + 3 Excel/Spreadsheet + 1 bonus)
 2. **Daily Cash Tracking klaszter** — 3 TOP PICK oldal: `restaurant-cash-count-sheet`, `retail-cash-reconciliation`, `store-daily-cash-log` + keyword expansion meglévő oldalakra
-3. **Stripe bekötés** — KÉSZ, deploy-olva TEST MODE-ban (2026-03-20):
+3. **Stripe bekötés** — KÓD KÉSZ, `STRIPE_LIVE=false` GATE AKTÍV (2026-03-20):
    - ✅ Stripe Dashboard: Products + Prices létrehozva (TEST MODE, adószám pending)
    - ✅ Price ID-k (test): Standard $19/mo, $190/yr | Pro $29/mo, $290/yr | Extra Seat $5/mo
    - ✅ DB: `seat_count` mező hozzáadva (migration 037)
-   - ✅ Edge Functions deploy-olva: `create-checkout-session` (Pro 2 line item), `update-subscription` (plan swap, `proration_behavior: 'none'`), `stripe-webhook` (seat_count sync), `create-portal-session`
+   - ✅ Edge Functions deploy-olva (`--no-verify-jwt`): `create-checkout-session`, `update-subscription`, `stripe-webhook`, `create-portal-session`
    - ✅ Frontend: `SpendNoteStripe.updateSubscription()`, pricing page smart buttons + seat selector, user settings gomb szétválasztás
-   - ✅ Team page: seat limit enforcement (Pro only invites, seat count check)
-   - ✅ Supabase Secrets feltöltve (8 db), Webhook endpoint Active (`whsec_...`)
+   - ✅ Team page: seat limit enforcement (Pro only invites, seat count check), seat counter (ikon + progress bar)
+   - ✅ Nav menü: Team menüpont + org context csak Pro/preview usereknél jelenik meg
+   - ✅ Team page gate: nem-Pro userek redirect → pricing (`?minPlan=pro&feature=Team Management`)
+   - ✅ Supabase Secrets feltöltve (8 db), Webhook endpoint Active
+   - ✅ Stripe test checkout TESZTELVE — működik (Pro yearly checkout megnyílt)
+   - ✅ **`STRIPE_LIVE = false`** gate aktív (`supabase-config.js`):
+     - Pricing page: Standard/Pro gombok → "Coming Soon" (disabled)
+     - User Settings: "Change Plan" rejtve, "Manage Billing" → disabled, "Cancel" rejtve
+     - Minden `_invoke()` hívás blokkolva: "Billing is not yet available"
    - ⏳ Customer Portal config: test módban nem menthető, live módra marad (adószám után)
+   - **Élesítéskor:** `STRIPE_LIVE = false` → `true` + live Stripe keys + Customer Portal config
    - **Billing szabályok:**
      - Plan váltás (upgrade/downgrade) a jelenlegi billing periódus VÉGÉN lép érvénybe, NINCS proration
      - Visszatérítés csak ha <20 tranzakció készült az adott billing periódusban
      - Extra seat mindig $5/hó, éves Pro plan esetén is
      - Pro csomag 3 usert tartalmaz, felette extra seat szükséges
+   - ⏳ **PENDING QA — teljes flow ellenőrzés (élesítés előtt):**
+     - [ ] Tier falak tesztelése: free/standard user → Team oldal redirect? Nav rejtés?
+     - [ ] Tier falak üzenetei: hol, milyen szöveggel ütközik a user falba?
+     - [ ] Pricing → signup flow: "Start Free" gomb → mi történik be nem jelentkezett usernél?
+     - [ ] Pricing → checkout: bejelentkezett user → Standard/Pro "Get Started" → Stripe Checkout
+     - [ ] Checkout → webhook: sikeres fizetés → profil frissül? (tier, billing_status, stripe_customer_id)
+     - [ ] Plan váltás: Pro → Standard, Standard → Pro, seat szám módosítás
+     - [ ] Manage Billing → Stripe Customer Portal megnyílik?
+     - [ ] Cancel subscription → periódus végén jár le?
+     - [ ] Team invite: seat limit elérve → upgrade prompt?
+     - [ ] Seat counter: valós adatot mutat?
 4. ~~**Google OAuth consent screen**~~ — KÉSZ (2026-03-20):
    - Google Cloud Console Branding: app név → SpendNote, logó, privacy/terms linkek
    - Google Groups: SpendNote Support csoport (support@spendnote.app)

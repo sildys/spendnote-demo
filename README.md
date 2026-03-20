@@ -17,32 +17,39 @@ This repository is deployable as a static site (Cloudflare Pages, currently live
 - Google Cloud Credentials: redirect URI `https://api.spendnote.app/auth/v1/callback`
 - Google Groups: SpendNote Support (support@spendnote.app)
 
-### Stripe subscription flow (2026-03-20 — DEPLOYED, test mode)
+### Stripe subscription flow (2026-03-20 — CODE COMPLETE, `STRIPE_LIVE=false`)
 
-- **Stripe is in TEST MODE** (adószám pending)
+- **Stripe is in TEST MODE** (adószám pending), **all billing disabled via `STRIPE_LIVE=false`**
 - **Products/Prices created:**
   - Standard: $19/mo (`price_1TBGHNCemJwsJwrbKgoc6Xyd`) | $190/yr (`price_1TBGO3CemJwsJwrbjasyPzEV`)
   - Pro: $29/mo (`price_1TBGHtCemJwsJwrbv2fGMxWC`) | $290/yr (`price_1TBGMDCemJwsJwrbSLt40xhV`)
   - Extra Seat: $5/mo (`price_1TBGQkCemJwsJwrbLqsrk5PN`) — no yearly variant
-- **Deployed & working:**
+- **Deployed & working (behind gate):**
   - DB: `seat_count` field on profiles (migration 037)
-  - Edge Functions: `create-checkout-session` (Pro 2 line items), `update-subscription` (plan swap, no proration), `stripe-webhook` (seat_count sync), `create-portal-session`
-  - Supabase Secrets: 8 secrets configured
-  - Stripe Webhook endpoint: Active, 6 events
-  - Pricing page: detect current plan, smart buttons (Current Plan / Switch / Get Started), Pro seat selector
-  - User Settings: Change Plan → pricing, Manage Billing → Portal, Cancel → Portal
-  - Team page: seat limit enforcement (Pro only invites, seat count check)
-- **Subscription flow:**
+  - Edge Functions (`--no-verify-jwt`): `create-checkout-session`, `update-subscription`, `stripe-webhook`, `create-portal-session`
+  - Supabase Secrets: 8 secrets configured, Webhook endpoint Active
+  - Pricing page: smart buttons + Pro seat selector (currently "Coming Soon")
+  - User Settings: billing buttons hidden/disabled while gate is active
+  - Team page: seat counter (icon + progress bar), seat limit enforcement, Pro gate (redirect non-Pro)
+  - Nav menu: Team link + org context hidden for non-Pro/preview users
+- **`STRIPE_LIVE = false` gate** (`supabase-config.js`):
+  - All new users → `preview` tier (full access, 200 tx limit)
+  - Pricing: Standard/Pro buttons → "Coming Soon" (disabled)
+  - Settings: Change Plan hidden, Manage Billing disabled, Cancel hidden
+  - All `_invoke()` calls blocked → "Billing is not yet available"
+  - **To activate:** flip `STRIPE_LIVE = false` → `true`, swap test→live keys, configure Customer Portal
+- **Subscription flow (when live):**
   - Signup → preview tier (free, no credit card)
-  - Upgrade → `spendnote-pricing.html` → Stripe Checkout (new subscription)
-  - Plan swap → `update-subscription` Edge Function (`proration_behavior: 'none'`, takes effect at period end)
-  - Manage billing → Stripe Customer Portal (payment method, invoices, cancel)
-- **Pro seat model:** 3 users included, +$5/mo per extra seat (2 line items: base + extra seats)
-- **Billing rules:**
-  - Plan changes take effect at END of current billing period, NO proration
-  - Refund only if <20 transactions in billing period
-  - Extra seat always $5/mo regardless of base plan cycle
-- **Pending (live mode only):** Customer Portal branding + legal policies (requires adószám)
+  - Upgrade → `spendnote-pricing.html` → Stripe Checkout
+  - Plan swap → `update-subscription` (`proration_behavior: 'none'`, period end)
+  - Manage billing → Stripe Customer Portal
+- **Pro seat model:** 3 users included, +$5/mo per extra seat
+- **Pending QA (before launch):**
+  - Tier walls: where/how does user hit walls per tier? What messages show?
+  - Pricing → signup flow: "Start Free" for non-logged-in users
+  - Full checkout → webhook → profile update cycle
+  - Plan switch, seat change, cancel, billing portal
+  - Team invite seat limit + seat counter accuracy
 
 ## Previous status (2026-03-13 — Legal docs rewrite + cookie consent GDPR compliance)
 
