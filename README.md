@@ -17,13 +17,21 @@ This repository is deployable as a static site (Cloudflare Pages, currently live
 - Google Cloud Credentials: redirect URI `https://api.spendnote.app/auth/v1/callback`
 - Google Groups: SpendNote Support (support@spendnote.app)
 
-### Stripe subscription flow (2026-03-20 — designed, implementation pending)
+### Stripe subscription flow (2026-03-20 — DEPLOYED, test mode)
 
 - **Stripe is in TEST MODE** (adószám pending)
 - **Products/Prices created:**
   - Standard: $19/mo (`price_1TBGHNCemJwsJwrbKgoc6Xyd`) | $190/yr (`price_1TBGO3CemJwsJwrbjasyPzEV`)
   - Pro: $29/mo (`price_1TBGHtCemJwsJwrbv2fGMxWC`) | $290/yr (`price_1TBGMDCemJwsJwrbSLt40xhV`)
   - Extra Seat: $5/mo (`price_1TBGQkCemJwsJwrbLqsrk5PN`) — no yearly variant
+- **Deployed & working:**
+  - DB: `seat_count` field on profiles (migration 037)
+  - Edge Functions: `create-checkout-session` (Pro 2 line items), `update-subscription` (plan swap, no proration), `stripe-webhook` (seat_count sync), `create-portal-session`
+  - Supabase Secrets: 8 secrets configured
+  - Stripe Webhook endpoint: Active, 6 events
+  - Pricing page: detect current plan, smart buttons (Current Plan / Switch / Get Started), Pro seat selector
+  - User Settings: Change Plan → pricing, Manage Billing → Portal, Cancel → Portal
+  - Team page: seat limit enforcement (Pro only invites, seat count check)
 - **Subscription flow:**
   - Signup → preview tier (free, no credit card)
   - Upgrade → `spendnote-pricing.html` → Stripe Checkout (new subscription)
@@ -34,12 +42,7 @@ This repository is deployable as a static site (Cloudflare Pages, currently live
   - Plan changes take effect at END of current billing period, NO proration
   - Refund only if <20 transactions in billing period
   - Extra seat always $5/mo regardless of base plan cycle
-- **Existing Edge Functions:** `create-checkout-session`, `create-portal-session`, `stripe-webhook`
-- **Pending implementation:**
-  - DB `seat_count` field, `update-subscription` Edge Function, webhook seat sync
-  - Pricing page: detect current plan + seat selector for Pro
-  - User Settings: button separation (Change Plan → pricing, Manage Billing → Portal)
-  - Team page: seat limit enforcement on invite
+- **Pending (live mode only):** Customer Portal branding + legal policies (requires adószám)
 
 ## Previous status (2026-03-13 — Legal docs rewrite + cookie consent GDPR compliance)
 

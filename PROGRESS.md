@@ -112,22 +112,15 @@ If a chat thread freezes / context is lost: in the new thread say:
 
 1. **SEO Batch 2** — 11 oldal hátra (7 Service Provider + 3 Excel/Spreadsheet + 1 bonus)
 2. **Daily Cash Tracking klaszter** — 3 TOP PICK oldal: `restaurant-cash-count-sheet`, `retail-cash-reconciliation`, `store-daily-cash-log` + keyword expansion meglévő oldalakra
-3. **Stripe bekötés** — részleges kód KÉSZ, teljes subscription flow újratervezve (2026-03-20):
+3. **Stripe bekötés** — KÉSZ, deploy-olva TEST MODE-ban (2026-03-20):
    - ✅ Stripe Dashboard: Products + Prices létrehozva (TEST MODE, adószám pending)
    - ✅ Price ID-k (test): Standard $19/mo, $190/yr | Pro $29/mo, $290/yr | Extra Seat $5/mo
-   - ✅ Edge Functions kész: `create-checkout-session`, `create-portal-session`, `stripe-webhook`
-   - ✅ Frontend wrapper kész: `SpendNoteStripe` (supabase-config.js)
-   - ⏳ **Hiányzó implementáció:**
-     - DB: `seat_count` mező hozzáadása profiles táblához
-     - `create-checkout-session` frissítés: Pro-nál 2 line item (base + extra seats)
-     - ÚJ `update-subscription` Edge Function: plan swap + seat change (`proration_behavior: 'none'`, periódus végén vált)
-     - `stripe-webhook` frissítés: seat_count sync profilba
-     - `SpendNoteStripe.updateSubscription()` frontend method
-     - Pricing page: detect current plan, gomb logika (new checkout vs update-subscription), seat selector Pro-nál
-     - User Settings gombok szétválasztása: "Change Plan" → pricing page, "Manage Billing" → Stripe Portal, "Cancel" → Stripe Portal
-     - Team page: seat limit enforcement (invite blokk ha nincs szabad seat)
-     - Supabase Secrets feltöltés + Edge Function deploy + Stripe Webhook endpoint config
-     - Stripe Branding + Customer Portal config
+   - ✅ DB: `seat_count` mező hozzáadva (migration 037)
+   - ✅ Edge Functions deploy-olva: `create-checkout-session` (Pro 2 line item), `update-subscription` (plan swap, `proration_behavior: 'none'`), `stripe-webhook` (seat_count sync), `create-portal-session`
+   - ✅ Frontend: `SpendNoteStripe.updateSubscription()`, pricing page smart buttons + seat selector, user settings gomb szétválasztás
+   - ✅ Team page: seat limit enforcement (Pro only invites, seat count check)
+   - ✅ Supabase Secrets feltöltve (8 db), Webhook endpoint Active (`whsec_...`)
+   - ⏳ Customer Portal config: test módban nem menthető, live módra marad (adószám után)
    - **Billing szabályok:**
      - Plan váltás (upgrade/downgrade) a jelenlegi billing periódus VÉGÉN lép érvénybe, NINCS proration
      - Visszatérítés csak ha <20 tranzakció készült az adott billing periódusban
