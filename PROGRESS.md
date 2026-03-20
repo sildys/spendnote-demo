@@ -118,14 +118,8 @@ If a chat thread freezes / context is lost: in the new thread say:
    - Stripe Webhook endpoint → Supabase Edge Function URL
    - Edge Function-ök deploy
 4. **Google OAuth consent screen** — jelenleg csúnya Supabase project link jelenik meg a Google bejelentkezésnél. Javítás: Google Cloud Console → APIs & Services → OAuth consent screen → rendes SpendNote app név, logó, leírás beállítása
-5. **PDF download funkció** — beépítés az appba
-6. **Receipt Preview** a new transaction formban (dashboard modal + mobil new-transaction oldal):
-   - `👁 Preview` link az "Add another after saving" sor jobb oldalán (nem gomb, nem zavarja a flow-t)
-   - Kattintásra: új tab nyílik → `spendnote-receipt-print-two-copies.html` demo paraméterekkel (form aktuális adataiból: név, összeg, leírás, cím, cash box settings: logó, labelek, stb.)
-   - `autoPrint=0` — csak előnézet, nem nyomtat
-   - Nincs DB mentés, nincs txId, nincs draft — a receipt demo módban renderel
-   - Modal bezáródik (a user az új tabban van, ha visszajön, újra kitölti)
-   - A "Done" és "Done & Print" gombok **változatlanok** maradnak — a 30 mp-es gyors nyomtatási flow nem sérül
+5. ~~**PDF download funkció**~~ — TÖRÖLVE: már rég működik (`spendnote-pdf-receipt.html` + Transaction Detail PDF gomb)
+6. ~~**Receipt Preview**~~ — ELVETVA (2026-03-20): nem éri meg, a Cash Box Settings preview már lefedi, a form maga a preview, a 30 mp-es gyors nyomtatási flow-t nem szabad bonyolítani
 
 ---
 
