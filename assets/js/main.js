@@ -233,12 +233,13 @@ async function updateOrgContextIndicator() {
         const orgId = String(state?.orgId || state?.selectedOrgId || '').trim();
         const role = String(state?.role || state?.selectedRole || '').trim().toLowerCase();
 
+        const isPro = Boolean(state?.isPro);
         if (teamLink) {
-            const canManageTeam = role === 'owner' || role === 'admin';
-            teamLink.style.display = canManageTeam ? '' : 'none';
+            const canSeeTeam = isPro && (role === 'owner' || role === 'admin');
+            teamLink.style.display = canSeeTeam ? '' : 'none';
         }
 
-        if (!orgId) { hide(); return; }
+        if (!orgId || !isPro) { hide(); return; }
 
         const roleLabel = role === 'owner' ? 'Owner' : (role === 'admin' ? 'Admin' : 'User');
         const shortOrg = orgId.slice(0, 8);

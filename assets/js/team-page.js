@@ -334,6 +334,24 @@ const initTeamPage = async () => {
         return;
     }
 
+    // Gate: only Pro (and preview) users can access Team page
+    try {
+        const { data: sessionData } = await window.supabaseClient.auth.getSession();
+        const uid = sessionData?.session?.user?.id;
+        if (uid) {
+            const { data: gateProfile } = await window.supabaseClient
+                .from('profiles')
+                .select('subscription_tier')
+                .eq('id', uid)
+                .single();
+            const tier = String(gateProfile?.subscription_tier || '').toLowerCase();
+            if (tier !== 'pro' && tier !== 'preview') {
+                window.location.href = 'spendnote-pricing.html?minPlan=pro&feature=Team%20Management';
+                return;
+            }
+        }
+    } catch (_) {}
+
     try {
         if (window.db?.orgMemberships?.getMyRole) {
             const r = await window.db.orgMemberships.getMyRole();
