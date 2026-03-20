@@ -135,16 +135,45 @@ If a chat thread freezes / context is lost: in the new thread say:
      - Extra seat mindig $5/hó, éves Pro plan esetén is
      - Pro csomag 3 usert tartalmaz, felette extra seat szükséges
    - ⏳ **PENDING QA — teljes flow ellenőrzés (élesítés előtt):**
-     - [ ] Tier falak tesztelése: free/standard user → Team oldal redirect? Nav rejtés?
-     - [ ] Tier falak üzenetei: hol, milyen szöveggel ütközik a user falba?
-     - [ ] Pricing → signup flow: "Start Free" gomb → mi történik be nem jelentkezett usernél?
-     - [ ] Pricing → checkout: bejelentkezett user → Standard/Pro "Get Started" → Stripe Checkout
-     - [ ] Checkout → webhook: sikeres fizetés → profil frissül? (tier, billing_status, stripe_customer_id)
-     - [ ] Plan váltás: Pro → Standard, Standard → Pro, seat szám módosítás
-     - [ ] Manage Billing → Stripe Customer Portal megnyílik?
-     - [ ] Cancel subscription → periódus végén jár le?
-     - [ ] Team invite: seat limit elérve → upgrade prompt?
-     - [ ] Seat counter: valós adatot mutat?
+     - **Tier falak + üzenetek:**
+       - [ ] free/standard user → Team oldal redirect? Nav Team link rejtve?
+       - [ ] Hol, milyen szöveggel ütközik a user falba? (üzenetek összegyűjtése)
+       - [ ] Cash Box limit: Free=1, Standard=2, Pro=unlimited — be van kényszerítve?
+       - [ ] Tranzakció limit: preview=200 — mi történik elérésnél? Üzenet?
+       - [ ] Feature gating: custom logo upload (Standard+), receipt layouts (Standard+), CSV export (Standard+), email receipts (Pro) — le vannak zárva?
+     - **Pricing + signup flow:**
+       - [ ] "Start Free" gomb → mi történik be nem jelentkezett usernél?
+       - [ ] Bejelentkezett preview user → "Get Started" / "Coming Soon" helyes?
+       - [ ] Éves/havi toggle: helyes árak, "Save $X" számítás
+     - **Checkout + webhook ciklus:**
+       - [ ] Standard/Pro "Get Started" → Stripe Checkout megnyílik
+       - [ ] Sikeres fizetés → webhook → profil frissül? (tier, billing_status, stripe_customer_id, seat_count)
+       - [ ] Sikertelen fizetés → mi történik? past_due kezelés?
+     - **Plan váltás + seat:**
+       - [ ] Pro → Standard, Standard → Pro, seat szám módosítás
+       - [ ] Seat selector → "Update Seats" gomb → update-subscription hívás
+     - **Billing portal + cancel:**
+       - [ ] Manage Billing → Stripe Customer Portal megnyílik?
+       - [ ] Cancel subscription → periódus végén jár le? Profil frissül?
+     - **Team:**
+       - [ ] Team invite: seat limit elérve → upgrade prompt?
+       - [ ] Seat counter: valós adatot mutat? Invite/remove után frissül?
+     - **Downgrade kezelés:**
+       - [ ] Pro → Standard: mi történik a team memberekkel? Extra cash box-okkal?
+       - [ ] Standard → Free: mi történik a 2. cash box-szal? Tranzakciókkal?
+     - **Preview → éles migráció:**
+       - [ ] Meglévő preview userek: maradnak preview-ban, vagy kell plan választás?
+       - [ ] Preview → Free átállás stratégia (ha billing megy élesbe)
+     - **Élesítési checklist:**
+       - [ ] `STRIPE_LIVE = false` → `true` (`supabase-config.js`)
+       - [ ] Stripe test keys → live keys (Supabase Secrets csere)
+       - [ ] Stripe Webhook endpoint: új live endpoint + signing secret
+       - [ ] Customer Portal config (live módban): legal policies, branding, cancel settings
+       - [ ] Statement descriptor: `SPENDNOTE`
+       - [ ] Edge Functions újra deploy (ha secret-ek változnak)
+       - [ ] supabase-config.js cache verzió bump
+     - **Cleanup:**
+       - [ ] Debug console.log-ok eltávolítása (team-page.js profil logok)
 4. ~~**Google OAuth consent screen**~~ — KÉSZ (2026-03-20):
    - Google Cloud Console Branding: app név → SpendNote, logó, privacy/terms linkek
    - Google Groups: SpendNote Support csoport (support@spendnote.app)
