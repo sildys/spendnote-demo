@@ -151,12 +151,37 @@ cash-count-sheet-template, cash-deposit-receipt, cash-discrepancy-between-shifts
 
 **Összesen Phase 1 + Phase 2:** 13 + 32 = 45 oldal, 270 tag frissítve
 
+### 2026-03-21 — CTR framing konklúzió + Phase 3 terv
+
+**Tanulság a Phase 1-2 title rewrite-ból:**
+A title-ök SEO szempontból rendben vannak (keyword elöl, nincs stuffing, nincs clickbait), de sok title túl "leíró" maradt — funkciót mond, nem szituációt/pain-t. A meta description-ök már beszélgetős stílusúak, de a title-ök egy részénél hiányzik a pszichológiai CTR trigger.
+
+**Példák a különbségre:**
+| Jelenlegi (leíró) | Jobb (pain/szituáció framing) |
+|---|---|
+| Cash Refund Receipt — Instant Refund Documentation | Need to Refund Cash? Use This Simple Receipt (Free) |
+| Employee Cash Advance Receipt — Instant Proof of Payment | Gave an Employee Cash? Create a Signed Receipt in 30s |
+| Petty Cash How Much to Keep? Float Formula + Examples | How Much Petty Cash Should You Keep? (Simple Rule) |
+
+**Fontos:** ez NEM keyword változtatás és NEM agresszívebb SEO — csak jobb copywriting a title-ben. Nulla SEO kockázat, mert nem változik a relevancia, csak a framing.
+
+**Ahol a framing MÁR jó volt:**
+- "Petty Cash Doesn't Balance? Here's Why + How to Fix It" — szituáció + megoldás
+- "Who Took Money From the Cash Box? Find Out Fast" — pain + trigger
+- Meta description-ök szinte mind kérdés formátumúak
+
+**Egyéb elvégzett változtatások (2026-03-21):**
+- 404.html: GA4 `page_not_found` event hozzáadva (page_path + referrer tracking) — commit `d3e6145`
+- `_redirects`: "kitalálható" URL-ekre redirect hozzáadva (pricing.html, faq.html, login.html, stb.)
+- Backlink beküldések: AlternativeTo, Capterra, WebsiteLaunches (jóváhagyás alatt)
+
 **Következő lépések (SEO Phase 3 — PENDING):**
-1. Tartalom megerősítés a top 3-5 oldalon (új H2-k GSC query-k alapján, hosszabb szöveg)
-2. "Template" oldalak repozícionálása (tool-framing a letölthető template helyett)
-3. Backlink építés indítása (LinkedIn poszt, startup directoriák, niche közösségek)
-4. GSC Performance monitoring 2-3 hét múlva — mérjük a CTR változást
-5. GSC-ben újraindexelés kérése az összes frissített URL-re
+1. **7-10 nap várakozás** — ne nyúlj semmihez, hagyd hogy a Google indexelje az új title/meta-kat
+2. **GSC-ben újraindexelés kérése** az összes frissített URL-re (45 oldal)
+3. **CTR elemzés** — GSC-ben megnézni: melyik oldalaknál marad 0% CTR top 15-ös pozícióban
+4. **Title framing csere (3-5 oldal)** — CSAK azoknál amelyek top 15-ben vannak de 0% CTR → szituáció/pain framing (nem keyword csere, csak copywriting)
+5. Tartalom megerősítés a top 3-5 oldalon (új H2-k GSC query-k alapján)
+6. Backlink építés folytatása (LinkedIn company page, Crunchbase, heti Reddit/Quora)
 
 ---
 

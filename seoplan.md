@@ -1112,6 +1112,49 @@ Maradék 31 SEO oldal + index.html landing page — ugyanaz a stratégia mint Ph
 
 ---
 
+### Update log - 2026-03-21 (CTR framing konklúzió + Phase 3 finomítás)
+
+**Konklúzió a Phase 1-2 title rewrite-ról:**
+
+A title-ök SEO-technikai szempontból rendben vannak:
+- ✅ Keyword elöl minden title-ben
+- ✅ Brand suffix eltávolítva (12+ karakter nyereség)
+- ✅ Nincs keyword stuffing
+- ✅ Nincs clickbait mismatch
+- ✅ Meta description-ök beszélgetős, kérdés formátumúak
+
+**De:** sok title túl "leíró" maradt — funkciót/feature-t mond, nem szituációt vagy pain-t. Ez CTR szempontból gyengébb, mert a user nem érzi a "miért kattintsak most?" triggert.
+
+**Példák a különbségre (nem keyword csere, csak framing csere):**
+
+| Jelenlegi (leíró) | Jobb (pain/szituáció trigger) |
+|---|---|
+| Cash Refund Receipt — Instant Refund Documentation | Need to Refund Cash? Use This Simple Receipt (Free) |
+| Employee Cash Advance Receipt — Instant Proof of Payment | Gave an Employee Cash? Create a Signed Receipt in 30s |
+| Petty Cash How Much to Keep? Float Formula + Examples | How Much Petty Cash Should You Keep? (Simple Rule) |
+
+**Fontos:** ez NEM agresszívebb SEO. Nincs extra keyword, nincs stuffing, nincs clickbait. Csak más pszichológiai framing — szituáció/probléma a title elején, ami erősebb kattintási triggert ad. Nulla SEO kockázat.
+
+**Ahol a framing MÁR jó:**
+- "Petty Cash Doesn't Balance? Here's Why + How to Fix It" ✅
+- "Who Took Money From the Cash Box? Find Out Fast" ✅
+- Szinte minden meta description (kérdés formátum) ✅
+
+**Phase 3 finomított terv:**
+1. **7-10 nap várakozás** (ne nyúlj semmihez, várj indexelésre)
+2. **GSC újraindexelés** — 45 URL beküldése
+3. **CTR elemzés ~április 1** — GSC-ben: melyik oldalaknál marad 0% CTR top 15-ös pozícióban?
+4. **Title framing csere (3-5 oldal)** — CSAK a 0% CTR + top 15 oldalaknál, szituáció/pain framingre (nem keyword csere)
+5. **Tartalom megerősítés** — top oldalak H2 bővítése GSC query-k alapján
+6. **Backlink építés folytatása** — LinkedIn company page, Crunchbase, heti 1-2 Reddit/Quora válasz
+
+**Egyéb változtatások (2026-03-21):**
+- `404.html`: GA4 `page_not_found` custom event (page_path + referrer) — commit `d3e6145`
+- `_redirects`: pricing.html, faq.html, login.html, signup.html, stb. redirectek hozzáadva
+- Backlink beküldések: AlternativeTo, Capterra, WebsiteLaunches (jóváhagyás alatt)
+
+---
+
 ### Update log - 2026-03-14 (weekend batch — 5 new SEO pages, indexed)
 
 1. **Created 5 new SEO pages — all live (index, follow), indexed in Google Search Console:**
