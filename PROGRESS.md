@@ -211,26 +211,33 @@ A jelenlegi SEO oldalak "petty cash" + "receipt" + "template" kulcsszavakra cél
 
 **SEO Phase 4 terv — "Cash Accountability" angle oldalak (PLANNED, építés: ~április eleje):**
 
-| # | Slug | Title angle | Target keyword / pain |
-|---|------|------------|----------------------|
-| 1 | who-has-the-cash-right-now | Who Has the Cash Right Now? Track It Instantly | "who has the cash", "track company cash" |
-| 2 | office-cash-tracking | Office Cash Tracking — See Every Movement | "office cash tracking", "track cash in office" |
-| 3 | cash-advance-not-returned | Employee Didn't Return Cash Advance? What to Do | "cash advance not returned", "employee owes money" |
-| 4 | boss-cant-see-where-cash-goes | Can't See Where Your Team's Cash Goes? Fix That | "where does company cash go", "cash visibility" |
+**3 core oldal (ezeket építjük):**
 
-**Kanibalizáció-ellenőrzés (2026-03-22):**
-- ~~track-cash-between-employees~~ TÖRÖLVE — túl közel a `cash-handoff-receipt`-hez
-- ~~small-business-cash-control~~ TÖRÖLVE — túl közel a `how-to-manage-petty-cash-small-business`-hez
-- `who-has-the-cash-right-now` vs `who-took-money-from-cash-box`: OK — múlt ("ki vette ki?") vs jelen ("kinél van most?")
-- `office-cash-tracking` vs `office-expense-reimbursement-form`: OK — általános tracking vs specifikus form
-- `cash-advance-not-returned` vs `employee-cash-advance-receipt`: OK — "mi van ha nem adja vissza?" vs "receipt készítés"
-- `boss-cant-see-where-cash-goes` vs `manage-petty-cash-remotely`: OK (óvatos) — pain framing vs feature framing
+| # | Slug | Title angle | Miért erős |
+|---|------|------------|-----------|
+| 1 | who-has-the-cash-right-now | Who Has the Cash Right Now? Track It Instantly | Core pain — a legerősebb angle az egész listában |
+| 2 | cash-advance-not-returned | Employee Didn't Return Cash Advance? What to Do | Konkrét szituáció, niche fájdalom |
+| 3 | boss-cant-see-where-cash-goes | Can't See Where Your Team's Cash Goes? Fix That | Emotional trigger — frusztráció, nem feature |
+
+**+1 opcionális (ha a core 3 jól teljesít):**
+
+| # | Slug | Title angle | Feltétel |
+|---|------|------------|---------|
+| 4 | track-cash-between-employees | Track Cash Between Employees — Who Gave, Who Got | Csak ha jól elkülönül a `cash-handoff-receipt`-től (az = dokumentum/proof, ez = kontroll/visibility) |
+
+**Kanibalizáció-kezelés — fontos tanulság:**
+A kanibalizáció nem topic overlap, hanem **intent overlap**. Két oldal szólhat hasonló témáról, ha a user szándéka más:
+- `cash-handoff-receipt` = "csinálj bizonylatot" (dokumentálás intent)
+- `track-cash-between-employees` = "kinél van most a pénz?" (kontroll/visibility intent)
+- → ha a tartalom/framing világosan elkülöníti az intentet, megférnek
+- Aranyszabály: **1 oldal = 1 intent** (nem 1 topic)
 
 **Fontos:** NEM "petty cash" keyword-ök, hanem szituáció/pain alapú. Célcsoport: irodavezető, kisvállalkozó, csapatvezető aki távolról akarja látni a pénzt.
 
 **Időzítés:**
-1. Április eleje: GSC kiértékelés + ezekből 2-3 oldal megépítése
-2. A legjobban performálót duplikálod a többire
+1. Április eleje: 3 core oldal megépítése
+2. Teljesítmény figyelés 2 hétig
+3. Ha jól megy: 4. oldal megépítése + a meglévő oldalak angle finomítása
 
 ---
 
