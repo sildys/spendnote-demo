@@ -1188,16 +1188,22 @@ A jelenlegi SEO oldalak "petty cash" + "receipt" + "template" kulcsszavakra cél
 - "hogyan követem az irodai készpénzt?"
 - "a főnök lássa hol a pénz"
 
-**SEO Phase 4 terv — "Cash Accountability" angle oldalak (PLANNED, építés: ~április közepe):**
+**SEO Phase 4 terv — "Cash Accountability" angle oldalak (PLANNED, építés: ~április eleje):**
 
 | # | Slug | Title angle | Target pain |
 |---|------|------------|------------|
 | 1 | who-has-the-cash-right-now | Who Has the Cash Right Now? Track It Instantly | "Kinél van a pénz?" — átláthatóság |
 | 2 | office-cash-tracking | Office Cash Tracking — See Every Movement | Irodai készpénz mozgás követése |
 | 3 | cash-advance-not-returned | Employee Didn't Return Cash Advance? What to Do | Nem adta vissza az előleget |
-| 4 | track-cash-between-employees | Track Cash Between Employees — Who Gave, Who Got | Pénz mozgás emberek között |
-| 5 | small-business-cash-control | Small Business Cash Control — No Accounting Needed | Kontroll könyvelő nélkül |
-| 6 | boss-cant-see-where-cash-goes | Can't See Where Your Team's Cash Goes? Fix That | Főnök nem lát rá a pénzre |
+| 4 | boss-cant-see-where-cash-goes | Can't See Where Your Team's Cash Goes? Fix That | Főnök nem lát rá a pénzre |
+
+**Kanibalizáció-ellenőrzés (2026-03-22):**
+- ~~track-cash-between-employees~~ TÖRÖLVE — kanibalizálná a `cash-handoff-receipt`-et (mindkettő: pénz mozgás emberek között)
+- ~~small-business-cash-control~~ TÖRÖLVE — kanibalizálná a `how-to-manage-petty-cash-small-business`-t (mindkettő: small business + cash management)
+- `who-has-the-cash-right-now` vs `who-took-money-from-cash-box`: OK — más intent (jelen "kinél van?" vs múlt "ki vette ki?")
+- `office-cash-tracking` vs `office-expense-reimbursement-form`: OK — általános tracking vs specifikus reimbursement form
+- `cash-advance-not-returned` vs `employee-cash-advance-receipt`: OK — probléma ("nem adta vissza") vs dokumentálás ("receipt készítés")
+- `boss-cant-see-where-cash-goes` vs `manage-petty-cash-remotely`: OK de óvatosan — pain framing vs feature framing, keyword-öket el kell választani
 
 **Mi más ezekben:**
 - NEM "petty cash" / "template" keyword-ök — hanem szituáció/pain alapú
@@ -1206,9 +1212,8 @@ A jelenlegi SEO oldalak "petty cash" + "receipt" + "template" kulcsszavakra cél
 - Kiegészítik a meglévő 47 oldalt, nem helyettesítik
 
 **Időzítés:**
-1. Április eleje: GSC kiértékelés — Phase 1-2 title/meta hatása mérhető
-2. Április közepe: ezekből 2-3 oldal megépítése (nem mind 6 egyszerre)
-3. A legjobban performálót duplikálod a többire
+1. Április eleje: GSC kiértékelés + ezekből 2-3 oldal megépítése
+2. A legjobban performálót duplikálod a többire
 
 ---
 

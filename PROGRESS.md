@@ -209,23 +209,28 @@ A jelenlegi SEO oldalak "petty cash" + "receipt" + "template" kulcsszavakra cél
 - "elszámolt-e a kolléga?"
 - "hogyan követem az irodai készpénzt?"
 
-**SEO Phase 4 terv — "Cash Accountability" angle oldalak (PLANNED, építés: ~április közepe):**
+**SEO Phase 4 terv — "Cash Accountability" angle oldalak (PLANNED, építés: ~április eleje):**
 
 | # | Slug | Title angle | Target keyword / pain |
 |---|------|------------|----------------------|
 | 1 | who-has-the-cash-right-now | Who Has the Cash Right Now? Track It Instantly | "who has the cash", "track company cash" |
 | 2 | office-cash-tracking | Office Cash Tracking — See Every Movement | "office cash tracking", "track cash in office" |
 | 3 | cash-advance-not-returned | Employee Didn't Return Cash Advance? What to Do | "cash advance not returned", "employee owes money" |
-| 4 | track-cash-between-employees | Track Cash Between Employees — Who Gave, Who Got | "track cash between employees", "cash handoff tracking" |
-| 5 | small-business-cash-control | Small Business Cash Control — No Accounting Needed | "cash control small business", "control company cash" |
-| 6 | boss-cant-see-where-cash-goes | Can't See Where Your Team's Cash Goes? Fix That | "where does company cash go", "cash visibility" |
+| 4 | boss-cant-see-where-cash-goes | Can't See Where Your Team's Cash Goes? Fix That | "where does company cash go", "cash visibility" |
 
-**Fontos:** NEM "petty cash" keyword-ök, hanem szituáció/pain alapú. Nem template, hanem probléma-megoldás framing. Célcsoport: irodavezető, kisvállalkozó, csapatvezető aki távolról akarja látni a pénzt.
+**Kanibalizáció-ellenőrzés (2026-03-22):**
+- ~~track-cash-between-employees~~ TÖRÖLVE — túl közel a `cash-handoff-receipt`-hez
+- ~~small-business-cash-control~~ TÖRÖLVE — túl közel a `how-to-manage-petty-cash-small-business`-hez
+- `who-has-the-cash-right-now` vs `who-took-money-from-cash-box`: OK — múlt ("ki vette ki?") vs jelen ("kinél van most?")
+- `office-cash-tracking` vs `office-expense-reimbursement-form`: OK — általános tracking vs specifikus form
+- `cash-advance-not-returned` vs `employee-cash-advance-receipt`: OK — "mi van ha nem adja vissza?" vs "receipt készítés"
+- `boss-cant-see-where-cash-goes` vs `manage-petty-cash-remotely`: OK (óvatos) — pain framing vs feature framing
+
+**Fontos:** NEM "petty cash" keyword-ök, hanem szituáció/pain alapú. Célcsoport: irodavezető, kisvállalkozó, csapatvezető aki távolról akarja látni a pénzt.
 
 **Időzítés:**
-1. Április eleje: GSC kiértékelés — Phase 1-2 title/meta hatása mérhető
-2. Április közepe: ezekből 2-3 oldal megépítése (nem mind 6 egyszerre)
-3. A legjobban performálót duplikálod a többire
+1. Április eleje: GSC kiértékelés + ezekből 2-3 oldal megépítése
+2. A legjobban performálót duplikálod a többire
 
 ---
 
