@@ -239,6 +239,36 @@ A kanibalizáció nem topic overlap, hanem **intent overlap**. Két oldal szólh
 2. Teljesítmény figyelés 2 hétig
 3. Ha jól megy: 4. oldal megépítése + a meglévő oldalak angle finomítása
 
+### 2026-03-23 — UK charity signup + nonprofit szegmens felismerés
+
+**Új signup:** UK-s jótékonysági szervezet, céges email. Ez az első valódi "target user":
+- Fizetőképes piac (UK)
+- Céges domain (nem gmail)
+- Szervezet ami készpénzzel dolgozik, elszámolás kell neki, proof kell
+
+**Validáció:** ha egy ilyen user magától rátalált, az azt jelenti:
+- Az SEO oldalak működnek (valószínűleg a title változtatás hatása)
+- A charity/nonprofit szegmens valós célcsoport
+
+**Új szegmens azonosítva: nonprofits / charities / community orgs**
+Jellemzők: sok készpénz, kis kifizetések, elszámolási kötelezettség, önkéntesek kezelik a pénzt, proof kell.
+
+**Potenciális SEO oldalak (Phase 5 — PLANNED, tervezés):**
+
+| # | Slug | Angle | Megjegyzés |
+|---|------|-------|-----------|
+| 1 | charity-cash-tracking | Track Cash at Your Charity — Every Pound Accounted For | Általános charity cash management |
+| 2 | nonprofit-petty-cash | Nonprofit Petty Cash — Simple Rules for Small Teams | Petty cash specifikusan nonprofit-oknak |
+| 3 | fundraiser-cash-handling | Fundraiser Cash Handling — Receipt Every Transaction | Gyűjtések, események, bake sale-ek |
+| 4 | church-cash-management | Church Cash Management — Track Offerings & Expenses | Egyházi pénzkezelés (nagy piac US-ben) |
+| 5 | volunteer-cash-receipt | Volunteer Cash Receipt — Proof for Every Handoff | Önkéntesek közötti pénz mozgás |
+
+**JOGI KORLÁT — FONTOS:**
+- NEM használunk "donation receipt" / "donation proof" kifejezést — sok országban (UK Gift Aid, US IRS 501(c)(3), EU) ez adóigazolás, szabályozott dokumentum
+- A SpendNote NEM adóigazolást generál — hanem "payment receipt" / "cash receipt" / "transaction record" / "proof of payment"
+- Minden charity SEO oldalon ezt egyértelműen jelezni kell: "This is not a tax receipt or official donation acknowledgment"
+- Biztonságos kifejezések: cash receipt, payment receipt, transaction record, proof of payment, cash tracking
+
 ---
 
 ## Where we are now (last updated: 2026-03-18 — SEO progress + pending tasks)

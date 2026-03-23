@@ -1228,6 +1228,46 @@ Fontos tanulság: a kanibalizáció nem **topic overlap**, hanem **intent overla
 
 ---
 
+### Update log - 2026-03-23 (UK charity signup + nonprofit szegmens + Phase 5 terv)
+
+**Új signup validáció:**
+UK-s jótékonysági szervezet regisztrált, céges emailmel. Első valódi "target user":
+- Fizetőképes piac (UK), céges domain, szervezet ami készpénzzel dolgozik
+- Valószínűleg a title/meta változtatások hatására talált ránk (GSC-ben ellenőrizni)
+- Nonprofit/charity szegmens: sok készpénz, kis kifizetések, elszámolási kötelezettség, önkéntesek
+
+**Meglévő charity/nonprofit tartalom (már van, de nem dedikált):**
+- `event-cash-handling.html` — "Fundraisers & Charity Events" szekció
+- `school-money-collection-tracker.html` — volunteer/treasurer angle
+- `custom-cash-receipt-with-logo.html` — "Clubs, Organizations & Nonprofits" szekció
+- `petty-cash-how-much-to-keep.html` — "Nonprofit / community org" sor a táblázatban
+
+**SEO Phase 5 terv — Nonprofit/Charity szegmens oldalak (PLANNED):**
+
+| # | Slug | Title angle | Target |
+|---|------|------------|--------|
+| 1 | charity-cash-tracking | Track Cash at Your Charity — Every Pound Accounted For | Általános charity cash management |
+| 2 | nonprofit-petty-cash | Nonprofit Petty Cash — Simple Rules for Small Teams | Petty cash nonprofit-oknak |
+| 3 | fundraiser-cash-handling | Fundraiser Cash Handling — Receipt Every Transaction | Gyűjtések, események, bake sale |
+| 4 | church-cash-management | Church Cash Management — Track Offerings & Expenses | Egyházi pénzkezelés (nagy US piac) |
+| 5 | volunteer-cash-receipt | Volunteer Cash Receipt — Proof for Every Handoff | Önkéntesek közötti pénz mozgás |
+
+**JOGI KORLÁT — KRITIKUS:**
+- **NEM használunk** "donation receipt" / "donation proof" / "gift aid receipt" kifejezéseket
+- Sok országban (UK Gift Aid, US IRS 501(c)(3), EU) a "donation receipt" adóigazolás, szabályozott dokumentum
+- A SpendNote NEM adóigazolást generál — hanem belső elszámolási bizonylatot
+- **Biztonságos kifejezések:** cash receipt, payment receipt, transaction record, proof of payment, cash tracking
+- **Minden charity SEO oldalon disclaimer kell:** "This is not a tax receipt or official donation acknowledgment"
+
+**Kanibalizáció-check:**
+- `charity-cash-tracking` vs `event-cash-handling`: OK — az event page esemény-specifikus, a charity page szervezet-specifikus
+- `fundraiser-cash-handling` vs `event-cash-handling`: ÓVATOS — van átfedés a fundraiser szekciónál. Megoldás: a fundraiser page a tervezés/szabályokra fókuszál, az event page a napi lebonyolításra
+- `volunteer-cash-receipt` vs `cash-handoff-receipt`: OK — más célcsoport (nonprofit önkéntes vs üzleti alkalmazott)
+
+**Időzítés:** Phase 4 (cash accountability) után, ~április közepe-vége. Először 2 oldalt építünk (charity-cash-tracking + nonprofit-petty-cash), a többit teljesítmény alapján.
+
+---
+
 ### Update log - 2026-03-14 (weekend batch — 5 new SEO pages, indexed)
 
 1. **Created 5 new SEO pages — all live (index, follow), indexed in Google Search Console:**
