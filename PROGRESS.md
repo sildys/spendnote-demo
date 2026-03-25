@@ -247,11 +247,14 @@ A kanibalizáció nem topic overlap, hanem **intent overlap**. Két oldal szólh
 2. Teljesítmény figyelés 2 hétig
 3. Ha jól megy: további oldalak + meglévő oldalak angle finomítása
 
-**2 új SEO oldal KÉSZ + deployolva (2026-03-24):**
-- `who-has-the-cash-right-now.html` — "Who Has the Cash Right Now?" — core pain: valós idejű cash visibility
-- `boss-cant-see-where-cash-goes.html` — "Can't See Where Your Cash Goes?" — emotional trigger: owner nincs rálátás
-- Charity oldal kihagyva (jogi aggály), team feature nem hangsúlyozva (preview-ban nincs)
-- Következő: GSC indexelés kérés → 2 hét figyelés → ha jó: cash-advance-not-returned
+**2 új SEO oldal KÉSZ + finomhangolva + indexelés kérve (2026-03-24):**
+- `who-has-the-cash-right-now.html` — title: "Simple Petty Cash Tracking App — See Who Has the Cash Now" — H1: "Who Has the Cash Right Now?" — problem-first sales landing
+- `boss-cant-see-where-cash-goes.html` — title: "Can't See Where Your Cash Is Going? — Fix That Today" — emotional trigger, owner frusztráció
+- 4 kör ChatGPT finomhangolás: hero hook, copy felezve, CTA átírva, kulcsszavak beszőve, meta desc frissítve
+- Sitemap.xml + resources oldal frissítve (belső linkek)
+- GSC indexelés kérés beküldve (mindkét oldal + resources)
+- Bing: csak landing page indexelve 4 hét után — Google a fő csatorna
+- Következő: 2 hét figyelés → ha jó: cash-advance-not-returned
 
 ### 2026-03-23 — UK charity signup + nonprofit szegmens felismerés
 

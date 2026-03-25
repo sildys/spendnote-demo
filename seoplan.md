@@ -1251,24 +1251,41 @@ Fontos tanulság: a kanibalizáció nem **topic overlap**, hanem **intent overla
 - A Google a vártnál gyorsabban indexelte az új title/meta-kat
 - 24 órás GSC: 4 kattintás, 128 megjelenés, 3.1% CTR — eddigi legjobb nap
 
-**2 új SEO oldal KÉSZ + deployolva (2026-03-24):**
+**2 új SEO oldal KÉSZ + deployolva + finomhangolva (2026-03-24):**
 
-| # | Slug | Title | Angle |
-|---|------|-------|-------|
-| 1 | `who-has-the-cash-right-now` | Who Has the Cash Right Now? — Track It Instantly | Core pain: valós idejű cash visibility, "kinél van a pénz?" |
-| 2 | `boss-cant-see-where-cash-goes` | Can't See Where Your Cash Goes? — Fix That Today | Emotional trigger: owner/manager frusztráció, nincs rálátás |
+| # | Slug | Title (SERP) | H1 (on-page) | Angle |
+|---|------|-------------|--------------|-------|
+| 1 | `who-has-the-cash-right-now` | Simple Petty Cash Tracking App — See Who Has the Cash Now | Who Has the Cash Right Now? | Core pain: "kinél van a pénz?", problem-first sales landing |
+| 2 | `boss-cant-see-where-cash-goes` | Can't See Where Your Cash Is Going? — Fix That Today | Can't See Where Your Cash Is Going? | Emotional trigger: owner frusztráció, nincs rálátás |
 
 **Döntések:**
-- `charity-cash-tracking` oldal KIHAGYVA — user aggódik a "donation receipt" jogi vonatkozásai miatt, helyette `boss-cant-see-where-cash-goes` került be
-- Team feature NEM hangsúlyozva egyiken sem — preview módban nincs team invite/multi-user
-- Owner/manager perspektíva mindkét oldalon: TE követed a pénzt, TE látsz rá
-- £ használat a boss oldalon (UK piac validáció a charity signup-pal)
-- Mindkét oldal: Article + FAQPage schema, 4 FAQ, disclaimer, 6 related resource link, CTA
+- `charity-cash-tracking` oldal KIHAGYVA — jogi aggály ("donation receipt" adóigazolás kockázat)
+- Team feature NEM hangsúlyozva — preview módban nincs team invite/multi-user
+- Owner/manager perspektíva: TE követed a pénzt, TE látsz rá
+- US piac célzás ($, nem £)
+- Title tag ≠ H1 szándékosan: title = SEO (SERP-ben jelenik meg), H1 = konverzió (oldalon belül)
+
+**Finomhangolás (ChatGPT review alapján, 4 kör):**
+- Hero: problem-first hook ("You gave out cash. Now you don't know where it is.")
+- Copy felezve, punchline-ok félkövér/külön sorba
+- CTA: "Start Tracking Your Cash" / "Track Your Cash" (nem "Create Free Account")
+- "simple", "app", "track", "petty cash", "receipt" kulcsszavak finoman beszőve
+- Meta description frissítve az új tónusra
+- "Free to start. Plans from $19/month." mindkét CTA-nál — transzparens árazás
+- Sitemap.xml-be felvéve (priority 0.9)
+- Resources oldalra felvéve (Security & Controls kategória)
+
+**Státusz (2026-03-24):**
+- ✅ Deployolva (Cloudflare auto-deploy)
+- ✅ GSC indexelés kérés beküldve (mindkét oldal + resources oldal)
+- ✅ Sitemap frissítve
+- ✅ Resources oldal frissítve (belső linkek)
+- ⏳ Bing: csak landing page indexelve 4 hét után, SEO oldalakat nem — Google a fő csatorna
 
 **Következő lépés:**
-1. GSC-ben indexelés kérés mindkét új oldalra
-2. 2 hét teljesítmény figyelés
-3. Ha jó: `cash-advance-not-returned` + opcionálisan `track-cash-between-employees`
+1. 2 hét teljesítmény figyelés (GSC impressions, pozíciók, CTR)
+2. Ha elkap query-t poz 10-20-ban: finomítás
+3. Ha beválik: `cash-advance-not-returned` + opcionálisan `track-cash-between-employees`
 
 ---
 
