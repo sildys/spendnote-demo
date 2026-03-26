@@ -95,6 +95,44 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
+## Where we are now (last updated: 2026-03-26 — SEO szünet + Google Ads terv + Stripe QA hétvégén)
+
+### 2026-03-26 frissítés — SEO szünet, Google Ads terv, Stripe QA menetrend
+
+**SEO státusz — SZÜNET (tudatos döntés):**
+- A "template" / "petty cash voucher" kulcsszavak poz 50-100 → reménytelen (DA ~5 vs Canva DA 70-90)
+- Az organikus kattintások 16/28 nap — nem elég a növekedéshez
+- Phase 4 oldalak (who-has-the-cash, boss-cant-see) beindexelés alatt — várjuk az eredményt
+- **Döntés:** nem csinálunk több SEO oldalt, nem nyúlunk a meglévőkhöz. Várjuk a backlink-ek beérését (G2, SourceForge, AlternativeTo, Capterra) és a DA természetes emelkedését.
+- Az SEO a háttérben dolgozik, de nem ez a növekedési motor rövid távon.
+
+**Eddigi eredmények (28 nap):**
+- 16 kattintás, 3 regisztráció (18.75% signup rate — kiemelkedő!)
+- 1 aktív user aki végigpróbálta az appot (UK charity)
+- 8 oldal volt page 1-en rövid ideig (freshness boost, de visszaestek)
+- Bing: poz 3-8 "app for petty cash" típusú keresésekre (de nem indexeli a többi oldalt)
+
+**Google Ads terv (Stripe élesítés után):**
+- **Budget:** $10/nap ($300/hó keret)
+- **Kulcsszavak:** "petty cash app", "cash tracking app", "petty cash tracking app", "simple petty cash software"
+- **Negative keywords:** "free template", "excel", "download", "printable"
+- **Landing page-ek:** `who-has-the-cash-right-now` és `boss-cant-see-where-cash-goes` (A/B teszt)
+- **Geotargeting:** US + UK
+- **Becsült eredmény (18.75% signup rate alapján):** ~120-150 klikk/hó → 22-28 regisztráció/hó
+- **Cél:** validáció (fizetnek-e?), nem profit. Első hét után optimalizálás.
+
+**Hétvégi Stripe QA menetrend (2026-03-29/30):**
+1. Feature gating ellenőrzés — saját fiókkal tesztelünk (SQL-lel free→standard→pro átállítás)
+2. Tier falak + üzenetek összegyűjtése — hol, milyen szöveggel ütközik a user falba
+3. Pricing → signup flow ellenőrzés
+4. Checkout + webhook teszt (test mode, 4242 kártya)
+5. Debug cleanup (console.log-ok eltávolítása)
+6. Élesítési checklist előkészítés
+7. **UTOLSÓ:** Preview userek átállítása (csak miután minden más kész és tesztelve)
+
+**Sorrend a végleges élesítésig:**
+- Stripe QA (hétvége) → Stripe élesítés (adószám után) → Google Ads indítás → Onboarding/retention javítás (30+ reg adatai alapján)
+
 ## Where we are now (last updated: 2026-03-21 — SEO CTR optimization Phase 1 + Phase 2)
 
 ### 2026-03-21 frissítés — SEO Performance Analysis + Title/Meta Rewrite (13 oldal KÉSZ)

@@ -1289,6 +1289,59 @@ Fontos tanulság: a kanibalizáció nem **topic overlap**, hanem **intent overla
 
 ---
 
+### Update log - 2026-03-26 (SEO szünet + Google Ads terv)
+
+**SEO valóság-ellenőrzés (28 napos adat):**
+- 49 indexelt oldal, 16 kattintás összesen, 3 regisztráció (18.75% signup rate)
+- Átlagos pozíció ~53 — a "template" kulcsszavak poz 50-100-on ragadtak
+- A homepage poz 7.9, CTR 16.7% — de a legtöbb oldal láthatatlan
+- A freshness boost-ok (title átírás, új oldalak) mindig 1-2 napig tartottak, utána visszaesés
+- Bing: 19 crawl request/hét, szinte semmit nem indexel a homepage-en kívül
+
+**Kulcs felismerés:**
+- A DA ~5 domain-nel a "template" kulcsszavak (Canva DA 70, Template.net DA 90) **elérhetetlen** versenyzők
+- Még több SEO oldal NEM oldja meg az alap problémát (alacsony DA)
+- Az SEO **hosszú távú befektetés** (6-12 hónap) — nem rövid távú növekedési motor
+- A backlink-ek (G2 DA 90, SourceForge DA 85, AlternativeTo DA 60, Capterra DA 80) idővel emelhetik a DA-t, de ez hónapok kérdése
+
+**Döntés: SEO SZÜNET**
+- Nem csinálunk több SEO oldalt
+- Nem nyúlunk a meglévő title/meta-khoz (Phase 1+2 megvan, hagyjuk dolgozni)
+- SEO Batch 2 (7 Service Provider + 3 Excel) → **HALASZTVA** határozatlan időre
+- Daily Cash Tracking klaszter → **HALASZTVA**
+- Phase 5 Nonprofit → **HALASZTVA**
+- Az SEO oldalak a háttérben dolgoznak, a backlink-ek érnek, a DA lassan nő
+
+**Új növekedési csatorna: Google Ads (Stripe élesítés után)**
+- **Budget:** $10/nap, $300/hó keret
+- **Kulcsszavak (app intent):**
+  - "petty cash app"
+  - "cash tracking app"
+  - "petty cash tracking app"
+  - "simple petty cash software"
+  - "track cash payments app"
+- **Negative keywords:** "free template", "excel", "download", "printable"
+- **Landing page-ek (A/B teszt):**
+  - `who-has-the-cash-right-now` — core pain framing
+  - `boss-cant-see-where-cash-goes` — emotional trigger framing
+- **Geotargeting:** US + UK
+- **Becsült eredmény:** $2/klikk → ~150 klikk/hó → 18.75% signup rate → ~28 reg/hó
+- **Cél:** validáció — fizetnek-e? Hol akadnak el? Melyik landing konvertál jobban?
+- **Mellékhatás SEO-ra:** user jelzések (engagement, visszajárás, brand keresések) javítják az organikus pozíciókat is
+
+**Az Ads landing page-ekre tett oldalak értékelése:**
+- A Phase 4 oldalak (who-has-the-cash, boss-cant-see) a legjobb oldalak a site-on: problem-first copy, szituáció framing, erős CTA, use case boxok, konkrét "30 seconds" messaging
+- Ezek hirdetés mögé is tökéletesek — nem a homepage-re irányítunk, hanem ezekre
+
+**Sorrend:**
+1. Stripe QA (hétvége, 2026-03-29/30)
+2. Stripe élesítés (adószám után)
+3. Google Ads indítás
+4. Onboarding/retention javítás (30+ regisztráció adatai alapján)
+5. SEO-hoz visszatérés (április közepe — GSC adat + backlink eredmények kiértékelése)
+
+---
+
 ### Update log - 2026-03-23 (UK charity signup + nonprofit szegmens + Phase 5 terv)
 
 **Új signup validáció:**
