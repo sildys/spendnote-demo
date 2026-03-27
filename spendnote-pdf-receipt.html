@@ -419,9 +419,16 @@
     }
   </style></head>
 <body>
-  <div class="actions no-print">
+  <div class="actions no-print" id="pdfActionsBar">
     <button id="btnDownloadPdf" type="button" class="btn" disabled>Download PDF</button>
   </div>
+  <script>
+    try {
+      if (new URLSearchParams(window.location.search).get('preview') === '1') {
+        document.getElementById('pdfActionsBar').style.display = 'none';
+      }
+    } catch (_) {}
+  </script>
   <div class="receipt">
     <div class="void-watermark" aria-hidden="true">VOID</div>
     
