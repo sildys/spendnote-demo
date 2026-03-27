@@ -1332,13 +1332,13 @@ window.SpendNoteUpgrade = {
             <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ecfdf5,#d1fae5);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
-            <div style="font-size:19px;font-weight:800;color:#0f172a;margin-bottom:10px;line-height:1.3;">Give your team access to this cash box</div>
-            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">Invite team members to view or manage cash boxes.<br>Control who can add transactions, export data, or just view.</div>
+            <div style="font-size:19px;font-weight:800;color:#0f172a;margin-bottom:10px;line-height:1.3;">Share access to your cash</div>
+            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">Let your team manage cash together.<br>Without it, everything depends on one person.</div>
             <a href="${planUrl}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#059669;color:#fff;border-radius:10px;padding:13px 28px;font-size:15px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;">
-              Unlock Team Access
+              Unlock team access
             </a>
             <button type="button" id="sn-upgrade-overlay-secondary" style="appearance:none;border:none;background:none;color:#cbd5e1;font-size:12px;font-weight:400;cursor:pointer;margin-top:14px;padding:4px;">Not now</button>
-            <div style="font-size:12px;color:#94a3b8;margin-top:8px;line-height:1.4;">Manage roles and permissions for up to 3 users</div>
+            <div style="font-size:12px;color:#94a3b8;margin-top:8px;line-height:1.4;">Set roles and permissions</div>
           </div>
         `;
         document.body.appendChild(overlay);
