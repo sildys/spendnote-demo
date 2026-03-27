@@ -525,7 +525,8 @@ function initTransactionForm() {
 
                     const resolveText = (dbValue) => String(dbValue || '').trim();
 
-                    params.set('logo', yn(resolveVisibility('logo', cb?.receipt_show_logo, true), '1'));
+                    const canUploadLogo = await window.SpendNoteFeatures?.can('can_upload_logo');
+                    params.set('logo', canUploadLogo === false ? '0' : yn(resolveVisibility('logo', cb?.receipt_show_logo, true), '1'));
                     params.set('addresses', yn(resolveVisibility('addresses', cb?.receipt_show_addresses, true), '1'));
                     params.set('tracking', yn(resolveVisibility('tracking', cb?.receipt_show_tracking, true), '1'));
                     params.set('additional', yn(resolveVisibility('additional', cb?.receipt_show_additional, false), '0'));

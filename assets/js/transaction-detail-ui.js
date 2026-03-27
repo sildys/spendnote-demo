@@ -344,6 +344,27 @@ const QUICK_PRESET = {
             signatures: resolveVisibilityBool(cb.receipt_show_signatures, true) ? '1' : '0'
         };
 
+        (async () => {
+            try {
+                const canLogo = await window.SpendNoteFeatures?.can('can_upload_logo');
+                if (canLogo === false) {
+                    displayOptions.logo = '0';
+                    const logoToggle = document.querySelector('.toggle-list input[data-field="logo"]');
+                    if (logoToggle) {
+                        logoToggle.checked = false;
+                        logoToggle.disabled = true;
+                        const item = logoToggle.closest('.toggle-item');
+                        if (item) {
+                            item.style.opacity = '0.5';
+                            item.style.cursor = 'pointer';
+                            item.addEventListener('click', (e) => { e.preventDefault(); window.SpendNoteUpgrade?.showLogoUpgrade?.(); });
+                        }
+                    }
+                    requestReload(0);
+                }
+            } catch (_) {}
+        })();
+
         document.querySelectorAll('.toggle-list input[type="checkbox"]').forEach(toggle => {
             const field = toggle.dataset.field;
             if (field && displayOptions[field] !== undefined) {
