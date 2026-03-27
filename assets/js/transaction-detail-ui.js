@@ -592,7 +592,10 @@ html, body { height: auto !important; overflow: auto !important; }
         }
         if (emailBtn) {
             emailBtn.addEventListener('click', async () => {
-                if (!await window.SpendNoteUpgrade?.guardFeature('can_send_email_receipt', 'Email Receipts', 'pro')) return;
+                if (!await window.SpendNoteFeatures?.can('can_send_email_receipt')) {
+                    window.SpendNoteUpgrade?.showEmailUpgrade?.();
+                    return;
+                }
                 let prefillEmail = '';
                 try {
                     const currentTxId = getCurrentTxId();
