@@ -167,11 +167,13 @@ BEGIN
     void_reason = p_reason
   WHERE id = v_tx.id;
 
-  -- Audit log (org_id can be NULL for solo users, that is OK)
-  PERFORM public.spendnote_write_audit_log(
-      v_tx.org_id, v_actor, 'transaction.void', 'transaction', v_tx.id,
-      jsonb_build_object('void_tx_id', v_void_tx_id, 'reason', coalesce(p_reason, ''))
-  );
+  -- Audit log (skip for solo users without org)
+  IF v_tx.org_id IS NOT NULL THEN
+    PERFORM public.spendnote_write_audit_log(
+        v_tx.org_id, v_actor, 'transaction.void', 'transaction', v_tx.id,
+        jsonb_build_object('void_tx_id', v_void_tx_id, 'reason', coalesce(p_reason, ''))
+    );
+  END IF;
 
   RETURN QUERY SELECT v_void_tx_id;
 END;
