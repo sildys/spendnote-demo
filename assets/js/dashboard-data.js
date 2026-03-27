@@ -764,6 +764,17 @@ async function loadDashboardData() {
                         }
                     });
 
+                    // Update Add Cash Box card with real tier and box count
+                    try {
+                        const addCard = document.querySelector('.add-cash-box-card');
+                        if (addCard) {
+                            const tier = await window.SpendNoteFeatures?.getTier?.() || 'free';
+                            const realBoxCount = swiperWrapper.querySelectorAll('.register-card').length;
+                            addCard.setAttribute('data-plan', tier === 'preview' ? 'pro' : tier);
+                            addCard.setAttribute('data-box-count', String(realBoxCount));
+                        }
+                    } catch (_) {}
+
                     // Ensure Add Cash Box card matches height of other cards
                     try {
                         const addCard = document.querySelector('.add-cash-box-card');

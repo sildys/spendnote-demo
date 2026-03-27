@@ -224,6 +224,15 @@ async function loadCashBoxList() {
             } else {
                 grid.insertAdjacentHTML('beforeend', allCardsHTML);
             }
+
+            // Update Add Cash Box card with real tier and box count
+            try {
+                if (addCashBoxCard) {
+                    const tier = await window.SpendNoteFeatures?.getTier?.() || 'free';
+                    addCashBoxCard.setAttribute('data-plan', tier === 'preview' ? 'pro' : tier);
+                    addCashBoxCard.setAttribute('data-box-count', String(cashBoxes.length));
+                }
+            } catch (_) {}
             
             // Bind selection + menu color sync for dynamic rows
             const cashBoxCards = Array.from(grid.querySelectorAll('.register-row'));
