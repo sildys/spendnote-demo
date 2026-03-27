@@ -1073,7 +1073,7 @@ window.SpendNoteUpgrade = {
         el.appendChild(badge);
     },
 
-    showCashBoxUpgrade() {
+    showCashBoxUpgrade(onClose) {
         const existing = document.getElementById(this._overlayId);
         if (existing) existing.remove();
 
@@ -1099,7 +1099,7 @@ window.SpendNoteUpgrade = {
         `;
         document.body.appendChild(overlay);
 
-        const close = () => overlay.remove();
+        const close = () => { overlay.remove(); if (typeof onClose === 'function') onClose(); };
         document.getElementById('sn-upgrade-overlay-close').addEventListener('click', close);
         overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
         const escHandler = (e) => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escHandler); } };

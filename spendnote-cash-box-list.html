@@ -229,24 +229,8 @@
             }
         });
 
-        // Handle Add Cash Box card click with conditional logic
-        async function handleAddCashBox() {
-            try {
-                window.SpendNoteFeatures?.invalidate?.();
-                const feats = await window.SpendNoteFeatures?.getAll?.();
-                const tier = feats?.tier || 'free';
-                const maxBoxes = (tier === 'preview' || tier === 'pro') ? Infinity : (feats?.max_cash_boxes ?? 1);
-                if (Number.isFinite(maxBoxes)) {
-                    const user = await window.auth?.getCurrentUser?.();
-                    if (user) {
-                        const { data: existing } = await supabaseClient.from('cash_boxes').select('id').eq('user_id', user.id);
-                        if ((existing?.length || 0) >= maxBoxes) {
-                            window.SpendNoteUpgrade?.showCashBoxUpgrade?.();
-                            return;
-                        }
-                    }
-                }
-            } catch (_) {}
+        // Handle Add Cash Box card click — limit enforced on the settings page (create mode)
+        function handleAddCashBox() {
             window.location.href = 'spendnote-cash-box-settings.html';
         }
 

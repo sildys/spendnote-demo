@@ -467,7 +467,9 @@ async function initCashBoxSettings() {
                     const currentCount = existing?.length || 0;
                     if (DEBUG) console.log('[CashBoxLimit] currentCount:', currentCount);
                     if (currentCount >= maxBoxes) {
-                        window.SpendNoteUpgrade?.showCashBoxUpgrade?.();
+                        window.SpendNoteUpgrade?.showCashBoxUpgrade?.(() => {
+                            window.location.replace('spendnote-cash-box-list.html');
+                        });
                         return;
                     }
                 }

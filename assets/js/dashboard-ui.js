@@ -310,23 +310,8 @@ function initCashBoxCards() {
 // ========================================
 // ADD CASH BOX
 // ========================================
-async function handleAddCashBoxDashboard() {
-    try {
-        window.SpendNoteFeatures?.invalidate?.();
-        const feats = await window.SpendNoteFeatures?.getAll?.();
-        const tier = feats?.tier || 'free';
-        const maxBoxes = (tier === 'preview' || tier === 'pro') ? Infinity : (feats?.max_cash_boxes ?? 1);
-        if (Number.isFinite(maxBoxes)) {
-            const user = await window.auth?.getCurrentUser?.();
-            if (user) {
-                const { data: existing } = await supabaseClient.from('cash_boxes').select('id').eq('user_id', user.id);
-                if ((existing?.length || 0) >= maxBoxes) {
-                    window.SpendNoteUpgrade?.showCashBoxUpgrade?.();
-                    return;
-                }
-            }
-        }
-    } catch (_) {}
+// Limit enforced on the settings page (create mode)
+function handleAddCashBoxDashboard() {
     window.location.href = 'spendnote-cash-box-settings.html';
 }
 
