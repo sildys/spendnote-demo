@@ -453,15 +453,19 @@ async function initCashBoxSettings() {
 
             // Enforce cash box limit before allowing create
             try {
+                window.SpendNoteFeatures?.invalidate?.();
                 const feats = await window.SpendNoteFeatures?.getAll?.();
                 const tier = feats?.tier || 'free';
                 const maxBoxes = (tier === 'preview' || tier === 'pro') ? Infinity : (feats?.max_cash_boxes ?? 1);
+                if (DEBUG) console.log('[CashBoxLimit] tier:', tier, 'maxBoxes:', maxBoxes);
                 if (Number.isFinite(maxBoxes)) {
-                    const { data: existing } = await window.supabaseClient
+                    const user = await window.auth?.getCurrentUser?.();
+                    const { data: existing } = await supabaseClient
                         .from('cash_boxes')
-                        .select('id', { count: 'exact', head: false })
-                        .limit(maxBoxes + 1);
+                        .select('id')
+                        .eq('user_id', user.id);
                     const currentCount = existing?.length || 0;
+                    if (DEBUG) console.log('[CashBoxLimit] currentCount:', currentCount);
                     if (currentCount >= maxBoxes) {
                         const planLabel = tier === 'free' ? 'Free' : (tier === 'standard' ? 'Standard' : tier);
                         showAlert(`You have reached the ${planLabel} plan limit (${maxBoxes} Cash Box${maxBoxes === 1 ? '' : 'es'}).\n\nUpgrade to add more Cash Boxes.`, { iconType: 'warning', title: 'Plan Limit Reached' });
@@ -469,7 +473,7 @@ async function initCashBoxSettings() {
                         return;
                     }
                 }
-            } catch (_) {}
+            } catch (e) { console.error('[CashBoxLimit] error:', e); }
             
             // Update page title
             const pageTitle = document.querySelector('.page-title');
