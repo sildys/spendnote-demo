@@ -1333,7 +1333,7 @@ window.SpendNoteUpgrade = {
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             </div>
             <div style="font-size:19px;font-weight:800;color:#0f172a;margin-bottom:10px;line-height:1.3;">Your free trial has ended</div>
-            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">Upgrade to continue adding transactions.</div>
+            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">Upgrade to keep adding transactions.</div>
             <a href="${planUrl}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#059669;color:#fff;border-radius:10px;padding:13px 28px;font-size:15px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;">
               Upgrade now
             </a>

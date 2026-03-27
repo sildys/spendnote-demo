@@ -111,8 +111,8 @@
                     <span style="font-size:13px;color:#92400e;font-weight:600;" id="trialBannerText">Your free trial ends in 3 days</span>
                     <span style="font-size:12px;color:#b45309;">Upgrade to keep adding transactions without interruption</span>
                 </div>
-                <a href="spendnote-pricing.html?ref=trial-warning" style="font-size:12px;font-weight:600;color:#d97706;text-decoration:none;white-space:nowrap;">View plans →</a>
-                <button type="button" onclick="this.parentElement.style.display='none';try{localStorage.setItem('sn.trialBannerDismissed','1')}catch(_){}" style="appearance:none;border:none;background:none;color:#d97706;cursor:pointer;padding:2px;line-height:1;opacity:0.6;" title="Dismiss">
+                <a href="spendnote-pricing.html?ref=trial-warning" style="font-size:12px;font-weight:600;color:#d97706;text-decoration:none;white-space:nowrap;">Upgrade now →</a>
+                <button type="button" onclick="this.parentElement.style.display='none';try{localStorage.setItem('sn.trialBannerDismissed',new Date().toDateString())}catch(_){}" style="appearance:none;border:none;background:none;color:#d97706;cursor:pointer;padding:2px;line-height:1;opacity:0.6;" title="Dismiss">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
@@ -1860,7 +1860,8 @@
         // ========================================
         (async () => {
             try {
-                if (localStorage.getItem('sn.trialBannerDismissed') === '1') return;
+                const dismissed = localStorage.getItem('sn.trialBannerDismissed');
+                if (dismissed === new Date().toDateString()) return;
                 const tier = await window.SpendNoteFeatures?.getTier?.();
                 if (tier !== 'free') return;
                 const { data: { user } } = await supabaseClient.auth.getUser();
