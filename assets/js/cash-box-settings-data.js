@@ -1220,7 +1220,7 @@ async function lockProSectionIfNeeded() {
             el.addEventListener('focus', async (e) => {
                 e.preventDefault();
                 el.blur();
-                window.SpendNoteUpgrade?.showLockOverlay({ feature: 'Custom Labels & Per-Box Logo', requiredPlan: 'pro' });
+                window.SpendNoteUpgrade?.showLabelsUpgrade?.();
             });
         });
     } catch (_) {}

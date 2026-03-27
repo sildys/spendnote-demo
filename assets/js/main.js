@@ -1,4 +1,4 @@
-﻿// SpendNote - Main JavaScript
+// SpendNote - Main JavaScript
 
 function updateMenuColors(color) {
     if (!color) return;
@@ -1250,7 +1250,7 @@ window.SpendNoteUpgrade = {
         const existing = document.getElementById(this._overlayId);
         if (existing) existing.remove();
 
-        const planUrl = this._buildPlanUrl('standard', 'Email Receipts');
+        const planUrl = this._buildPlanUrl('pro', 'Email Receipts');
         const overlay = document.createElement('div');
         overlay.id = this._overlayId;
         overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,0.55);display:flex;align-items:center;justify-content:center;padding:20px;';
