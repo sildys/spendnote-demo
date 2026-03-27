@@ -1239,10 +1239,25 @@ async function lockProSectionIfNeeded() {
     } catch (_) {}
 }
 
+async function lockLogoToggleIfNeeded() {
+    try {
+        const canLogo = await window.SpendNoteFeatures?.can('can_upload_logo');
+        if (canLogo) return;
+        const logoToggle = document.querySelector('.toggle-item input[data-field="logo"]');
+        if (!logoToggle) return;
+        logoToggle.checked = false;
+        logoToggle.disabled = true;
+        logoToggle.dispatchEvent(new Event('change', { bubbles: true }));
+        const label = logoToggle.closest('.toggle-item');
+        if (label) label.style.opacity = '0.5';
+    } catch (_) {}
+}
+
 // Initialize when page loads
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { initCashBoxSettings(); lockProSectionIfNeeded(); });
+    document.addEventListener('DOMContentLoaded', () => { initCashBoxSettings(); lockProSectionIfNeeded(); lockLogoToggleIfNeeded(); });
 } else {
     initCashBoxSettings();
     lockProSectionIfNeeded();
+    lockLogoToggleIfNeeded();
 }
