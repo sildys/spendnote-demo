@@ -1704,9 +1704,30 @@ Full "profi app" mobilnézet implementálva. Minden változtatás CSS+JS szinten
 - **Print settings mismatch** — Done&Print és transaction detail receipt most a cash box display settings-t és tier check-et használja
 - **Upgrade overlay pointer-events** — dashboard.css modal-open rule kiegészítve #sn-upgrade-overlay kivétellel
 
+### Post-payment onboarding (activation):
+
+**Standard upgrade:**
+- ✅ Celebration toast: "You're on Standard! All your new features are ready." (localStorage tier change detection)
+- ✅ Nincs setup flow / modal — user azonnal visszakerül a flow-ba
+- Filozófia: friction removal, nem capability unlock → ne adj feladatot, csak megerősítést
+
+**Pro upgrade:**
+- ✅ Celebration toast: "You're on Pro! All your new features are ready."
+- ✅ Team page onboarding modal: "You now have access to team features" context + "Start working with your team" + team name input
+- ✅ Skip → marad team page-en empty state-tel ("No team yet / Invite people when you're ready" + "Create team" gomb)
+- ✅ RPC: `spendnote_ensure_org_for_pro` — org + owner membership auto-create
+- Filozófia: capability unlock → guided next step, de lehetőség nem feladat
+
+**Még finomítandó (post-payment flow audit):**
+- ⏳ Végigmenni a teljes post-payment flow-n mindkét csomagra (Standard + Pro) — itt szokott elfolyni 30-40% activation
+- ⏳ Ellenőrizni: Stripe checkout → redirect back → toast megjelenik → megfelelő oldal töltődik
+- ⏳ Pro: team page-re irányítás Stripe checkout után (return_url)
+- ⏳ Standard: dashboard-ra visszatérés, sima folytatás
+
 ### NEM KÉSZ / Következő lépések:
 - ⚠️ **`STRIPE_LIVE = false`** (`supabase-config.js` ~302) — checkout/portal client-oldalon kikapcsolva
 - ⏳ **Stripe end-to-end teszt** — pricing → checkout → subscription aktív → tier frissül → limitek feloldva
+- ⏳ **Post-payment onboarding audit** — végigmenni a flow-n, Stripe redirect → toast → activation
 - ⏳ **Preview → Free átállás** — meglévő preview userek tierje átírása, 30% kupon generálás
 - ⏳ **Preview banner eltávolítása/frissítése** — SEO oldalakon + app oldalakon
 - ⏳ **Pricing oldal optimalizálás** — copy, positioning, conversion
