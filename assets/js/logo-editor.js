@@ -342,7 +342,10 @@ const LogoEditor = (() => {
 
         if (uploadBtn && fileInput) {
             uploadBtn.addEventListener('click', async () => {
-                if (!await window.SpendNoteUpgrade?.guardFeature('can_upload_logo', 'Custom Logo', 'standard')) return;
+                if (!await window.SpendNoteFeatures?.can('can_upload_logo')) {
+                    window.SpendNoteUpgrade?.showLogoUpgrade?.();
+                    return;
+                }
                 try { fileInput.value = ''; } catch (_) {}
                 fileInput.click();
             });
