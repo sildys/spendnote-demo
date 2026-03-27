@@ -1252,7 +1252,14 @@ async function lockLogoToggleIfNeeded() {
         }
         if (typeof reloadIframe === 'function') reloadIframe();
         const label = logoToggle.closest('.toggle-item');
-        if (label) label.style.opacity = '0.5';
+        if (label) {
+            label.style.opacity = '0.5';
+            label.style.cursor = 'pointer';
+            label.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.SpendNoteUpgrade?.showLogoUpgrade?.();
+            });
+        }
     } catch (_) {}
 }
 
