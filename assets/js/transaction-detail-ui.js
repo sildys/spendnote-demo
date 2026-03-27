@@ -306,7 +306,7 @@ const QUICK_PRESET = {
             const canCustomize = await window.SpendNoteFeatures?.can('can_customize_labels');
             if (!canCustomize) {
                 const showProLock = () => {
-                    window.SpendNoteUpgrade?.showLockOverlay?.({ feature: 'Custom Labels', requiredPlan: 'pro' });
+                    window.SpendNoteUpgrade?.showLabelsUpgrade?.();
                 };
                 [titleEl, totalEl, fromEl, toEl, descEl, amtEl, issuedEl, receivedEl, footerEl].forEach(el => {
                     if (!el) return;
@@ -1048,7 +1048,7 @@ html, body { height: auto !important; overflow: auto !important; }
         if (saveLabelsBtn) {
             saveLabelsBtn.addEventListener('click', async () => {
                 if (!await window.SpendNoteFeatures?.can('can_customize_labels')) {
-                    window.SpendNoteUpgrade?.showLockOverlay?.({ feature: 'Custom Labels', requiredPlan: 'pro' });
+                    window.SpendNoteUpgrade?.showLabelsUpgrade?.();
                     return;
                 }
                 const currentTxId = getCurrentTxId();
