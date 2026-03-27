@@ -40,10 +40,13 @@ BEGIN
     RAISE EXCEPTION 'Transaction is already voided';
   END IF;
 
-  -- Direct owner can always void their own transactions
-  IF v_tx.user_id = v_actor THEN
-    v_can_void := true;
-  END IF;
+  -- Cash box owner can always void (solo users without org_memberships)
+  SELECT EXISTS(
+    SELECT 1
+    FROM public.cash_boxes cb
+    WHERE cb.id = v_tx.cash_box_id
+      AND cb.user_id = v_actor
+  ) INTO v_can_void;
 
   -- Check org-level owner/admin permission
   IF NOT v_can_void AND v_tx.org_id IS NOT NULL THEN
