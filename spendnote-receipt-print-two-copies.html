@@ -841,6 +841,9 @@ body {
         img.src = logo;
         box.appendChild(img);
       });
+    } else {
+      document.querySelectorAll('.logo-box').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.header-rule').forEach(el => el.classList.add('full-width'));
     }
 
     // Apply logo scale from URL param or localStorage
@@ -1105,12 +1108,14 @@ body {
               if (preferredLogo) {
                 document.querySelectorAll('.logo-box').forEach((box) => {
                   box.textContent = '';
+                  box.style.display = '';
                   const img = document.createElement('img');
                   img.className = 'logo-img';
                   img.alt = 'Company logo';
                   img.src = preferredLogo;
                   box.appendChild(img);
                 });
+                document.querySelectorAll('.header-rule').forEach(el => el.classList.remove('full-width'));
               }
             }
           } catch (_) {}

@@ -996,6 +996,8 @@ if (urlParams.get('logo') === '0') {
             img.src = logo;
             svgLogo.parentNode.replaceChild(img, svgLogo);
         }
+    } else {
+        document.querySelectorAll('.logo, .logo-box, .logo-img').forEach(el => el.style.display = 'none');
     }
 }
 
@@ -1257,6 +1259,7 @@ if (urlParams.get('signatures') === '0') {
                   img.src = preferredLogo;
                   currentLogo.parentNode.replaceChild(img, currentLogo);
                 }
+                currentLogo.style.display = '';
               }
             }
           }

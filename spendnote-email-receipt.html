@@ -902,6 +902,8 @@ if (urlParams.get('logo') === '0') {
             img.style.display = 'block';
             container.appendChild(img);
         }
+    } else {
+        document.querySelectorAll('.logo, .logo-box, .logo-img, .logo-container').forEach(el => el.style.display = 'none');
     }
 }
 
@@ -1152,6 +1154,7 @@ if (urlParams.get('signatures') === '0') {
                 const container = document.querySelector('.logo');
                 if (container) {
                   container.innerHTML = '';
+                  container.style.display = '';
                   const img = document.createElement('img');
                   img.alt = 'Company logo';
                   img.src = preferredLogo;
