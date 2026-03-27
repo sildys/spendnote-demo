@@ -1090,7 +1090,7 @@ window.SpendNoteUpgrade = {
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </div>
             <div style="font-size:19px;font-weight:800;color:#0f172a;margin-bottom:10px;line-height:1.3;">You're tracking cash in only one place</div>
-            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">If you handle cash in multiple locations, you're already losing visibility.<br>Tracking everything in one place creates blind spots.</div>
+            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">If you handle cash in multiple locations, you're already losing visibility.<br>One cash box means one view — what you don't track, you don't see.</div>
             <a href="${planUrl}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#059669;color:#fff;border-radius:10px;padding:13px 28px;font-size:15px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;">
               Unlock full control
             </a>
