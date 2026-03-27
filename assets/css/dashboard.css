@@ -2282,7 +2282,7 @@ table.transactions-table td,
      padding-right: var(--spendnote-scrollbar-comp, 0px);
  }
  
- body.modal-open > *:not(#createTransactionModal):not(.sn-dialog-overlay) {
+ body.modal-open > *:not(#createTransactionModal):not(.sn-dialog-overlay):not(#sn-upgrade-overlay) {
      pointer-events: none;
      user-select: none;
  }
