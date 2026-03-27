@@ -1258,9 +1258,7 @@ async function lockLogoToggleIfNeeded() {
 
 // Initialize when page loads
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { initCashBoxSettings(); lockProSectionIfNeeded(); lockLogoToggleIfNeeded(); });
+    document.addEventListener('DOMContentLoaded', async () => { await initCashBoxSettings(); lockProSectionIfNeeded(); lockLogoToggleIfNeeded(); });
 } else {
-    initCashBoxSettings();
-    lockProSectionIfNeeded();
-    lockLogoToggleIfNeeded();
+    (async () => { await initCashBoxSettings(); lockProSectionIfNeeded(); lockLogoToggleIfNeeded(); })();
 }

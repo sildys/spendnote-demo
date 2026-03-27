@@ -737,7 +737,13 @@ function applyReceiptMode(mode) {
     displayOptions = m === 'quick' ? { ...QUICK_PRESET } : { ...DETAILED_PRESET };
     document.querySelectorAll('.toggle-list input[type="checkbox"]').forEach(toggle => {
         const field = toggle.dataset.field;
-        if (field) toggle.checked = displayOptions[field] === '1';
+        if (field) {
+            if (toggle.disabled) {
+                displayOptions[field] = toggle.checked ? '1' : '0';
+            } else {
+                toggle.checked = displayOptions[field] === '1';
+            }
+        }
     });
     reloadIframe();
 }
@@ -1151,6 +1157,6 @@ if (typeof showPageTip === 'function') {
     }
 }
 </script>
-<script src="assets/js/cash-box-settings-data.js?v=56"></script>
+<script src="assets/js/cash-box-settings-data.js?v=57"></script>
 </body>
 </html>
