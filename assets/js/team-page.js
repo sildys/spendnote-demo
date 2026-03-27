@@ -346,7 +346,11 @@ const initTeamPage = async () => {
                 .single();
             const tier = String(gateProfile?.subscription_tier || '').toLowerCase();
             if (tier !== 'pro' && tier !== 'preview') {
-                window.location.href = 'spendnote-pricing.html?minPlan=pro&feature=Team%20Management';
+                if (window.SpendNoteUpgrade?.showTeamUpgrade) {
+                    window.SpendNoteUpgrade.showTeamUpgrade();
+                } else {
+                    window.location.href = 'spendnote-pricing.html?minPlan=pro&feature=Team%20Management';
+                }
                 return;
             }
         }
