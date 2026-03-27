@@ -467,8 +467,10 @@ async function initCashBoxSettings() {
                     const currentCount = existing?.length || 0;
                     if (DEBUG) console.log('[CashBoxLimit] currentCount:', currentCount);
                     if (currentCount >= maxBoxes) {
-                        const planLabel = tier === 'free' ? 'Free' : (tier === 'standard' ? 'Standard' : tier);
-                        showAlert(`You have reached the ${planLabel} plan limit (${maxBoxes} Cash Box${maxBoxes === 1 ? '' : 'es'}).\n\nUpgrade to add more Cash Boxes.`, { iconType: 'warning', title: 'Plan Limit Reached' });
+                        const upgradeMsg = tier === 'free'
+                            ? 'Upgrade to Standard to create up to 2 Cash Boxes.'
+                            : 'Upgrade to Pro for unlimited Cash Boxes.';
+                        showAlert(`You have reached the ${tier === 'free' ? 'Free' : 'Standard'} plan limit (${maxBoxes} Cash Box${maxBoxes === 1 ? '' : 'es'}).\n\n${upgradeMsg}`, { iconType: 'warning', title: 'Plan Limit Reached' });
                         window.location.replace('spendnote-cash-box-list.html');
                         return;
                     }
