@@ -1872,14 +1872,8 @@
             const limit = planLimits[plan] || 1;
             
             if (boxCount >= limit) {
-                // User reached limit - show upgrade message
-                if (plan === 'free') {
-                    showAlert('You have reached the Free plan limit (1 Cash Box).\n\nUpgrade to Standard to create up to 2 Cash Boxes.', { iconType: 'warning', title: 'Plan Limit Reached' });
-                } else if (plan === 'standard') {
-                    showAlert('You have reached the Standard plan limit (2 Cash Boxes).\n\nUpgrade to Pro for unlimited Cash Boxes.', { iconType: 'warning', title: 'Plan Limit Reached' });
-                }
+                window.SpendNoteUpgrade?.showCashBoxUpgrade?.();
             } else {
-                // User can still add more - open create flow
                 window.location.href = 'spendnote-cash-box-settings.html';
             }
         }

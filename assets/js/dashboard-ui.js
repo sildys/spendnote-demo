@@ -318,9 +318,7 @@ function handleAddCashBoxDashboard() {
     const limit = limits[plan] || 1;
 
     if (boxCount >= limit) {
-        showAlert(plan === 'free' 
-            ? 'You have reached the Free plan limit (1 Cash Box).\n\nUpgrade to Standard to create up to 2 Cash Boxes.'
-            : 'You have reached the Standard plan limit (2 Cash Boxes).\n\nUpgrade to Pro for unlimited Cash Boxes.', { iconType: 'warning', title: 'Plan Limit Reached' });
+        window.SpendNoteUpgrade?.showCashBoxUpgrade?.();
     } else {
         window.location.href = 'spendnote-cash-box-settings.html';
     }
