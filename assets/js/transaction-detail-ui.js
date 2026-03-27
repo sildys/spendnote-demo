@@ -301,6 +301,18 @@ const QUICK_PRESET = {
         bindText(receivedEl, 'receivedByLabel');
         bindText(footerEl, 'footerNote');
 
+        // Disable label editing for non-Pro users
+        (async () => {
+            const canCustomize = await window.SpendNoteFeatures?.can('can_customize_labels');
+            if (!canCustomize) {
+                [titleEl, totalEl, fromEl, toEl, descEl, amtEl, issuedEl, receivedEl, footerEl].forEach(el => {
+                    if (el) { el.readOnly = true; el.style.opacity = '0.5'; el.style.cursor = 'not-allowed'; }
+                });
+                const saveBtn = document.getElementById('txSaveLabelsBtn');
+                if (saveBtn) saveBtn.style.display = 'none';
+            }
+        })();
+
         receiptLogoUrl = String(cb.cash_box_logo_url || profile?.account_logo_url || '').trim();
 
         const mapBool = (v, fallback) => {
@@ -1028,6 +1040,10 @@ html, body { height: auto !important; overflow: auto !important; }
         const saveLabelsBtn = document.getElementById('txSaveLabelsBtn');
         if (saveLabelsBtn) {
             saveLabelsBtn.addEventListener('click', async () => {
+                if (!await window.SpendNoteFeatures?.can('can_customize_labels')) {
+                    window.SpendNoteUpgrade?.showLockOverlay?.({ feature: 'Custom Labels', requiredPlan: 'pro' });
+                    return;
+                }
                 const currentTxId = getCurrentTxId();
                 if (!currentTxId || !window.db?.transactions?.update) return;
 
