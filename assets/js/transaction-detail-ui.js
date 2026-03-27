@@ -305,8 +305,15 @@ const QUICK_PRESET = {
         (async () => {
             const canCustomize = await window.SpendNoteFeatures?.can('can_customize_labels');
             if (!canCustomize) {
+                const showProLock = () => {
+                    window.SpendNoteUpgrade?.showLockOverlay?.({ feature: 'Custom Labels', requiredPlan: 'pro' });
+                };
                 [titleEl, totalEl, fromEl, toEl, descEl, amtEl, issuedEl, receivedEl, footerEl].forEach(el => {
-                    if (el) { el.readOnly = true; el.style.opacity = '0.5'; el.style.cursor = 'not-allowed'; }
+                    if (!el) return;
+                    el.readOnly = true;
+                    el.style.opacity = '0.5';
+                    el.style.cursor = 'not-allowed';
+                    el.addEventListener('focus', () => { el.blur(); showProLock(); });
                 });
                 const saveBtn = document.getElementById('txSaveLabelsBtn');
                 if (saveBtn) saveBtn.style.display = 'none';
