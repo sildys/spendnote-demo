@@ -310,18 +310,24 @@ function initCashBoxCards() {
 // ========================================
 // ADD CASH BOX
 // ========================================
-function handleAddCashBoxDashboard() {
-    const card = document.querySelector('.add-cash-box-card');
-    const plan = card?.getAttribute('data-plan');
-    const boxCount = parseInt(card?.getAttribute('data-box-count') || '0');
-    const limits = { free: 1, standard: 2, pro: Infinity };
-    const limit = limits[plan] || 1;
-
-    if (boxCount >= limit) {
-        window.SpendNoteUpgrade?.showCashBoxUpgrade?.();
-    } else {
-        window.location.href = 'spendnote-cash-box-settings.html';
-    }
+async function handleAddCashBoxDashboard() {
+    try {
+        window.SpendNoteFeatures?.invalidate?.();
+        const feats = await window.SpendNoteFeatures?.getAll?.();
+        const tier = feats?.tier || 'free';
+        const maxBoxes = (tier === 'preview' || tier === 'pro') ? Infinity : (feats?.max_cash_boxes ?? 1);
+        if (Number.isFinite(maxBoxes)) {
+            const user = await window.auth?.getCurrentUser?.();
+            if (user) {
+                const { data: existing } = await supabaseClient.from('cash_boxes').select('id').eq('user_id', user.id);
+                if ((existing?.length || 0) >= maxBoxes) {
+                    window.SpendNoteUpgrade?.showCashBoxUpgrade?.();
+                    return;
+                }
+            }
+        }
+    } catch (_) {}
+    window.location.href = 'spendnote-cash-box-settings.html';
 }
 
 function initAddCashBoxCard() {

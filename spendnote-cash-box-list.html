@@ -230,26 +230,24 @@
         });
 
         // Handle Add Cash Box card click with conditional logic
-        function handleAddCashBox() {
-            const card = document.querySelector('.add-cash-box-card');
-            const plan = card.getAttribute('data-plan'); // 'free', 'standard', 'pro'
-            const boxCount = parseInt(card.getAttribute('data-box-count'));
-            
-            // Plan limits: Free = 1, Standard = 2, Pro = unlimited
-            const planLimits = {
-                'free': 1,
-                'standard': 2,
-                'pro': Infinity
-            };
-            
-            const limit = planLimits[plan] || 1;
-            
-            if (boxCount >= limit) {
-                window.SpendNoteUpgrade?.showCashBoxUpgrade?.();
-            } else {
-                // User can still add more - open create flow
-                window.location.href = 'spendnote-cash-box-settings.html';
-            }
+        async function handleAddCashBox() {
+            try {
+                window.SpendNoteFeatures?.invalidate?.();
+                const feats = await window.SpendNoteFeatures?.getAll?.();
+                const tier = feats?.tier || 'free';
+                const maxBoxes = (tier === 'preview' || tier === 'pro') ? Infinity : (feats?.max_cash_boxes ?? 1);
+                if (Number.isFinite(maxBoxes)) {
+                    const user = await window.auth?.getCurrentUser?.();
+                    if (user) {
+                        const { data: existing } = await supabaseClient.from('cash_boxes').select('id').eq('user_id', user.id);
+                        if ((existing?.length || 0) >= maxBoxes) {
+                            window.SpendNoteUpgrade?.showCashBoxUpgrade?.();
+                            return;
+                        }
+                    }
+                }
+            } catch (_) {}
+            window.location.href = 'spendnote-cash-box-settings.html';
         }
 
         // Initialize Add Cash Box card state on page load
