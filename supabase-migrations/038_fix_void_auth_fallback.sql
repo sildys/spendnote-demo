@@ -77,7 +77,7 @@ BEGIN
     line_items, contact_name, contact_email, contact_phone,
     contact_address, contact_custom_field_1, contact_custom_field_2,
     created_by_user_id, created_by_user_name, status,
-    is_void_entry, original_transaction_id,
+    is_system, original_tx_id,
     cash_box_name_snapshot, cash_box_currency_snapshot,
     cash_box_color_snapshot, cash_box_icon_snapshot,
     cash_box_id_prefix_snapshot
