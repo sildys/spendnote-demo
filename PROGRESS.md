@@ -1728,6 +1728,14 @@ Full "profi app" mobilnézet implementálva. Minden változtatás CSS+JS szinten
 - ⚠️ **`STRIPE_LIVE = false`** (`supabase-config.js` ~302) — checkout/portal client-oldalon kikapcsolva
 - ⏳ **Stripe end-to-end teszt** — pricing → checkout → subscription aktív → tier frissül → limitek feloldva
 - ⏳ **Post-payment onboarding audit** — végigmenni a flow-n, Stripe redirect → toast → activation
+- ⏳ **Downgrade flow audit** — mi történik ha Pro→Standard, Standard→Free, Pro→Free, vagy subscription lejár:
+  - Meglévő adatok (team, extra cash box-ok, logó, labelek) mi lesz velük?
+  - Aktív team memberek hozzáférése megszűnik-e?
+  - Cash box-ok száma limit fölött → melyik marad aktív?
+  - Tranzakciók megmaradnak-e (readonly) vagy törlődnek?
+  - UI feedback: kap-e értesítést a user, hogy mit veszít / mi változik?
+  - Stripe webhook → tier frissítés → limitek visszaállnak-e helyesen?
+  - Grace period kell-e (pl. 7 nap a subscription lejárata után)?
 - ⏳ **Preview → Free átállás** — meglévő preview userek tierje átírása, 30% kupon generálás
 - ⏳ **Preview banner eltávolítása/frissítése** — SEO oldalakon + app oldalakon
 - ⏳ **Pricing oldal optimalizálás** — copy, positioning, conversion
