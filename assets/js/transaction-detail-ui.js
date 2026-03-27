@@ -588,6 +588,10 @@ html, body { height: auto !important; overflow: auto !important; }
         }
         if (pdfBtn) {
             pdfBtn.addEventListener('click', async () => {
+                if (!await window.SpendNoteFeatures?.can('can_export_pdf')) {
+                    window.SpendNoteUpgrade?.showPdfUpgrade?.();
+                    return;
+                }
                 const opened = openReceiptPlaceholder();
                 if (!opened) {
                     showAlert('Popup blocked. Please allow popups to download PDFs.', { iconType: 'warning' });
