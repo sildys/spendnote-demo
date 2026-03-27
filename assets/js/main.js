@@ -1123,12 +1123,12 @@ window.SpendNoteUpgrade = {
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             </div>
             <div style="font-size:19px;font-weight:800;color:#0f172a;margin-bottom:10px;line-height:1.3;">Make your receipts look professional</div>
-            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">Add your logo to every receipt and present your business properly.<br>Without it, your receipts stay generic.</div>
+            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">Add your logo to every receipt and look more professional.<br>Without it, your receipts stay generic.</div>
             <a href="${planUrl}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#059669;color:#fff;border-radius:10px;padding:13px 28px;font-size:15px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;">
               Add your logo
             </a>
-            <button type="button" id="sn-upgrade-overlay-secondary" style="appearance:none;border:none;background:none;color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;margin-top:14px;padding:4px;">Not now</button>
-            <div style="font-size:12px;color:#94a3b8;margin-top:8px;line-height:1.4;">Your logo appears on all receipts</div>
+            <button type="button" id="sn-upgrade-overlay-secondary" style="appearance:none;border:none;background:none;color:#cbd5e1;font-size:12px;font-weight:400;cursor:pointer;margin-top:14px;padding:4px;">Not now</button>
+            <div style="font-size:12px;color:#94a3b8;margin-top:8px;line-height:1.4;">Appears on every receipt automatically</div>
           </div>
         `;
         document.body.appendChild(overlay);
