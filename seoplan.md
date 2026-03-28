@@ -1289,7 +1289,76 @@ Fontos tanulság: a kanibalizáció nem **topic overlap**, hanem **intent overla
 
 ---
 
-### Update log - 2026-03-26 (SEO szünet + Google Ads terv)
+### Update log - 2026-03-08 (Domain repositioning — template cluster → pain/anti-template)
+
+**GSC adat (legfrissebb, ~7 nap):**
+- 0 kattintás az összes oldalon
+- Top megjelenítések: what-is-petty-cash (30, poz 77.5), cash-receipt-template (24, poz 62.9), petty-cash-how-much-to-keep (12, poz 24.6), cash-drawer-reconciliation (12, poz 39.3)
+- A template oldalak hozzák a megjelenést, de rossz intenttel (letölthető fájlt keresnek)
+- A pain/accountability oldalak (boss-cant-see poz 2.0, petty-cash-reconciliation poz 3.5) jól rankelnek, de alacsony volumenű kulcsszavakra
+
+**Stratégiaváltás: REPOSITIONING (nem szünet)**
+
+Korábbi megközelítés: "ne nyúlj a meglévőkhöz, várjuk a backlink-eket"
+Új megközelítés: **a meglévő top impression oldalakat aktívan átírjuk template → pain/anti-template angle-re**
+
+Indoklás:
+- A template queryknél soha nem fogunk nyerni (Canva DA 70-90 vs mi DA ~5)
+- DE a megjelenések azt mutatják, hogy Google MUTATJA az oldalainkat — rossz pozícióban, rossz intenttel
+- Ha az intentet átfordítjuk, más queryk felé pozícionáljuk az oldalakat
+- Nem új oldalak kellenek — hanem a meglévők repositioning-ja
+
+**Elvégzett átírások (2026-03-08):**
+
+1. **`what-is-petty-cash`** (30 imp, poz 77.5 → átírva)
+   - Régi: Wikipedia-stílusú "What Is Petty Cash? Definition & How It Works" — tankönyvi definíció
+   - Új title: "What Is Petty Cash? — Why Most Businesses Lose Track of It"
+   - Új H1: "You Have Petty Cash. Where Did It Go?"
+   - Stratégia: pain-first hero ("Someone took $20, nobody wrote it down"), definíció lecsúsztatva page ~40%-ra
+   - Anti-kanibalizáció: setup/start szekciók lerövidítve, linkekkel a how-to-start és how-to-manage oldalakra (nem duplikálja őket)
+   - Cél queryk: "petty cash management small business", "why is petty cash missing", "petty cash system"
+
+2. **`cash-receipt-template`** (24 imp, poz 62.9 → átírva)
+   - Régi: receipt template oldal, próbált versenyezni Canva-val
+   - Új title: "Cash Receipt Template? Here's Why It Breaks When You Need It"
+   - Új H1: "You Downloaded a Cash Receipt Template. Now Where Is It?"
+   - Stratégia: **anti-template** positioning — nem template-et adunk, hanem megmutatjuk miért szar a template
+   - Új blokkok: "What You're Actually Looking For" (intent mapping), "The Template Trap", comparison table feljebb húzva, "A Template Is a File. Cash Tracking Is a System." (hard positioning)
+   - Anti-kanibalizáció: kihagytam a keyword lista blokkot ("petty cash log", "cash tracking system") mert direkt kanibalizálná a petty-cash-log-template és how-to-track oldalalakat
+   - Cél queryk: "prove cash payment", "stop losing receipts", "cash receipt system", "receipt legally valid"
+
+**Prioritási lista (következő batch-ek):**
+
+🔴 **Batch 2 (2-3 nap várakozás után):**
+- `petty-cash-voucher-template` (378 megjelenés) — legnagyobb volumen, anti-template átírás
+- `petty-cash-voucher-sample` (187 megjelenés) — együtt kezelni a voucher template-tel
+- `petty-cash-log-template` (137 megjelenés) — kulcs oldal, log = tracking → legközelebb a termékhez
+
+🟡 **Batch 3 (utána):**
+- `cash-refund-receipt` (138 megjelenés) — pain irányba vihető
+- `how-to-manage-petty-cash-small-business` (120 megjelenés) — túl általános, nehéz
+
+🟢 **Ne nyúlj hozzá (jó pozícióban vannak):**
+- `petty-cash-how-much-to-keep` (poz 14.2) — érintés nélkül hagyni
+- `cash-drawer-reconciliation` (poz 25.6) — jó irány
+- `employee-cash-advance-receipt` (poz 21.1) — use case, békén hagyni
+- `boss-cant-see-where-cash-goes` (poz 2.0) — page 1, ne bántsd
+- `petty-cash-reconciliation` (poz 3.5) — page 1
+- `two-person-cash-count-policy` (poz 4.7) — page 1
+
+**Template → anti-template átírási sablon:**
+1. H1: pain-based, nem keyword-based ("You downloaded X. Now where is it?")
+2. Első szekció: konkrét szituáció/probléma, NEM definíció
+3. Comparison table: feljebb a page-en (top 30%)
+4. Hard positioning blokk: "A template is a file. Tracking is a system."
+5. Intent mapping: "What you're actually looking for" — long-tail query capture
+6. Definíció/magyarázat: lejjebb (30-40%), linkelve a specialista oldalakra
+7. FAQ: anti-template angle, "How do I stop losing X?" típusú kérdések
+8. Kanibalizáció-check minden bejegyzésnél: ne célozz más meglévő oldal elsődleges kulcsszavát
+
+---
+
+### Update log - 2026-03-26 (SEO szünet + Google Ads terv) — FELÜLÍRVA fent
 
 **SEO valóság-ellenőrzés (28 napos adat):**
 - 49 indexelt oldal, 16 kattintás összesen, 3 regisztráció (18.75% signup rate)
@@ -1298,15 +1367,15 @@ Fontos tanulság: a kanibalizáció nem **topic overlap**, hanem **intent overla
 - A freshness boost-ok (title átírás, új oldalak) mindig 1-2 napig tartottak, utána visszaesés
 - Bing: 19 crawl request/hét, szinte semmit nem indexel a homepage-en kívül
 
-**Kulcs felismerés:**
+**Kulcs felismerés (továbbra is érvényes):**
 - A DA ~5 domain-nel a "template" kulcsszavak (Canva DA 70, Template.net DA 90) **elérhetetlen** versenyzők
 - Még több SEO oldal NEM oldja meg az alap problémát (alacsony DA)
 - Az SEO **hosszú távú befektetés** (6-12 hónap) — nem rövid távú növekedési motor
 - A backlink-ek (G2 DA 90, SourceForge DA 85, AlternativeTo DA 60, Capterra DA 80) idővel emelhetik a DA-t, de ez hónapok kérdése
+- **ÚJ felismerés (2026-03-08):** a meglévő oldalak intentjét kell átfordítani, nem újakat építeni
 
-**Döntés: SEO SZÜNET**
-- Nem csinálunk több SEO oldalt
-- Nem nyúlunk a meglévő title/meta-khoz (Phase 1+2 megvan, hagyjuk dolgozni)
+**Döntés: SEO REPOSITIONING (korábban: SZÜNET)**
+- ~~Nem nyúlunk a meglévő oldalakhoz~~ → AKTÍVAN átírjuk a top impression oldalakat
 - SEO Batch 2 (7 Service Provider + 3 Excel) → **HALASZTVA** határozatlan időre
 - Daily Cash Tracking klaszter → **HALASZTVA**
 - Phase 5 Nonprofit → **HALASZTVA**
