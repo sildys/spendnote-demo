@@ -95,16 +95,16 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-03-08 — Domain repositioning: template → pain/anti-template)
+## Where we are now (last updated: 2026-03-29 — Domain repositioning: template → pain/anti-template)
 
-### 2026-03-08 frissítés — SEO domain repositioning (template cluster átfordítás)
+### 2026-03-29 frissítés — SEO domain repositioning (template cluster átfordítás)
 
 **Stratégiaváltás:**
 - A template cluster (voucher template, receipt template, log template) sok megjelenést hoz, de rossz intenttel (letölthető fájlt várnak, nem SaaS-t)
 - Nem több traffic kell — hanem **más traffic** (problem/pain intent)
 - Meglévő top impression oldalak átírása anti-template / pain-first angle-re
 
-**Elkészült (2026-03-08):**
+**Elkészült (2026-03-29):**
 - ✅ `what-is-petty-cash` — Wikipedia explainer → pain page ("You Have Petty Cash. Where Did It Go?"), definíció lecsúsztatva 40%-ra
 - ✅ `cash-receipt-template` — template page → anti-template page ("You Downloaded a Template. Now Where Is It?"), intent mapping + hard positioning blokkok
 
@@ -129,11 +129,11 @@ If a chat thread freezes / context is lost: in the new thread say:
 
 ### 2026-03-26 frissítés — SEO szünet, Google Ads terv, Stripe QA menetrend
 
-**SEO státusz — SZÜNET → REPOSITIONING (2026-03-08-tól aktív):**
+**SEO státusz — SZÜNET → REPOSITIONING (2026-03-29-tól aktív):**
 - A "template" / "petty cash voucher" kulcsszavak poz 50-100 → reménytelen (DA ~5 vs Canva DA 70-90)
 - Az organikus kattintások 16/28 nap — nem elég a növekedéshez
 - Phase 4 oldalak (who-has-the-cash, boss-cant-see) beindexelés alatt — várjuk az eredményt
-- **Új döntés (2026-03-08):** nem új oldalak kellenek, hanem a meglévő top impression oldalak átfordítása template → pain/anti-template angle-re
+- **Új döntés (2026-03-29):** nem új oldalak kellenek, hanem a meglévő top impression oldalak átfordítása template → pain/anti-template angle-re
 - Az SEO a háttérben dolgozik, de nem ez a növekedési motor rövid távon.
 
 **Eddigi eredmények (28 nap):**
@@ -1655,7 +1655,7 @@ Full "profi app" mobilnézet implementálva. Minden változtatás CSS+JS szinten
   - Consistent icon types: info, success, warning, error, danger
   - Destructive confirms use red danger styling; prompts for email, void reason, delete confirmation
 
-## Paywall / Subscription rendszer — Állapot (2026-03-08)
+## Paywall / Subscription rendszer — Állapot (2026-03-29)
 
 ### KÉSZ (gated + működik):
 - ✅ **Feature flag rendszer** (`_FLAGS` in `supabase-config.js`) — 4 tier: preview, free, standard, pro
@@ -1727,7 +1727,7 @@ Full "profi app" mobilnézet implementálva. Minden változtatás CSS+JS szinten
 | 040_free_trial_expiry_server_guard.sql | Free 14 nap trial szerver guard | ✅ futtatva |
 | 041_ensure_org_for_pro.sql | Pro onboarding: org + owner membership auto-create | **futtatandó** |
 
-### Bugfixek (2026-03-08 session):
+### Bugfixek (2026-03-29 session):
 - **Void transaction** — 4 rétegű hiba javítva: parameter name mismatch, auth logic (solo user), INSERT column names/types, audit_log org_id NULL
 - **Receipt logo placeholder** — "Company logo" szöveg eltávolítva ha nincs tényleges logó (print, PDF, email template), bootstrap fázis visszaállítja ha Supabase-ből jön logó
 - **Logo toggle lock** — free tierben disabled + unchecked + dimmed, click → showLogoUpgrade modal, timing fix (await initCashBoxSettings)

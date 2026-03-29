@@ -1289,7 +1289,7 @@ Fontos tanulság: a kanibalizáció nem **topic overlap**, hanem **intent overla
 
 ---
 
-### Update log - 2026-03-08 (Domain repositioning — template cluster → pain/anti-template)
+### Update log - 2026-03-29 (Domain repositioning — template cluster → pain/anti-template)
 
 **GSC adat (legfrissebb, ~7 nap):**
 - 0 kattintás az összes oldalon
@@ -1308,7 +1308,7 @@ Indoklás:
 - Ha az intentet átfordítjuk, más queryk felé pozícionáljuk az oldalakat
 - Nem új oldalak kellenek — hanem a meglévők repositioning-ja
 
-**Elvégzett átírások (2026-03-08):**
+**Elvégzett átírások (2026-03-29):**
 
 1. **`what-is-petty-cash`** (30 imp, poz 77.5 → átírva)
    - Régi: Wikipedia-stílusú "What Is Petty Cash? Definition & How It Works" — tankönyvi definíció
@@ -1372,7 +1372,7 @@ Indoklás:
 - Még több SEO oldal NEM oldja meg az alap problémát (alacsony DA)
 - Az SEO **hosszú távú befektetés** (6-12 hónap) — nem rövid távú növekedési motor
 - A backlink-ek (G2 DA 90, SourceForge DA 85, AlternativeTo DA 60, Capterra DA 80) idővel emelhetik a DA-t, de ez hónapok kérdése
-- **ÚJ felismerés (2026-03-08):** a meglévő oldalak intentjét kell átfordítani, nem újakat építeni
+- **ÚJ felismerés (2026-03-29):** a meglévő oldalak intentjét kell átfordítani, nem újakat építeni
 
 **Döntés: SEO REPOSITIONING (korábban: SZÜNET)**
 - ~~Nem nyúlunk a meglévő oldalakhoz~~ → AKTÍVAN átírjuk a top impression oldalakat
