@@ -359,30 +359,69 @@ window.SpendNoteBackendErrors = {
 
 const __spendnoteSendUserEventEmail = async (payload = {}) => {
     try {
-        let accessToken = '';
-        for (let i = 0; i < 5; i++) {
+        try {
+            await (window.__spendnoteAuthCallbackPromise || Promise.resolve());
+        } catch (_) {
+            // ignore
+        }
+
+        const getTokenFromSession = async () => {
             try {
                 const { data: { session }, error: sessErr } = await supabaseClient.auth.getSession();
                 if (!sessErr && session?.access_token) {
-                    accessToken = String(session.access_token || '').trim();
-                    break;
+                    return String(session.access_token || '').trim();
                 }
             } catch (_) {
                 // ignore
             }
+            return '';
+        };
+
+        const tryRestoreSessionFromBootstrap = async () => {
+            try {
+                const raw = String(localStorage.getItem('spendnote.session.bootstrap') || '').trim();
+                if (!raw) return '';
+                const parsed = JSON.parse(raw);
+                const accessToken = String(parsed?.access_token || '').trim();
+                const refreshToken = String(parsed?.refresh_token || '').trim();
+                if (!accessToken || !refreshToken) return '';
+                const { data, error } = await supabaseClient.auth.setSession({
+                    access_token: accessToken,
+                    refresh_token: refreshToken
+                });
+                if (error || !data?.session?.access_token) {
+                    try { localStorage.removeItem('spendnote.session.bootstrap'); } catch (_) {}
+                    return '';
+                }
+                return String(data.session.access_token || '').trim();
+            } catch (_) {
+                return '';
+            }
+        };
+
+        const tryRefreshToken = async () => {
+            try {
+                const { data, error } = await supabaseClient.auth.refreshSession();
+                if (error || !data?.session?.access_token) return '';
+                return String(data.session.access_token || '').trim();
+            } catch (_) {
+                return '';
+            }
+        };
+
+        let accessToken = '';
+        for (let i = 0; i < 5; i++) {
+            accessToken = await getTokenFromSession();
+            if (accessToken) break;
             await new Promise((resolve) => setTimeout(resolve, 250 * (i + 1)));
         }
 
         if (!accessToken) {
-            try {
-                const raw = String(localStorage.getItem('spendnote.session.bootstrap') || '').trim();
-                if (raw) {
-                    const parsed = JSON.parse(raw);
-                    accessToken = String(parsed?.access_token || '').trim();
-                }
-            } catch (_) {
-                // ignore
-            }
+            accessToken = await tryRestoreSessionFromBootstrap();
+        }
+
+        if (!accessToken) {
+            accessToken = await tryRefreshToken();
         }
 
         if (!accessToken) {
@@ -401,6 +440,26 @@ const __spendnoteSendUserEventEmail = async (payload = {}) => {
 
         if (!resp.ok) {
             const parsed = await __spendnoteParseFetchError(resp, { defaultMessage: 'Email event send failed.' });
+            const msg = String(parsed?.message || '').toLowerCase();
+            if (resp.status === 401 && msg.includes('invalid jwt')) {
+                const refreshedAccessToken = await tryRefreshToken();
+                if (refreshedAccessToken) {
+                    const retryResp = await fetch(`${SUPABASE_URL}/functions/v1/send-user-event-email`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${refreshedAccessToken}`,
+                            'apikey': SUPABASE_ANON_KEY
+                        },
+                        body: JSON.stringify(payload || {})
+                    });
+                    if (retryResp.ok) {
+                        let retryData = null;
+                        try { retryData = await retryResp.json(); } catch (_) {}
+                        return { success: true, data: retryData };
+                    }
+                }
+            }
             __spendnoteLogBackendError('userEventEmail.send', parsed, { payload });
             return { success: false, error: __spendnoteBuildUserMessage('Email event send failed', parsed) };
         }
