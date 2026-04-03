@@ -1272,6 +1272,7 @@ function togglePreviewDetails() {
                 return;
             }
 
+            if (typeof gtag === 'function') gtag('event', 'checkout_started', { plan, billing_cycle: cycle, extra_seats: extraSeats });
             window.location.href = url;
         }
 

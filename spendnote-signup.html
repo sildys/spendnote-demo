@@ -1202,6 +1202,8 @@ function togglePreviewDetails() {
                 }
 
                 if (result.success) {
+                    if (typeof gtag === 'function') gtag('event', 'signup_completed');
+
                     if (result.needsEmailConfirmation || !result.session) {
                         successMessage.classList.add('show');
                         const emailSafe = String(email || '').trim();

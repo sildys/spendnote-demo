@@ -1758,17 +1758,413 @@ Full "profi app" mobilnézet implementálva. Minden változtatás CSS+JS szinten
 - ⚠️ **`STRIPE_LIVE = false`** (`supabase-config.js` ~302) — checkout/portal client-oldalon kikapcsolva
 - ⏳ **Stripe end-to-end teszt** — pricing → checkout → subscription aktív → tier frissül → limitek feloldva
 - ⏳ **Post-payment onboarding audit** — végigmenni a flow-n, Stripe redirect → toast → activation
-- ⏳ **Downgrade flow audit** — mi történik ha Pro→Standard, Standard→Free, Pro→Free, vagy subscription lejár:
-  - Meglévő adatok (team, extra cash box-ok, logó, labelek) mi lesz velük?
-  - Aktív team memberek hozzáférése megszűnik-e?
-  - Cash box-ok száma limit fölött → melyik marad aktív?
-  - Tranzakciók megmaradnak-e (readonly) vagy törlődnek?
-  - UI feedback: kap-e értesítést a user, hogy mit veszít / mi változik?
-  - Stripe webhook → tier frissítés → limitek visszaállnak-e helyesen?
-  - Grace period kell-e (pl. 7 nap a subscription lejárata után)?
+- ⏳ **Downgrade flow** — kidolgozva (2026-04-03), részletek a V1 Launch terv szekció alatt
 - ⏳ **Preview → Free átállás** — meglévő preview userek tierje átírása, 30% kupon generálás
 - ⏳ **Preview banner eltávolítása/frissítése** — SEO oldalakon + app oldalakon
 - ⏳ **Pricing oldal optimalizálás** — copy, positioning, conversion
+
+---
+
+## V1 Launch terv — Team, Billing, Onboarding, In-app (2026-04-03 session)
+
+Teljes terv kidolgozva. Cél: app launch-ready állapotba hozása.
+
+### 1. Team member modell
+
+A meghívott user **nem kap saját subscription-t**. Tagság nélküli felhasználó, aki az org owner előfizetésén keresztül dolgozik.
+
+**Team member profilja:**
+- `profiles.subscription_tier = 'team_member'` — új tier, nincs saját előfizetés
+- Nincs trial, nincs trial countdown, nincs trial banner
+- Nem lát pricing/upgrade/billing UI-t — az owner dolga
+- `_FLAGS`-be új tier: `team_member` — minimális saját jogok, minden az org owner-től jön
+
+**Feature öröklés:**
+- `SpendNoteFeatures.getTier()` bővítése: ha `tier === 'team_member'` ÉS van aktív org context → az org owner `subscription_tier`-jét használja
+- Owner tier lekérdezése: `org_memberships` (role=owner) + `profiles` join
+- Opcionálisan: új RPC `spendnote_get_effective_tier` szerver-oldalon
+
+**UI korlátozások team membernek:**
+- Pricing oldal: rejtve vagy redirect a dashboard-ra
+- User Settings billing szekció: rejtve — "Your access is managed by [org name]"
+- Upgrade modalok: nem jelennek meg, helyette "Contact your team admin"
+- Trial banner: nem jelenik meg
+
+**Ha eltávolítják az org-ból:**
+- Locked out állapot: dashboard helyett üres oldal
+- Üzenet: "You no longer have access to [org name]. Contact your admin to be re-invited, or create your own account."
+- "Create your own account" → pricing page, `subscription_tier` átíródik `free`-re, indul a 14 napos trial
+
+**Egy user = egy kontextus (V1 szabályok):**
+- Egy user egyszerre csak egy org-hoz tartozhat
+- Ha már van org-ja, új meghívást nem fogadhat el: "You're already part of [Org Name]. Leave that team first to join another."
+- Ha az email címhez már tartozik aktív fiók (saját subscription):
+  1. Első ajánlat: "This email already has a SpendNote account. Use a different email address to join as a team member."
+  2. Ha mégis ezzel az emaillel: "Your personal account will be paused. Your data stays safe and comes back if you leave the team." Accept = tier → `team_member`, saját cash box-ok rejtve.
+  3. Stripe figyelmeztetés fizető usernél: "You'll also need to cancel your personal subscription in Billing settings to stop being charged." (V1-ben manuális, nem auto-cancel)
+- Nincs org switcher, nincs dual-context V1-ben
+
+**Edge case-ek és guardok:**
+- Free (lejárt trial) user + invite: zéró friction, elfogadja → `team_member`, azonnal dolgozhat
+- Pro owner-t (akinek VAN csapata) meghívják: kemény blokk: "You're the owner of [Org Name] with active team members. You cannot join another organization."
+- Owner subscription lejár/downgrade (Pro → Standard/Free): team member-ek bejelentkezéskor: "Your team's subscription has expired. Contact [owner email] to restore access."
+- Team member önkéntes kilépés: "Leave team" gomb a Settings-ben → locked out state
+- Owner NEM léphet ki a saját org-jából: V1-ben nincs "Leave" gomb az owner-nek
+- Signup flow invite token-nel: `__spendnoteEnsureProfileForCurrentUser`-ben: ha van `inviteToken` localStorage-ban → `subscription_tier = 'team_member'`, nem `preview`
+- Újrameghívás eltávolítás után: új `org_membership` sor, tier marad `team_member`, azonnal működik
+- Önmeghívás: kliens-oldalon blokkolva: "You can't invite yourself."
+
+### 2. Seat billing flow (block + redirect)
+
+Amikor a Pro owner a seat limitnél (default 3) több embert próbál meghívni:
+- Blokkolás + üzenet: "You've used all 3 included seats. Add more seats to invite another team member."
+- "Manage seats" gomb → Stripe Portal vagy pricing page, ahol megveszi az extra seat-et (+$5/mo/seat)
+- Utána visszajön, meghívhat
+
+**Javítandó/építendő:**
+- `team-page.js`: seat limit modal átírása block+redirect UX-szel
+- `supabase-config.js`: `createCheckoutSession()` — `extraSeats` paraméter bekötése (jelenleg kimarad a payload-ból!)
+- `spendnote-pricing.html`: `seat_count` betöltése a profile-ból (profile query nem select-eli jelenleg)
+- `create-checkout-session/index.ts`: validálni `extraSeats`/`quantity` Stripe line item-be kerülését
+- `stripe-webhook/index.ts`: `seat_count` update ellenőrzése subscription update-nél
+
+### 3. Conversion-oriented onboarding email rendszer
+
+#### State machine (viselkedés-alapú, nem idő-alapú)
+
+| State | Feltétel |
+|-------|----------|
+| SignedUp | regisztrált, még semmi nem történt |
+| NoTransaction | belépett, de nincs mentett tranzakció |
+| PartialActivation | megnyitotta a new transaction formot, de nem fejezte be |
+| FirstTransaction | létrehozta az első tranzakciót (AHA MOMENT) |
+| MultipleTransactions | több tranzakció, rendszeres használat |
+| TrialEnding | D+11, trial lejárat közeledik |
+| Expired | D+14, trial lejárt, nincs subscription |
+| WinBack | D+21, utolsó próbálkozás |
+
+Minden email implicit kérdése: eljutott-e az aha momentig (első tranzakció)? Ha nem → oda tolja. Ha igen → ownership érzés erősítése + upgrade felé visz.
+
+#### Solo user email sequence (14 napos trial)
+
+**D+0: Welcome** (trigger: signup)
+- "Your cash box is ready. Most people record their first transaction in under 30 seconds. You don't need to set anything up first. No setup. No team needed. No config."
+- CTA: "Record your first transaction"
+
+**D+1: Activation nudge** (trigger: state = NoTransaction, signup > 24h)
+- "Someone took cash from the box. End of day, the numbers don't add up. That's the moment SpendNote is built for. Record what happened — amount, who, why — and you'll have a receipt and a record in 30 seconds."
+- CTA: "Record it now"
+
+**D+1/D+2: PartialActivation nudge** (trigger: state = PartialActivation)
+- "You were one step away from recording your first transaction. It takes 30 seconds to finish it."
+- CTA: "Complete your first transaction"
+- Magasabb conversion rate mint a hideg nudge — a user már mutatott szándékot
+
+**D+3 — HA state = NoTransaction:**
+- Konkrét use-case sztorik: café owner, small office, construction crew
+- "They all started with one transaction."
+- CTA: "Create your first one"
+- Utolsó "puha" próbálkozás. Ha ezután sem aktiválódik, D+7-et NEM kap.
+
+**D+3 — HA state = FirstTransaction / MultipleTransactions:**
+- "You recorded your first transaction. Good. Record the next one as well. Then the next. That's how you stop guessing where your cash went."
+- CTA: "Open your dashboard"
+
+**D+7: Mid-trial value** (trigger: state = FirstTransaction/MultipleTransactions CSAK)
+- "You tracked [X] transactions this week. You now know where your cash went. You have a receipt for every movement. Without this, you wouldn't have this record. That's control."
+- CTA: "See plans"
+- Counterfactual thinking trigger. Inaktív user NEM kap emailt.
+
+**D+11 (T-3): Trial warning** (mindenki kapja)
+- Aktív: "Your free trial ends in 3 days. You've recorded [X] transactions worth [$Y]. Those records stay — but you won't be able to add new ones."
+- Inaktív: "Right now, if cash moves, you have no record of it. You still have time to change that."
+
+**D+13 (T-1): Last day**
+- "Tomorrow your trial expires. Your system will be paused — no new transactions, no new receipts. $19/month. Less than one misplaced cash receipt costs you. Or one missing transaction."
+
+**D+14: Expired**
+- "You can't create new transactions anymore. Your records are here. Your receipts are here. Nothing is lost. Your system is paused. Upgrade anytime to unpause."
+
+**D+21: Win-back** (utolsó email, utána STOP)
+- "We're keeping your [X] transactions and receipts safe. Upgrade whenever you're ready — they'll be waiting."
+
+#### Fizető user emailek
+
+**Payment confirmation** (trigger: stripe webhook — checkout.session.completed)
+- Standard: "You're set up to track your cash properly. No more guessing where the money went. Next step: keep recording every cash movement."
+- Pro: "Next step: invite your team and track together. Most teams invite their first person within 24 hours."
+
+**Pro +48h: Team invite reminder** (trigger: Pro tier > 48h + 0 invites)
+- "You have 3 team seats ready. Most teams invite at least one person within 24 hours."
+
+#### Meghívott team member email
+
+**Accept után: Welcome to team** (trigger: invite accepted)
+- "You've joined [Org Name]. [Owner name] has given you [role] access."
+- Rövid, nincs trial, nincs pricing.
+
+#### Upgrade/downgrade emailek
+
+**Plan downgrade notify** (trigger: webhook — subscription_tier csökken, pl. Pro→Standard)
+- Owner-nek: "Your plan has changed to [Standard]. Here's what's different now:"
+- Lista amit elveszített (team access, custom labels, stb.)
+- "Your data is safe. Upgrade anytime to restore full access."
+- CTA: "Upgrade back"
+
+**Subscription canceled** (trigger: webhook — user aktívan cancel-el a Stripe Portal-on)
+- Owner-nek: "Your [Pro/Standard] subscription has been canceled. It stays active until [period end date]."
+- "After that, your plan changes to Free. Your data stays safe."
+- CTA: "Change your mind? Resubscribe"
+
+**Payment failed** (trigger: webhook — invoice.payment_failed)
+- Owner-nek: "Your payment for [Pro/Standard] failed. Update your payment method to keep your plan."
+- "If not resolved, your subscription will be canceled and your plan will change to Free."
+- CTA: "Update payment method" → Stripe Portal
+- EZ A LEGFONTOSABB REVENUE RECOVERY EMAIL — involuntary churn 20-30%-a menthető
+
+**Subscription deleted** (trigger: webhook — customer.subscription.deleted, Stripe retry végleges kudarc)
+- Owner-nek: "Your subscription has ended. Your plan is now Free."
+- Lista amit elveszített + "Your data is safe. Upgrade anytime."
+- CTA: "Resubscribe"
+
+**Team access revoked** (trigger: owner tier Pro → Standard/Free)
+- Team member-eknek (az org összes nem-owner tagjának): "Your team's subscription has expired. You no longer have access to [Org Name]."
+- "Contact [owner name] at [owner email] to restore access, or create your own account."
+- CTA: "Create your own account" → pricing page
+
+#### Technikai infrastruktúra
+
+**`email_log` tábla** (nem flag-ek a profiles-on):
+```sql
+CREATE TABLE email_log (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid REFERENCES profiles(id),
+  email_type text NOT NULL,
+  sent_at timestamptz DEFAULT now()
+);
+CREATE INDEX idx_email_log_user ON email_log(user_id, email_type);
+```
+
+**`pg_cron` job:** Naponta egyszer fut, lekérdezi a user-eket state alapján (signup dátum + tranzakció szám + email_log), meghívja `send-user-event-email` edge function-t.
+
+**PartialActivation tracking:** `profiles.opened_transaction_form_at` timestamp mező, kliens-oldalon mentve amikor a user megnyitja a new transaction formot.
+
+**Copy workflow (email + in-app szövegek):**
+1. Cursor megírja a draft szöveget a tervben leírt irányok alapján
+2. Átadás ChatGPT-nek kontrollra — copy review, konverziós finomítás, tone check
+3. ChatGPT feedback visszahozása Cursor-ba
+4. Cursor implementálja a végleges verziót a kódba
+Ez minden email template-re és in-app onboarding szövegre (checklist, empty states, nudge-ök, modals) vonatkozik.
+
+### 4. In-app onboarding (behavior forcing flow)
+
+Egyetlen cél: **first transaction 30 másodpercen belül**. Minden más másodlagos.
+
+#### 4a. First login: Currency auto-detect + cash box creation
+
+1. **Auto-detect** pénznem IP/locale alapján (HU → HUF, UK → GBP, US → USD)
+2. **Minimal modal** (max 3 másodperc): "We set your currency to **HUF**." + [Change] + [Continue]
+   - Nem kérdés, hanem visszaigazolás. A user nem választ, hanem jóváhagy.
+3. **Cash box auto-create** a kiválasztott pénznemmel. Continue után egyből dashboard.
+
+#### 4b. Dashboard onboarding (3 réteg)
+
+**1. Checklist banner** (dashboard tetején, max 3 lépés):
+- ✓ Cash box created → Record your first transaction → View your receipt
+- CTA gomb: "Record your first transaction"
+- Ha minden kész: banner eltűnik örökre
+
+**2. Guided empty states** (ez konvertál):
+- Dashboard (0 tranzakció): "No transactions yet. If cash moves and you don't record it, you lose track. Record your first transaction in 30 seconds." [Record transaction]
+- Transactions lista (üres): "Your transactions will appear here. Start with your first one." [Record transaction]
+- Receipt nézet (nincs még): "Every transaction creates a receipt. Create one to see how it works." [Record transaction]
+- Mindenhol UGYANAZ a CTA: **"Record transaction"**
+
+**3. Micro nudge** (első belépés után 5-10 mp):
+- Toast: "Most users record their first transaction in under 30 seconds."
+- Egyszer jelenik meg, utána soha.
+
+#### Post-first-transaction
+
+Azonnal toast: "Nice. Now record the next one. That's how you stay in control." + [Record another]
+Checklist frissül: ✓ Cash box created ✓ First transaction → View your receipt
+
+#### Szabályok
+
+- Max 1 lépés, max 1 döntés, max 3 másodperc a currency selection-nél
+- Nincs product tour, nincs tooltip flow, nincs setup wizard
+- A dashboard NEM hagy mást csinálni, mint az első tranzakciót
+- Ha a user 10-15 másodpercen belül nem indítja el az első tranzakciót, az onboarding UX nem elég erős
+
+### 5. Upgrade / Downgrade flow
+
+#### Alapelv: "Soft lock"
+
+Minden adat megmarad és látható, de az AKCIÓK a jelenlegi tier-hez igazodnak. Nincs adatvesztés, nincs törlés, nincs archiválás. A user folyamatosan látja, amije volt — ami upgrade motiváció.
+
+#### Upgrade (bármely irány: Free→Standard, Free→Pro, Standard→Pro)
+
+- Stripe webhook frissíti `profiles.subscription_tier`-t
+- Feature flags azonnal az új tier-t tükrözik, minden "just works"
+- Cash box-ok: ha volt readonly (downgrade-ből), mind aktívvá válik újra
+- Team members: ha Pro-ra upgrade-el, azonnal elérhető a Team page
+- Celebration toast megjelenik ("You're on [Plan]!")
+- Payment confirmation email megy (Standard: feature lista, Pro: + "invite your team")
+
+#### Downgrade: Pro → Standard
+
+**Cash box-ok (ha több van mint a Standard limit = 2):**
+- Következő bejelentkezéskor modal: "Your plan allows 2 active cash boxes. You have [X]. Select which ones to keep active."
+- A választás **egyszer történik meg és végleges** (amíg nem upgrade-el vissza)
+- Amíg nem választ: az összes cash box **readonly** (nem tud egyikben sem tranzakciót rögzíteni)
+- Kiválasztott cash box-ok: aktívak (tranzakció rögzíthető)
+- Nem kiválasztott cash box-ok: readonly — megtekinthető, lekérdezhető, de nem rögzíthető benne új tranzakció
+- Ha később visszaupgrade-el Pro-ra: mindegyik cash box újra aktív. Ha megint downgrade-el, újra választ.
+- Technikai: `cash_boxes.is_active` boolean flag, vagy `cash_boxes.deactivated_at` timestamp
+
+**Team members:**
+- Azonnal locked out: "Your team's subscription has expired. Contact [owner email] to restore access."
+- Org és membership adatok megmaradnak DB-ben
+- Owner nem fér hozzá a Team page-hez (Standard-nél rejtve)
+- Ha visszaupgrade-el Pro-ra: team members azonnal újra működnek (membership megvan)
+
+**Custom labels:**
+- Régi tranzakciókon megjelennek (historikus adat)
+- Új tranzakcióknál nem választhatóak (feature locked, upgrade prompt)
+
+**Email receipt:**
+- Feature locked, upgrade prompt
+- Korábban emailben küldött receipt-ek nem érintettek
+
+**Export:**
+- Standard-nél CSV és PDF elérhető (nincs változás)
+
+#### Downgrade: Standard → Free
+
+**Cash box-ok (ha több van mint a Free limit = 1):**
+- Ugyanaz a flow mint Pro→Standard: választ 1 aktív cash box-ot
+- Választás egyszer, végleges
+
+**Export:**
+- CSV és PDF locked, csak print
+- Meglévő exportok/PDF-ek nem érintettek
+
+**Logo:**
+- Feature locked
+- Régi tranzakciók receipt-jein megmarad a logó (historikus)
+- Új receipt-eken nem jelenik meg
+
+**Tranzakció limit:**
+- Free = 20 tx limit élesedik
+- Ha 50 tranzakciója van: nem tud újat, upgrade prompt
+- Meglévő tranzakciók megtekinthetőek, kereshetőek
+
+**Trial:**
+- NEM indul újra 14 napos trial. Aki egyszer fizetett és lemondta, nem kap új trial-t.
+
+#### Downgrade: Pro → Free (cancel)
+
+Pro→Standard + Standard→Free szabályok együtt alkalmazandók. Cash box választás: 1 aktív.
+
+#### Payment failed (past_due)
+
+- `billing_status = 'past_due'`, DE `subscription_tier` NEM változik
+- Stripe retry periódus (~2-3 hét, 3-4 próbálkozás)
+- User Settings-ben: "Payment failed. Update your payment method." + Stripe Portal link
+- Ha végül nem sikerül: Stripe `subscription.deleted` → tier → `free`, downgrade flow élesedik
+
+#### Grace period
+
+- V1-ben nincs explicit grace period
+- Operatív grace: a `past_due` állapot maga a grace period (Stripe retry)
+- Ha a subscription törlődik, a downgrade azonnal érvényes
+
+### 6. Guardok és jogi követelmények
+
+**Email unsubscribe (CAN-SPAM):**
+- Drip/onboarding emailek (D+0 — D+21) aljára unsubscribe link kötelező
+- `profiles.email_opt_out` boolean flag (default false)
+- pg_cron job kihagyja az opt-out user-eket a drip email küldésnél
+- Tranzakciós emaileknél (payment failed, plan changed, invite, password reset) NEM kell unsubscribe — ezek account-related, nem marketing
+
+**Account deletion + team:**
+- Owner NEM törölheti a fiókját amíg van aktív team member
+- Üzenet: "Remove all team members first, then delete your account."
+- Solo user (nincs team): normális törlés, delete-account edge function
+- Team member (nem owner): törölheti a saját fiókját, org_membership törlődik vele
+
+### 7. Meglévő bugok javítása
+
+- `createCheckoutSession` nem küldi az `extraSeats`-et — payload-ból hiányzik
+- Pricing page nem tölti be a `seat_count`-ot — profile query nem select-eli
+- Cash box access grant invite-kor nem működik — `member_id` nem létezik invite időpontjában; accept flow-ba kell mozgatni
+- `trial_ends_at` nem szinkronizálódik a Stripe webhook-ból — Stripe trialing állapotban a dátum nem íródik profiles-ba
+- Pricing FAQ ellentmondás — "20+ transactions" vs "20 transactions or fewer" a money-back guarantee-nél
+
+### 8. Conversion tracking (teljes)
+
+**GA4 funnel események** (gtag custom events, pár sor kliens-oldali kód):
+- `signup_completed` — sikeres regisztráció
+- `first_login` — első belépés a dashboard-ra
+- `currency_selected` — pénznem visszaigazolás a currency modal-ban
+- `transaction_form_opened` — new transaction form megnyitása (PartialActivation)
+- `first_transaction_created` — AHA moment, első tranzakció mentve
+- `second_transaction_created` — rendszeres használat jele
+- `checkout_started` — pricing page-ről checkout indítása
+- `upgrade_completed` — sikeres fizetés, tier váltás
+- `trial_warning_shown` — T-3 dashboard banner megjelent
+- `invite_sent` — Pro user meghívást küldött
+
+**Email tracking (Resend API):**
+- Resend automatikusan trackeli: open, click, bounce, complaint
+- Resend webhook-ok → `email_log` táblába: `opened_at`, `clicked_at` mezők hozzáadása
+- Ezzel mérhető: melyik email típus hoz legtöbb open/click-et
+- Attribution: ha a user emailben lévő linkre kattint és utána upgrade-el, az email_log + profiles.subscription_tier változás időpontja összeköthető
+
+**Conversion attribution:**
+- UTM paraméterek az email CTA linkeken: `?utm_source=email&utm_medium=drip&utm_campaign=d7_midtrial`
+- GA4-ben mérhető: melyik email campaign hozta a checkout_started / upgrade_completed eseményt
+- Egyszerű attribution: utolsó email kattintás → upgrade időpont (email_log.clicked_at vs profiles tier change timestamp)
+
+**Admin stats oldal** (`/spendnote-admin.html`, csak owner email-lel elérhető):
+
+Metrics:
+- Userek: total, tier bontás (free/standard/pro/team_member), új regisztrációk (ma/hét/hónap)
+- Activation funnel: signup → first login → first transaction → upgrade (számok + %)
+- Revenue: MRR, aktív subscriptionök, seat-ek
+- Trial: aktív trial-ok, lejártak, conversion rate
+- Email: küldött/megnyitott/kattintott arányok (email_log)
+- State machine: hány user van melyik állapotban (NoTransaction, PartialActivation, FirstTransaction, stb.)
+- Churn: past_due, canceled, downgraded az elmúlt 30 napban
+
+Chartok:
+- Signup trend (daily/weekly line chart)
+- Funnel vizualizáció (signup → activation → upgrade, bar/funnel chart)
+- MRR trend (line chart)
+- Email performance (open/click rate per email type, bar chart)
+
+Technikai:
+- Egy RPC (`spendnote_admin_stats`) ami összegyűjti az adatokat a meglévő táblákból
+- Chart.js vagy hasonló lightweight chart library
+- Hozzáférés: `profiles.email` === owner email (hardcoded guard, vagy admin role check)
+
+### 9. Stripe end-to-end teszt + STRIPE_LIVE
+
+- Migration 041 futtatása (Pro onboarding org auto-create)
+- Stripe teszt módban végigmenni: pricing → checkout → subscription aktív → tier frissül → feature-ök feloldva
+- Post-payment redirect (Standard → dashboard, Pro → team page)
+- `STRIPE_LIVE = true` átkapcsolás ha minden működik
+
+### Implementációs sorrend / prioritás
+
+1-2-7-9 a kritikus path (team + billing + bugfixes + Stripe E2E)
+3 (email rendszer) párhuzamosan építhető
+4a-4b (in-app onboarding) párhuzamosan építhető
+5 (upgrade/downgrade flow) a Stripe E2E-vel együtt tesztelhető
+6 (guardok) kis feladatok, bármikor beilleszthetőek
+8 (conversion tracking) az in-app onboarding és email rendszer mellé épül — GA4 események az onboarding kódba kerülnek, Resend tracking az email infraba
+
+---
 
 ## Korábbi "Next focus" (archív)
 - ~~Marketing oldalak mobil optimalizálása~~ (alacsonyabb prioritás most)

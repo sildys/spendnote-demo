@@ -451,6 +451,23 @@ function initTransactionForm() {
 
             const createdId = result?.data?.id;
 
+            // GA4 conversion funnel events
+            try {
+                if (typeof gtag === 'function') {
+                    const uid = (await supabaseClient?.auth?.getUser?.())?.data?.user?.id;
+                    const txKey = uid ? `sn.txCount.${uid}` : null;
+                    const prev = txKey ? parseInt(localStorage.getItem(txKey) || '0', 10) : 0;
+                    const now = prev + 1;
+                    if (txKey) localStorage.setItem(txKey, String(now));
+                    if (now === 1) {
+                        gtag('event', 'first_transaction_created');
+                        gtag('event', 'transaction_form_opened');
+                    } else if (now === 2) {
+                        gtag('event', 'second_transaction_created');
+                    }
+                }
+            } catch (_) {}
+
             const addAnother = Boolean(document.getElementById('modalAddAnother')?.checked);
 
             // Reload dashboard data

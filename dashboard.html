@@ -97,6 +97,18 @@
                 </div>
                 <!-- End of registers-swiper -->
 
+            <!-- Onboarding: Checklist Banner -->
+            <div id="onboardingChecklist" class="sn-onboarding-checklist" style="display:none;">
+                <div class="sn-checklist-steps">
+                    <span class="sn-checklist-step completed" id="checkStep1"><i class="fas fa-check-circle"></i> Cash box ready</span>
+                    <span class="sn-checklist-divider">→</span>
+                    <span class="sn-checklist-step active" id="checkStep2"><i class="fas fa-circle"></i> Record your first transaction</span>
+                    <span class="sn-checklist-divider">→</span>
+                    <span class="sn-checklist-step" id="checkStep3"><i class="fas fa-circle"></i> View your receipt</span>
+                </div>
+                <button class="sn-checklist-cta" id="checklistCtaBtn" type="button">Record your first transaction</button>
+            </div>
+
             <!-- Tip: invite your team (compact) - Moved below Cash Boxes -->
             <div class="invite-banner-compact" id="inviteBanner" style="display:none;">
                 <i class="fas fa-lightbulb"></i>
@@ -1876,6 +1888,7 @@
                 const d = Math.ceil(daysLeft);
                 if (textEl) textEl.textContent = d <= 1 ? 'Your trial ends tomorrow' : `Your free trial ends in ${d} days`;
                 banner.style.display = 'flex';
+                if (typeof gtag === 'function') gtag('event', 'trial_warning_shown', { days_left: d });
             } catch (_) {}
         })();
 
@@ -1893,6 +1906,7 @@
                 const upgrades = { free: 0, standard: 1, pro: 2, preview: 3 };
                 if ((upgrades[tier] || 0) <= (upgrades[prevTier] || 0)) return;
                 const label = tier === 'pro' ? 'Pro' : (tier === 'standard' ? 'Standard' : tier);
+                if (typeof gtag === 'function') gtag('event', 'upgrade_completed', { tier });
                 if (typeof showAlert === 'function') {
                     showAlert(`Welcome to ${label}! All your new features are ready.`, { iconType: 'success', title: `You're on ${label}` });
                 }
@@ -1965,7 +1979,186 @@
             }
         });
 
+        // ========================================
+        // ONBOARDING: CURRENCY CONFIRM + CHECKLIST + EMPTY STATES + NUDGES
+        // ========================================
+        (async () => {
+            try {
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (!user) return;
+                const uid = user.id;
+
+                // --- Currency Confirm Modal ---
+                const pendingCurrency = localStorage.getItem(`spendnote.currencyConfirm.${uid}`);
+                if (pendingCurrency) {
+                    localStorage.removeItem(`spendnote.currencyConfirm.${uid}`);
+                    await __snShowCurrencyConfirmModal(pendingCurrency, uid);
+                }
+
+                // --- GA4: first_login ---
+                const firstLoginKey = `sn.firstLoginSent.${uid}`;
+                if (!localStorage.getItem(firstLoginKey)) {
+                    localStorage.setItem(firstLoginKey, '1');
+                    if (typeof gtag === 'function') gtag('event', 'first_login');
+                }
+
+                // --- Wait for dashboard data to be ready ---
+                await new Promise(resolve => {
+                    if (window.__spendnoteDashboardDataLoaded) return resolve();
+                    window.addEventListener('SpendNoteDashboardDataLoaded', resolve, { once: true });
+                    setTimeout(resolve, 8000);
+                });
+
+                // --- Count transactions for this user ---
+                let txCount = 0;
+                try {
+                    const { count } = await supabaseClient
+                        .from('transactions')
+                        .select('id', { count: 'exact', head: true })
+                        .or('is_system.is.null,is_system.eq.false')
+                        .eq('status', 'active');
+                    txCount = count || 0;
+                } catch (_) {}
+
+                // --- Checklist Banner ---
+                const checklist = document.getElementById('onboardingChecklist');
+                const checklistDoneKey = `sn.onboardingDone.${uid}`;
+                if (checklist && !localStorage.getItem(checklistDoneKey)) {
+                    if (txCount === 0) {
+                        checklist.style.display = 'flex';
+                        document.getElementById('checklistCtaBtn')?.addEventListener('click', () => {
+                            if (typeof window.openModal === 'function') {
+                                window.openModal({ direction: 'in' });
+                            }
+                        });
+                    } else if (txCount >= 1) {
+                        // First tx done, update checklist
+                        const step2 = document.getElementById('checkStep2');
+                        const step3 = document.getElementById('checkStep3');
+                        const ctaBtn = document.getElementById('checklistCtaBtn');
+                        if (step2) { step2.classList.remove('active'); step2.classList.add('completed'); step2.innerHTML = '<i class="fas fa-check-circle"></i> First transaction'; }
+                        if (step3) { step3.classList.add('active'); step3.innerHTML = '<i class="fas fa-circle"></i> View your receipt'; }
+                        if (ctaBtn) ctaBtn.textContent = 'View your receipt';
+                        checklist.style.display = 'flex';
+                        ctaBtn?.addEventListener('click', () => {
+                            window.location.href = 'spendnote-transaction-history.html';
+                        });
+                        if (txCount >= 2) {
+                            localStorage.setItem(checklistDoneKey, '1');
+                            checklist.style.display = 'none';
+                        }
+                    }
+                }
+
+                // --- Guided Empty State ---
+                if (txCount === 0) {
+                    const tableBody = document.querySelector('#transactionsTable tbody');
+                    const cardList = document.getElementById('txCardList');
+                    const emptyHtml = `
+                        <div class="sn-empty-state">
+                            <div class="sn-empty-icon"><i class="fas fa-receipt"></i></div>
+                            <h3>No transactions yet</h3>
+                            <p>If cash moves and you don't record it, you lose track.<br>Record your first transaction in 30 seconds.</p>
+                            <button class="sn-empty-cta" onclick="if(typeof window.openModal==='function')window.openModal({direction:'in'})">
+                                <i class="fas fa-plus"></i> Record transaction
+                            </button>
+                        </div>`;
+                    if (tableBody) {
+                        const existingEmpty = tableBody.querySelector('.sn-empty-state');
+                        if (!existingEmpty) {
+                            const emptyRow = tableBody.querySelector('td[colspan]');
+                            if (emptyRow) emptyRow.closest('tr').remove();
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `<td colspan="7" style="padding:0;border:none;">${emptyHtml}</td>`;
+                            tableBody.appendChild(tr);
+                        }
+                    }
+                    if (cardList) {
+                        const existingEmpty = cardList.querySelector('.sn-empty-state');
+                        if (!existingEmpty) {
+                            const oldEmpty = cardList.querySelector('.tx-card-empty');
+                            if (oldEmpty) oldEmpty.remove();
+                            cardList.innerHTML = emptyHtml;
+                        }
+                    }
+                }
+
+                // --- Micro nudge toast (once per user, 5s delay) ---
+                const nudgeKey = `sn.microNudge.${uid}`;
+                if (txCount === 0 && !localStorage.getItem(nudgeKey)) {
+                    localStorage.setItem(nudgeKey, '1');
+                    setTimeout(() => {
+                        if (typeof showPageTip === 'function') {
+                            showPageTip('onboarding-nudge', 'Most users record their first transaction in under 30 seconds.');
+                        }
+                    }, 5000);
+                }
+
+            } catch (e) {
+                console.warn('[Onboarding]', e);
+            }
+        })();
+
         if (typeof showPageTip === 'function') showPageTip('dashboard', 'Record an <strong>IN</strong> transaction to set your opening balance, then track payments as <strong>OUT</strong>.');
+
+        // Currency confirm modal builder
+        async function __snShowCurrencyConfirmModal(detectedCurrency, userId) {
+            const CURRENCIES = [
+                'USD','EUR','GBP','HUF','PLN','CZK','RON','SEK','DKK','NOK','CHF',
+                'CAD','AUD','NZD','JPY','CNY','KRW','INR','BRL','MXN','ZAR','TRY',
+                'UAH','AED','SAR','THB','PHP','MYR','SGD','HKD','TWD','IDR','VND'
+            ];
+            return new Promise(resolve => {
+                const overlay = document.createElement('div');
+                overlay.className = 'sn-dialog-overlay';
+                overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s ease;';
+
+                const optionsHtml = CURRENCIES.map(c =>
+                    `<option value="${c}" ${c === detectedCurrency ? 'selected' : ''}>${c}</option>`
+                ).join('');
+
+                overlay.innerHTML = `
+                    <div class="sn-dialog-card" style="max-width:380px;text-align:center;">
+                        <div class="sn-dialog-icon" style="color:var(--primary)"><i class="fas fa-coins"></i></div>
+                        <div class="sn-dialog-title">We set your currency to ${detectedCurrency}</div>
+                        <div class="sn-dialog-message" style="margin-bottom:16px;">You can change this later in Cash Box settings.</div>
+                        <select id="snCurrencySelect" class="sn-dialog-input" style="width:100%;padding:10px 12px;font-size:15px;border-radius:8px;border:1px solid #d1d5db;margin-bottom:20px;text-align:center;font-weight:600;">
+                            ${optionsHtml}
+                        </select>
+                        <div class="sn-dialog-actions">
+                            <button class="sn-dialog-btn sn-dialog-btn-primary" id="snCurrencyConfirmBtn" style="width:100%;">Continue</button>
+                        </div>
+                    </div>`;
+
+                document.body.appendChild(overlay);
+                requestAnimationFrame(() => { overlay.style.opacity = '1'; });
+
+                document.getElementById('snCurrencyConfirmBtn').addEventListener('click', async () => {
+                    const chosen = document.getElementById('snCurrencySelect').value;
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.remove(), 200);
+
+                    if (chosen !== detectedCurrency) {
+                        try {
+                            const { data: boxes } = await supabaseClient
+                                .from('cash_boxes')
+                                .select('id')
+                                .eq('user_id', userId)
+                                .limit(1);
+                            if (boxes?.[0]) {
+                                await supabaseClient
+                                    .from('cash_boxes')
+                                    .update({ currency: chosen })
+                                    .eq('id', boxes[0].id);
+                            }
+                        } catch (_) {}
+                    }
+
+                    if (typeof gtag === 'function') gtag('event', 'currency_selected', { currency: chosen });
+                    resolve(chosen);
+                });
+            });
+        }
 
     </script>
 </body>

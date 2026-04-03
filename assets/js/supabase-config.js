@@ -30,6 +30,42 @@ const __spendnoteGetResponseRequestId = (resp) => {
     }
 };
 
+const __spendnoteDetectCurrency = () => {
+    const COUNTRY_CURRENCY = {
+        US: 'USD', GB: 'GBP', HU: 'HUF', PL: 'PLN', CZ: 'CZK', RO: 'RON',
+        SE: 'SEK', DK: 'DKK', NO: 'NOK', CH: 'CHF', JP: 'JPY', CN: 'CNY',
+        KR: 'KRW', IN: 'INR', BR: 'BRL', MX: 'MXN', CA: 'CAD', AU: 'AUD',
+        NZ: 'NZD', ZA: 'ZAR', RU: 'RUB', UA: 'UAH', TR: 'TRY', IL: 'ILS',
+        AE: 'AED', SA: 'SAR', TH: 'THB', PH: 'PHP', MY: 'MYR', SG: 'SGD',
+        HK: 'HKD', TW: 'TWD', ID: 'IDR', VN: 'VND', EG: 'EGP', NG: 'NGN',
+        KE: 'KES', GH: 'GHS', CO: 'COP', CL: 'CLP', PE: 'PEN', AR: 'ARS',
+        DE: 'EUR', FR: 'EUR', IT: 'EUR', ES: 'EUR', NL: 'EUR', BE: 'EUR',
+        AT: 'EUR', PT: 'EUR', IE: 'EUR', FI: 'EUR', GR: 'EUR', SK: 'EUR',
+        SI: 'EUR', EE: 'EUR', LV: 'EUR', LT: 'EUR', MT: 'EUR', CY: 'EUR',
+        LU: 'EUR', HR: 'EUR'
+    };
+    const LANG_CURRENCY = {
+        hu: 'HUF', pl: 'PLN', cs: 'CZK', ro: 'RON', sv: 'SEK', da: 'DKK',
+        nb: 'NOK', nn: 'NOK', ja: 'JPY', zh: 'CNY', ko: 'KRW', hi: 'INR',
+        pt: 'BRL', tr: 'TRY', uk: 'UAH', th: 'THB', vi: 'VND', id: 'IDR',
+        ms: 'MYR', he: 'ILS', ar: 'AED', de: 'EUR', fr: 'EUR', it: 'EUR',
+        es: 'EUR', nl: 'EUR', el: 'EUR', fi: 'EUR', sk: 'EUR', sl: 'EUR',
+        et: 'EUR', lv: 'EUR', lt: 'EUR', hr: 'EUR'
+    };
+    try {
+        const loc = String(navigator.language || navigator.userLanguage || 'en-US');
+        const parts = loc.split('-');
+        if (parts.length >= 2) {
+            const country = parts[parts.length - 1].toUpperCase();
+            if (COUNTRY_CURRENCY[country]) return COUNTRY_CURRENCY[country];
+        }
+        const lang = parts[0].toLowerCase();
+        if (LANG_CURRENCY[lang]) return LANG_CURRENCY[lang];
+    } catch (_) {}
+    return 'USD';
+};
+window.__spendnoteDetectCurrency = __spendnoteDetectCurrency;
+
 const __spendnoteEnsureDefaultCashBoxForCurrentUser = async () => {
     try {
         const { data: { user }, error } = await supabaseClient.auth.getUser();
@@ -56,16 +92,22 @@ const __spendnoteEnsureDefaultCashBoxForCurrentUser = async () => {
             // ignore read failures
         }
 
+        const detectedCurrency = __spendnoteDetectCurrency();
+
         await supabaseClient
             .from('cash_boxes')
             .insert([{
                 user_id: userId,
                 name: 'Main Cash Box',
-                currency: 'USD',
+                currency: detectedCurrency,
                 color: '#059669',
                 icon: 'building',
                 current_balance: 0
             }]);
+
+        try {
+            localStorage.setItem(`spendnote.currencyConfirm.${userId}`, detectedCurrency);
+        } catch (_) {}
     } catch (_) {
         // ignore
     }
@@ -3637,6 +3679,7 @@ var db = {
                 });
             }
 
+            try { if (typeof gtag === 'function') gtag('event', 'invite_sent'); } catch (_) {}
             return { success: true, data: row, emailSent, emailError };
         },
 

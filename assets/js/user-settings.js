@@ -830,6 +830,7 @@ const startCheckoutForPlan = async (plan) => {
         return;
     }
 
+    if (typeof gtag === 'function') gtag('event', 'checkout_started', { plan: normalizedPlan, billing_cycle: cycle });
     window.location.href = url;
 };
 
