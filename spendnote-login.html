@@ -1082,6 +1082,12 @@ function togglePreviewDetails() {
                             if (!alreadyRedirected) {
                                 if (redirectedKey) localStorage.setItem(redirectedKey, '1');
                                 if (typeof gtag === 'function') gtag('event', 'signup_completed');
+                                // Clear the ensureDone guard so welcome page can
+                                // run profile creation + welcome email from scratch
+                                try {
+                                    const ek = uid ? `spendnote.ensureDone.${uid}` : '';
+                                    if (ek) sessionStorage.removeItem(ek);
+                                } catch (_) {}
                                 window.location.href = 'spendnote-welcome.html';
                                 return;
                             }
