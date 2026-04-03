@@ -2062,14 +2062,6 @@
                     setTimeout(resolve, 8000);
                 });
 
-                // --- v2 ack migration: the old code set ack even when the DB update failed ---
-                // Clear stale ack exactly once so the modal re-shows after the DB trigger fix.
-                const ackV2Key = `sn.currencyAck.v2.${uid}`;
-                if (localStorage.getItem(currencyAckKey) && !localStorage.getItem(ackV2Key)) {
-                    localStorage.removeItem(currencyAckKey);
-                    localStorage.setItem(ackV2Key, '1');
-                }
-
                 // --- Currency confirm: always once until Continue (sn.currencyAck; legacy sn.currencyConfirmed was buggy) ---
                 let currencyModalRanThisLoad = false;
                 if (!localStorage.getItem(currencyAckKey)) {
