@@ -4313,13 +4313,15 @@ table.transactions-table td,
 .sn-onboarding-checklist {
     display: flex;
     align-items: center;
-    gap: 14px;
-    background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-    border: 1px solid #a7f3d0;
-    border-radius: 10px;
-    padding: 12px 18px;
+    justify-content: center;
+    gap: 16px;
+    background: #fff;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px 24px;
     margin-bottom: 16px;
     flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
     animation: snChecklistIn .4s ease;
 }
 @keyframes snChecklistIn {
@@ -4329,15 +4331,17 @@ table.transactions-table td,
 .sn-checklist-steps {
     display: flex;
     align-items: center;
-    gap: 8px;
-    flex: 1;
-    min-width: 0;
+    gap: 10px;
     flex-wrap: wrap;
+    justify-content: center;
 }
 .sn-checklist-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     font-size: 13px;
     font-weight: 500;
-    color: #6b7280;
+    color: #9ca3af;
     white-space: nowrap;
 }
 .sn-checklist-step.completed {
@@ -4348,11 +4352,20 @@ table.transactions-table td,
 }
 .sn-checklist-step.active {
     color: #111827;
-    font-weight: 600;
+    font-weight: 700;
+}
+.sn-checklist-step.active i {
+    color: #059669;
+    animation: snPulse 1.8s ease infinite;
+}
+@keyframes snPulse {
+    0%, 100% { opacity: .4; }
+    50% { opacity: 1; }
 }
 .sn-checklist-divider {
-    font-size: 11px;
-    color: #9ca3af;
+    font-size: 12px;
+    color: #d1d5db;
+    margin: 0 2px;
 }
 .sn-checklist-cta {
     appearance: none;
@@ -4360,92 +4373,109 @@ table.transactions-table td,
     background: #059669;
     color: #fff;
     font-size: 13px;
-    font-weight: 600;
-    padding: 8px 18px;
-    border-radius: 8px;
+    font-weight: 700;
+    padding: 9px 22px;
+    border-radius: 9px;
     cursor: pointer;
     white-space: nowrap;
-    transition: background .15s ease;
+    transition: background .15s ease, box-shadow .15s ease, transform .1s ease;
+    box-shadow: 0 2px 8px rgba(5,150,105,.25);
 }
 .sn-checklist-cta:hover {
     background: #047857;
+    box-shadow: 0 4px 14px rgba(5,150,105,.35);
+    transform: translateY(-1px);
 }
 
 /* ========================================
    ONBOARDING: GUIDED EMPTY STATE
+   (replaces entire transactions-card content)
    ======================================== */
 .sn-empty-state {
-    padding: 48px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 32px;
     text-align: center;
+    min-height: 320px;
 }
-.sn-empty-icon {
-    font-size: 42px;
-    color: #d1d5db;
-    margin-bottom: 16px;
+.sn-empty-illustration {
+    margin-bottom: 24px;
+    opacity: .85;
 }
 .sn-empty-state h3 {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: 800;
     color: #111827;
     margin: 0 0 8px;
 }
 .sn-empty-state p {
     font-size: 14px;
     color: #6b7280;
-    margin: 0 0 20px;
-    line-height: 1.5;
+    margin: 0 0 28px;
+    line-height: 1.6;
+    max-width: 340px;
 }
 .sn-empty-cta {
     appearance: none;
     border: none;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     background: #059669;
     color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px 22px;
-    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: background .15s ease, transform .1s ease;
+    transition: background .15s ease, box-shadow .15s ease, transform .1s ease;
+    box-shadow: 0 4px 16px rgba(5,150,105,.3);
 }
 .sn-empty-cta:hover {
     background: #047857;
-    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(5,150,105,.4);
+    transform: translateY(-2px);
+}
+.sn-empty-cta:active {
+    transform: translateY(0);
 }
 
 /* ========================================
-   CURRENCY CONFIRM DIALOG (re-uses sn-dialog styles if present)
+   CURRENCY CONFIRM DIALOG
    ======================================== */
 .sn-dialog-card {
     background: #fff;
-    border-radius: 16px;
-    padding: 32px 28px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.18);
+    border-radius: 20px;
+    padding: 36px 32px 28px;
+    box-shadow: 0 24px 80px rgba(0,0,0,.2);
     animation: snDialogIn .25s ease;
+    font-family: inherit;
 }
 @keyframes snDialogIn {
-    from { opacity: 0; transform: scale(.95) translateY(8px); }
+    from { opacity: 0; transform: scale(.92) translateY(12px); }
     to { opacity: 1; transform: scale(1) translateY(0); }
 }
 .sn-dialog-icon {
-    font-size: 36px;
-    margin-bottom: 12px;
+    font-size: 40px;
+    margin-bottom: 14px;
 }
 .sn-dialog-title {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 20px;
+    font-weight: 800;
     color: #111827;
     margin-bottom: 6px;
 }
 .sn-dialog-message {
     font-size: 13px;
     color: #6b7280;
+    line-height: 1.5;
 }
 .sn-dialog-input {
     appearance: none;
     outline: none;
+    font-family: inherit;
 }
 .sn-dialog-input:focus {
     border-color: #059669;
@@ -4460,15 +4490,17 @@ table.transactions-table td,
     border: none;
     background: #059669;
     color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px 20px;
-    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: background .15s ease;
+    transition: background .15s ease, box-shadow .15s ease;
+    box-shadow: 0 2px 10px rgba(5,150,105,.25);
 }
 .sn-dialog-btn-primary:hover {
     background: #047857;
+    box-shadow: 0 4px 16px rgba(5,150,105,.35);
 }
 
 /* ========================================
@@ -4476,22 +4508,23 @@ table.transactions-table td,
    ======================================== */
 .sn-toast {
     position: fixed;
-    bottom: 24px;
+    bottom: 28px;
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    background: #111827;
+    background: #1e293b;
     color: #fff;
     font-size: 14px;
     font-weight: 500;
-    padding: 12px 24px;
-    border-radius: 10px;
-    box-shadow: 0 8px 30px rgba(0,0,0,.18);
+    padding: 14px 28px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.2);
     z-index: 99998;
     opacity: 0;
-    transition: opacity .25s ease, transform .25s ease;
+    transition: opacity .3s ease, transform .3s ease;
     pointer-events: none;
     max-width: 90vw;
     text-align: center;
+    letter-spacing: -0.01em;
 }
 .sn-toast.show {
     opacity: 1;
@@ -4503,14 +4536,24 @@ table.transactions-table td,
         flex-direction: column;
         align-items: stretch;
         text-align: center;
+        padding: 14px 16px;
+        gap: 12px;
     }
     .sn-checklist-cta {
         width: 100%;
     }
+    .sn-empty-state {
+        padding: 48px 20px;
+        min-height: 260px;
+    }
+    .sn-empty-cta {
+        width: 100%;
+        justify-content: center;
+    }
     .sn-toast {
         bottom: 16px;
         font-size: 13px;
-        padding: 10px 18px;
+        padding: 12px 20px;
     }
 }
 

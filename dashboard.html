@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=23">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=21">
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260403-1">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260403-2">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
@@ -2069,36 +2069,28 @@
                     }
                 }
 
-                // --- Guided Empty State ---
+                // --- Guided Empty State: replace entire transactions-card content ---
                 if (txCount === 0) {
-                    const tableBody = document.querySelector('#transactionsTable tbody');
-                    const cardList = document.getElementById('txCardList');
-                    const emptyHtml = `
-                        <div class="sn-empty-state">
-                            <div class="sn-empty-icon"><i class="fas fa-receipt"></i></div>
-                            <h3>No transactions yet</h3>
-                            <p>If cash moves and you don't record it, you lose track.<br>Record your first transaction in 30 seconds.</p>
-                            <button class="sn-empty-cta" onclick="if(typeof window.openModal==='function')window.openModal({direction:'in'})">
-                                <i class="fas fa-plus"></i> Record transaction
-                            </button>
-                        </div>`;
-                    if (tableBody) {
-                        const existingEmpty = tableBody.querySelector('.sn-empty-state');
-                        if (!existingEmpty) {
-                            const emptyRow = tableBody.querySelector('td[colspan]');
-                            if (emptyRow) emptyRow.closest('tr').remove();
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `<td colspan="7" style="padding:0;border:none;">${emptyHtml}</td>`;
-                            tableBody.appendChild(tr);
-                        }
-                    }
-                    if (cardList) {
-                        const existingEmpty = cardList.querySelector('.sn-empty-state');
-                        if (!existingEmpty) {
-                            const oldEmpty = cardList.querySelector('.tx-card-empty');
-                            if (oldEmpty) oldEmpty.remove();
-                            cardList.innerHTML = emptyHtml;
-                        }
+                    const txCard = document.querySelector('.transactions-card');
+                    if (txCard) {
+                        txCard.innerHTML = `
+                            <div class="sn-empty-state">
+                                <div class="sn-empty-illustration">
+                                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                                        <rect x="12" y="8" width="56" height="64" rx="8" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="2"/>
+                                        <rect x="22" y="22" width="36" height="4" rx="2" fill="#d1fae5"/>
+                                        <rect x="22" y="32" width="28" height="4" rx="2" fill="#d1fae5"/>
+                                        <rect x="22" y="42" width="32" height="4" rx="2" fill="#d1fae5"/>
+                                        <circle cx="60" cy="56" r="14" fill="#059669"/>
+                                        <path d="M54 56h12M60 50v12" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <h3>No transactions yet</h3>
+                                <p>Cash moved? Record it here.<br>Your first transaction takes about 30 seconds.</p>
+                                <button class="sn-empty-cta" onclick="if(typeof window.openModal==='function')window.openModal({direction:'in'})">
+                                    <i class="fas fa-plus"></i> Record your first transaction
+                                </button>
+                            </div>`;
                     }
                 }
 
