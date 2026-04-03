@@ -7,9 +7,11 @@ Go to: **Supabase Dashboard -> Authentication -> Email Templates**
 ## 2) Template mapping
 
 - **Confirm signup**
+  - Subject: `Confirm your email — start tracking your cash`
   - Paste: `email-confirmation.html`
 
 - **Reset password**
+  - Subject: `Reset your SpendNote password`
   - Paste: `password-reset.html`
 
 - **Invite user**
@@ -20,16 +22,22 @@ Go to: **Supabase Dashboard -> Authentication -> Email Templates**
 
 These are sent by `send-user-event-email`:
 
-- `welcome-account-created.html` (event: `welcome_account_created`)
-- `invite-accepted-admin.html` (event: `invite_accepted_admin`)
-- `password-changed.html` (event: `password_changed`)
+- `welcome_account_created` — welcome email driving first transaction
+- `first_transaction_created` — congratulations + nudge to record another
+- `trial_expiry_warning` — loss-framed trial warning with tx count
+- `upgrade_confirmed` — plan confirmation with unlocked features
+- `invite_accepted_admin` — admin notification when invite is accepted
+- `password_changed` — security notification
+
+Sent by `send-invite-email`:
+
+- Team invitation email with personalized inviter name
 
 ## 4) Required Edge Function secrets
 
 Set in Supabase project secrets:
 
 - `RESEND_API_KEY`
-- `SPENDNOTE_EMAIL_FROM` (example: `SpendNote <no-reply@spendnote.app>`)
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
@@ -49,9 +57,10 @@ Auth templates must keep Supabase variables intact:
 
 ## 7) Post-setup smoke test
 
-1. Sign up with new email -> confirmation email arrives
-2. Confirm email and login -> welcome email arrives (if session created at signup/login path triggers)
-3. Invite a user from Team page -> invite email arrives
-4. Accept invite -> admin notification email arrives
-5. Request password reset -> reset email arrives
-6. Change password -> password-changed email arrives
+1. Sign up with new email -> confirmation email arrives (subject: "Confirm your email — start tracking your cash")
+2. Confirm email and login -> welcome email arrives (subject: "{name}, your cash tracking starts now")
+3. Record first transaction -> first-tx email arrives (subject: "Your first transaction is on record")
+4. Invite a user from Team page -> invite email arrives (subject: "{inviter} invited you to SpendNote")
+5. Accept invite -> admin notification email arrives (subject: "{user} joined your team")
+6. Request password reset -> reset email arrives
+7. Change password -> password-changed email arrives

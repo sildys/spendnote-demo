@@ -14,25 +14,26 @@
             </tr>
             <tr>
               <td style="padding:14px 20px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;">
-                <div style="font-size:22px;font-weight:900;">Confirm your email</div>
-                <div style="font-size:13px;opacity:.95;margin-top:4px;">One quick step to activate your account</div>
+                <div style="font-size:22px;font-weight:900;">One quick step</div>
+                <div style="font-size:13px;opacity:.95;margin-top:4px;">Confirm your email to activate your account.</div>
               </td>
             </tr>
             <tr>
               <td style="padding:18px 20px;font-size:14px;line-height:1.6;">
-                <p style="margin:0 0 10px;">Hi there, please confirm your email address to activate your SpendNote account.</p>
+                <p style="margin:0 0 10px;">Hi there, confirm your email address and you can start recording cash handoffs immediately.</p>
                 <p style="margin:18px 0 16px;">
-                  <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#059669;color:#fff;text-decoration:none;padding:10px 14px;border-radius:10px;font-weight:800;">Confirm email</a>
+                  <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#4f46e5;color:#fff;text-decoration:none;padding:12px 24px;border-radius:10px;font-weight:800;font-size:15px;">Confirm email &rarr;</a>
                 </p>
-                <p style="margin:0 0 10px;color:#374151;">If the button doesn’t work, use this link:</p>
-                <p style="margin:0 0 16px;"><a href="{{ .ConfirmationURL }}" style="color:#1d4ed8;word-break:break-all;">{{ .ConfirmationURL }}</a></p>
-                <p style="margin:0;color:#6b7280;">If you didn’t create this account, you can ignore this email.</p>
+                <p style="margin:0 0 10px;color:#374151;font-size:13px;">If the button doesn't work, use this link:</p>
+                <p style="margin:0 0 16px;"><a href="{{ .ConfirmationURL }}" style="color:#1d4ed8;word-break:break-all;font-size:13px;">{{ .ConfirmationURL }}</a></p>
+                <p style="margin:0 0 10px;color:#374151;font-size:13px;font-style:italic;">If cash moves and you don't record it, you lose track.</p>
+                <p style="margin:0;color:#6b7280;font-size:12px;">If you didn't create this account, you can safely ignore this email.</p>
               </td>
             </tr>
             <tr>
               <td style="padding:14px 20px;border-top:1px solid #e5e7eb;color:#6b7280;font-size:12px;">
                 Cash handoff documentation only. Not a tax or accounting tool.<br>
-                © SpendNote • spendnote.app
+                &copy; SpendNote &bull; <a href="https://spendnote.app" style="color:#6b7280;">spendnote.app</a>
               </td>
             </tr>
           </table>

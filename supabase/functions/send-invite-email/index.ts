@@ -261,7 +261,7 @@ Deno.serve(async (req: Request) => {
         from,
         to: [invitedEmail],
         reply_to: inviterEmail || undefined,
-        subject: inviterName ? `${inviterName} invited you to SpendNote` : subject,
+        subject: rendered.subject,
         html: rendered.html,
         text: rendered.text,
         headers: {
