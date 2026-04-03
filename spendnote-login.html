@@ -1068,6 +1068,26 @@ function togglePreviewDetails() {
                             return;
                         }
                     } catch (_) {}
+
+                    // Detect fresh Google OAuth signup on login page:
+                    // if account was created <2 min ago, treat as new signup
+                    try {
+                        const createdAt = Date.parse(String(user.created_at || ''));
+                        const ageMs = Number.isFinite(createdAt) ? Date.now() - createdAt : Infinity;
+                        const isNewOAuthUser = ageMs < 120_000;
+                        if (isNewOAuthUser) {
+                            const uid = String(user.id || '').trim();
+                            const redirectedKey = uid ? `sn.oauthNewRedirected.${uid}` : '';
+                            const alreadyRedirected = redirectedKey && localStorage.getItem(redirectedKey);
+                            if (!alreadyRedirected) {
+                                if (redirectedKey) localStorage.setItem(redirectedKey, '1');
+                                if (typeof gtag === 'function') gtag('event', 'signup_completed');
+                                window.location.href = 'spendnote-welcome.html';
+                                return;
+                            }
+                        }
+                    } catch (_) {}
+
                     await redirectAfterLogin();
                 }
             } catch (_) {
