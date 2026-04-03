@@ -417,6 +417,10 @@ const __spendnoteSendUserEventEmail = async (payload = {}) => {
     }
 };
 
+window.SpendNoteEmailEvents = {
+    send: __spendnoteSendUserEventEmail
+};
+
 // ── Stripe billing gate ──
 // Flip to true when Stripe is activated with live keys + adószám.
 const STRIPE_LIVE = false;
