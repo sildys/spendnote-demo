@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=23">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=21">
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260403-8">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260403-9">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
@@ -1987,32 +1987,8 @@
                 const { data: { user } } = await supabaseClient.auth.getUser();
                 if (!user) return;
                 const uid = user.id;
-
-                // --- Currency Confirm Modal ---
-                const confirmedKey = `sn.currencyConfirmed.${uid}`;
-                const pendingCurrency = localStorage.getItem(`spendnote.currencyConfirm.${uid}`);
-                if (pendingCurrency) {
-                    localStorage.removeItem(`spendnote.currencyConfirm.${uid}`);
-                    await __snShowCurrencyConfirmModal(pendingCurrency, uid);
-                    localStorage.setItem(confirmedKey, '1');
-                } else if (!localStorage.getItem(confirmedKey)) {
-                    // Existing user who never confirmed currency — detect and offer
-                    const detected = typeof __spendnoteDetectCurrency === 'function' ? __spendnoteDetectCurrency() : null;
-                    if (detected) {
-                        try {
-                            const { data: boxes } = await supabaseClient
-                                .from('cash_boxes')
-                                .select('id, currency')
-                                .eq('user_id', uid)
-                                .limit(1);
-                            const box = boxes?.[0];
-                            if (box && box.currency !== detected) {
-                                await __snShowCurrencyConfirmModal(detected, uid);
-                            }
-                        } catch (_) {}
-                        localStorage.setItem(confirmedKey, '1');
-                    }
-                }
+                const currencyAckKey = `sn.currencyAck.${uid}`;
+                const pendingKey = `spendnote.currencyConfirm.${uid}`;
 
                 // --- GA4: first_login ---
                 const firstLoginKey = `sn.firstLoginSent.${uid}`;
@@ -2021,12 +1997,48 @@
                     if (typeof gtag === 'function') gtag('event', 'first_login');
                 }
 
-                // --- Wait for dashboard data to be ready ---
+                // --- Wait for dashboard data (cash box must exist before currency step) ---
                 await new Promise(resolve => {
                     if (window.__spendnoteDashboardDataLoaded) return resolve();
                     window.addEventListener('SpendNoteDashboardDataLoaded', resolve, { once: true });
                     setTimeout(resolve, 8000);
                 });
+
+                // --- Currency confirm: always once until Continue (sn.currencyAck; legacy sn.currencyConfirmed was buggy) ---
+                if (!localStorage.getItem(currencyAckKey)) {
+                    let box = null;
+                    let pending = null;
+                    for (let i = 0; i < 50; i++) {
+                        try { pending = localStorage.getItem(pendingKey); } catch (_) { pending = null; }
+                        try {
+                            const { data: boxes } = await supabaseClient
+                                .from('cash_boxes')
+                                .select('id, currency')
+                                .eq('user_id', uid)
+                                .limit(1);
+                            box = boxes?.[0] || null;
+                        } catch (_) { box = null; }
+                        if (box || pending) break;
+                        await new Promise(r => setTimeout(r, 150));
+                    }
+                    let preselected = null;
+                    if (pending) {
+                        try { localStorage.removeItem(pendingKey); } catch (_) {}
+                        preselected = String(pending).trim() || null;
+                    } else if (box?.currency) {
+                        preselected = String(box.currency).trim();
+                    }
+                    if (preselected) {
+                        await __snShowCurrencyConfirmModal(preselected, uid);
+                        try {
+                            localStorage.setItem(currencyAckKey, '1');
+                            localStorage.removeItem(`sn.currencyConfirmed.${uid}`);
+                        } catch (_) {}
+                        if (typeof loadDashboardData === 'function') {
+                            try { await loadDashboardData(); } catch (_) {}
+                        }
+                    }
+                }
 
                 // --- Count transactions for this user ---
                 let txCount = 0;
@@ -2124,27 +2136,32 @@
 
         // Page tip is shown from the onboarding block above (only for users with txCount > 0)
 
-        // Currency confirm modal builder
-        async function __snShowCurrencyConfirmModal(detectedCurrency, userId) {
+        // Currency confirm modal (blocks until user taps Continue; z-index above tx modal)
+        async function __snShowCurrencyConfirmModal(preselectedCurrency, userId) {
+            const pre = String(preselectedCurrency || 'USD').trim().toUpperCase() || 'USD';
+            const detected = (typeof __spendnoteDetectCurrency === 'function' ? __spendnoteDetectCurrency() : 'USD') || 'USD';
             const CURRENCIES = [
                 'USD','EUR','GBP','HUF','PLN','CZK','RON','SEK','DKK','NOK','CHF',
                 'CAD','AUD','NZD','JPY','CNY','KRW','INR','BRL','MXN','ZAR','TRY',
                 'UAH','AED','SAR','THB','PHP','MYR','SGD','HKD','TWD','IDR','VND'
             ];
+            const hint = detected !== pre
+                ? `Your browser locale suggests <strong>${detected}</strong>. Pick the currency you actually use.`
+                : 'Pick the currency for this Cash Box. You can change it later in settings.';
             return new Promise(resolve => {
                 const overlay = document.createElement('div');
                 overlay.className = 'sn-dialog-overlay';
-                overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s ease;';
+                overlay.style.cssText = 'position:fixed;inset:0;z-index:100080;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .18s ease;';
 
                 const optionsHtml = CURRENCIES.map(c =>
-                    `<option value="${c}" ${c === detectedCurrency ? 'selected' : ''}>${c}</option>`
+                    `<option value="${c}" ${c === pre ? 'selected' : ''}>${c}</option>`
                 ).join('');
 
                 overlay.innerHTML = `
-                    <div class="sn-dialog-card" style="max-width:380px;text-align:center;">
-                        <div class="sn-dialog-icon" style="color:var(--primary)"><i class="fas fa-coins"></i></div>
-                        <div class="sn-dialog-title">We set your currency to ${detectedCurrency}</div>
-                        <div class="sn-dialog-message" style="margin-bottom:16px;">You can change this later in Cash Box settings.</div>
+                    <div class="sn-dialog-card" style="max-width:400px;text-align:center;">
+                        <div class="sn-dialog-icon" style="color:#4f46e5"><i class="fas fa-coins"></i></div>
+                        <div class="sn-dialog-title">Confirm your Cash Box currency</div>
+                        <div class="sn-dialog-message" style="margin-bottom:16px;">${hint}</div>
                         <select id="snCurrencySelect" class="sn-dialog-input" style="width:100%;padding:10px 12px;font-size:15px;border-radius:8px;border:1px solid #d1d5db;margin-bottom:20px;text-align:center;font-weight:600;">
                             ${optionsHtml}
                         </select>
@@ -2161,7 +2178,7 @@
                     overlay.style.opacity = '0';
                     setTimeout(() => overlay.remove(), 200);
 
-                    if (chosen !== detectedCurrency) {
+                    if (chosen !== pre) {
                         try {
                             const { data: boxes } = await supabaseClient
                                 .from('cash_boxes')
