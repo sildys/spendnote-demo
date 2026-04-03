@@ -4505,6 +4505,23 @@ table.transactions-table td,
 }
 
 /* ========================================
+   ONBOARDING: DE-EMPHASIS + PULSE
+   ======================================== */
+.register-card.sn-deemphasized {
+    opacity: .55;
+    filter: grayscale(.3);
+    pointer-events: none;
+    transition: opacity .3s ease, filter .3s ease;
+}
+.sn-pulse {
+    animation: snCtaPulse 2s ease-in-out infinite;
+}
+@keyframes snCtaPulse {
+    0%, 100% { box-shadow: 0 4px 16px rgba(79,70,229,.3); }
+    50% { box-shadow: 0 4px 28px rgba(79,70,229,.55), 0 0 0 6px rgba(79,70,229,.12); }
+}
+
+/* ========================================
    MICRO NUDGE TOAST
    ======================================== */
 .sn-toast {

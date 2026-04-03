@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=23">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=21">
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260403-4">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260403-5">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
@@ -106,7 +106,7 @@
                     <span class="sn-checklist-divider">→</span>
                     <span class="sn-checklist-step" id="checkStep3"><i class="fas fa-circle"></i> View your receipt</span>
                 </div>
-                <button class="sn-checklist-cta" id="checklistCtaBtn" type="button">Record your first transaction</button>
+                <button class="sn-checklist-cta sn-pulse" id="checklistCtaBtn" type="button">Record your first transaction (30 sec)</button>
             </div>
 
             <!-- Tip: invite your team (compact) - Moved below Cash Boxes -->
@@ -2069,8 +2069,18 @@
                     }
                 }
 
-                // --- Guided Empty State: replace entire transactions-card content ---
+                // --- AGGRESSIVE ONBOARDING: first-transaction state ---
                 if (txCount === 0) {
+                    // 1. De-emphasize everything except the single CTA
+                    document.querySelectorAll('.register-quick-actions').forEach(el => el.style.opacity = '0.25');
+                    document.querySelectorAll('.register-quick-actions button').forEach(el => { el.style.pointerEvents = 'none'; el.tabIndex = -1; });
+                    const navNewTx = document.getElementById('addTransactionBtn');
+                    if (navNewTx) navNewTx.style.opacity = '0.3';
+                    document.querySelectorAll('.register-card').forEach(card => card.classList.add('sn-deemphasized'));
+                    const addBoxCard = document.querySelector('.add-cash-box-card');
+                    if (addBoxCard) addBoxCard.closest('.swiper-slide').style.display = 'none';
+
+                    // 2. Replace transactions-card with focused empty state
                     const txCard = document.querySelector('.transactions-card');
                     if (txCard) {
                         txCard.innerHTML = `
@@ -2085,35 +2095,27 @@
                                         <path d="M54 56h12M60 50v12" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
                                     </svg>
                                 </div>
-                                <h3>No transactions yet</h3>
-                                <p>Cash moved? Record it here.<br>Your first transaction takes about 30 seconds.</p>
-                                <button class="sn-empty-cta" onclick="if(typeof window.openModal==='function')window.openModal({direction:'in'})">
-                                    <i class="fas fa-plus"></i> Record your first transaction
+                                <h3>If cash moves and you don't record it, you lose track.</h3>
+                                <p>Start now — it takes about 30 seconds.</p>
+                                <button class="sn-empty-cta sn-pulse" id="snMainCta" onclick="if(typeof window.openModal==='function')window.openModal({direction:'in'})">
+                                    Record your first transaction
                                 </button>
                             </div>`;
                     }
-                }
 
-                // --- Micro nudge toast (once per user, 5s delay) ---
-                const nudgeKey = `sn.microNudge.${uid}`;
-                if (txCount === 0 && !localStorage.getItem(nudgeKey)) {
-                    localStorage.setItem(nudgeKey, '1');
-                    setTimeout(() => {
-                        const toast = document.createElement('div');
-                        toast.className = 'sn-toast';
-                        toast.textContent = 'Most users record their first transaction in under 30 seconds.';
-                        document.body.appendChild(toast);
-                        requestAnimationFrame(() => toast.classList.add('show'));
+                    // 3. Auto-open modal after 2s on very first visit
+                    const autoOpenKey = `sn.autoOpened.${uid}`;
+                    if (!localStorage.getItem(autoOpenKey)) {
+                        localStorage.setItem(autoOpenKey, '1');
                         setTimeout(() => {
-                            toast.classList.remove('show');
-                            setTimeout(() => toast.remove(), 300);
-                        }, 6000);
-                    }, 5000);
-                }
-
-                // Page tip for returning users only (not during onboarding)
-                if (txCount > 0 && typeof showPageTip === 'function') {
-                    showPageTip('dashboard', 'Record an <strong>IN</strong> transaction to set your opening balance, then track payments as <strong>OUT</strong>.');
+                            if (typeof window.openModal === 'function') window.openModal({ direction: 'in' });
+                        }, 2000);
+                    }
+                } else {
+                    // Returning user with transactions
+                    if (typeof showPageTip === 'function') {
+                        showPageTip('dashboard', 'Record an <strong>IN</strong> transaction to set your opening balance, then track payments as <strong>OUT</strong>.');
+                    }
                 }
 
             } catch (e) {
