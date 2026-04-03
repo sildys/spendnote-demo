@@ -402,7 +402,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase-config.js?v=20260403-2240"></script>
+<script src="assets/js/supabase-config.js?v=20260403-2252"></script>
 <script>
 let selectedColor = '#10b981';
 let currentWelcomeVariant = 'free';
@@ -580,6 +580,26 @@ async function saveSetup() {
         await waitForDb();
         const user = await window.auth?.getCurrentUser?.();
         if (!user) { window.location.href = 'spendnote-login.html'; return; }
+        try {
+            const uid = String(user.id || '').trim();
+            if (uid) {
+                const pendingKey = 'spendnote.welcome.pending.' + uid;
+                const sentKey = 'spendnote.welcome.sent.v2.' + uid;
+                const pending = sessionStorage.getItem(pendingKey) === '1';
+                const alreadySent = localStorage.getItem(sentKey) === '1';
+                if (pending && !alreadySent) {
+                    const sendResult = await window.SpendNoteEmailEvents?.send?.({ eventType: 'welcome_account_created' });
+                    if (sendResult?.success) {
+                        try { localStorage.setItem(sentKey, '1'); } catch (_) {}
+                        try { sessionStorage.removeItem(pendingKey); } catch (_) {}
+                    } else {
+                        console.error('[SN-WELCOME] welcome email send failed:', sendResult?.error || sendResult);
+                    }
+                }
+            }
+        } catch (welcomeErr) {
+            console.error('[SN-WELCOME] welcome email bridge error:', welcomeErr);
+        }
 
         let profile = null;
         let role = '';

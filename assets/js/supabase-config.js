@@ -636,7 +636,7 @@ const __spendnoteEnsureProfileForCurrentUser = async () => {
         if (!userId) return;
         const createdAtMs = Date.parse(String(user.created_at || ''));
         const isFreshAuthUser = Number.isFinite(createdAtMs) && (Date.now() - createdAtMs) < (20 * 60 * 1000);
-        const welcomeSentKey = `spendnote.welcome.sent.${userId}`;
+        const welcomeSentKey = `spendnote.welcome.sent.v2.${userId}`;
         const sendWelcome = async () => {
             try {
                 if (localStorage.getItem(welcomeSentKey) === '1') return;
@@ -1436,7 +1436,7 @@ var auth = {
                 if (emailResult?.success === true) {
                     try {
                         const userId = String(data?.user?.id || '').trim();
-                        if (userId) localStorage.setItem(`spendnote.welcome.sent.${userId}`, '1');
+                        if (userId) localStorage.setItem(`spendnote.welcome.sent.v2.${userId}`, '1');
                     } catch (_) {
                         // ignore localStorage side-effect errors
                     }
