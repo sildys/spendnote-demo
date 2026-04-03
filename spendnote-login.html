@@ -1087,11 +1087,27 @@ function togglePreviewDetails() {
                                 const welcomeKey = uid ? `spendnote.welcome.sent.${uid}` : '';
                                 if (!welcomeKey || localStorage.getItem(welcomeKey) !== '1') {
                                     try {
-                                        await window.supabaseClient.functions.invoke('send-user-event-email', {
-                                            body: { eventType: 'welcome_account_created' },
-                                        });
-                                        if (welcomeKey) localStorage.setItem(welcomeKey, '1');
-                                    } catch (_) {}
+                                        console.log('[SN-LOGIN] Sending welcome email for new OAuth user:', uid);
+                                        const { data: sess } = await window.supabaseClient.auth.getSession();
+                                        if (!sess?.session?.access_token) {
+                                            console.error('[SN-LOGIN] No session/token for welcome email');
+                                        } else {
+                                            const resp = await fetch('https://zrnnharudlgxuvewqryj.supabase.co/functions/v1/send-user-event-email', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'Authorization': 'Bearer ' + sess.session.access_token,
+                                                    'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5oYXJ1ZGxneHV2ZXdxcnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyOTkxMDgsImV4cCI6MjA4Mjg3NTEwOH0.kQLRMVrl_uYYzZwX387uFs_BAXc9c5v7EhcvGhPR7v4'
+                                                },
+                                                body: JSON.stringify({ eventType: 'welcome_account_created' })
+                                            });
+                                            const respBody = await resp.text();
+                                            console.log('[SN-LOGIN] Welcome email response:', resp.status, respBody);
+                                            if (resp.ok && welcomeKey) localStorage.setItem(welcomeKey, '1');
+                                        }
+                                    } catch (emailErr) {
+                                        console.error('[SN-LOGIN] Welcome email error:', emailErr);
+                                    }
                                 }
 
                                 // Clear the ensureDone guard so welcome page can
