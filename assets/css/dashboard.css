@@ -4315,13 +4315,14 @@ table.transactions-table td,
     align-items: center;
     justify-content: center;
     gap: 16px;
-    background: #fff;
-    border: 1.5px solid #e5e7eb;
+    background: linear-gradient(135deg, #f5f3ff, #eef2ff);
+    border: 1.5px solid #c7d2fe;
     border-radius: 14px;
     padding: 14px 24px;
+    margin-top: 20px;
     margin-bottom: 16px;
     flex-wrap: wrap;
-    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+    box-shadow: 0 2px 12px rgba(79,70,229,.08);
     animation: snChecklistIn .4s ease;
 }
 @keyframes snChecklistIn {
@@ -4345,10 +4346,10 @@ table.transactions-table td,
     white-space: nowrap;
 }
 .sn-checklist-step.completed {
-    color: #059669;
+    color: #4f46e5;
 }
 .sn-checklist-step.completed i {
-    color: #059669;
+    color: #4f46e5;
 }
 .sn-checklist-step.active {
     color: #111827;
