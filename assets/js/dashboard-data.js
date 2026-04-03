@@ -808,6 +808,44 @@ async function loadDashboardData() {
                 console.log('ℹ️ No cash boxes found in database');
             }
 
+            // Ensure the transactions table exists (aggressive onboarding may replace it with empty state)
+            if (!document.getElementById('transactionsTable')) {
+                const txCard = document.querySelector('.transactions-card');
+                if (txCard) {
+                    txCard.innerHTML = `
+                        <div class="transactions-header" id="transactionsHeader">
+                            <div class="header-top">
+                                <h2 class="transactions-title">Latest Transactions</h2>
+                                <a href="spendnote-transaction-history.html" class="view-all-btn">
+                                    <span>View All</span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <div class="table-wrapper">
+                                <table id="transactionsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>ID</th>
+                                            <th>Date</th>
+                                            <th>Cash Box</th>
+                                            <th>Contact</th>
+                                            <th>Description</th>
+                                            <th class="col-amount">Amount</th>
+                                            <th>Created by</th>
+                                            <th class="col-action">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div id="txCardList" class="tx-card-list" aria-label="Latest transactions"></div>
+                        </div>`;
+                }
+            }
+
             dashboardTxController = createDashboardTransactionsController({ cashBoxes: cashBoxes || [] });
             try {
                 await dashboardTxController.render();
