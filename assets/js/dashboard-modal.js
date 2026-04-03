@@ -414,6 +414,10 @@ function updateModalCashboxDisplay() {
 // OPEN/CLOSE MODAL
 // ========================================
 function openModal(preset) {
+    // Block while currency onboarding overlay is open (avoids stacked modals)
+    try {
+        if (document.querySelector('.sn-dialog-overlay')) return;
+    } catch (_) {}
     const modal = getModal();
     const container = getModalContainer();
     const isEvent = preset && typeof preset === 'object' && 'preventDefault' in preset;

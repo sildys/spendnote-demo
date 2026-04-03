@@ -612,7 +612,15 @@ BEGIN
     IF new_prefix = 'REC-' THEN new_prefix := 'SN'; END IF;
 
     IF new_currency IS DISTINCT FROM old_currency THEN
-        RAISE EXCEPTION 'cash_boxes.currency is immutable after creation';
+        -- Allow fix during onboarding: no active non-system transactions yet
+        IF EXISTS (
+            SELECT 1 FROM public.transactions t
+            WHERE t.cash_box_id = OLD.id
+              AND COALESCE(lower(trim(t.status)), 'active') = 'active'
+              AND (t.is_system IS NULL OR t.is_system = false)
+        ) THEN
+            RAISE EXCEPTION 'cash_boxes.currency is immutable after creation';
+        END IF;
     END IF;
 
     IF new_prefix IS DISTINCT FROM old_prefix THEN

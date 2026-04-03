@@ -2063,6 +2063,7 @@
                 });
 
                 // --- Currency confirm: always once until Continue (sn.currencyAck; legacy sn.currencyConfirmed was buggy) ---
+                let currencyModalRanThisLoad = false;
                 if (!localStorage.getItem(currencyAckKey)) {
                     let box = null;
                     let pending = null;
@@ -2073,6 +2074,7 @@
                                 .from('cash_boxes')
                                 .select('id, currency')
                                 .eq('user_id', uid)
+                                .order('created_at', { ascending: true })
                                 .limit(1);
                             box = boxes?.[0] || null;
                         } catch (_) { box = null; }
@@ -2083,9 +2085,10 @@
                         try { localStorage.removeItem(pendingKey); } catch (_) {}
                     }
                     if (box) {
+                        currencyModalRanThisLoad = true;
                         const baseline = String(box.currency || 'USD').trim().toUpperCase() || 'USD';
                         const suggested = (typeof __spendnoteDetectCurrency === 'function' ? __spendnoteDetectCurrency() : baseline) || baseline;
-                        await __snShowCurrencyConfirmModal(suggested, uid, baseline);
+                        await __snShowCurrencyConfirmModal(suggested, uid, baseline, box.id);
                         try {
                             localStorage.setItem(currencyAckKey, '1');
                             localStorage.removeItem(`sn.currencyConfirmed.${uid}`);
@@ -2171,13 +2174,14 @@
                             </div>`;
                     }
 
-                    // 3. Auto-open modal after 2s on very first visit
+                    // 3. Auto-open tx modal only if currency dialog did NOT run this load (avoids stacked modals)
                     const autoOpenKey = `sn.autoOpened.${uid}`;
-                    if (!localStorage.getItem(autoOpenKey)) {
+                    if (!currencyModalRanThisLoad && !localStorage.getItem(autoOpenKey)) {
                         localStorage.setItem(autoOpenKey, '1');
                         setTimeout(() => {
+                            if (document.querySelector('.sn-dialog-overlay')) return;
                             if (typeof window.openModal === 'function') window.openModal({ direction: 'in' });
-                        }, 2000);
+                        }, 3500);
                     }
                 } else {
                     // Returning user with transactions
@@ -2193,10 +2197,11 @@
 
         // Page tip is shown from the onboarding block above (only for users with txCount > 0)
 
-        // Currency confirm modal — suggested = dropdown default (timezone + locale); baseline = current DB value for updates
-        async function __snShowCurrencyConfirmModal(suggestedCurrency, userId, dbCurrency) {
+        // Currency confirm modal — suggested = dropdown default; baseline = DB currency; cashBoxId = row to UPDATE
+        async function __snShowCurrencyConfirmModal(suggestedCurrency, userId, dbCurrency, cashBoxId) {
             const suggested = String(suggestedCurrency || 'USD').trim().toUpperCase() || 'USD';
             const baseline = String(dbCurrency || suggested).trim().toUpperCase() || 'USD';
+            const cbId = String(cashBoxId || '').trim();
             const CURRENCIES = [
                 'USD','EUR','GBP','HUF','PLN','CZK','RON','SEK','DKK','NOK','CHF',
                 'CAD','AUD','NZD','JPY','CNY','KRW','INR','BRL','MXN','ZAR','TRY',
@@ -2232,25 +2237,28 @@
                 requestAnimationFrame(() => { overlay.style.opacity = '1'; });
 
                 document.getElementById('snCurrencyConfirmBtn').addEventListener('click', async () => {
-                    const chosen = document.getElementById('snCurrencySelect').value;
+                    const chosen = String(document.getElementById('snCurrencySelect').value || '').trim().toUpperCase();
+                    let saveError = null;
+                    if (chosen !== baseline && cbId) {
+                        try {
+                            const { error } = await supabaseClient
+                                .from('cash_boxes')
+                                .update({ currency: chosen })
+                                .eq('id', cbId);
+                            if (error) saveError = error.message || String(error);
+                        } catch (e) {
+                            saveError = e?.message || String(e);
+                        }
+                    }
+                    if (saveError) {
+                        if (typeof showAlert === 'function') {
+                            showAlert('Could not save currency: ' + saveError + '. If you already recorded a transaction, currency is locked — add a new Cash Box for another currency.', { iconType: 'error', title: 'Currency not saved' });
+                        } else {
+                            alert(saveError);
+                        }
+                    }
                     overlay.style.opacity = '0';
                     setTimeout(() => overlay.remove(), 200);
-
-                    if (chosen !== baseline) {
-                        try {
-                            const { data: boxes } = await supabaseClient
-                                .from('cash_boxes')
-                                .select('id')
-                                .eq('user_id', userId)
-                                .limit(1);
-                            if (boxes?.[0]) {
-                                await supabaseClient
-                                    .from('cash_boxes')
-                                    .update({ currency: chosen })
-                                    .eq('id', boxes[0].id);
-                            }
-                        } catch (_) {}
-                    }
 
                     if (typeof gtag === 'function') gtag('event', 'currency_selected', { currency: chosen });
                     resolve(chosen);
