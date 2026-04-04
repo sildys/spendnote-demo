@@ -672,7 +672,7 @@ const __spendnotePersistInviteTokenFromUrl = () => {
             return;
         }
         const path = String(window.location.pathname || '');
-        const m = path.match(/^\/invite\/([^/?#]+)\/?$/i);
+        const m = path.match(/^\/(?:invite|i)\/([^/?#]+)\/?$/i);
         if (m && m[1]) {
             try {
                 localStorage.setItem(__spendnoteInviteTokenKey, decodeURIComponent(String(m[1])).trim());
@@ -3670,7 +3670,7 @@ var db = {
             try {
                 const token = row?.token;
                 if (token) {
-                    const link = `${window.location.origin}/invite?inviteToken=${encodeURIComponent(token)}`;
+                    const link = `${window.location.origin}/i/${encodeURIComponent(token)}`;
                     const sessionRes = await supabaseClient.auth.getSession();
                     let accessToken = String(sessionRes?.data?.session?.access_token || '');
                     if (!accessToken) throw new Error('Not authenticated');

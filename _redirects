@@ -1,10 +1,10 @@
 /favicon.ico /favicon.svg 200
 
-# Invite landing (path /invite; token must be in ?inviteToken= on spendnote.app — edge rules may strip /invite/TOKEN)
+# Invite landing via /i/{token} (Cloudflare has hard redirect rules on /invite).
 /invite /invite.html 200
 /invite/ /invite.html 200
-# Fallback for older /invite/TOKEN links on hosts without edge normalization → query param the page can read
-/invite/* /invite.html?inviteToken=:splat 302
+# New short invite links (stable on Cloudflare): /i/{token}
+/i/* /invite.html 200
 
 /app /dashboard 302
 /app/ /dashboard 302

@@ -46,7 +46,7 @@ export const renderInviteEmailTemplate = (args: {
   /** Display name only (no email); empty → anonymous fallback */
   inviterDisplayName?: string;
   role: "Admin" | "User";
-  /** Short URL, e.g. https://spendnote.app/invite?inviteToken=... */
+  /** Short URL, e.g. https://spendnote.app/i/{token} */
   inviteShortUrl: string;
 }): BaseEmailTemplate => {
   const nameRaw = String(args.inviterDisplayName || "").trim();

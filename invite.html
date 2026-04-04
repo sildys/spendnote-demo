@@ -23,7 +23,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/assets/js/supabase-config.js?v=20260405-invite-query"></script>
+    <script src="/assets/js/supabase-config.js?v=20260405-invite-i-route"></script>
     <script>
 (function () {
     const INVITE_TOKEN_KEY = 'spendnote.inviteToken.pending';
@@ -42,9 +42,9 @@
             var href = String(window.location.href || '');
             var path = String(window.location.pathname || '');
             var patterns = [
-                path.match(/\/invite\/([A-Fa-f0-9]{20,})\/?$/),
-                href.match(/\/invite\/([A-Fa-f0-9]{20,})/),
-                path.match(/\/invite\/([^/?#]{20,})\/?$/)
+                path.match(/\/(?:invite|i)\/([A-Fa-f0-9]{20,})\/?$/),
+                href.match(/\/(?:invite|i)\/([A-Fa-f0-9]{20,})/),
+                path.match(/\/(?:invite|i)\/([^/?#]{20,})\/?$/)
             ];
             for (var i = 0; i < patterns.length; i++) {
                 var m = patterns[i];
