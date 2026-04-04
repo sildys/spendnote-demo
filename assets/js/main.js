@@ -749,6 +749,21 @@ function isValidAvatarSource(value) {
     return /^data:image\//i.test(src) || /^https?:\/\//i.test(src);
 }
 
+/** Normalize profile avatar_color for team lists (#RGB / #RRGGBB). */
+function spendNoteParseProfileAvatarColorHex(raw) {
+    const s = String(raw || '').trim();
+    if (!s) return null;
+    const body = s.startsWith('#') ? s.slice(1) : s;
+    if (/^[0-9a-f]{6}$/i.test(body)) return `#${body.toLowerCase()}`;
+    if (/^[0-9a-f]{3}$/i.test(body)) {
+        const a = body[0];
+        const b = body[1];
+        const c = body[2];
+        return `#${a}${a}${b}${b}${c}${c}`.toLowerCase();
+    }
+    return null;
+}
+
 function spendNoteEscapeHtmlText(s) {
     return String(s ?? '')
         .replace(/&/g, '&amp;')
@@ -770,13 +785,7 @@ window.SpendNoteMemberAvatar = {
         const initialsArg = String(options.initials || '').trim();
         const ini = initialsArg || getInitials(displayName);
         const fallbackBg = String(options.fallbackBg || '#6366f1').trim();
-        const circleBg = (() => {
-            const c = String(options.avatarColor || '').trim();
-            if (/^#?[0-9a-f]{6}$/i.test(c)) {
-                return c.startsWith('#') ? c : `#${c}`;
-            }
-            return fallbackBg;
-        })();
+        const explicitColor = spendNoteParseProfileAvatarColorHex(options.avatarColor);
         const avatarUrl = String(options.avatarUrl || '').trim();
         const settings = options.avatarSettings;
         const slotSizeOpt = Number(options.slotSize);
@@ -785,10 +794,13 @@ window.SpendNoteMemberAvatar = {
         const photoClass = rootClass === 'team-avatar' ? 'team-avatar--photo' : 'member-avatar--photo';
 
         if (avatarUrl && isValidAvatarSource(avatarUrl)) {
+            // Never use list-index placeholder behind a real profile photo; that looked like an "owner-assigned" color.
+            const ringBg = explicitColor || '#e5e7eb';
             const transform = buildMainAvatarTransform(settings, slot);
-            return `<div class="${rootClass} ${photoClass}" style="background:${spendNoteEscapeHtmlAttr(circleBg)}" role="img" aria-label="${spendNoteEscapeHtmlAttr(displayName)}"><img src="${spendNoteEscapeHtmlAttr(avatarUrl)}" alt="" draggable="false" style="width:100%;height:100%;object-fit:cover;border-radius:50%;transform-origin:50% 50%;transform:${spendNoteEscapeHtmlAttr(transform)}"/></div>`;
+            return `<div class="${rootClass} ${photoClass}" style="background:${spendNoteEscapeHtmlAttr(ringBg)}" role="img" aria-label="${spendNoteEscapeHtmlAttr(displayName)}"><img src="${spendNoteEscapeHtmlAttr(avatarUrl)}" alt="" draggable="false" style="width:100%;height:100%;object-fit:cover;border-radius:50%;transform-origin:50% 50%;transform:${spendNoteEscapeHtmlAttr(transform)}"/></div>`;
         }
-        return `<div class="${rootClass}" style="background:${spendNoteEscapeHtmlAttr(circleBg)}">${spendNoteEscapeHtmlText(ini)}</div>`;
+        const initialsBg = explicitColor || fallbackBg;
+        return `<div class="${rootClass}" style="background:${spendNoteEscapeHtmlAttr(initialsBg)}">${spendNoteEscapeHtmlText(ini)}</div>`;
     }
 };
 
