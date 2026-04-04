@@ -213,16 +213,47 @@ function createDashboardTransactionsController(ctx) {
         ).toLowerCase();
     };
 
+    /** Pick which profile row drives "Created by" avatar when created_by_user_id ≠ user_id (legacy / bad rows). */
+    const resolveTxCreatorProfile = (tx, profileMap, createdByName) => {
+        const map = profileMap instanceof Map ? profileMap : new Map();
+        const cb = safeText(tx?.created_by_user_id, '');
+        const uid = safeText(tx?.user_id, '');
+        const nameNorm = safeText(createdByName, '').toLowerCase();
+
+        const rowFor = (id) => (id ? map.get(String(id)) : null);
+        const nameMatches = (prof) => {
+            if (!prof || !nameNorm || nameNorm === '—') return false;
+            return safeText(prof.full_name, '').toLowerCase() === nameNorm;
+        };
+
+        const pCb = rowFor(cb);
+        const pUid = rowFor(uid);
+
+        if (cb && uid && cb !== uid) {
+            const mCb = nameMatches(pCb);
+            const mUid = nameMatches(pUid);
+            if (mUid && !mCb) return pUid;
+            if (mCb && !mUid) return pCb;
+            return pUid || pCb;
+        }
+        if (cb) return pCb;
+        return pUid;
+    };
+
     const getCreatedByAvatarData = (createdByName, tx, creatorProfiles) => {
         const profileMap = creatorProfiles instanceof Map ? creatorProfiles : new Map();
         const createdByUserId = safeText(tx?.created_by_user_id, '');
+        const rowUserId = safeText(tx?.user_id, '');
         const createdByNameNorm = safeText(createdByName, '').toLowerCase();
         const isCurrentUserRow = (
             viewerAvatar.userId
-            && createdByUserId
-            && createdByUserId === viewerAvatar.userId
+            && (
+                (createdByUserId && createdByUserId === viewerAvatar.userId)
+                || (rowUserId && rowUserId === viewerAvatar.userId)
+            )
         ) || (
             !createdByUserId
+            && !rowUserId
             && viewerAvatar.displayName
             && createdByNameNorm
             && createdByNameNorm === viewerAvatar.displayName
@@ -230,7 +261,7 @@ function createDashboardTransactionsController(ctx) {
 
         const slotPx = 32;
 
-        const peerProfile = createdByUserId ? profileMap.get(String(createdByUserId)) : null;
+        const peerProfile = resolveTxCreatorProfile(tx, profileMap, createdByName);
         if (peerProfile) {
             const peerUrl = safeText(peerProfile.avatar_url, '');
             if (peerUrl && isValidAvatarSource(peerUrl)) {
@@ -373,6 +404,7 @@ function createDashboardTransactionsController(ctx) {
 
         const plainSelect = [
             'id',
+            'user_id',
             'receipt_number',
             'cash_box_id',
             'type',
@@ -557,7 +589,15 @@ function createDashboardTransactionsController(ctx) {
         }
 
         const txs = Array.isArray(res?.data) ? res.data : [];
-        const creatorIds = [...new Set(txs.map((t) => safeText(t?.created_by_user_id, '')).filter(Boolean))];
+        const creatorIds = [
+            ...new Set(
+                txs.flatMap((t) => {
+                    const cb = safeText(t?.created_by_user_id, '');
+                    const uid = safeText(t?.user_id, '');
+                    return [cb, uid].filter(Boolean);
+                })
+            )
+        ];
         let creatorProfiles = new Map();
         if (creatorIds.length && window.supabaseClient) {
             try {
