@@ -249,6 +249,16 @@ Deno.serve(async (req: Request) => {
       // ignore
     }
 
+    const PLACEHOLDER_NAMES = [
+      "spendnote user", "user", "test", "admin", "owner",
+      "test user", "demo", "demo user",
+    ];
+    const isPlaceholderName = PLACEHOLDER_NAMES.includes(
+      inviterName.toLowerCase(),
+    ) || inviterName.toLowerCase() === inviterEmail.split("@")[0]?.toLowerCase();
+
+    const displayName = (inviterName && !isPlaceholderName) ? inviterName : "";
+
     const normalizedAppUrl = String(appUrl || "").trim().replace(/\/+$/, "");
     let baseOrigin = normalizedAppUrl;
     if (!baseOrigin) {
@@ -263,10 +273,9 @@ Deno.serve(async (req: Request) => {
       : `https://spendnote.app/invite/${encodeURIComponent(inviteToken)}`;
 
     const rendered = renderInviteEmailTemplate({
-      inviterDisplayName: inviterName || "",
+      inviterDisplayName: displayName,
       role: safeRole === "Admin" ? "Admin" : "User",
       inviteShortUrl,
-      subject,
     });
 
     const resendResp = await fetch("https://api.resend.com/emails", {

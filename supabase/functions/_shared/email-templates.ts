@@ -43,30 +43,34 @@ const PAIN_LINE = "If cash moves and you don't record it, you lose track.";
 // ─── Invite email ───────────────────────────────────────────────────────────────
 
 export const renderInviteEmailTemplate = (args: {
-  /** Display name only (no email); empty → anonymous copy */
+  /** Display name only (no email); empty → anonymous fallback */
   inviterDisplayName?: string;
   role: "Admin" | "User";
   /** Short URL, e.g. https://spendnote.app/invite/{token} */
   inviteShortUrl: string;
-  subject?: string;
 }): BaseEmailTemplate => {
   const nameRaw = String(args.inviterDisplayName || "").trim();
-  const whoHtml = nameRaw
-    ? `<strong>${esc(nameRaw)}</strong> invited you`
-    : `<strong>Someone from your team</strong> invited you`;
-  const whoText = nameRaw ? `${nameRaw} invited you` : "Someone from your team invited you";
-  const role = args.role === "Admin" ? "Admin" : "User";
+  const role = args.role === "Admin" ? "an Admin" : "a team member";
+  const roleShort = args.role === "Admin" ? "Admin" : "User";
   const shortUrl = esc(String(args.inviteShortUrl || "").trim());
-  const subject = String(
-    args.subject ||
-      (nameRaw ? `${nameRaw} invited you to SpendNote` : `You've been invited to SpendNote`),
-  );
+
+  const subject = nameRaw
+    ? `${nameRaw} invited you to SpendNote`
+    : `You've been invited to SpendNote`;
+
+  const whoLine = nameRaw
+    ? `<strong>${esc(nameRaw)}</strong> invited you to join as ${role}.`
+    : `Someone from your team invited you to join as ${role}.`;
+
+  const whoText = nameRaw
+    ? `${nameRaw} invited you to join as ${role}.`
+    : `Someone from your team invited you to join as ${role}.`;
 
   const html = appCard(
     "You're invited",
-    "Join your team — see who has the cash, right now.",
+    "Join your team \u2014 see who has the cash, right now.",
     `
-      <p style="margin:0 0 10px;">${whoHtml} to join on SpendNote as <strong>${role}</strong>.</p>
+      <p style="margin:0 0 10px;">${whoLine}</p>
       <p style="margin:0 0 14px;">SpendNote records every cash handoff &mdash; who took it, when, and how much &mdash; so nothing goes unaccounted for.</p>
       <div style="margin:18px 0 16px;">
         <a href="${shortUrl}" style="${CTA_STYLE}">Accept invitation &rarr;</a>
@@ -78,7 +82,7 @@ export const renderInviteEmailTemplate = (args: {
   );
 
   const text =
-    `${subject}\n\nJoin your team — see who has the cash, right now.\n\n${whoText} to join on SpendNote as ${role}.\n\nOpen this link (one tap):\n${args.inviteShortUrl}\n\nIf you didn't expect this invite, ignore this email.`;
+    `${subject}\n\nJoin your team \u2014 see who has the cash, right now.\n\n${whoText}\n\nAccept invitation (one tap):\n${args.inviteShortUrl}\n\nIf you didn't expect this invite, ignore this email.`;
 
   return { subject, html, text };
 };
