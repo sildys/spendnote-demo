@@ -92,6 +92,12 @@ function createDashboardTransactionsController(ctx) {
         return fallback === undefined ? '' : String(fallback);
     };
 
+    const isValidAvatarSource = (value) => {
+        const src = String(value || '').trim();
+        if (!src) return false;
+        return /^data:image\//i.test(src) || /^https?:\/\//i.test(src);
+    };
+
     const normalizeAvatarSettings = (raw) => {
         const src = raw && typeof raw === 'object' ? raw : {};
         const scaleNum = Number(src.scale);
@@ -207,7 +213,8 @@ function createDashboardTransactionsController(ctx) {
         ).toLowerCase();
     };
 
-    const getCreatedByAvatarData = (createdByName, tx) => {
+    const getCreatedByAvatarData = (createdByName, tx, creatorProfiles) => {
+        const profileMap = creatorProfiles instanceof Map ? creatorProfiles : new Map();
         const createdByUserId = safeText(tx?.created_by_user_id, '');
         const createdByNameNorm = safeText(createdByName, '').toLowerCase();
         const isCurrentUserRow = (
@@ -221,14 +228,35 @@ function createDashboardTransactionsController(ctx) {
             && createdByNameNorm === viewerAvatar.displayName
         );
 
-        if (isCurrentUserRow && viewerAvatar.avatarUrl) {
+        const slotPx = 32;
+
+        const peerProfile = createdByUserId ? profileMap.get(String(createdByUserId)) : null;
+        if (peerProfile) {
+            const peerUrl = safeText(peerProfile.avatar_url, '');
+            if (peerUrl && isValidAvatarSource(peerUrl)) {
+                return {
+                    url: peerUrl,
+                    transform: buildAvatarTransform(peerProfile.avatar_settings, slotPx)
+                };
+            }
+            const peerColor = normalizeHexColor(peerProfile.avatar_color || '#10b981');
+            const peerInitialsName = safeText(peerProfile.full_name || createdByName, '');
+            const peerInitials = getInitials(peerInitialsName === '—' ? '' : peerInitialsName);
+            const svgPeer = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffffff" stroke="${peerColor}" stroke-width="4"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="800" fill="${peerColor}">${peerInitials}</text></svg>`;
             return {
-                url: viewerAvatar.avatarUrl,
+                url: `data:image/svg+xml,${encodeURIComponent(svgPeer)}`,
                 transform: ''
             };
         }
 
-        const avatarColor = isCurrentUserRow ? viewerAvatar.avatarColor : '#10b981';
+        if (isCurrentUserRow && viewerAvatar.avatarUrl && isValidAvatarSource(viewerAvatar.avatarUrl)) {
+            return {
+                url: viewerAvatar.avatarUrl,
+                transform: buildAvatarTransform(viewerAvatar.avatarSettings, slotPx)
+            };
+        }
+
+        const avatarColor = isCurrentUserRow ? normalizeHexColor(viewerAvatar.avatarColor) : '#10b981';
         const initials = getInitials(createdByName === '—' ? '' : createdByName);
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffffff" stroke="${avatarColor}" stroke-width="4"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="800" fill="${avatarColor}">${initials}</text></svg>`;
         return {
@@ -390,7 +418,7 @@ function createDashboardTransactionsController(ctx) {
         return res;
     };
 
-    const renderRows = (rows) => {
+    const renderRows = (rows, creatorProfiles) => {
         if (!txTbody) return;
         clearTbody();
 
@@ -398,6 +426,7 @@ function createDashboardTransactionsController(ctx) {
         const txCardList = document.getElementById('txCardList');
         if (txCardList) txCardList.innerHTML = '';
 
+        const profileByCreator = creatorProfiles instanceof Map ? creatorProfiles : new Map();
         const txs = Array.isArray(rows) ? rows : [];
         if (!txs.length) {
             renderMessageRow('No transactions found.');
@@ -421,7 +450,7 @@ function createDashboardTransactionsController(ctx) {
                 createdByName = safeText(viewerAvatar.displayName, '');
             }
             createdByName = String(createdByName || '').trim() || '—';
-            const avatarData = getCreatedByAvatarData(createdByName, tx);
+            const avatarData = getCreatedByAvatarData(createdByName, tx, profileByCreator);
             const avatarStyle = avatarData.transform
                 ? ` style="transform: ${avatarData.transform}; transform-origin: 50% 50%;"`
                 : '';
@@ -527,8 +556,25 @@ function createDashboardTransactionsController(ctx) {
             return;
         }
 
-        state.latestRows = Array.isArray(res?.data) ? res.data : [];
-        renderRows(state.latestRows);
+        const txs = Array.isArray(res?.data) ? res.data : [];
+        const creatorIds = [...new Set(txs.map((t) => safeText(t?.created_by_user_id, '')).filter(Boolean))];
+        let creatorProfiles = new Map();
+        if (creatorIds.length && window.supabaseClient) {
+            try {
+                const { data: profRows, error: profErr } = await window.supabaseClient
+                    .from('profiles')
+                    .select('id,avatar_url,avatar_settings,avatar_color,full_name')
+                    .in('id', creatorIds);
+                if (!profErr && Array.isArray(profRows)) {
+                    creatorProfiles = new Map(profRows.map((p) => [String(p.id), p]));
+                }
+            } catch (_) {
+                creatorProfiles = new Map();
+            }
+        }
+
+        state.latestRows = txs;
+        renderRows(txs, creatorProfiles);
     }
 
     return {

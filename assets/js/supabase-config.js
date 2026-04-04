@@ -3785,7 +3785,7 @@ var db = {
                     .select('id,full_name,email,avatar_url,avatar_settings,avatar_color')
                     .in('id', userIds);
                 if (!profRes.error) {
-                    profilesById = new Map((profRes.data || []).map((p) => [p.id, p]));
+                    profilesById = new Map((profRes.data || []).map((p) => [String(p.id), p]));
                 }
             }
 
@@ -3805,7 +3805,7 @@ var db = {
 
             const members = rows.map((m) => {
                 const uid = m?.user_id || '';
-                let memberObj = profilesById.get(uid) || null;
+                let memberObj = profilesById.get(String(uid)) || null;
                 if (!memberObj) {
                     const invitedEmail = acceptedEmailByUserId.get(uid) || '';
                     let synthName = '';

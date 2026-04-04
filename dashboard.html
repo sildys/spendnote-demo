@@ -1670,7 +1670,7 @@
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260413-rpc-owner-identity"></script>
+    <script src="assets/js/supabase-config.js?v=20260415-org-members-peer-read"></script>
     <script src="assets/js/auth-guard.js?v=20260223-1949"></script>
     <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
     <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
@@ -1679,7 +1679,7 @@
     <script src="assets/js/dashboard-ui.js?v=20260406-role-add-box"></script>
     <script src="assets/js/dashboard-modal.js?v=20260406-user-role-gates"></script>
     <script src="assets/js/dashboard-form.js?v=20260413-rpc-owner-identity"></script>
-    <script src="assets/js/dashboard-data.js?v=20260406-user-role-gates"></script>
+    <script src="assets/js/dashboard-data.js?v=20260415-creator-avatars"></script>
 
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
@@ -1958,7 +1958,7 @@
         function handleAddCashBoxDashboard() {
             if (window.__spendnoteCanAddCashBox === false) {
                 if (typeof showAlert === 'function') {
-                    showAlert('Only workspace owners and admins can add Cash Boxes. Ask your team admin if you need a new one.', { iconType: 'info' });
+                    showAlert('Only team owners and admins can add Cash Boxes. Ask your team admin if you need a new one.', { iconType: 'info' });
                 }
                 return;
             }
