@@ -77,6 +77,9 @@ function createDashboardTransactionsController(ctx) {
         avatarSettings: { scale: 1, x: 0, y: 0 }
     };
 
+    /** Current org workspace owner (profiles.id); used to fix bad rows that credit the owner but user_id is the real member. */
+    let workspaceOwnerUserId = '';
+
     const AVATAR_SCOPE_USER_KEY = 'spendnote.user.avatar.activeUserId.v1';
     const AVATAR_KEY_PREFIX = 'spendnote.user.avatar.v2';
     const AVATAR_COLOR_KEY_PREFIX = 'spendnote.user.avatarColor.v2';
@@ -213,12 +216,16 @@ function createDashboardTransactionsController(ctx) {
         ).toLowerCase();
     };
 
-    /** Pick which profile row drives "Created by" avatar when created_by_user_id ≠ user_id (legacy / bad rows). */
+    /**
+     * Pick which profiles row drives "Created by" avatar.
+     * Prefer each member's own `profiles` avatar (user settings), not a mistaken attribution to the workspace owner.
+     */
     const resolveTxCreatorProfile = (tx, profileMap, createdByName) => {
         const map = profileMap instanceof Map ? profileMap : new Map();
         const cb = safeText(tx?.created_by_user_id, '');
         const uid = safeText(tx?.user_id, '');
         const nameNorm = safeText(createdByName, '').toLowerCase();
+        const orgOwner = safeText(workspaceOwnerUserId, '');
 
         const rowFor = (id) => (id ? map.get(String(id)) : null);
         const nameMatches = (prof) => {
@@ -228,6 +235,24 @@ function createDashboardTransactionsController(ctx) {
 
         const pCb = rowFor(cb);
         const pUid = rowFor(uid);
+
+        // Rows that credit the org owner but were recorded under the member's user_id (owner must see the member's avatar).
+        if (orgOwner && cb && uid && cb === orgOwner && uid !== orgOwner) {
+            const actor = rowFor(uid);
+            if (actor) return actor;
+        }
+
+        // Both ids may wrongly point at the owner while created_by_user_name is the member — pick the single roster name match.
+        if (orgOwner && cb === orgOwner && nameNorm && nameNorm !== '—') {
+            let nameHit = null;
+            let nameHitCount = 0;
+            map.forEach((prof) => {
+                if (!nameMatches(prof)) return;
+                nameHitCount += 1;
+                nameHit = prof;
+            });
+            if (nameHitCount === 1 && nameHit) return nameHit;
+        }
 
         if (cb && uid && cb !== uid) {
             const mCb = nameMatches(pCb);
@@ -589,6 +614,14 @@ function createDashboardTransactionsController(ctx) {
         }
 
         const txs = Array.isArray(res?.data) ? res.data : [];
+
+        workspaceOwnerUserId = '';
+        try {
+            workspaceOwnerUserId = safeText(await window.db?.teamMembers?.getOrgOwnerUserId?.(), '');
+        } catch (_) {
+            workspaceOwnerUserId = '';
+        }
+
         const creatorIds = [
             ...new Set(
                 txs.flatMap((t) => {
@@ -598,7 +631,24 @@ function createDashboardTransactionsController(ctx) {
                 })
             )
         ];
-        let creatorProfiles = new Map();
+
+        // Same profile blobs as Team page (org roster), then overlay a direct profiles read for tx creators (freshest avatar).
+        const creatorProfiles = new Map();
+        try {
+            if (window.db?.teamMembers?.getAll) {
+                const team = await window.db.teamMembers.getAll();
+                for (const m of Array.isArray(team) ? team : []) {
+                    const mid = safeText(m?.member_id || m?.member?.id, '');
+                    const mem = m?.member;
+                    if (mid && mem && typeof mem === 'object') {
+                        creatorProfiles.set(mid, mem);
+                    }
+                }
+            }
+        } catch (_) {
+            // ignore roster load failures
+        }
+
         if (creatorIds.length && window.supabaseClient) {
             try {
                 const { data: profRows, error: profErr } = await window.supabaseClient
@@ -606,10 +656,15 @@ function createDashboardTransactionsController(ctx) {
                     .select('id,avatar_url,avatar_settings,avatar_color,full_name')
                     .in('id', creatorIds);
                 if (!profErr && Array.isArray(profRows)) {
-                    creatorProfiles = new Map(profRows.map((p) => [String(p.id), p]));
+                    for (const p of profRows) {
+                        const id = safeText(p?.id, '');
+                        if (!id) continue;
+                        const prev = creatorProfiles.get(id);
+                        creatorProfiles.set(id, prev && typeof prev === 'object' ? { ...prev, ...p } : p);
+                    }
                 }
             } catch (_) {
-                creatorProfiles = new Map();
+                // keep roster-only map
             }
         }
 
