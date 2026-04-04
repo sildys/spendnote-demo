@@ -213,12 +213,14 @@ const receiptDisplayNameFromSource = (r) => {
  * Uses org selection state so Receipt Identity reflects what receipts use even if profiles.getCurrent merge is stale.
  */
 const fetchWorkspaceOwnerReceiptIdentityProfile = async () => {
+    const dbg = (...args) => console.log('[ReceiptIdentity]', ...args);
     try {
         const user = await window.auth?.getCurrentUser?.();
         const uid = String(user?.id || '').trim();
-        if (!uid || !window.supabaseClient) return null;
+        if (!uid || !window.supabaseClient) { dbg('BAIL: no user or supabase', uid); return null; }
 
         const state = await window.SpendNoteOrgContext?.getSelectionState?.();
+        dbg('orgSelectionState:', JSON.stringify({ orgId: state?.orgId, role: state?.role, memberships: state?.memberships?.length }));
         let orgId = String(state?.orgId || '').trim();
         let role = String(state?.role || '').trim().toLowerCase();
         if (!orgId && Array.isArray(state?.memberships) && state.memberships.length === 1) {
@@ -226,18 +228,20 @@ const fetchWorkspaceOwnerReceiptIdentityProfile = async () => {
             orgId = String(m0?.org_id || '').trim();
             role = String(m0?.role || role).trim().toLowerCase();
         }
-        if (role !== 'user' && role !== 'admin') return null;
-        if (!orgId) return null;
+        dbg('resolved orgId:', orgId, 'role:', role);
+        if (role !== 'user' && role !== 'admin') { dbg('BAIL: role not user/admin'); return null; }
+        if (!orgId) { dbg('BAIL: no orgId'); return null; }
 
         const { data: orgRow, error: oErr } = await window.supabaseClient
             .from('orgs')
             .select('owner_user_id')
             .eq('id', orgId)
             .maybeSingle();
-        if (oErr) return null;
+        dbg('orgs query:', JSON.stringify({ owner: orgRow?.owner_user_id, err: oErr?.message }));
+        if (oErr) { dbg('BAIL: orgs error'); return null; }
 
         const ownerId = String(orgRow?.owner_user_id || '').trim();
-        if (!ownerId) return null;
+        if (!ownerId) { dbg('BAIL: no ownerId'); return null; }
 
         const { data: rows, error: pErr } = await window.supabaseClient
             .from('profiles')
@@ -245,10 +249,11 @@ const fetchWorkspaceOwnerReceiptIdentityProfile = async () => {
             .eq('id', ownerId)
             .limit(1);
         const o = Array.isArray(rows) ? rows[0] : null;
-        if (pErr || !o) return null;
+        dbg('owner profile:', JSON.stringify({ company: o?.company_name, full: o?.full_name, phone: o?.phone, err: pErr?.message }));
+        if (pErr || !o) { dbg('BAIL: profile error or empty'); return null; }
 
         const ownerFull = String(o.full_name || '').trim();
-        return {
+        const result = {
             company_name: o.company_name,
             phone: o.phone,
             address: o.address,
@@ -256,7 +261,10 @@ const fetchWorkspaceOwnerReceiptIdentityProfile = async () => {
             logo_settings: o.logo_settings,
             spendnote_receipt_sender_fallback: ownerFull || null
         };
-    } catch (_) {
+        dbg('SUCCESS, returning:', JSON.stringify({ company: result.company_name, fallback: result.spendnote_receipt_sender_fallback }));
+        return result;
+    } catch (e) {
+        console.error('[ReceiptIdentity] EXCEPTION:', e);
         return null;
     }
 };
