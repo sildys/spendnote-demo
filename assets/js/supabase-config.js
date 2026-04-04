@@ -769,6 +769,9 @@ const __spendnoteTryAcceptPendingInviteToken = async () => {
     __spendnoteTryAcceptLock = __spendnoteTryAcceptPendingInviteTokenImpl();
     try { return await __spendnoteTryAcceptLock; } finally { __spendnoteTryAcceptLock = null; }
 };
+try {
+    window.__spendnoteTryAcceptPendingInviteToken = __spendnoteTryAcceptPendingInviteToken;
+} catch (_) {}
 const __spendnoteTryAcceptPendingInviteTokenImpl = async () => {
     let __currentUser = null;
     try {
@@ -2061,6 +2064,19 @@ async function getMyOrgContext() {
 
     return await __orgContextCache.promise;
 }
+
+try {
+    window.__spendnoteInvalidateOrgContextCache = function () {
+        __orgContextCache.orgId = null;
+        __orgContextCache.ownerUserId = null;
+        __orgContextCache.role = null;
+        __orgContextCache.selectionRequired = false;
+        __orgContextCache.isPro = false;
+        __orgContextCache.membershipCount = 0;
+        __orgContextCache.ts = 0;
+        __orgContextCache.promise = null;
+    };
+} catch (_) {}
 
 window.SpendNoteOrgContext = {
     async getSelectionState() {

@@ -402,7 +402,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase-config.js?v=20260404-0150"></script>
+<script src="assets/js/supabase-config.js?v=20260406-welcome-team"></script>
 <script>
 let selectedColor = '#10b981';
 let currentWelcomeVariant = 'free';
@@ -620,8 +620,17 @@ async function saveSetup() {
             console.error('[SN-WELCOME] welcome email error:', welcomeErr);
         }
 
+        try { await (window.__spendnoteAuthCallbackPromise || Promise.resolve()); } catch (_) {}
+        try {
+            if (typeof window.__spendnoteTryAcceptPendingInviteToken === 'function') {
+                await window.__spendnoteTryAcceptPendingInviteToken();
+            }
+        } catch (_) {}
+        try { window.__spendnoteInvalidateOrgContextCache?.(); } catch (_) {}
+
         let profile = null;
         let role = '';
+        let ownerId = '';
 
         try {
             profile = await window.db.profiles.getCurrent();
@@ -633,9 +642,17 @@ async function saveSetup() {
         } catch (_) {
             role = '';
         }
+        try {
+            ownerId = String(await window.db?.orgMemberships?.getOrgOwnerUserId?.() || '').trim();
+        } catch (_) {
+            ownerId = '';
+        }
 
+        const uid = String(user?.id || '').trim();
+        const isOrgOwner = Boolean(uid && ownerId && uid === ownerId);
+        const inOrg = Boolean(role);
         const tier = normalizeTier(profile?.subscription_tier);
-        const variant = role === 'user'
+        const variant = (inOrg && !isOrgOwner)
             ? 'invited'
             : (tier === 'pro' ? 'pro' : (tier === 'standard' ? 'standard' : 'free'));
         applyWelcomeVariant(variant);
