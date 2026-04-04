@@ -234,12 +234,10 @@ async function updateOrgContextIndicator() {
         const role = String(state?.role || state?.selectedRole || '').trim().toLowerCase();
 
         const isPro = Boolean(state?.isPro);
-        // Use tier from org selection state (fresh DB read) — SpendNoteFeatures.getTier() can be stuck on an early "free" cache before session.
-        const subTier = String(state?.subscriptionTier || '').trim().toLowerCase();
         if (teamLink) {
-            // Pro: only owner/admin see Team in nav. Preview: always show so early adopters can open Team / create org (matches team-page gate).
-            const canSeeTeam = isPro && (subTier === 'preview' || role === 'owner' || role === 'admin');
-            teamLink.style.display = canSeeTeam ? '' : 'none';
+            // Same gate as team-page.js (pro or preview tier). Do not also require owner/admin — org "user" role may still open Team (read-only UX there).
+            // Rely on state.isPro only (not subscriptionTier string) so older cached supabase-config without subscriptionTier still works.
+            teamLink.style.display = isPro ? '' : 'none';
         }
 
         if (!orgId || !isPro) { hide(); return; }
