@@ -2308,6 +2308,21 @@
                     setTimeout(() => overlay.remove(), 200);
 
                     if (typeof gtag === 'function') gtag('event', 'currency_selected', { currency: chosen });
+                    // Send welcome email (session is settled by now)
+                    try {
+                        const welUid = String(userId || '').trim();
+                        const welSentKey = welUid ? 'spendnote.welcome.sent.v2.' + welUid : '';
+                        if (welSentKey && localStorage.getItem(welSentKey) !== '1') {
+                            const { data: welData, error: welErr } = await supabaseClient.functions.invoke(
+                                'send-user-event-email',
+                                { body: { eventType: 'welcome_account_created' } }
+                            );
+                            console.log('[SN-DASH] Welcome email:', JSON.stringify({ ok: welData?.success, err: welErr?.message || welErr }));
+                            if (!welErr && welData?.success) {
+                                try { localStorage.setItem(welSentKey, '1'); } catch (_) {}
+                            }
+                        }
+                    } catch (_) {}
                     resolve({ saved: true, chosen });
                 });
             });
