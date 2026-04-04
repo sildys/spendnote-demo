@@ -83,7 +83,7 @@ const QUICK_PRESET = {
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260220-2000');
+        params.append('v', 'receipt-20260409-tx-resolve');
         const currentTxId = getCurrentTxId();
         if (currentTxId) params.append('txId', currentTxId);
         params.append('bootstrap', '1');
@@ -320,7 +320,12 @@ const QUICK_PRESET = {
             }
         })();
 
-        receiptLogoUrl = String(cb.cash_box_logo_url || profile?.account_logo_url || '').trim();
+        receiptLogoUrl = String(
+            cb.cash_box_logo_url
+                || String(t.sender_profile_logo_url_snapshot || '').trim()
+                || profile?.account_logo_url
+                || ''
+        ).trim();
 
         const mapBool = (v, fallback) => {
             if (typeof v === 'boolean') return v;
@@ -758,6 +763,11 @@ html, body { height: auto !important; overflow: auto !important; }
                 let profile = null;
                 try {
                     profile = window.db?.profiles?.getCurrent ? await window.db.profiles.getCurrent() : null;
+                    try {
+                        if (typeof window.spendnoteResolveReceiptProfileForTx === 'function') {
+                            profile = await window.spendnoteResolveReceiptProfileForTx(tx, profile);
+                        }
+                    } catch (_) {}
                 } catch (_) {}
 
                 const currency = cashBox?.currency || 'USD';
@@ -790,8 +800,15 @@ html, body { height: auto !important; overflow: auto !important; }
                 const txDate = tx.transaction_date || tx.created_at;
                 const dateStr = txDate ? new Date(txDate).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) : '—';
 
-                const companyName = safeText(profile?.company_name || profile?.full_name || cashBox?.name, '—');
-                const companyAddress = safeText(profile?.address, '');
+                const companyName = safeText(
+                    String(tx.sender_company_name_snapshot || '').trim()
+                        || profile?.company_name
+                        || profile?.spendnote_receipt_sender_fallback
+                        || profile?.full_name
+                        || cashBox?.name,
+                    '—'
+                );
+                const companyAddress = safeText(String(tx.sender_address_snapshot || '').trim() || profile?.address, '');
                 const contactName = safeText(tx.contact_name || tx.contact?.name, '—');
                 const contactAddress = safeText(tx.contact_address || tx.contact?.address, '');
 

@@ -462,6 +462,12 @@ CREATE TABLE IF NOT EXISTS public.transactions (
     cash_box_color_snapshot TEXT,
     cash_box_icon_snapshot TEXT,
     cash_box_id_prefix_snapshot TEXT,
+
+    -- Sender / workspace receipt identity at transaction time (contact-style snapshot)
+    sender_company_name_snapshot TEXT,
+    sender_address_snapshot TEXT,
+    sender_phone_snapshot TEXT,
+    sender_profile_logo_url_snapshot TEXT,
     
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()

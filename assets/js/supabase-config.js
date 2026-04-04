@@ -1174,6 +1174,31 @@ const TX_CASH_BOX_SNAPSHOT_COLUMNS = Object.freeze([
     'cash_box_id_prefix_snapshot'
 ]);
 
+/** Optional INSERT columns: stripped on retry if DB schema is behind the client. */
+const TX_INSERT_SOFT_COLUMNS = Object.freeze([
+    ...TX_CASH_BOX_SNAPSHOT_COLUMNS,
+    'sender_company_name_snapshot',
+    'sender_address_snapshot',
+    'sender_phone_snapshot',
+    'sender_profile_logo_url_snapshot'
+]);
+
+try {
+    window.spendnoteReceiptSenderSnapshotsFromProfile = function spendnoteReceiptSenderSnapshotsFromProfile(profile) {
+        const p = profile && typeof profile === 'object' ? profile : {};
+        const cn = String(p.company_name || '').trim();
+        const fb = String(p.spendnote_receipt_sender_fallback || '').trim();
+        const fn = String(p.full_name || '').trim();
+        const company = cn || fb || fn || null;
+        return {
+            sender_company_name_snapshot: company,
+            sender_address_snapshot: String(p.address || '').trim() || null,
+            sender_phone_snapshot: String(p.phone || '').trim() || null,
+            sender_profile_logo_url_snapshot: String(p.account_logo_url || '').trim() || null
+        };
+    };
+} catch (_) {}
+
 function normalizeCashBoxIdPrefix(value) {
     const raw = String(value || '').trim();
     if (!raw) return 'SN';
@@ -1309,7 +1334,7 @@ function extractMissingTransactionsColumn(error) {
         if (!match || !match[1]) continue;
         const column = String(match[1]).trim().toLowerCase();
         if (!column) continue;
-        if (hasTransactionsContext || TX_CASH_BOX_SNAPSHOT_COLUMNS.includes(column)) {
+        if (hasTransactionsContext || TX_INSERT_SOFT_COLUMNS.includes(column)) {
             return column;
         }
     }
@@ -2062,6 +2087,70 @@ async function getMyOrgContext() {
 
     return await __orgContextCache.promise;
 }
+
+/**
+ * Receipt pages must show workspace owner identity for org members even when getMyOrgContext()
+ * is stale, empty, or mismatched (e.g. iframe / new tab). Uses tx.org_id → org.owner_user_id,
+ * else cash_boxes.user_id on the loaded tx, then loads that profile (RLS: same-org read).
+ */
+async function spendnoteResolveReceiptProfileForTx(tx, baseProfile) {
+    const t = tx && typeof tx === 'object' ? tx : null;
+    const base = baseProfile && typeof baseProfile === 'object' ? { ...baseProfile } : {};
+
+    const hasSenderSnap = Boolean(
+        String(t?.sender_company_name_snapshot || '').trim()
+        || String(t?.sender_address_snapshot || '').trim()
+        || String(t?.sender_phone_snapshot || '').trim()
+        || String(t?.sender_profile_logo_url_snapshot || '').trim()
+    );
+    if (hasSenderSnap) return base;
+
+    try {
+        const me = await auth.getCurrentUser();
+        const myId = String(me?.id || '').trim();
+        if (!myId || !supabaseClient) return base;
+
+        let ownerId = '';
+        const orgId = String(t?.org_id || '').trim();
+        if (orgId) {
+            const { data: orgRow } = await supabaseClient
+                .from('orgs')
+                .select('owner_user_id')
+                .eq('id', orgId)
+                .maybeSingle();
+            ownerId = String(orgRow?.owner_user_id || '').trim();
+        }
+        if (!ownerId) {
+            ownerId = String(t?.cash_box?.user_id || '').trim();
+        }
+        if (!ownerId || ownerId === myId) return base;
+
+        const { data: ownRows, error: pErr } = await supabaseClient
+            .from('profiles')
+            .select('company_name, phone, address, account_logo_url, logo_settings, full_name')
+            .eq('id', ownerId)
+            .limit(1);
+        const o = Array.isArray(ownRows) ? ownRows[0] : null;
+        if (pErr || !o) return base;
+
+        const ownerFull = String(o.full_name || '').trim();
+        return {
+            ...base,
+            company_name: o.company_name,
+            phone: o.phone,
+            address: o.address,
+            account_logo_url: o.account_logo_url,
+            logo_settings: o.logo_settings,
+            spendnote_receipt_sender_fallback: ownerFull || null
+        };
+    } catch (_) {
+        return base;
+    }
+}
+
+try {
+    window.spendnoteResolveReceiptProfileForTx = spendnoteResolveReceiptProfileForTx;
+} catch (_) {}
 
 try {
     window.__spendnoteInvalidateOrgContextCache = function () {
@@ -3154,7 +3243,7 @@ var db = {
                     .from('transactions')
                     .select(`
                         *,
-                        cash_box:cash_boxes(id, name, color, currency, icon, sequence_number),
+                        cash_box:cash_boxes(id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url),
                         contact:contacts(id, name, email, phone, address, sequence_number)
                     `)
                     .eq('id', txId);
@@ -3231,7 +3320,7 @@ var db = {
                 if (tx.cash_box_id) {
                     const { data: cb } = await supabaseClient
                         .from('cash_boxes')
-                        .select('id, name, color, currency, icon, sequence_number, id_prefix')
+                        .select('id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url')
                         .eq('id', tx.cash_box_id)
                         .single();
                     if (cb) tx.cash_box = cb;
@@ -3358,7 +3447,7 @@ var db = {
                 const missingColumn = extractMissingTransactionsColumn(error);
                 const canStripSnapshotColumn = Boolean(
                     missingColumn &&
-                    TX_CASH_BOX_SNAPSHOT_COLUMNS.includes(missingColumn) &&
+                    TX_INSERT_SOFT_COLUMNS.includes(missingColumn) &&
                     Object.prototype.hasOwnProperty.call(workingPayload, missingColumn)
                 );
 
@@ -3444,18 +3533,21 @@ var db = {
                     if ((role === 'user' || role === 'admin') && ownerId && ownerId !== userId) {
                         const { data: ownerRows, error: ownerErr } = await supabaseClient
                             .from('profiles')
-                            .select('company_name, phone, address, account_logo_url, logo_settings')
+                            .select('company_name, phone, address, account_logo_url, logo_settings, full_name')
                             .eq('id', ownerId)
                             .limit(1);
                         const o = Array.isArray(ownerRows) ? (ownerRows[0] || null) : null;
                         if (!ownerErr && o) {
+                            const ownerFull = String(o.full_name || '').trim();
+                            // Use owner row only for receipt identity — do not fall back to member fields when owner has NULL.
                             return {
                                 ...row,
-                                company_name: o.company_name != null ? o.company_name : row?.company_name,
-                                phone: o.phone != null ? o.phone : row?.phone,
-                                address: o.address != null ? o.address : row?.address,
-                                account_logo_url: o.account_logo_url != null ? o.account_logo_url : row?.account_logo_url,
-                                logo_settings: o.logo_settings != null ? o.logo_settings : row?.logo_settings
+                                company_name: o.company_name,
+                                phone: o.phone,
+                                address: o.address,
+                                account_logo_url: o.account_logo_url,
+                                logo_settings: o.logo_settings,
+                                spendnote_receipt_sender_fallback: ownerFull || null
                             };
                         }
                     }

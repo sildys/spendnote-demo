@@ -940,7 +940,7 @@ if (urlParams.get('signatures') === '0') {
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260406-admin-receipt-rpc"></script>
+    <script src="assets/js/supabase-config.js?v=20260409-receipt-tx-resolve"></script>
     <script src="assets/js/auth-guard.js?v=20260207-2310"></script>
     <script src="assets/js/main.js?v=44"></script>
 
@@ -1143,13 +1143,23 @@ if (urlParams.get('signatures') === '0') {
           let profile = null;
           try {
             profile = window.db?.profiles?.getCurrent ? await window.db.profiles.getCurrent() : null;
+            try {
+              if (typeof window.spendnoteResolveReceiptProfileForTx === 'function') {
+                profile = await window.spendnoteResolveReceiptProfileForTx(tx, profile);
+              }
+            } catch (_) {}
           } catch (_) {
             profile = null;
           }
 
           try {
             if (urlParams.get('logo') !== '0') {
-              const preferredLogo = safeText(tx?.cash_box?.cash_box_logo_url || profile?.account_logo_url, '');
+              const preferredLogo = safeText(
+                tx?.cash_box?.cash_box_logo_url
+                  || String(tx.sender_profile_logo_url_snapshot || '').trim()
+                  || profile?.account_logo_url,
+                ''
+              );
               if (preferredLogo) {
                 const container = document.querySelector('.logo');
                 if (container) {
@@ -1165,9 +1175,17 @@ if (urlParams.get('signatures') === '0') {
             }
           } catch (_) {}
 
-          const companyName = safeText(profile?.company_name || profile?.full_name || tx.cash_box_name_snapshot || tx.cash_box?.name, '-');
-          const companyAddress = safeText(profile?.address, '');
-          const companyOtherId = safeText(profile?.phone, '');
+          const companyName = safeText(
+            String(tx.sender_company_name_snapshot || '').trim()
+              || profile?.company_name
+              || profile?.spendnote_receipt_sender_fallback
+              || profile?.full_name
+              || tx.cash_box_name_snapshot
+              || tx.cash_box?.name,
+            '-'
+          );
+          const companyAddress = safeText(String(tx.sender_address_snapshot || '').trim() || profile?.address, '');
+          const companyOtherId = safeText(String(tx.sender_phone_snapshot || '').trim() || profile?.phone, '');
 
           // IN = money received: contact is FROM (sender), company is TO (receiver)
           // OUT = money paid: company is FROM (sender), contact is TO (receiver)

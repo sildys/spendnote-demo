@@ -311,6 +311,12 @@ function initTransactionForm() {
                 created_by_user_name: profile?.full_name || user.user_metadata?.full_name || user.email || null
             };
 
+            try {
+                if (typeof window.spendnoteReceiptSenderSnapshotsFromProfile === 'function') {
+                    Object.assign(payload, window.spendnoteReceiptSenderSnapshotsFromProfile(profile));
+                }
+            } catch (_) {}
+
             // If user selected a contact from autocomplete, link by UUID.
             try {
                 const selectedIdRaw = String(document.getElementById('modalContactId')?.value || '').trim();

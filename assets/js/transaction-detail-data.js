@@ -482,9 +482,14 @@
         }
 
         try {
-            const profile = window.db?.profiles?.getCurrent
+            let profile = window.db?.profiles?.getCurrent
                 ? await window.db.profiles.getCurrent()
                 : null;
+            try {
+                if (typeof window.spendnoteResolveReceiptProfileForTx === 'function') {
+                    profile = await window.spendnoteResolveReceiptProfileForTx(tx, profile);
+                }
+            } catch (_) {}
             if (typeof window.onTransactionDetailDataLoaded === 'function') {
                 window.onTransactionDetailDataLoaded({
                     tx,
