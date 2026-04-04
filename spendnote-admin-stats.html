@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" type="image/x-icon" href="favicon.ico">
+    <title>Admin Stats - SpendNote</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/main.css?v=23">
+    <link rel="stylesheet" href="assets/css/app-layout.css?v=21">
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: #fff;
+            border: 1px solid var(--border, #e2e8f0);
+            border-radius: 14px;
+            padding: 22px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .stat-card .stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-card .stat-value {
+            font-size: 32px;
+            font-weight: 900;
+            color: #0f172a;
+            line-height: 1.1;
+        }
+        .stat-card .stat-sub {
+            font-size: 12px;
+            color: #94a3b8;
+        }
+        .stat-card.highlight {
+            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+            border-color: rgba(5, 150, 105, 0.2);
+        }
+        .stat-card.highlight .stat-value {
+            color: #059669;
+        }
+        .stat-card.warn {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+        .stat-card.warn .stat-value {
+            color: #d97706;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 32px 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title i {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .chart-container {
+            background: #fff;
+            border: 1px solid var(--border, #e2e8f0);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .chart-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 14px;
+        }
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 120px;
+            padding-top: 8px;
+        }
+        .bar-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 100%;
+            position: relative;
+        }
+        .bar {
+            width: 100%;
+            max-width: 18px;
+            background: #059669;
+            border-radius: 3px 3px 0 0;
+            min-height: 2px;
+            transition: height 0.3s ease;
+        }
+        .bar-label {
+            font-size: 9px;
+            color: #94a3b8;
+            margin-top: 4px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            max-height: 40px;
+            overflow: hidden;
+        }
+        .bar-value {
+            font-size: 9px;
+            color: #64748b;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .pie-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .pie-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .pie-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .pie-count {
+            color: #64748b;
+            font-weight: 400;
+            margin-left: 2px;
+        }
+
+        .recent-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .recent-table th {
+            text-align: left;
+            font-weight: 700;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 8px 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .recent-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #334155;
+        }
+        .recent-table tr:hover td {
+            background: #f8fafc;
+        }
+        .tier-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .tier-preview { background: #e0e7ff; color: #4338ca; }
+        .tier-free { background: #f1f5f9; color: #64748b; }
+        .tier-standard { background: #fef3c7; color: #b45309; }
+        .tier-pro { background: #dbeafe; color: #1d4ed8; }
+
+        .loading-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+            font-size: 15px;
+        }
+        .loading-state i {
+            font-size: 28px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .error-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #dc2626;
+            background: #fef2f2;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+        .refresh-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #0f172a;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
+            z-index: 100;
+        }
+        .refresh-btn:hover {
+            background: #1e293b;
+        }
+        .generated-at {
+            font-size: 11px;
+            color: #94a3b8;
+            text-align: right;
+            margin-top: 8px;
+        }
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .two-col { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+<div id="nav-container"></div>
+
+<div class="app-container">
+    <main class="main-content">
+        <div class="page-header">
+            <div class="page-title-group">
+                <h1 class="page-title"><i class="fas fa-chart-bar" style="color:#059669;margin-right:8px;"></i>Admin Dashboard</h1>
+                <p class="page-subtitle">Real-time usage statistics</p>
+            </div>
+        </div>
+
+        <div id="statsContent">
+            <div class="loading-state" id="loadingState">
+                <i class="fas fa-spinner fa-spin"></i>
+                Loading statistics...
+            </div>
+        </div>
+    </main>
+</div>
+
+<button class="refresh-btn" id="refreshBtn" style="display:none;" onclick="loadStats()">
+    <i class="fas fa-sync-alt"></i> Frissítés
+</button>
+
+<footer class="app-footer">
+    <div class="app-footer-container">
+        <div class="app-footer-top">
+            <div class="app-footer-brand">
+                <a href="dashboard.html" class="app-footer-brand-logo">
+                    <svg width="32" height="32" viewBox="0 0 48 48" fill="none"><path d="M12 4 C10.895 4 10 4.895 10 6 L10 38 L12 36 L14 38 L16 36 L18 38 L20 36 L22 38 L24 36 L26 38 L28 36 L30 38 L32 36 L34 38 L36 36 L38 38 L38 6 C38 4.895 37.105 4 36 4 Z" fill="white"/><path d="M32 4 L38 10 L32 10 Z" fill="rgba(0,0,0,0.15)"/></svg>
+                    <span>SpendNote</span>
+                </a>
+            </div>
+        </div>
+        <div class="app-footer-bottom"><div class="app-footer-copyright">2026 SpendNote. Admin only.</div></div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js?v=20260404-0150"></script>
+<script src="assets/js/auth-guard.js?v=20260223-1949"></script>
+<script src="assets/js/nav-loader.js?v=20260223-2101"></script>
+<script>loadNav();</script>
+<script src="assets/js/main.js?v=38"></script>
+<script>
+(async function() {
+    const TIER_COLORS = {
+        preview: '#818cf8',
+        free: '#94a3b8',
+        standard: '#f59e0b',
+        pro: '#3b82f6',
+        unknown: '#cbd5e1'
+    };
+    const CURRENCY_COLORS = ['#059669','#3b82f6','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316','#6366f1','#84cc16'];
+
+    window.loadStats = async function() {
+        const content = document.getElementById('statsContent');
+        const refreshBtn = document.getElementById('refreshBtn');
+        content.innerHTML = '<div class="loading-state"><i class="fas fa-spinner fa-spin"></i>Loading statistics...</div>';
+        refreshBtn.style.display = 'none';
+
+        try {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                content.innerHTML = '<div class="error-state"><i class="fas fa-lock"></i> Nem vagy bejelentkezve.</div>';
+                return;
+            }
+
+            const resp = await fetch(`${SUPABASE_URL}/functions/v1/admin-stats`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.access_token}`,
+                    'apikey': SUPABASE_ANON_KEY
+                },
+                body: '{}'
+            });
+
+            if (resp.status === 403) {
+                content.innerHTML = '<div class="error-state"><i class="fas fa-ban"></i> Nincs jogosultságod az admin oldal megtekintéséhez.</div>';
+                return;
+            }
+            if (!resp.ok) {
+                const err = await resp.json().catch(() => ({}));
+                throw new Error(err.error || `HTTP ${resp.status}`);
+            }
+
+            const d = await resp.json();
+            renderStats(d);
+            refreshBtn.style.display = 'flex';
+        } catch (err) {
+            content.innerHTML = `<div class="error-state"><i class="fas fa-exclamation-triangle"></i> Hiba: ${err.message}</div>`;
+            refreshBtn.style.display = 'flex';
+        }
+    };
+
+    function renderStats(d) {
+        const content = document.getElementById('statsContent');
+        const u = d.users;
+        const tx = d.transactions;
+        const cb = d.cashBoxes;
+        const t = d.teams;
+
+        let html = '';
+
+        // --- TOP CARDS ---
+        html += '<div class="stats-grid">';
+        html += statCard('Összes felhasználó', u.total, 'fa-users', '', 'highlight');
+        html += statCard('Fizető felhasználó', u.paying, 'fa-credit-card', '', u.paying > 0 ? 'highlight' : '');
+        html += statCard('Összes tranzakció', tx.total, 'fa-receipt');
+        html += statCard('Cash box-ok', cb.total, 'fa-cash-register');
+        html += statCard('Teamek', t.totalOrgs, 'fa-building');
+        html += statCard('Kontaktok', d.contacts.total, 'fa-address-book');
+        html += '</div>';
+
+        // --- RECENT ACTIVITY ---
+        html += '<div class="stats-grid">';
+        html += statCard('Mai regisztráció', u.today, 'fa-user-plus', 'ma');
+        html += statCard('Heti regisztráció', u.thisWeek, 'fa-calendar-week', 'utolsó 7 nap');
+        html += statCard('Havi regisztráció', u.thisMonth, 'fa-calendar', 'utolsó 30 nap');
+        html += statCard('Mai tranzakció', tx.today, 'fa-plus-circle', 'ma');
+        html += statCard('Heti tranzakció', tx.thisWeek, 'fa-chart-line', 'utolsó 7 nap');
+        html += statCard('Havi tranzakció', tx.thisMonth, 'fa-chart-bar', 'utolsó 30 nap');
+        html += '</div>';
+
+        // --- CHARTS ---
+        html += '<div class="two-col">';
+
+        // Registration trend
+        html += '<div class="chart-container">';
+        html += '<div class="chart-title">Regisztrációs trend (30 nap)</div>';
+        html += renderBarChart(u.registrationTrend, '#059669');
+        html += '</div>';
+
+        // Tx trend
+        html += '<div class="chart-container">';
+        html += '<div class="chart-title">Tranzakciós trend (30 nap)</div>';
+        html += renderBarChart(tx.trend, '#3b82f6');
+        html += '</div>';
+
+        html += '</div>';
+
+        // --- BREAKDOWNS ---
+        html += '<div class="two-col">';
+
+        // Tier breakdown
+        html += '<div class="chart-container">';
+        html += '<div class="chart-title">Előfizetési szint eloszlás</div>';
+        html += '<div class="pie-row">';
+        for (const [tier, count] of Object.entries(u.tiers).sort((a, b) => b[1] - a[1])) {
+            const color = TIER_COLORS[tier] || TIER_COLORS.unknown;
+            const label = tier.charAt(0).toUpperCase() + tier.slice(1);
+            html += `<div class="pie-item"><span class="pie-dot" style="background:${color}"></span>${label} <span class="pie-count">(${count})</span></div>`;
+        }
+        html += '</div></div>';
+
+        // Currency breakdown
+        html += '<div class="chart-container">';
+        html += '<div class="chart-title">Pénznem eloszlás</div>';
+        html += '<div class="pie-row">';
+        const currencies = Object.entries(cb.currencies).sort((a, b) => b[1] - a[1]);
+        currencies.forEach(([cur, count], i) => {
+            const color = CURRENCY_COLORS[i % CURRENCY_COLORS.length];
+            html += `<div class="pie-item"><span class="pie-dot" style="background:${color}"></span>${cur} <span class="pie-count">(${count})</span></div>`;
+        });
+        html += '</div></div>';
+
+        html += '</div>';
+
+        // --- INVITES ---
+        html += '<div class="section-title"><i class="fas fa-envelope"></i> Meghívók</div>';
+        html += '<div class="stats-grid">';
+        html += statCard('Függőben', t.pendingInvites, 'fa-clock', '', t.pendingInvites > 0 ? 'warn' : '');
+        html += statCard('Elfogadva', t.acceptedInvites, 'fa-check-circle');
+        html += '</div>';
+
+        // --- RECENT SIGNUPS ---
+        html += '<div class="section-title"><i class="fas fa-user-plus"></i> Legutóbbi regisztrációk</div>';
+        html += '<div class="chart-container" style="padding:0;overflow-x:auto;">';
+        html += '<table class="recent-table"><thead><tr><th>Email</th><th>Név</th><th>Szint</th><th>Billing</th><th>Regisztráció</th></tr></thead><tbody>';
+        for (const s of u.recentSignups) {
+            const tierClass = 'tier-' + (s.tier || 'unknown');
+            const date = s.created ? new Date(s.created).toLocaleDateString('hu-HU', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+            html += `<tr>
+                <td style="font-weight:600;">${esc(s.email)}</td>
+                <td>${esc(s.name || '-')}</td>
+                <td><span class="tier-badge ${tierClass}">${esc(s.tier || '?')}</span></td>
+                <td style="font-size:12px;color:#64748b;">${esc(s.billing || '-')}</td>
+                <td style="font-size:12px;color:#94a3b8;white-space:nowrap;">${date}</td>
+            </tr>`;
+        }
+        html += '</tbody></table></div>';
+
+        // --- GENERATED AT ---
+        if (d.generatedAt) {
+            const gen = new Date(d.generatedAt).toLocaleString('hu-HU');
+            html += `<div class="generated-at">Generálva: ${gen}</div>`;
+        }
+
+        content.innerHTML = html;
+    }
+
+    function statCard(label, value, icon, sub, cls) {
+        return `<div class="stat-card ${cls || ''}">
+            <div class="stat-label"><i class="fas ${icon}" style="margin-right:4px;"></i>${label}</div>
+            <div class="stat-value">${value ?? '-'}</div>
+            ${sub ? `<div class="stat-sub">${sub}</div>` : ''}
+        </div>`;
+    }
+
+    function renderBarChart(data, color) {
+        if (!data) return '<div style="color:#94a3b8;font-size:12px;">Nincs adat</div>';
+        const entries = Object.entries(data);
+        const maxVal = Math.max(...entries.map(e => e[1]), 1);
+        let html = '<div class="bar-chart">';
+        for (const [date, val] of entries) {
+            const h = Math.max((val / maxVal) * 100, 2);
+            const dayLabel = date.slice(5);
+            html += `<div class="bar-col" title="${date}: ${val}">
+                ${val > 0 ? `<div class="bar-value">${val}</div>` : ''}
+                <div class="bar" style="height:${h}%;background:${color};"></div>
+                <div class="bar-label">${dayLabel}</div>
+            </div>`;
+        }
+        html += '</div>';
+        return html;
+    }
+
+    function esc(s) {
+        const d = document.createElement('div');
+        d.textContent = String(s || '');
+        return d.innerHTML;
+    }
+
+    // Auto-load
+    loadStats();
+})();
+</script>
+</body>
+</html>
