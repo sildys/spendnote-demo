@@ -1297,7 +1297,7 @@ const initUserSettingsPage = async () => {
         }
 
         if (token) {
-            const link = `${window.location.origin}/spendnote-signup.html?inviteToken=${encodeURIComponent(token)}&invitedEmail=${encodeURIComponent(String(email || '').trim())}`;
+            const link = `${window.location.origin}/invite/${encodeURIComponent(token)}`;
             try {
                 await showPrompt('Copy invite link:', { defaultValue: link, title: 'Invite Link' });
             } catch (_) {
@@ -1351,7 +1351,7 @@ const initUserSettingsPage = async () => {
                 }
 
                 if (token) {
-                    const link = `${window.location.origin}/spendnote-signup.html?inviteToken=${encodeURIComponent(token)}&invitedEmail=${encodeURIComponent(String(email || '').trim())}`;
+                    const link = `${window.location.origin}/invite/${encodeURIComponent(token)}`;
                     try {
                         await showPrompt('Copy invite link:', { defaultValue: link, title: 'Invite Link' });
                     } catch (_) {

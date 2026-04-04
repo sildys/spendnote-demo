@@ -666,9 +666,20 @@ let __spendnoteInviteAcceptAttemptedToken = '';
 const __spendnotePersistInviteTokenFromUrl = () => {
     try {
         const sp = new URLSearchParams(window.location.search);
-        const inviteToken = sp.get('inviteToken');
-        if (!inviteToken) return;
-        localStorage.setItem(__spendnoteInviteTokenKey, String(inviteToken));
+        const fromQuery = sp.get('inviteToken');
+        if (fromQuery) {
+            localStorage.setItem(__spendnoteInviteTokenKey, String(fromQuery));
+            return;
+        }
+        const path = String(window.location.pathname || '');
+        const m = path.match(/^\/invite\/([^/?#]+)\/?$/i);
+        if (m && m[1]) {
+            try {
+                localStorage.setItem(__spendnoteInviteTokenKey, decodeURIComponent(String(m[1])).trim());
+            } catch (_) {
+                localStorage.setItem(__spendnoteInviteTokenKey, String(m[1]).trim());
+            }
+        }
     } catch (_) {
         // ignore
     }
@@ -3659,7 +3670,7 @@ var db = {
             try {
                 const token = row?.token;
                 if (token) {
-                    const link = `${window.location.origin}/spendnote-signup.html?inviteToken=${encodeURIComponent(token)}&invitedEmail=${encodeURIComponent(String(email || '').trim())}`;
+                    const link = `${window.location.origin}/invite/${encodeURIComponent(token)}`;
                     const sessionRes = await supabaseClient.auth.getSession();
                     let accessToken = String(sessionRes?.data?.session?.access_token || '');
                     if (!accessToken) throw new Error('Not authenticated');

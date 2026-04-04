@@ -94,13 +94,35 @@ Deno.serve(async (req: Request) => {
       .map((b) => b.toString(16).padStart(2, "0"))
       .join("");
 
-    const { data: inviteRow, error: inviteError } = await supabaseAdmin
+    let inviteRow: {
+      id: string;
+      org_id: string;
+      invited_email: string;
+      role: string;
+      status: string;
+    } | null = null;
+
+    const byHash = await supabaseAdmin
       .from("invites")
       .select("id, org_id, invited_email, role, status")
       .eq("token_hash", tokenHash)
-      .single();
+      .maybeSingle();
 
-    if (inviteError || !inviteRow) {
+    if (!byHash.error && byHash.data) {
+      inviteRow = byHash.data as typeof inviteRow;
+    } else {
+      // Legacy rows: token set but token_hash NULL (RPC did not populate hash)
+      const byToken = await supabaseAdmin
+        .from("invites")
+        .select("id, org_id, invited_email, role, status")
+        .eq("token", inviteToken)
+        .maybeSingle();
+      if (!byToken.error && byToken.data) {
+        inviteRow = byToken.data as typeof inviteRow;
+      }
+    }
+
+    if (!inviteRow) {
       return new Response(JSON.stringify({ error: "Invite not found" }), {
         status: 404,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -213,19 +235,6 @@ Deno.serve(async (req: Request) => {
 
     const safeRole = role === "admin" ? "Admin" : "User";
 
-    let effectiveLink = inviteLink;
-    try {
-      const normalizedAppUrl = String(appUrl || "").trim().replace(/\/+$/, "");
-      const baseOrigin = normalizedAppUrl ? normalizedAppUrl : new URL(inviteLink).origin;
-
-      const u = new URL("/spendnote-signup.html", baseOrigin);
-      u.searchParams.set("inviteToken", inviteToken);
-      u.searchParams.set("invitedEmail", invitedEmail);
-      effectiveLink = u.toString();
-    } catch (_) {
-      // ignore
-    }
-
     let inviterName = "";
     let inviterEmail = "";
     try {
@@ -240,14 +249,23 @@ Deno.serve(async (req: Request) => {
       // ignore
     }
 
-    const inviterLine = inviterName
-      ? `${inviterName}${inviterEmail ? ` (${inviterEmail})` : ""}`
-      : (inviterEmail || "A team member");
+    const normalizedAppUrl = String(appUrl || "").trim().replace(/\/+$/, "");
+    let baseOrigin = normalizedAppUrl;
+    if (!baseOrigin) {
+      try {
+        baseOrigin = new URL(inviteLink).origin;
+      } catch (_) {
+        baseOrigin = "";
+      }
+    }
+    const inviteShortUrl = baseOrigin
+      ? `${baseOrigin.replace(/\/+$/, "")}/invite/${encodeURIComponent(inviteToken)}`
+      : `https://spendnote.app/invite/${encodeURIComponent(inviteToken)}`;
 
     const rendered = renderInviteEmailTemplate({
-      inviterLine,
+      inviterDisplayName: inviterName || "",
       role: safeRole === "Admin" ? "Admin" : "User",
-      inviteLink: effectiveLink,
+      inviteShortUrl,
       subject,
     });
 

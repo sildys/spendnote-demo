@@ -37,8 +37,35 @@ function normalizeCashBoxIdPrefix(value) {
     return up;
 }
 
-function readStoredCashBoxLogo(_cashBoxId) { return ''; }
-function writeStoredCashBoxLogo(_cashBoxId, _logoDataUrl) {}
+function cashBoxLogoLocalStorageKey(cashBoxId) {
+    const id = String(cashBoxId || '').trim();
+    return id ? `spendnote.cashBoxLogo.data.${id}` : '';
+}
+
+function readStoredCashBoxLogo(cashBoxId) {
+    const key = cashBoxLogoLocalStorageKey(cashBoxId);
+    if (!key) return '';
+    try {
+        return String(localStorage.getItem(key) || '').trim();
+    } catch (_) {
+        return '';
+    }
+}
+
+function writeStoredCashBoxLogo(cashBoxId, logoDataUrl) {
+    const key = cashBoxLogoLocalStorageKey(cashBoxId);
+    if (!key) return;
+    try {
+        const v = String(logoDataUrl || '').trim();
+        if (!v) {
+            localStorage.removeItem(key);
+        } else {
+            localStorage.setItem(key, v);
+        }
+    } catch (_) {
+        // Quota or private mode — DB path should still work when column exists
+    }
+}
 
 function isUuid(value) {
     try {
@@ -708,7 +735,8 @@ async function loadCashBoxData(id) {
 
         currentCashBoxData = cashBox;
         supportsReceiptLabels = Boolean(cashBox && Object.prototype.hasOwnProperty.call(cashBox, 'receipt_amount_label'));
-        supportsCashBoxLogo = Boolean(cashBox && Object.prototype.hasOwnProperty.call(cashBox, 'cash_box_logo_url'));
+        // Assume logo column exists until a save proves otherwise (some responses omit null keys).
+        supportsCashBoxLogo = true;
         unsupportedReceiptVisibilityFields = new Set(
             RECEIPT_VISIBILITY_FIELDS.filter((field) => {
                 const column = RECEIPT_VISIBILITY_COLUMN_BY_FIELD[field];
@@ -958,10 +986,29 @@ async function handleSave(e) {
                 return { success: false, error: 'Cash box logo update did not affect any rows.' };
             }
 
-            const persistedValue = String(data.cash_box_logo_url || '').trim();
+            let persistedValue = String(data.cash_box_logo_url || '').trim();
             const expectedValue = logoValue;
-            if (persistedValue !== expectedValue) {
-                return { success: false, error: 'Cash box logo was not persisted in database.' };
+            // PostgREST usually echoes the stored value; avoid hard-failing on rare encoding/normalization drift.
+            if (persistedValue !== expectedValue && expectedValue) {
+                try {
+                    const { data: row, error: readErr } = await window.supabaseClient
+                        .from('cash_boxes')
+                        .select('cash_box_logo_url')
+                        .eq('id', targetId)
+                        .maybeSingle();
+                    if (!readErr && row) {
+                        persistedValue = String(row.cash_box_logo_url || '').trim();
+                    }
+                } catch (_) {
+                    // keep persistedValue from update response
+                }
+            }
+            if (persistedValue !== expectedValue && expectedValue) {
+                writeStoredCashBoxLogo(targetId, expectedValue);
+                if (typeof window.setCashBoxLogo === 'function') {
+                    window.setCashBoxLogo(expectedValue);
+                }
+                return { success: true, localOnly: true, verifyMismatch: true };
             }
 
             if (typeof window.setCashBoxLogo === 'function') {

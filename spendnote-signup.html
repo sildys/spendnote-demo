@@ -943,8 +943,31 @@ function togglePreviewDetails() {
     <a href="/" class="fab-home" title="Back to homepage"><i class="fas fa-home"></i></a>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260404-0150"></script>
+    <script src="assets/js/supabase-config.js?v=20260404-invite-flow"></script>
     <script>
+        const __SN_INVITE_TOKEN_KEY = 'spendnote.inviteToken.pending';
+        const __SN_INVITED_EMAIL_KEY = 'spendnote.invitedEmail.pending';
+
+        function getInviteTokenFromContext() {
+            try {
+                const q = String(new URLSearchParams(window.location.search).get('inviteToken') || '').trim();
+                if (q) return q;
+                return String(localStorage.getItem(__SN_INVITE_TOKEN_KEY) || '').trim();
+            } catch (_) {
+                return '';
+            }
+        }
+
+        function getInvitedEmailFromContext() {
+            try {
+                const q = String(new URLSearchParams(window.location.search).get('invitedEmail') || '').trim();
+                if (q) return q;
+                return String(localStorage.getItem(__SN_INVITED_EMAIL_KEY) || '').trim();
+            } catch (_) {
+                return '';
+            }
+        }
+
         const ensureProfile = async () => {
             try {
                 const { data: { user }, error } = await window.supabaseClient.auth.getUser();
@@ -1033,23 +1056,18 @@ function togglePreviewDetails() {
                 });
             } catch (_) {}
             try {
-                const sp = new URLSearchParams(window.location.search);
-                const inviteToken = String(sp.get('inviteToken') || '').trim();
-                const invitedEmail = String(sp.get('invitedEmail') || '').trim();
-                if (inviteToken && invitedEmail) {
+                const inviteToken = getInviteTokenFromContext();
+                const invitedEmail = getInvitedEmailFromContext();
+                if (invitedEmail) {
                     const emailEl = document.getElementById('email');
                     if (emailEl) {
                         emailEl.value = invitedEmail;
-                        emailEl.readOnly = true;
+                        if (inviteToken) emailEl.readOnly = true;
                     }
                 }
-                if (inviteToken) {
-                    const loginLink = document.getElementById('loginLink');
-                    if (loginLink) {
-                        let href = 'spendnote-login.html?inviteToken=' + encodeURIComponent(inviteToken);
-                        if (invitedEmail) href += '&invitedEmail=' + encodeURIComponent(invitedEmail);
-                        loginLink.href = href;
-                    }
+                const loginLink = document.getElementById('loginLink');
+                if (loginLink) {
+                    loginLink.href = 'spendnote-login.html';
                 }
             } catch (_) {}
             // Check if already logged in
@@ -1060,9 +1078,7 @@ function togglePreviewDetails() {
             const user = await auth.getCurrentUser();
             if (user) {
                 try {
-                    const sp = new URLSearchParams(window.location.search);
-                    const inviteToken = sp.get('inviteToken');
-                    await acceptInviteToken(inviteToken);
+                    await acceptInviteToken(getInviteTokenFromContext());
                 } catch (_) {
 
                 }
@@ -1150,9 +1166,8 @@ function togglePreviewDetails() {
             const fullName = document.getElementById('fullName').value;
             let email = document.getElementById('email').value;
             try {
-                const sp = new URLSearchParams(window.location.search);
-                const inviteToken = String(sp.get('inviteToken') || '').trim();
-                const invitedEmail = String(sp.get('invitedEmail') || '').trim();
+                const inviteToken = getInviteTokenFromContext();
+                const invitedEmail = getInvitedEmailFromContext();
                 if (inviteToken && invitedEmail) {
                     email = invitedEmail;
                 }
@@ -1187,8 +1202,7 @@ function togglePreviewDetails() {
 
             try {
                 // Sign up with Supabase
-                const sp = new URLSearchParams(window.location.search);
-                const inviteToken = sp.get('inviteToken');
+                const inviteToken = getInviteTokenFromContext();
                 const redirectBase = `${window.location.origin}/spendnote-login.html?confirmed=1`;
                 const emailRedirectTo = inviteToken
                     ? `${redirectBase}&inviteToken=${encodeURIComponent(inviteToken)}`
@@ -1223,8 +1237,7 @@ function togglePreviewDetails() {
                         resendBtn.textContent = 'Resend confirmation email';
                         resendBtn.addEventListener('click', async () => {
                             try {
-                                const sp = new URLSearchParams(window.location.search);
-                                const inviteToken = sp.get('inviteToken');
+                                const inviteToken = getInviteTokenFromContext();
                                 const redirectBase = `${window.location.origin}/spendnote-login.html?confirmed=1`;
                                 const emailRedirectTo = inviteToken
                                     ? `${redirectBase}&inviteToken=${encodeURIComponent(inviteToken)}`
@@ -1249,7 +1262,7 @@ function togglePreviewDetails() {
                     }
 
                     try {
-                        await acceptInviteToken(inviteToken);
+                        await acceptInviteToken(getInviteTokenFromContext());
                     } catch (_) {
 
                     }
@@ -1349,8 +1362,7 @@ function togglePreviewDetails() {
             googleBtn.textContent = 'Redirecting...';
 
             try {
-                const sp = new URLSearchParams(window.location.search);
-                const inviteToken = sp.get('inviteToken');
+                const inviteToken = getInviteTokenFromContext();
                 const redirectUrl = new URL(`${window.location.origin}/spendnote-welcome.html`);
                 if (inviteToken) {
                     redirectUrl.searchParams.set('inviteToken', inviteToken);

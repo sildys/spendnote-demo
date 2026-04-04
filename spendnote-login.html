@@ -873,8 +873,20 @@ function togglePreviewDetails() {
     <a href="/" class="fab-home" title="Back to homepage"><i class="fas fa-home"></i></a>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260404-0150"></script>
+    <script src="assets/js/supabase-config.js?v=20260404-invite-flow"></script>
     <script>
+        const __SN_INVITE_TOKEN_KEY = 'spendnote.inviteToken.pending';
+
+        function getInviteTokenFromContext() {
+            try {
+                const q = String(new URLSearchParams(window.location.search).get('inviteToken') || '').trim();
+                if (q) return q;
+                return String(localStorage.getItem(__SN_INVITE_TOKEN_KEY) || '').trim();
+            } catch (_) {
+                return '';
+            }
+        }
+
         const ensureProfile = async () => {
             try {
                 const { data: { user }, error } = await window.supabaseClient.auth.getUser();
@@ -1055,9 +1067,7 @@ function togglePreviewDetails() {
                 const user = await window.auth.getCurrentUser();
                 if (user) {
                     try {
-                        const sp = new URLSearchParams(window.location.search);
-                        const inviteToken = sp.get('inviteToken');
-                        await acceptInviteToken(inviteToken);
+                        await acceptInviteToken(getInviteTokenFromContext());
                     } catch (_) {
 
                     }
@@ -1145,8 +1155,7 @@ function togglePreviewDetails() {
                 const email = String(lastAttemptEmail || document.getElementById('email')?.value || '').trim();
                 if (!email) { showError('Please enter your email first.'); return; }
                 try {
-                    const sp = new URLSearchParams(window.location.search);
-                    const inviteToken = sp.get('inviteToken');
+                    const inviteToken = getInviteTokenFromContext();
                     const redirectUrl = new URL(`${window.location.origin}/spendnote-login.html`);
                     redirectUrl.searchParams.set('confirmed', '1');
                     redirectUrl.searchParams.set('returnTo', getSafeReturnTo());
@@ -1193,9 +1202,7 @@ function togglePreviewDetails() {
                 
                 if (result.success) {
                     try {
-                        const sp = new URLSearchParams(window.location.search);
-                        const inviteToken = sp.get('inviteToken');
-                        await acceptInviteToken(inviteToken);
+                        await acceptInviteToken(getInviteTokenFromContext());
                     } catch (_) {
 
                     }
@@ -1234,8 +1241,7 @@ function togglePreviewDetails() {
         // Google login
         document.getElementById('googleBtn').addEventListener('click', async () => {
             try {
-                const sp = new URLSearchParams(window.location.search);
-                const inviteToken = sp.get('inviteToken');
+                const inviteToken = getInviteTokenFromContext();
                 const redirectUrl = new URL(`${window.location.origin}/spendnote-login.html`);
                 redirectUrl.searchParams.set('returnTo', getSafeReturnTo());
                 if (inviteToken) {

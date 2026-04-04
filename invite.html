@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Team invite — SpendNote</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="assets/css/main.css?v=23">
+    <style>
+        body { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--bg-page, #f8fafc); margin: 0; font-family: Inter, system-ui, sans-serif; }
+        .invite-card { max-width: 420px; padding: 28px 24px; text-align: center; background: #fff; border-radius: 14px; border: 1px solid var(--border-color, #e5e7eb); box-shadow: 0 10px 40px rgba(15,23,42,0.08); }
+        .invite-card h1 { font-size: 1.15rem; margin: 0 0 10px; color: var(--text-primary, #111); }
+        .invite-card p { margin: 0; color: var(--text-muted, #6b7280); font-size: 0.95rem; line-height: 1.5; }
+        .invite-card .err { color: #b91c1c; margin-top: 12px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="invite-card">
+        <h1>Opening SpendNote…</h1>
+        <p id="inviteStatus">One moment.</p>
+        <p id="inviteError" class="err" style="display:none;"></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-config.js?v=20260404-invite-flow"></script>
+    <script>
+(function () {
+    const INVITE_TOKEN_KEY = 'spendnote.inviteToken.pending';
+    const INVITED_EMAIL_KEY = 'spendnote.invitedEmail.pending';
+    const SIGNUP_PATH = '/signup';
+    const APP_PATH = '/app';
+
+    function parseInviteTokenFromPath() {
+        try {
+            const path = String(window.location.pathname || '');
+            const m = path.match(/^\/invite\/([^/?#]+)\/?$/i);
+            if (!m || !m[1]) return '';
+            return decodeURIComponent(m[1]).trim();
+        } catch (_) {
+            return '';
+        }
+    }
+
+    function setStatus(t) {
+        const el = document.getElementById('inviteStatus');
+        if (el) el.textContent = t;
+    }
+    function showError(t) {
+        setStatus('');
+        const el = document.getElementById('inviteError');
+        if (el) { el.textContent = t; el.style.display = 'block'; }
+    }
+
+    async function acceptInviteToken(token) {
+        if (!token || !window.supabaseClient?.rpc) return;
+        try {
+            const { data: { user } } = await window.supabaseClient.auth.getUser();
+            if (!user) return;
+            try {
+                const { data: existing } = await window.supabaseClient.from('profiles').select('id').eq('id', user.id).maybeSingle();
+                if (!existing?.id) {
+                    const email = String(user.email || '').trim();
+                    const fullName = String(user.user_metadata?.full_name || '').trim() || (email ? email.split('@')[0] : 'User');
+                    if (email) {
+                        await window.supabaseClient.from('profiles').insert([{
+                            id: user.id, email, full_name: fullName,
+                            subscription_tier: 'preview', billing_status: 'preview'
+                        }]);
+                    }
+                }
+            } catch (_) {}
+            let r = await window.supabaseClient.rpc('spendnote_accept_invite_v2', { p_token: token });
+            if (r?.error) {
+                r = await window.supabaseClient.rpc('spendnote_accept_invite', { p_token: token });
+            }
+            if (!r?.error) {
+                try { localStorage.removeItem(INVITE_TOKEN_KEY); } catch (_) {}
+                try { localStorage.removeItem(INVITED_EMAIL_KEY); } catch (_) {}
+            }
+        } catch (_) {}
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        const token = parseInviteTokenFromPath();
+        if (!token || token.length < 20 || /\s/.test(token)) {
+            showError('This invite link is invalid or expired. Ask your team admin to send a new invite.');
+            return;
+        }
+
+        try { localStorage.setItem(INVITE_TOKEN_KEY, token); } catch (_) {}
+
+        try {
+            await (window.__spendnoteAuthCallbackPromise || Promise.resolve());
+        } catch (_) {}
+
+        try {
+            const { data, error } = await window.supabaseClient.rpc('spendnote_public_invite_meta', { p_token: token });
+            let meta = data;
+            if (meta && typeof meta === 'string') {
+                try { meta = JSON.parse(meta); } catch (_) { meta = null; }
+            }
+            if (!error && meta && meta.ok === true && meta.invited_email) {
+                try { localStorage.setItem(INVITED_EMAIL_KEY, String(meta.invited_email).trim()); } catch (_) {}
+            }
+        } catch (_) {}
+
+        try {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (session?.user) {
+                setStatus('Adding you to the team…');
+                await acceptInviteToken(token);
+                window.location.replace(APP_PATH);
+                return;
+            }
+        } catch (_) {}
+
+        setStatus('Redirecting to sign up…');
+        window.location.replace(SIGNUP_PATH);
+    });
+})();
+    </script>
+</body>
+</html>
