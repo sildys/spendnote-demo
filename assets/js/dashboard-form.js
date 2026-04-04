@@ -361,14 +361,10 @@ function initTransactionForm() {
                         : '';
                     if (cached) {
                         payload.contact_id = String(cached);
-                    } else if (window.supabaseClient && user && user.id) {
-                        const lookup = await window.supabaseClient
-                            .from('contacts')
-                            .select('id')
-                            .eq('user_id', user.id)
-                            .ilike('name', String(contactName))
-                            .limit(1);
-                        const row = Array.isArray(lookup?.data) ? lookup.data[0] : null;
+                    } else if (window.db?.contacts?.getAll) {
+                        const list = await window.db.contacts.getAll();
+                        const nk = nameKey;
+                        const row = (Array.isArray(list) ? list : []).find((c) => String(c?.name || '').trim().toLowerCase() === nk);
                         const id = String(row?.id || '').trim();
                         if (id) {
                             payload.contact_id = id;

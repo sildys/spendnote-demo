@@ -488,6 +488,7 @@ const computeAndApplyRole = async () => {
 
             const readOnlyNote = document.getElementById('receiptIdentityReadOnlyNote');
             if (readOnlyNote) {
+                readOnlyNote.textContent = 'Receipt identity on printed receipts comes from your workspace owner’s account (read-only here).';
                 readOnlyNote.style.display = isUserRole ? 'block' : 'none';
             }
 

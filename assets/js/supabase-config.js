@@ -14,7 +14,7 @@ try {
 }
 
 if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260301-2141');
-window.__spendnoteSupabaseConfigBuild = '20260301-2141';
+window.__spendnoteSupabaseConfigBuild = '20260406-org-user-workspace-identity';
 
 const __spendnoteGetResponseRequestId = (resp) => {
     try {
@@ -2076,6 +2076,20 @@ try {
     };
 } catch (_) {}
 
+/**
+ * In org workspace: list contacts tagged for the org OR legacy rows owned by the org owner with null org_id.
+ * (Invited members need the owner's contact list, not only rows with org_id set.)
+ */
+function __spendnoteApplyContactsWorkspaceScope(query, ctx) {
+    const orgId = String(ctx?.orgId || '').trim();
+    const ownerUserId = String(ctx?.ownerUserId || '').trim();
+    if (!orgId) return query;
+    if (ownerUserId) {
+        return query.or(`org_id.eq.${orgId},and(user_id.eq.${ownerUserId},org_id.is.null)`);
+    }
+    return query.eq('org_id', orgId);
+}
+
 window.SpendNoteOrgContext = {
     async getSelectionState() {
         const user = await auth.getCurrentUser();
@@ -2675,7 +2689,7 @@ var db = {
                 .from('contacts')
                 .select('*');
             if (ctx?.orgId) {
-                query = query.eq('org_id', ctx.orgId);
+                query = __spendnoteApplyContactsWorkspaceScope(query, ctx);
             }
             const { data, error } = await query.order('name', { ascending: true });
             if (error) {
@@ -2686,14 +2700,10 @@ var db = {
         },
 
         async getById(id) {
-            const ctx = await getMyOrgContext();
-            let query = supabaseClient
+            const query = supabaseClient
                 .from('contacts')
                 .select('*')
                 .eq('id', id);
-            if (ctx?.orgId) {
-                query = query.eq('org_id', ctx.orgId);
-            }
             const { data, error } = await query.single();
             if (error) {
                 console.error('Error fetching contact:', error);
@@ -2722,10 +2732,10 @@ var db = {
                 .eq('sequence_number', seq);
 
             if (ctx?.orgId) {
-                query = query.eq('org_id', ctx.orgId);
+                query = __spendnoteApplyContactsWorkspaceScope(query, ctx);
             }
 
-            const { data, error } = await query.single();
+            const { data, error } = await query.order('created_at', { ascending: true }).limit(1).maybeSingle();
 
             if (error) {
                 return null;
@@ -2780,7 +2790,7 @@ var db = {
                 .eq('name', name);
 
             if (ctx?.orgId) {
-                lookup = lookup.eq('org_id', ctx.orgId);
+                lookup = __spendnoteApplyContactsWorkspaceScope(lookup, ctx);
             }
 
             if (email) {
@@ -3425,6 +3435,34 @@ var db = {
                 }
 
                 const row = Array.isArray(data) ? (data[0] || null) : null;
+
+                // Invited org members (role user): use workspace owner's receipt identity on receipts and in UI preview.
+                try {
+                    const ctx = await getMyOrgContext();
+                    const role = String(ctx?.role || '').trim().toLowerCase();
+                    const ownerId = String(ctx?.ownerUserId || '').trim();
+                    if (role === 'user' && ownerId && ownerId !== userId) {
+                        const { data: ownerRows, error: ownerErr } = await supabaseClient
+                            .from('profiles')
+                            .select('company_name, phone, address, account_logo_url, logo_settings')
+                            .eq('id', ownerId)
+                            .limit(1);
+                        const o = Array.isArray(ownerRows) ? (ownerRows[0] || null) : null;
+                        if (!ownerErr && o) {
+                            return {
+                                ...row,
+                                company_name: o.company_name != null ? o.company_name : row?.company_name,
+                                phone: o.phone != null ? o.phone : row?.phone,
+                                address: o.address != null ? o.address : row?.address,
+                                account_logo_url: o.account_logo_url != null ? o.account_logo_url : row?.account_logo_url,
+                                logo_settings: o.logo_settings != null ? o.logo_settings : row?.logo_settings
+                            };
+                        }
+                    }
+                } catch (_) {
+                    // ignore overlay failures
+                }
+
                 return row;
             } catch (e) {
                 if (window.SpendNoteDebug) {
