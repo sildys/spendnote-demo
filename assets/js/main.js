@@ -1029,39 +1029,100 @@ window.SpendNoteUpgrade = {
         }
     },
 
+    _escapeOverlayText(s) {
+        return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    },
+
     showLockOverlay(opts) {
-        const { feature = '', requiredPlan = 'standard', anchorEl = null } = opts || {};
+        const { feature = '', requiredPlan = 'standard' } = opts || {};
 
         const existing = document.getElementById(this._overlayId);
         if (existing) existing.remove();
 
-        const planLabel = this._planLabel[requiredPlan] || 'a paid plan';
+        const planLabel = this._planLabel[requiredPlan] || 'paid';
         const planUrl = this._buildPlanUrl(requiredPlan, feature);
+        const esc = (t) => this._escapeOverlayText(t);
+        const feat = esc(feature);
+        const title = 'Unlock this feature';
+        const body = feat
+            ? `Upgrade to use <strong>${feat}</strong>.<br>It’s included in the <strong>${esc(planLabel)}</strong> plan and above.`
+            : `This is included in the <strong>${esc(planLabel)}</strong> plan and above.`;
+
         const overlay = document.createElement('div');
         overlay.id = this._overlayId;
         overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,0.55);display:flex;align-items:center;justify-content:center;padding:20px;';
         overlay.innerHTML = `
-          <div style="background:#fff;border-radius:16px;box-shadow:0 24px 60px rgba(15,23,42,0.18);max-width:400px;width:100%;padding:32px 28px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:center;">
-            <div style="width:56px;height:56px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
-              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <div style="background:#fff;border-radius:16px;box-shadow:0 24px 60px rgba(15,23,42,0.18);max-width:420px;width:100%;padding:36px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:center;position:relative;">
+            <button type="button" id="sn-upgrade-overlay-close" style="position:absolute;top:14px;right:14px;appearance:none;border:none;background:none;color:#94a3b8;cursor:pointer;padding:4px;line-height:1;" aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ecfdf5,#d1fae5);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             </div>
-            <div style="font-size:18px;font-weight:800;color:#0f172a;margin-bottom:8px;">Upgrade Required</div>
-            <div style="font-size:14px;color:#64748b;margin-bottom:24px;line-height:1.5;">${feature ? `<strong>${feature}</strong> is` : 'This feature is'} available on the <strong>${planLabel}</strong> plan and above.</div>
-            <div style="display:flex;gap:10px;justify-content:center;">
-              <a href="${planUrl}" style="display:inline-flex;align-items:center;gap:8px;background:#0f172a;color:#fff;border-radius:8px;padding:11px 22px;font-size:14px;font-weight:700;text-decoration:none;">
-                View Plans
-              </a>
-              <button type="button" id="sn-upgrade-overlay-close" style="appearance:none;border:1px solid #cbd5e1;background:#fff;color:#64748b;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:700;cursor:pointer;">
-                Cancel
-              </button>
-            </div>
+            <div style="font-size:19px;font-weight:800;color:#0f172a;margin-bottom:10px;line-height:1.3;">${title}</div>
+            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">${body}</div>
+            <a href="${planUrl}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#059669;color:#fff;border-radius:10px;padding:13px 28px;font-size:15px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;">
+              View plans
+            </a>
+            <button type="button" id="sn-upgrade-overlay-secondary" style="appearance:none;border:none;background:none;color:#cbd5e1;font-size:12px;font-weight:400;cursor:pointer;margin-top:14px;padding:4px;">Not now</button>
+            <div style="font-size:12px;color:#94a3b8;margin-top:8px;line-height:1.4;">Compare plans on the next screen</div>
           </div>
         `;
         document.body.appendChild(overlay);
 
         const close = () => overlay.remove();
         document.getElementById('sn-upgrade-overlay-close').addEventListener('click', close);
+        document.getElementById('sn-upgrade-overlay-secondary').addEventListener('click', close);
         overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+        const escHandler = (e) => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escHandler); } };
+        document.addEventListener('keydown', escHandler);
+    },
+
+    showSeatLimitUpgrade(seatLimit) {
+        const n = Math.max(1, Number(seatLimit) || 1);
+        const existing = document.getElementById(this._overlayId);
+        if (existing) existing.remove();
+
+        const planUrl = this._buildPlanUrl('pro', 'Team seats');
+        const title = n === 1
+            ? 'You’ve used your included seat'
+            : `You’ve used all ${n} included seats`;
+        const body = n === 1
+            ? 'Your plan includes <strong>1 seat</strong> (you).<br>Add extra seats on Pro to invite teammates.'
+            : `Your plan includes <strong>${n} seats</strong> and they’re all in use.<br>Add more seats to invite another member.`;
+
+        const overlay = document.createElement('div');
+        overlay.id = this._overlayId;
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:10000;background:rgba(15,23,42,0.55);display:flex;align-items:center;justify-content:center;padding:20px;';
+        overlay.innerHTML = `
+          <div style="background:#fff;border-radius:16px;box-shadow:0 24px 60px rgba(15,23,42,0.18);max-width:420px;width:100%;padding:36px 32px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;text-align:center;position:relative;">
+            <button type="button" id="sn-upgrade-overlay-close" style="position:absolute;top:14px;right:14px;appearance:none;border:none;background:none;color:#94a3b8;cursor:pointer;padding:4px;line-height:1;" aria-label="Close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ecfdf5,#d1fae5);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div style="font-size:19px;font-weight:800;color:#0f172a;margin-bottom:10px;line-height:1.3;">${title}</div>
+            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">${body}</div>
+            <a href="${planUrl}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#059669;color:#fff;border-radius:10px;padding:13px 28px;font-size:15px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;">
+              Add seats &amp; view plans
+            </a>
+            <button type="button" id="sn-upgrade-overlay-secondary" style="appearance:none;border:none;background:none;color:#cbd5e1;font-size:12px;font-weight:400;cursor:pointer;margin-top:14px;padding:4px;">Not now</button>
+            <div style="font-size:12px;color:#94a3b8;margin-top:8px;line-height:1.4;">Extra seats on Pro · invite more teammates</div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const close = () => overlay.remove();
+        document.getElementById('sn-upgrade-overlay-close').addEventListener('click', close);
+        document.getElementById('sn-upgrade-overlay-secondary').addEventListener('click', close);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
+        const escHandler = (e) => { if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escHandler); } };
+        document.addEventListener('keydown', escHandler);
     },
 
     showLockBadge(el, requiredPlan) {

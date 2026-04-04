@@ -495,9 +495,11 @@ const initTeamPage = async () => {
 
         const currentCount = teamMembers.filter(m => m.status === 'active' || m.status === 'pending').length;
         if (currentCount >= seatLimit) {
-            if (window.SpendNoteUpgrade?.showLockOverlay) {
+            if (typeof window.SpendNoteUpgrade?.showSeatLimitUpgrade === 'function') {
+                window.SpendNoteUpgrade.showSeatLimitUpgrade(seatLimit);
+            } else if (window.SpendNoteUpgrade?.showLockOverlay) {
                 window.SpendNoteUpgrade.showLockOverlay({
-                    feature: `You've used all ${seatLimit} seats`,
+                    feature: 'More team seats',
                     requiredPlan: 'pro'
                 });
             } else {
