@@ -138,11 +138,224 @@
         return (first + last).toUpperCase().slice(0, 2) || 'SN';
     }
 
-    function getCreatedByAvatarUrl(createdByName) {
-        const avatarColor = '#10b981';
+    const TX_HIST_AVATAR_BASE_SIZE = 96;
+    const TX_HIST_AVATAR_MIN_SCALE = 0.5;
+    const TX_HIST_AVATAR_MAX_SCALE = 3;
+
+    function isValidTxHistAvatarSource(value) {
+        const src = String(value || '').trim();
+        if (!src) return false;
+        return /^data:image\//i.test(src) || /^https?:\/\//i.test(src);
+    }
+
+    function normalizeTxHistAvatarSettings(raw) {
+        const src = raw && typeof raw === 'object' ? raw : {};
+        const scaleNum = Number(src.scale);
+        const scale = Number.isFinite(scaleNum)
+            ? Math.max(TX_HIST_AVATAR_MIN_SCALE, Math.min(TX_HIST_AVATAR_MAX_SCALE, scaleNum))
+            : 1;
+        const xNum = Number(src.x);
+        const yNum = Number(src.y);
+        return {
+            scale: Math.round(scale * 100) / 100,
+            x: Number.isFinite(xNum) ? xNum : 0,
+            y: Number.isFinite(yNum) ? yNum : 0
+        };
+    }
+
+    function buildTxHistAvatarTransform(rawSettings, slotSizePx) {
+        const settings = normalizeTxHistAvatarSettings(rawSettings);
+        const slot = Number(slotSizePx);
+        const ratio = Number.isFinite(slot) && slot > 0 ? (slot / TX_HIST_AVATAR_BASE_SIZE) : 1;
+        const x = Math.round(settings.x * ratio * 100) / 100;
+        const y = Math.round(settings.y * ratio * 100) / 100;
+        return `translate(${x}px, ${y}px) scale(${settings.scale})`;
+    }
+
+    function resolveTxCreatorProfileForHistory(tx, profileMap, createdByName, workspaceOwnerId) {
+        const map = profileMap instanceof Map ? profileMap : new Map();
+        const cb = safeText(tx?.created_by_user_id, '');
+        const uid = safeText(tx?.user_id, '');
+        const nameNorm = safeText(createdByName, '').toLowerCase();
+        const orgOwner = safeText(workspaceOwnerId, '');
+
+        const rowFor = (id) => (id ? map.get(String(id)) : null);
+        const nameMatches = (prof) => {
+            if (!prof || !nameNorm || nameNorm === '—') return false;
+            return safeText(prof.full_name, '').toLowerCase() === nameNorm;
+        };
+
+        const pCb = rowFor(cb);
+        const pUid = rowFor(uid);
+
+        if (orgOwner && cb && uid && cb === orgOwner && uid !== orgOwner) {
+            const actor = rowFor(uid);
+            if (actor) return actor;
+        }
+
+        if (orgOwner && cb === orgOwner && nameNorm && nameNorm !== '—') {
+            let nameHit = null;
+            let nameHitCount = 0;
+            map.forEach((prof) => {
+                if (!nameMatches(prof)) return;
+                nameHitCount += 1;
+                nameHit = prof;
+            });
+            if (nameHitCount === 1 && nameHit) return nameHit;
+        }
+
+        if (cb && uid && cb !== uid) {
+            const mCb = nameMatches(pCb);
+            const mUid = nameMatches(pUid);
+            if (mUid && !mCb) return pUid;
+            if (mCb && !mUid) return pCb;
+            return pUid || pCb;
+        }
+        if (cb) return pCb;
+        return pUid;
+    }
+
+    function getTxCreatedByAvatarData(createdByName, tx, avatarCtx) {
+        const ctx = avatarCtx || {};
+        const profileMap = ctx.creatorMap instanceof Map ? ctx.creatorMap : new Map();
+        const workspaceOwnerId = safeText(ctx.workspaceOwnerId, '');
+        const viewerAvatar = ctx.viewerAvatar && typeof ctx.viewerAvatar === 'object' ? ctx.viewerAvatar : {};
+
+        const createdByUserId = safeText(tx?.created_by_user_id, '');
+        const rowUserId = safeText(tx?.user_id, '');
+        const createdByNameNorm = safeText(createdByName, '').toLowerCase();
+        const viewerId = safeText(viewerAvatar.userId, '');
+        const isCurrentUserRow = (
+            viewerId
+            && (
+                (createdByUserId && createdByUserId === viewerId)
+                || (rowUserId && rowUserId === viewerId)
+            )
+        ) || (
+            !createdByUserId
+            && !rowUserId
+            && safeText(viewerAvatar.displayName, '')
+            && createdByNameNorm
+            && createdByNameNorm === safeText(viewerAvatar.displayName, '').toLowerCase()
+        );
+
+        const slotPx = 32;
+
+        const peerProfile = resolveTxCreatorProfileForHistory(tx, profileMap, createdByName, workspaceOwnerId);
+        if (peerProfile) {
+            const peerUrl = safeText(peerProfile.avatar_url, '');
+            if (peerUrl && isValidTxHistAvatarSource(peerUrl)) {
+                return {
+                    url: peerUrl,
+                    transform: buildTxHistAvatarTransform(peerProfile.avatar_settings, slotPx)
+                };
+            }
+            const peerColor = normalizeHexColor(peerProfile.avatar_color || '#10b981');
+            const peerInitialsName = safeText(peerProfile.full_name || createdByName, '');
+            const peerInitials = getInitials(peerInitialsName === '—' ? '' : peerInitialsName);
+            const svgPeer = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffffff" stroke="${peerColor}" stroke-width="4"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="800" fill="${peerColor}">${peerInitials}</text></svg>`;
+            return {
+                url: `data:image/svg+xml,${encodeURIComponent(svgPeer)}`,
+                transform: ''
+            };
+        }
+
+        const vUrl = safeText(viewerAvatar.avatarUrl, '');
+        if (isCurrentUserRow && vUrl && isValidTxHistAvatarSource(vUrl)) {
+            return {
+                url: vUrl,
+                transform: buildTxHistAvatarTransform(viewerAvatar.avatarSettings, slotPx)
+            };
+        }
+
+        const avatarColor = isCurrentUserRow ? normalizeHexColor(viewerAvatar.avatarColor || '#10b981') : '#10b981';
         const initials = getInitials(createdByName === '—' ? '' : createdByName);
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="30" fill="#ffffff" stroke="${avatarColor}" stroke-width="4"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', sans-serif" font-size="24" font-weight="800" fill="${avatarColor}">${initials}</text></svg>`;
-        return `data:image/svg+xml,${encodeURIComponent(svg)}`;
+        return {
+            url: `data:image/svg+xml,${encodeURIComponent(svg)}`,
+            transform: ''
+        };
+    }
+
+    function emptyTxHistAvatarCtx() {
+        return {
+            creatorMap: new Map(),
+            viewerAvatar: {
+                userId: '',
+                displayName: '',
+                avatarUrl: '',
+                avatarColor: '#10b981',
+                avatarSettings: { scale: 1, x: 0, y: 0 }
+            },
+            workspaceOwnerId: ''
+        };
+    }
+
+    async function hydrateTxHistoryViewerAvatar() {
+        const out = emptyTxHistAvatarCtx().viewerAvatar;
+        try {
+            const user = await window.auth?.getCurrentUser?.();
+            out.userId = safeText(user?.id, '');
+            let profile = null;
+            try {
+                profile = await window.db?.profiles?.getCurrent?.();
+            } catch (_) {
+                profile = null;
+            }
+            out.avatarUrl = safeText(profile?.avatar_url || user?.user_metadata?.avatar_url, '');
+            out.avatarColor = safeText(profile?.avatar_color || user?.user_metadata?.avatar_color, '') || '#10b981';
+            out.avatarSettings = normalizeTxHistAvatarSettings(profile?.avatar_settings || user?.user_metadata?.avatar_settings || null);
+            out.displayName = safeText(
+                profile?.full_name || user?.user_metadata?.full_name || user?.email,
+                ''
+            ).toLowerCase();
+        } catch (_) {}
+        return out;
+    }
+
+    async function fetchCreatorProfilesForTransactions(txs) {
+        const map = new Map();
+        const list = Array.isArray(txs) ? txs : [];
+        const idSet = new Set();
+        list.forEach((t) => {
+            const cb = safeText(t?.created_by_user_id, '');
+            const uid = safeText(t?.user_id, '');
+            if (cb) idSet.add(cb);
+            if (uid) idSet.add(uid);
+        });
+
+        try {
+            if (window.db?.teamMembers?.getAll) {
+                const team = await window.db.teamMembers.getAll();
+                for (const m of Array.isArray(team) ? team : []) {
+                    const mid = safeText(m?.member_id || m?.member?.id, '');
+                    const mem = m?.member;
+                    if (mid && mem && typeof mem === 'object') {
+                        map.set(mid, mem);
+                    }
+                }
+            }
+        } catch (_) {}
+
+        const creatorIds = [...idSet];
+        if (creatorIds.length && window.supabaseClient) {
+            try {
+                const { data: profRows, error: profErr } = await window.supabaseClient
+                    .from('profiles')
+                    .select('id,avatar_url,avatar_settings,avatar_color,full_name')
+                    .in('id', creatorIds);
+                if (!profErr && Array.isArray(profRows)) {
+                    for (const p of profRows) {
+                        const id = safeText(p?.id, '');
+                        if (!id) continue;
+                        const prev = map.get(id);
+                        map.set(id, prev && typeof prev === 'object' ? { ...prev, ...p } : p);
+                    }
+                }
+            } catch (_) {}
+        }
+
+        return map;
     }
 
     function normalizeIdPrefix(value) {
@@ -503,13 +716,15 @@
         tbody.appendChild(tr);
     }
 
-    function renderTableRows(tbody, txs) {
+    function renderTableRows(tbody, txs, avatarCtx) {
         if (!tbody) return;
         tbody.innerHTML = '';
 
         // Also clear mobile card list
         const txCardList = document.getElementById('txCardList');
         if (txCardList) txCardList.innerHTML = '';
+
+        const ctx = avatarCtx || emptyTxHistAvatarCtx();
 
         if (!txs || txs.length === 0) {
             const tr = document.createElement('tr');
@@ -537,7 +752,10 @@
             const contactName = safeText(tx.contact?.name || tx.contact_name, '—');
             const contactId = getContactDisplayId(tx);
             const createdBy = safeText(tx.created_by_user_name || tx.created_by, '—');
-            const avatarUrl = getCreatedByAvatarUrl(createdBy);
+            const avatarData = getTxCreatedByAvatarData(createdBy, tx, ctx);
+            const avatarStyle = avatarData.transform
+                ? ` style="transform: ${avatarData.transform}; transform-origin: 50% 50%;"`
+                : '';
 
             const pillClass = isVoided ? 'void' : (isIncome ? 'in' : 'out');
             const pillIcon = isVoided ? 'fa-ban' : (isIncome ? 'fa-arrow-down' : 'fa-arrow-up');
@@ -557,7 +775,7 @@
                 <td><span class="tx-contact">${contactName}</span></td>
                 <td><span class="tx-contact-id">${contactId}</span></td>
                 <td><span class="tx-amount ${isIncome ? 'in' : 'out'} ${isVoided ? 'voided' : ''}">${formatCurrency(tx.amount, currency)}</span></td>
-                <td><div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarUrl}" alt="${createdBy}"></div></div></td>
+                <td><div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarData.url}" alt="${createdBy}"${avatarStyle}></div></div></td>
                 <td>
                     <div class="tx-actions">
                         <button type="button" class="tx-action btn-duplicate" data-tx-id="${safeText(tx.id, '')}" data-cash-box-id="${safeText(tx.cash_box_id || tx.cash_box?.id, '')}" data-direction="${isIncome ? 'in' : 'out'}" data-amount="${safeText(tx.amount, '')}" data-contact-id="${safeText(tx.contact_id || tx.contact?.id, '')}" data-description="${encodeURIComponent(safeText(tx.description, ''))}" data-contact-name="${encodeURIComponent(safeText(contactName, ''))}">
@@ -900,7 +1118,7 @@
             cashBoxByQuery: new Map()
         };
 
-        const txSelect = 'id, cash_box_id, type, amount, description, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name, cash_box_sequence, tx_sequence_in_box, status, voided_at, voided_by_user_name, cash_box_name_snapshot, cash_box_currency_snapshot, cash_box_color_snapshot, cash_box_icon_snapshot, cash_box_id_prefix_snapshot, contact:contacts(id, name, sequence_number)';
+        const txSelect = 'id, user_id, cash_box_id, type, amount, description, receipt_number, transaction_date, created_at, contact_id, contact_name, created_by_user_id, created_by_user_name, cash_box_sequence, tx_sequence_in_box, status, voided_at, voided_by_user_name, cash_box_name_snapshot, cash_box_currency_snapshot, cash_box_color_snapshot, cash_box_icon_snapshot, cash_box_id_prefix_snapshot, contact:contacts(id, name, sequence_number)';
 
         const filterHeader = qs('#filterHeader');
         const filterPanel = qs('#filterPanel');
@@ -2124,7 +2342,7 @@
             if (Array.isArray(serverCtx.cashBoxIds) && serverCtx.cashBoxIds.length === 0) {
                 serverCtx.filteredTxCount = 0;
                 await updateStats(serverCtx);
-                renderTableRows(tbody, []);
+                renderTableRows(tbody, [], emptyTxHistAvatarCtx());
                 state.pagination.onChange = render;
                 renderPagination(pagination, paginationInfo, state.pagination, 0);
                 if (selectAllHeader) selectAllHeader.checked = false;
@@ -2179,7 +2397,19 @@
 
             await updateStats(serverCtx);
 
-            renderTableRows(tbody, rows);
+            let workspaceOwnerId = '';
+            try {
+                workspaceOwnerId = safeText(await window.db?.teamMembers?.getOrgOwnerUserId?.(), '');
+            } catch (_) {
+                workspaceOwnerId = '';
+            }
+            const viewerAvatar = await hydrateTxHistoryViewerAvatar();
+            const creatorMap = await fetchCreatorProfilesForTransactions(rows);
+            renderTableRows(tbody, rows, {
+                creatorMap,
+                viewerAvatar,
+                workspaceOwnerId
+            });
 
             state.pagination.onChange = render;
             renderPagination(pagination, paginationInfo, state.pagination, Number(pageRes?.count) || 0);
