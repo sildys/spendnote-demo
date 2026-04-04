@@ -34,6 +34,24 @@ function getSpendNoteHelpers() {
 
 async function loadCashBoxList() {
     try {
+        let myOrgRole = '';
+        try {
+            myOrgRole = String(await window.db?.orgMemberships?.getMyRole?.() || '').trim().toLowerCase();
+        } catch (_) {
+            myOrgRole = '';
+        }
+        const canAddCashBoxByRole = myOrgRole !== 'user';
+        try {
+            window.__spendnoteCanAddCashBox = canAddCashBoxByRole;
+        } catch (_) {}
+
+        const gridForAdd = document.querySelector('.registers-list');
+        if (gridForAdd && !canAddCashBoxByRole) {
+            try {
+                gridForAdd.querySelector('.add-cash-box-card')?.remove();
+            } catch (_) {}
+        }
+
         // Load cash boxes from database
         const cashBoxes = await db.cashBoxes.getAll({
             select: 'id, name, color, currency, icon, current_balance, created_at, sort_order, sequence_number'

@@ -312,6 +312,12 @@ function initCashBoxCards() {
 // ========================================
 // Limit enforced on the settings page (create mode)
 function handleAddCashBoxDashboard() {
+    if (window.__spendnoteCanAddCashBox === false) {
+        if (typeof showAlert === 'function') {
+            showAlert('Only workspace owners and admins can add Cash Boxes. Ask your team admin if you need a new one.', { iconType: 'info' });
+        }
+        return;
+    }
     window.location.href = 'spendnote-cash-box-settings.html';
 }
 

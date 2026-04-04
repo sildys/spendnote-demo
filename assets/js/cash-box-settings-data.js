@@ -494,6 +494,15 @@ async function initCashBoxSettings() {
             // Create mode
             isEditMode = false;
 
+            try {
+                const r = String(await window.db?.orgMemberships?.getMyRole?.() || '').trim().toLowerCase();
+                if (r === 'user') {
+                    await showAlert('Only workspace owners and admins can create Cash Boxes. Ask your team admin if you need a new one.', { iconType: 'info' });
+                    window.location.replace('dashboard.html');
+                    return;
+                }
+            } catch (_) {}
+
             // Enforce cash box limit before allowing create
             try {
                 window.SpendNoteFeatures?.invalidate?.();

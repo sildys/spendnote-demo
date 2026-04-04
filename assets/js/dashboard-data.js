@@ -561,6 +561,17 @@ async function loadDashboardData() {
                 throw new Error('Dashboard DB API not ready');
             }
 
+            let myOrgRole = '';
+            try {
+                myOrgRole = String(await window.db?.orgMemberships?.getMyRole?.() || '').trim().toLowerCase();
+            } catch (_) {
+                myOrgRole = '';
+            }
+            const canAddCashBoxByRole = myOrgRole !== 'user';
+            try {
+                window.__spendnoteCanAddCashBox = canAddCashBoxByRole;
+            } catch (_) {}
+
             const debug = Boolean(window.SpendNoteDebug);
 
             const { hexToRgb, getIconClass, formatCurrency } = getSpendNoteHelpers();
@@ -738,7 +749,7 @@ async function loadDashboardData() {
                 // Insert all cash boxes before the "Add Cash Box" card
                 swiperWrapper.insertAdjacentHTML('beforeend', allSlidesHTML);
 
-                if (addSlide) {
+                if (addSlide && canAddCashBoxByRole) {
                     try {
                         swiperWrapper.appendChild(addSlide);
                     } catch (_) {

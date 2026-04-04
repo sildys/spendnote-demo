@@ -231,6 +231,12 @@
 
         // Handle Add Cash Box card click — limit enforced on the settings page (create mode)
         function handleAddCashBox() {
+            if (window.__spendnoteCanAddCashBox === false) {
+                if (typeof showAlert === 'function') {
+                    showAlert('Only workspace owners and admins can add Cash Boxes. Ask your team admin if you need a new one.', { iconType: 'info' });
+                }
+                return;
+            }
             window.location.href = 'spendnote-cash-box-settings.html';
         }
 
@@ -281,6 +287,6 @@
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=44"></script>
     <script>if (typeof showPageTip === 'function') showPageTip('cashbox-list', 'Drag to <strong>reorder your cash boxes</strong> — the order here is the same on your dashboard.');</script>
-    <script src="assets/js/cash-box-list-data.js?v=34"></script>
+    <script src="assets/js/cash-box-list-data.js?v=20260406-role-add-box"></script>
 </body>
 </html>
