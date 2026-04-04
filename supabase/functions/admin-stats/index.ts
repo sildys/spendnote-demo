@@ -69,8 +69,8 @@ Deno.serve(async (req: Request) => {
       billingCounts[b] = (billingCounts[b] || 0) + 1;
     }
 
-    // Paying users (have stripe_customer_id)
-    const payingUsers = allProfiles.filter(p => p.stripe_customer_id).length;
+    // Paying users (active billing status only)
+    const payingUsers = allProfiles.filter(p => p.billing_status === 'active').length;
 
     // Registration trend (last 30 days, per day)
     const registrationTrend: Record<string, number> = {};
@@ -123,10 +123,9 @@ Deno.serve(async (req: Request) => {
     // --- CONTACTS ---
     const { count: totalContacts } = await db.from("contacts").select("id", { count: "exact", head: true });
 
-    // --- RECENT SIGNUPS (last 10) ---
+    // --- ALL SIGNUPS ---
     const recentSignups = allProfiles
       .sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""))
-      .slice(0, 10)
       .map(p => ({
         email: p.email,
         name: p.full_name,
