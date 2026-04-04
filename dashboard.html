@@ -2070,6 +2070,36 @@
                 const uid = user.id;
                 const currencyAckKey = `sn.currencyAck.${uid}`;
                 const pendingKey = `spendnote.currencyConfirm.${uid}`;
+                let txCount = -1;
+                const loadTxCountOnce = async () => {
+                    if (txCount >= 0) return txCount;
+                    try {
+                        const { count } = await supabaseClient
+                            .from('transactions')
+                            .select('id', { count: 'exact', head: true })
+                            .or('is_system.is.null,is_system.eq.false')
+                            .eq('status', 'active');
+                        txCount = count || 0;
+                    } catch (_) {
+                        txCount = 0;
+                    }
+                    return txCount;
+                };
+
+                // One-time: old builds used sn.currencyConfirmed.* — without migration every returning user saw the modal again.
+                try {
+                    if (localStorage.getItem(`sn.currencyConfirmed.${uid}`)) {
+                        localStorage.setItem(currencyAckKey, '1');
+                        localStorage.removeItem(`sn.currencyConfirmed.${uid}`);
+                    }
+                } catch (_) {}
+
+                // DB truth: if they already have real transactions, currency is a settled choice — do not re-prompt (localStorage is per-browser).
+                if (!localStorage.getItem(currencyAckKey) && (await loadTxCountOnce()) >= 1) {
+                    try {
+                        localStorage.setItem(currencyAckKey, '1');
+                    } catch (_) {}
+                }
 
                 // --- GA4: first_login ---
                 const firstLoginKey = `sn.firstLoginSent.${uid}`;
@@ -2085,7 +2115,7 @@
                     setTimeout(resolve, 8000);
                 });
 
-                // --- Currency confirm: always once until Continue (sn.currencyAck; legacy sn.currencyConfirmed was buggy) ---
+                // --- Currency confirm: once per browser until Continue (sn.currencyAck) ---
                 let currencyModalRanThisLoad = false;
                 if (!localStorage.getItem(currencyAckKey)) {
                     let box = null;
@@ -2111,29 +2141,20 @@
                         currencyModalRanThisLoad = true;
                         const baseline = String(box.currency || 'USD').trim().toUpperCase() || 'USD';
                         const suggested = (typeof __spendnoteDetectCurrency === 'function' ? __spendnoteDetectCurrency() : baseline) || baseline;
-                        const result = await __snShowCurrencyConfirmModal(suggested, uid, baseline, box.id);
-                        if (result && result.saved !== false) {
-                            try {
-                                localStorage.setItem(currencyAckKey, '1');
-                                localStorage.removeItem(`sn.currencyConfirmed.${uid}`);
-                            } catch (_) {}
-                        }
+                        await __snShowCurrencyConfirmModal(suggested, uid, baseline, box.id);
+                        // Always ack after Continue — otherwise users with locked currency (save failed) see this modal every visit.
+                        try {
+                            localStorage.setItem(currencyAckKey, '1');
+                            localStorage.removeItem(`sn.currencyConfirmed.${uid}`);
+                        } catch (_) {}
                         if (typeof loadDashboardData === 'function') {
                             try { await loadDashboardData(); } catch (_) {}
                         }
                     }
                 }
 
-                // --- Count transactions for this user ---
-                let txCount = 0;
-                try {
-                    const { count } = await supabaseClient
-                        .from('transactions')
-                        .select('id', { count: 'exact', head: true })
-                        .or('is_system.is.null,is_system.eq.false')
-                        .eq('status', 'active');
-                    txCount = count || 0;
-                } catch (_) {}
+                // --- Count transactions for this user (reuse query if already loaded for currency skip) ---
+                await loadTxCountOnce();
 
                 // --- Checklist Banner ---
                 const checklist = document.getElementById('onboardingChecklist');
