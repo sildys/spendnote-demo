@@ -392,7 +392,7 @@
 
     <!-- Submit -->
     <div class="submit-row">
-        <button class="btn-skip" id="skipBtn" onclick="window.location.href='dashboard.html'">Skip for now</button>
+        <button class="btn-skip" id="skipBtn" onclick="sendWelcomeEmail(); window.location.href='dashboard.html'">Skip for now</button>
         <button class="btn-primary" id="saveBtn" onclick="saveSetup()">
             <span class="saving-spinner" id="spin"><i class="fas fa-circle-notch fa-spin"></i></span>
             <span id="saveBtnLabel">Start Creating Receipts</span> <i class="fas fa-arrow-right"></i>
@@ -543,6 +543,34 @@ function waitForDb() {
     });
 }
 
+async function sendWelcomeEmail() {
+    try {
+        const user = await window.auth?.getCurrentUser?.();
+        const uid = String(user?.id || '').trim();
+        if (!uid) return;
+        const sentKey = 'spendnote.welcome.sent.v2.' + uid;
+        if (localStorage.getItem(sentKey) === '1') return;
+        const { data: sessWrap } = await window.supabaseClient.auth.getSession();
+        const token = String(sessWrap?.session?.access_token || '').trim();
+        if (!token) { console.error('[SN-WELCOME] No token for email'); return; }
+        const resp = await fetch('https://zrnnharudlgxuvewqryj.supabase.co/functions/v1/send-user-event-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+                'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5oYXJ1ZGxneHV2ZXdxcnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyOTkxMDgsImV4cCI6MjA4Mjg3NTEwOH0.kQLRMVrl_uYYzZwX387uFs_BAXc9c5v7EhcvGhPR7v4'
+            },
+            body: JSON.stringify({ eventType: 'welcome_account_created' })
+        });
+        console.log('[SN-WELCOME] Email response:', resp.status);
+        if (resp.ok) {
+            try { localStorage.setItem(sentKey, '1'); } catch (_) {}
+        }
+    } catch (e) {
+        console.error('[SN-WELCOME] Email error:', e);
+    }
+}
+
 async function saveSetup() {
     showError('');
     const name    = document.getElementById('profileName').value.trim();
@@ -569,6 +597,7 @@ async function saveSetup() {
         const result = await window.db.profiles.update(payload);
         if (!result?.success) throw new Error(result?.error || 'Failed to save.');
         try { await window.supabaseClient.auth.updateUser({ data: { full_name: name, avatar_color: selectedColor } }); } catch (_) {}
+        await sendWelcomeEmail();
         window.location.href = 'dashboard.html';
     } catch (e) {
         showError(String(e?.message || 'Something went wrong. Please try again.'));
@@ -586,53 +615,7 @@ async function saveSetup() {
             const uid = String(user.id || '').trim();
             if (uid) {
                 const sentKey = 'spendnote.welcome.sent.v2.' + uid;
-                if (localStorage.getItem(sentKey) !== '1') {
-                    let sent = false;
-                    // Ensure we have a valid session token (OAuth redirect may leave stale token)
-                    let token = '';
-                    for (let attempt = 0; attempt < 5; attempt++) {
-                        try {
-                            const { data: refreshed } = await window.supabaseClient.auth.refreshSession();
-                            token = String(refreshed?.session?.access_token || '').trim();
-                            if (token) break;
-                        } catch (_) {}
-                        await new Promise(r => setTimeout(r, 500 * (attempt + 1)));
-                    }
-                    if (!token) {
-                        try {
-                            const { data: sessWrap } = await window.supabaseClient.auth.getSession();
-                            token = String(sessWrap?.session?.access_token || '').trim();
-                        } catch (_) {}
-                    }
-                    console.log('[SN-WELCOME] Token ready:', token ? 'yes (' + token.slice(0,20) + '...)' : 'NO');
-                    if (token) {
-                        // Direct fetch with fresh token
-                        try {
-                            const resp = await fetch('https://zrnnharudlgxuvewqryj.supabase.co/functions/v1/send-user-event-email', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer ' + token,
-                                    'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5oYXJ1ZGxneHV2ZXdxcnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyOTkxMDgsImV4cCI6MjA4Mjg3NTEwOH0.kQLRMVrl_uYYzZwX387uFs_BAXc9c5v7EhcvGhPR7v4'
-                                },
-                                body: JSON.stringify({ eventType: 'welcome_account_created' })
-                            });
-                            const respText = await resp.text();
-                            console.log('[SN-WELCOME] Email response:', resp.status, respText);
-                            if (resp.ok) sent = true;
-                        } catch (fetchErr) {
-                            console.error('[SN-WELCOME] Email fetch error:', fetchErr);
-                        }
-                    } else {
-                        console.error('[SN-WELCOME] No valid token after retries');
-                    }
-                    if (sent) {
-                        try { localStorage.setItem(sentKey, '1'); } catch (_) {}
-                        console.log('[SN-WELCOME] Welcome email sent successfully');
-                    } else {
-                        console.error('[SN-WELCOME] Welcome email FAILED');
-                    }
-                }
+                // Welcome email will be sent on user action (Save or Skip) — session is settled by then
             }
         } catch (welcomeErr) {
             console.error('[SN-WELCOME] welcome email error:', welcomeErr);
