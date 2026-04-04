@@ -123,7 +123,36 @@ Deno.serve(async (req: Request) => {
     // --- CONTACTS ---
     const { count: totalContacts } = await db.from("contacts").select("id", { count: "exact", head: true });
 
-    // --- ALL SIGNUPS ---
+    // --- PER-USER DETAILS ---
+    const { data: allCashBoxes } = await db.from("cash_boxes").select("id, user_id, currency");
+    const { data: allTx } = await db.from("transactions").select("id, user_id");
+
+    const cbByUser: Record<string, { count: number; currencies: string[] }> = {};
+    for (const cb of (allCashBoxes || [])) {
+      if (!cb.user_id) continue;
+      if (!cbByUser[cb.user_id]) cbByUser[cb.user_id] = { count: 0, currencies: [] };
+      cbByUser[cb.user_id].count++;
+      if (cb.currency && !cbByUser[cb.user_id].currencies.includes(cb.currency)) {
+        cbByUser[cb.user_id].currencies.push(cb.currency);
+      }
+    }
+
+    const txByUser: Record<string, number> = {};
+    for (const t of (allTx || [])) {
+      if (!t.user_id) continue;
+      txByUser[t.user_id] = (txByUser[t.user_id] || 0) + 1;
+    }
+
+    // --- UNCONFIRMED AUTH USERS ---
+    const { data: authUsers } = await db.auth.admin.listUsers({ perPage: 1000 });
+    const unconfirmedUsers = (authUsers?.users || []).filter(
+      (u: any) => !u.email_confirmed_at && u.email
+    ).map((u: any) => ({
+      email: u.email,
+      created: u.created_at,
+    }));
+
+    // --- ALL SIGNUPS (enriched) ---
     const recentSignups = allProfiles
       .sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""))
       .map(p => ({
@@ -132,6 +161,9 @@ Deno.serve(async (req: Request) => {
         tier: p.subscription_tier,
         billing: p.billing_status,
         created: p.created_at,
+        cashBoxes: cbByUser[p.id]?.count || 0,
+        currencies: cbByUser[p.id]?.currencies || [],
+        transactions: txByUser[p.id] || 0,
       }));
 
     const result = {
@@ -165,6 +197,7 @@ Deno.serve(async (req: Request) => {
       contacts: {
         total: totalContacts || 0,
       },
+      unconfirmed: unconfirmedUsers,
       generatedAt: now.toISOString(),
     };
 

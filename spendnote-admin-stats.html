@@ -426,17 +426,36 @@
         html += statCard('Elfogadva', t.acceptedInvites, 'fa-check-circle');
         html += '</div>';
 
-        // --- RECENT SIGNUPS ---
-        html += '<div class="section-title"><i class="fas fa-user-plus"></i> Összes regisztráció</div>';
+        // --- UNCONFIRMED USERS ---
+        if (d.unconfirmed && d.unconfirmed.length > 0) {
+            html += '<div class="section-title"><i class="fas fa-exclamation-circle" style="color:#d97706;"></i> Nem megerősített regisztrációk</div>';
+            html += '<div class="chart-container" style="padding:0;overflow-x:auto;">';
+            html += '<table class="recent-table"><thead><tr><th>Email</th><th>Regisztráció</th></tr></thead><tbody>';
+            for (const u2 of d.unconfirmed) {
+                const date = u2.created ? new Date(u2.created).toLocaleDateString('hu-HU', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+                html += `<tr>
+                    <td style="font-weight:600;color:#d97706;">${esc(u2.email)}</td>
+                    <td style="font-size:12px;color:#94a3b8;white-space:nowrap;">${date}</td>
+                </tr>`;
+            }
+            html += '</tbody></table></div>';
+        }
+
+        // --- ALL SIGNUPS ---
+        html += '<div class="section-title"><i class="fas fa-user-plus"></i> Összes felhasználó (részletes)</div>';
         html += '<div class="chart-container" style="padding:0;overflow-x:auto;">';
-        html += '<table class="recent-table"><thead><tr><th>Email</th><th>Név</th><th>Szint</th><th>Billing</th><th>Regisztráció</th></tr></thead><tbody>';
+        html += '<table class="recent-table"><thead><tr><th>Email</th><th>Név</th><th>Szint</th><th>Cash Box</th><th>Pénznem</th><th>Tranzakció</th><th>Billing</th><th>Regisztráció</th></tr></thead><tbody>';
         for (const s of u.recentSignups) {
             const tierClass = 'tier-' + (s.tier || 'unknown');
             const date = s.created ? new Date(s.created).toLocaleDateString('hu-HU', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+            const currencies = (s.currencies || []).join(', ') || '-';
             html += `<tr>
                 <td style="font-weight:600;">${esc(s.email)}</td>
                 <td>${esc(s.name || '-')}</td>
                 <td><span class="tier-badge ${tierClass}">${esc(s.tier || '?')}</span></td>
+                <td style="text-align:center;font-weight:700;">${s.cashBoxes || 0}</td>
+                <td style="font-size:12px;">${esc(currencies)}</td>
+                <td style="text-align:center;font-weight:700;">${s.transactions || 0}</td>
                 <td style="font-size:12px;color:#64748b;">${esc(s.billing || '-')}</td>
                 <td style="font-size:12px;color:#94a3b8;white-space:nowrap;">${date}</td>
             </tr>`;
