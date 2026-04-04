@@ -587,11 +587,47 @@ async function saveSetup() {
             if (uid) {
                 const sentKey = 'spendnote.welcome.sent.v2.' + uid;
                 if (localStorage.getItem(sentKey) !== '1') {
-                    const sendResult = await window.SpendNoteEmailEvents?.send?.({ eventType: 'welcome_account_created' });
-                    if (sendResult?.success) {
+                    let sent = false;
+                    // Attempt 1: SDK invoke
+                    try {
+                        console.log('[SN-WELCOME] Attempting welcome email via SDK...');
+                        const sendResult = await window.SpendNoteEmailEvents?.send?.({ eventType: 'welcome_account_created' });
+                        console.log('[SN-WELCOME] SDK result:', JSON.stringify(sendResult));
+                        if (sendResult?.success) sent = true;
+                    } catch (sdkErr) {
+                        console.error('[SN-WELCOME] SDK invoke error:', sdkErr);
+                    }
+                    // Attempt 2: Direct fetch fallback
+                    if (!sent) {
+                        try {
+                            console.log('[SN-WELCOME] Trying direct fetch fallback...');
+                            const { data: sessWrap } = await window.supabaseClient.auth.getSession();
+                            const token = String(sessWrap?.session?.access_token || '').trim();
+                            if (token) {
+                                const resp = await fetch('https://zrnnharudlgxuvewqryj.supabase.co/functions/v1/send-user-event-email', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer ' + token,
+                                        'apikey': window.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpybm5oYXJ1ZGxneHV2ZXdxcnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyOTkxMDgsImV4cCI6MjA4Mjg3NTEwOH0.kQLRMVrl_uYYzZwX387uFs_BAXc9c5v7EhcvGhPR7v4'
+                                    },
+                                    body: JSON.stringify({ eventType: 'welcome_account_created' })
+                                });
+                                const respText = await resp.text();
+                                console.log('[SN-WELCOME] Fallback response:', resp.status, respText);
+                                if (resp.ok) sent = true;
+                            } else {
+                                console.error('[SN-WELCOME] No access token for fallback');
+                            }
+                        } catch (fetchErr) {
+                            console.error('[SN-WELCOME] Fallback fetch error:', fetchErr);
+                        }
+                    }
+                    if (sent) {
                         try { localStorage.setItem(sentKey, '1'); } catch (_) {}
+                        console.log('[SN-WELCOME] Welcome email sent successfully');
                     } else {
-                        console.error('[SN-WELCOME] welcome email send failed:', sendResult?.error || sendResult);
+                        console.error('[SN-WELCOME] Welcome email failed both attempts');
                     }
                 }
             }
