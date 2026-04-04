@@ -731,6 +731,70 @@ const __spendnoteEnsureProfileForCurrentUser = async () => {
     } catch (_) {}
 };
 
+/**
+ * Persist OAuth provider photo (e.g. Google user_metadata.picture) into profiles.avatar_url
+ * so org peers can load it via RLS. Nav/User settings already merge metadata for self; team lists only read DB.
+ */
+const __spendnoteSyncOAuthAvatarToProfile = async () => {
+    try {
+        const { data: { user }, error } = await supabaseClient.auth.getUser();
+        if (error || !user) return;
+        const userId = String(user?.id || '').trim();
+        if (!userId) return;
+        try {
+            if (typeof isUuid === 'function' && !isUuid(userId)) {
+                return;
+            }
+        } catch (_) {}
+
+        const throttleKey = `spendnote.oauthAvatarSynced.v1.${userId}`;
+        try {
+            if (sessionStorage.getItem(throttleKey) === '1') return;
+        } catch (_) {}
+
+        const meta = user.user_metadata && typeof user.user_metadata === 'object' ? user.user_metadata : {};
+        const oauthPic = String(meta.picture || meta.avatar_url || '').trim();
+        if (!/^https?:\/\//i.test(oauthPic)) {
+            try {
+                sessionStorage.setItem(throttleKey, '1');
+            } catch (_) {}
+            return;
+        }
+
+        const { data: row, error: selErr } = await supabaseClient
+            .from('profiles')
+            .select('avatar_url')
+            .eq('id', userId)
+            .maybeSingle();
+        if (selErr) return;
+
+        const existing = String(row?.avatar_url || '').trim();
+        if (existing.startsWith('data:')) {
+            try {
+                sessionStorage.setItem(throttleKey, '1');
+            } catch (_) {}
+            return;
+        }
+        if (existing) {
+            try {
+                sessionStorage.setItem(throttleKey, '1');
+            } catch (_) {}
+            return;
+        }
+
+        const { error: upErr } = await supabaseClient
+            .from('profiles')
+            .update({ avatar_url: oauthPic })
+            .eq('id', userId);
+        try {
+            sessionStorage.setItem(throttleKey, '1');
+        } catch (_) {}
+        if (upErr && window.SpendNoteDebug) {
+            console.warn('[SpendNote] OAuth avatar sync skipped:', upErr.message || upErr);
+        }
+    } catch (_) {}
+};
+
 const __spendnoteAutoAcceptMyInvites = async () => {
     try {
         const { data: { user } } = await supabaseClient.auth.getUser();
@@ -794,19 +858,19 @@ const __spendnoteTryAcceptPendingInviteTokenImpl = async () => {
 
     if (!token) {
         // No explicit invite token -> do not call acceptance RPCs on normal app pages.
-        // Guard: skip ensure calls if already done this session for this user.
+        // Guard: skip ensure calls if already done this session for this user (OAuth avatar sync still runs).
         try {
             const uid2 = String(__currentUser?.id || '').trim();
             const ensureKey = uid2 ? `spendnote.ensureDone.${uid2}` : '';
-            if (ensureKey && sessionStorage.getItem(ensureKey) === '1') {
-                __spendnoteInviteAcceptAttemptedToken = '';
-                return;
+            const alreadyEnsured = ensureKey && sessionStorage.getItem(ensureKey) === '1';
+            if (!alreadyEnsured) {
+                await __spendnoteEnsureProfileForCurrentUser();
+                await __spendnoteEnsureDefaultCashBoxForCurrentUser();
+                if (ensureKey) {
+                    try { sessionStorage.setItem(ensureKey, '1'); } catch (_) {}
+                }
             }
-            await __spendnoteEnsureProfileForCurrentUser();
-            await __spendnoteEnsureDefaultCashBoxForCurrentUser();
-            if (ensureKey) {
-                try { sessionStorage.setItem(ensureKey, '1'); } catch (_) {}
-            }
+            await __spendnoteSyncOAuthAvatarToProfile();
         } catch (_) {
             // ignore
         }
@@ -834,6 +898,10 @@ const __spendnoteTryAcceptPendingInviteTokenImpl = async () => {
             console.warn('[invite-accept] ensureProfile error (non-fatal):', ep);
         }
     }
+
+    try {
+        await __spendnoteSyncOAuthAvatarToProfile();
+    } catch (_) {}
 
     try {
         if (__spendnoteInviteDebug) {
