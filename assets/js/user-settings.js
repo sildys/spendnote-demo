@@ -29,6 +29,18 @@ const forceReceiptLogoBaselineUi = () => {
     }
 };
 
+const RECEIPT_IDENTITY_READONLY_USER_MESSAGE =
+    'Receipt identity on printed receipts comes from your workspace owner’s account. You can view it here only—ask the owner or an admin if it needs to change.';
+
+let _lastReceiptReadonlyExplanationAt = 0;
+const showReceiptReadonlyExplanationForUserRole = () => {
+    if (typeof showAlert !== 'function') return;
+    const now = Date.now();
+    if (now - _lastReceiptReadonlyExplanationAt < 2200) return;
+    _lastReceiptReadonlyExplanationAt = now;
+    showAlert(RECEIPT_IDENTITY_READONLY_USER_MESSAGE, { iconType: 'info' });
+};
+
 // Avatar in-memory state (DB is source of truth, no localStorage)
 const AVATAR_SCALE_STEP = 0.1;
 const AVATAR_MIN_SCALE = 0.5;
@@ -584,10 +596,10 @@ const computeAndApplyRole = async () => {
             if (receiptOtherId) receiptOtherId.readOnly = isUserRole;
             if (receiptAddress) receiptAddress.readOnly = isUserRole;
 
-            const receiptResetBtn = document.getElementById('receiptResetBtn');
-            const receiptSaveBtn = document.querySelector('#receiptForm button[type="submit"]');
-            if (receiptResetBtn) receiptResetBtn.disabled = isUserRole;
-            if (receiptSaveBtn) receiptSaveBtn.disabled = isUserRole;
+            const receiptFormActions = document.getElementById('receiptFormActions');
+            if (receiptFormActions) {
+                receiptFormActions.style.display = isUserRole ? 'none' : '';
+            }
 
             const logoCanvas = document.getElementById('logoEditorCanvas');
             const logoFileInput = document.getElementById('logoFileInput');
@@ -1216,6 +1228,26 @@ const initUserSettingsPage = async () => {
         forceReceiptLogoBaselineUi();
         showAlert('Receipt identity saved.', { iconType: 'success' });
     });
+
+    const receiptFormEl = document.getElementById('receiptForm');
+    const logoCompactEl = document.querySelector('#receiptIdentityCard .logo-compact');
+    receiptFormEl?.addEventListener('focusin', (e) => {
+        if (currentRole !== 'user') return;
+        if (e.target?.matches?.('input[readonly], textarea[readonly]')) {
+            showReceiptReadonlyExplanationForUserRole();
+        }
+    });
+    receiptFormEl?.addEventListener('click', (e) => {
+        if (currentRole !== 'user') return;
+        const t = e.target;
+        if (t?.matches?.('#receiptDisplayName, #receiptOtherId, #receiptAddress')) {
+            showReceiptReadonlyExplanationForUserRole();
+        }
+    });
+    logoCompactEl?.addEventListener('pointerdown', (e) => {
+        if (currentRole !== 'user' || !e.isPrimary) return;
+        showReceiptReadonlyExplanationForUserRole();
+    }, true);
 
     // Delete Account collapsible toggle
     document.getElementById('deleteAccountToggle')?.addEventListener('click', () => {
