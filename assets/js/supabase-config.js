@@ -1909,6 +1909,7 @@ async function __spendnoteGetOrgSelectionState(userId) {
         return {
             required: false,
             isPro: false,
+            subscriptionTier: '',
             memberships: [],
             selectedOrgId: '',
             selectedRole: '',
@@ -1925,9 +1926,12 @@ async function __spendnoteGetOrgSelectionState(userId) {
         .order('created_at', { ascending: true });
 
     if (memError) {
+        const tierOnErr = await __spendnoteGetUserSubscriptionTier(uid);
+        const isProOnErr = tierOnErr === 'pro' || tierOnErr === PREVIEW_SUBSCRIPTION_TIER;
         return {
             required: false,
-            isPro: false,
+            isPro: isProOnErr,
+            subscriptionTier: tierOnErr,
             memberships: [],
             selectedOrgId: '',
             selectedRole: '',
@@ -1956,6 +1960,7 @@ async function __spendnoteGetOrgSelectionState(userId) {
         return {
             required: true,
             isPro,
+            subscriptionTier: tier,
             memberships: normalizedWithNames,
             selectedOrgId: '',
             selectedRole: '',
@@ -1977,6 +1982,7 @@ async function __spendnoteGetOrgSelectionState(userId) {
     return {
         required: false,
         isPro,
+        subscriptionTier: tier,
         memberships: normalizedWithNames,
         selectedOrgId: chosenOrgId,
         selectedRole: chosenRole,
@@ -2049,7 +2055,7 @@ window.SpendNoteOrgContext = {
     async getSelectionState() {
         const user = await auth.getCurrentUser();
         if (!user) {
-            return { required: false, isPro: false, memberships: [], selectedOrgId: '', selectedRole: '', orgId: '', role: '', orgName: '' };
+            return { required: false, isPro: false, subscriptionTier: '', memberships: [], selectedOrgId: '', selectedRole: '', orgId: '', role: '', orgName: '' };
         }
         return await __spendnoteGetOrgSelectionState(user.id);
     },
