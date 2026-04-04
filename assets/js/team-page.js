@@ -539,7 +539,7 @@ const initTeamPage = async () => {
         if (Boolean(result?.emailSent)) { showAlert('Invitation sent!', { iconType: 'success' }); return; }
         if (result?.emailError) showAlert(String(result.emailError), { iconType: 'warning' });
         if (token) {
-            const link = `${window.location.origin}/i/${encodeURIComponent(token)}`;
+            const link = `${window.location.origin}/signup?inviteToken=${encodeURIComponent(token)}`;
             try { await showPrompt('Copy invite link:', { defaultValue: link, title: 'Invite Link' }); }
             catch (_) { showAlert(link, { iconType: 'info' }); }
         }
@@ -570,7 +570,7 @@ const initTeamPage = async () => {
                 await loadTeam();
                 if (Boolean(result?.emailSent)) { showAlert('Invitation resent.', { iconType: 'success' }); return; }
                 if (result?.data?.token) {
-                    const link = `${window.location.origin}/i/${encodeURIComponent(result.data.token)}`;
+                    const link = `${window.location.origin}/signup?inviteToken=${encodeURIComponent(result.data.token)}`;
                     try { await showPrompt('Copy invite link:', { defaultValue: link, title: 'Invite Link' }); }
                     catch (_) { showAlert(link, { iconType: 'info' }); }
                 }

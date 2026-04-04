@@ -1297,7 +1297,7 @@ const initUserSettingsPage = async () => {
         }
 
         if (token) {
-            const link = `${window.location.origin}/i/${encodeURIComponent(token)}`;
+            const link = `${window.location.origin}/signup?inviteToken=${encodeURIComponent(token)}`;
             try {
                 await showPrompt('Copy invite link:', { defaultValue: link, title: 'Invite Link' });
             } catch (_) {
@@ -1351,7 +1351,7 @@ const initUserSettingsPage = async () => {
                 }
 
                 if (token) {
-                    const link = `${window.location.origin}/i/${encodeURIComponent(token)}`;
+                    const link = `${window.location.origin}/signup?inviteToken=${encodeURIComponent(token)}`;
                     try {
                         await showPrompt('Copy invite link:', { defaultValue: link, title: 'Invite Link' });
                     } catch (_) {

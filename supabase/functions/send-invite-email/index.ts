@@ -269,8 +269,8 @@ Deno.serve(async (req: Request) => {
       }
     }
     const inviteShortUrl = baseOrigin
-      ? `${baseOrigin.replace(/\/+$/, "")}/i/${encodeURIComponent(inviteToken)}`
-      : `https://spendnote.app/i/${encodeURIComponent(inviteToken)}`;
+      ? `${baseOrigin.replace(/\/+$/, "")}/signup?inviteToken=${encodeURIComponent(inviteToken)}`
+      : `https://spendnote.app/signup?inviteToken=${encodeURIComponent(inviteToken)}`;
 
     const rendered = renderInviteEmailTemplate({
       inviterDisplayName: displayName,

@@ -1,10 +1,10 @@
 /favicon.ico /favicon.svg 200
 
-# Invite landing via /i/{token} (Cloudflare has hard redirect rules on /invite).
+# Invite landing page
 /invite /invite.html 200
 /invite/ /invite.html 200
-# New short invite links (stable on Cloudflare): /i/{token}
-/i/* /invite.html 200
+# Compatibility for /i/{token} links created before this fix
+/i/* /signup?inviteToken=:splat 302
 
 /app /dashboard 302
 /app/ /dashboard 302

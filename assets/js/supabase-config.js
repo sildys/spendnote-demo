@@ -3670,7 +3670,7 @@ var db = {
             try {
                 const token = row?.token;
                 if (token) {
-                    const link = `${window.location.origin}/i/${encodeURIComponent(token)}`;
+                    const link = `${window.location.origin}/signup?inviteToken=${encodeURIComponent(token)}`;
                     const sessionRes = await supabaseClient.auth.getSession();
                     let accessToken = String(sessionRes?.data?.session?.access_token || '');
                     if (!accessToken) throw new Error('Not authenticated');
