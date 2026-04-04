@@ -1,7 +1,6 @@
--- 053: Org members can read peer org_memberships rows (for profiles_read_same_org JOIN).
--- IMPORTANT: Do not use a subquery on org_memberships inside a policy ON org_memberships —
--- that causes infinite RLS recursion and breaks all org/cash box/team queries.
--- Use SECURITY DEFINER helper so the membership lookup bypasses RLS safely.
+-- 054: Fix deployments that applied the original 053 (subquery on org_memberships → infinite RLS recursion).
+-- Symptom: empty dashboard, no cash boxes, Team stuck / upgrade modal, org APIs fail.
+-- Safe to run even if 053 was already the SECURITY DEFINER version (idempotent).
 
 BEGIN;
 
