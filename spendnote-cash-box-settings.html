@@ -455,7 +455,6 @@ const DUMMY_TX = {
 
 const DUMMY_PROFILE = {
     company_name: '',
-    spendnote_receipt_sender_fallback: '',
     full_name: '',
     address: '',
     phone: '',
@@ -466,8 +465,15 @@ const DUMMY_PROFILE = {
 async function loadLiveProfileIntoDummy() {
     try {
         const profile = await window.db?.profiles?.getCurrent?.();
+        try {
+            delete DUMMY_PROFILE.spendnote_receipt_sender_fallback;
+        } catch (_) {}
         if (profile) {
-            DUMMY_PROFILE.spendnote_receipt_sender_fallback = String(profile.spendnote_receipt_sender_fallback || '').trim();
+            if (Object.prototype.hasOwnProperty.call(profile, 'spendnote_receipt_sender_fallback')) {
+                DUMMY_PROFILE.spendnote_receipt_sender_fallback = String(
+                    profile.spendnote_receipt_sender_fallback == null ? '' : profile.spendnote_receipt_sender_fallback
+                ).trim();
+            }
             if (profile.company_name || profile.spendnote_receipt_sender_fallback || profile.full_name) {
                 DUMMY_PROFILE.company_name = profile.company_name || DUMMY_PROFILE.company_name;
                 DUMMY_PROFILE.full_name = profile.full_name || profile.company_name || DUMMY_PROFILE.full_name;
@@ -587,7 +593,7 @@ function buildReceiptUrl(format) {
     };
     
     const params = new URLSearchParams();
-    params.append('v', 'settings-preview-14');
+    params.append('v', 'settings-preview-15');
     params.append('demo', '1');
     if (format === 'pdf') {
         params.append('preview', '1');
@@ -670,7 +676,9 @@ function buildReceiptUrl(format) {
     } catch (e) {}
 
     // Demo data params (from current user settings profile; avoid hardcoded company/address fallbacks)
-    const demoCompany = String(DUMMY_PROFILE.company_name || DUMMY_PROFILE.spendnote_receipt_sender_fallback || DUMMY_PROFILE.full_name || '').trim();
+    const demoCompany = (typeof window.spendnoteReceiptProfileDisplayName === 'function')
+        ? String(window.spendnoteReceiptProfileDisplayName(DUMMY_PROFILE) || '').trim()
+        : String(DUMMY_PROFILE.company_name || DUMMY_PROFILE.spendnote_receipt_sender_fallback || DUMMY_PROFILE.full_name || '').trim();
     params.append('demoCompany', demoCompany || '');
     if (String(DUMMY_PROFILE.address || '').trim()) {
         params.append('demoAddress', String(DUMMY_PROFILE.address || '').trim());
@@ -1143,7 +1151,7 @@ window.addEventListener('beforeunload', () => {
 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase-config.js?v=20260409-receipt-tx-resolve"></script>
+<script src="assets/js/supabase-config.js?v=20260410-receipt-display-name"></script>
 <script src="assets/js/auth-guard.js"></script>
 <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
 <script src="assets/js/nav-loader.js?v=20260223-2101"></script>

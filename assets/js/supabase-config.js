@@ -1184,12 +1184,25 @@ const TX_INSERT_SOFT_COLUMNS = Object.freeze([
 ]);
 
 try {
+    /** Company / FROM line on receipts — never use invited member full_name when org workspace overlay is active. */
+    window.spendnoteReceiptProfileDisplayName = function spendnoteReceiptProfileDisplayName(profile) {
+        const p = profile && typeof profile === 'object' ? profile : {};
+        const cn = String(p.company_name || '').trim();
+        const fb = String(p.spendnote_receipt_sender_fallback || '').trim();
+        if (cn || fb) return cn || fb;
+        if (Object.prototype.hasOwnProperty.call(p, 'spendnote_receipt_sender_fallback')) {
+            return '';
+        }
+        return String(p.full_name || '').trim();
+    };
+
     window.spendnoteReceiptSenderSnapshotsFromProfile = function spendnoteReceiptSenderSnapshotsFromProfile(profile) {
         const p = profile && typeof profile === 'object' ? profile : {};
         const cn = String(p.company_name || '').trim();
         const fb = String(p.spendnote_receipt_sender_fallback || '').trim();
         const fn = String(p.full_name || '').trim();
-        const company = cn || fb || fn || null;
+        const hasOrgOverlay = Object.prototype.hasOwnProperty.call(p, 'spendnote_receipt_sender_fallback');
+        const company = cn || fb || (hasOrgOverlay ? null : fn) || null;
         return {
             sender_company_name_snapshot: company,
             sender_address_snapshot: String(p.address || '').trim() || null,
@@ -2097,13 +2110,9 @@ async function spendnoteResolveReceiptProfileForTx(tx, baseProfile) {
     const t = tx && typeof tx === 'object' ? tx : null;
     const base = baseProfile && typeof baseProfile === 'object' ? { ...baseProfile } : {};
 
-    const hasSenderSnap = Boolean(
-        String(t?.sender_company_name_snapshot || '').trim()
-        || String(t?.sender_address_snapshot || '').trim()
-        || String(t?.sender_phone_snapshot || '').trim()
-        || String(t?.sender_profile_logo_url_snapshot || '').trim()
-    );
-    if (hasSenderSnap) return base;
+    // Only skip owner fetch when company line is frozen; partial snaps (e.g. phone only) still need owner identity.
+    const hasFrozenCompanySnap = Boolean(String(t?.sender_company_name_snapshot || '').trim());
+    if (hasFrozenCompanySnap) return base;
 
     try {
         const me = await auth.getCurrentUser();
@@ -2141,6 +2150,7 @@ async function spendnoteResolveReceiptProfileForTx(tx, baseProfile) {
             address: o.address,
             account_logo_url: o.account_logo_url,
             logo_settings: o.logo_settings,
+            // Marker + owner display fallback: receipt UIs must not use member full_name when this key exists.
             spendnote_receipt_sender_fallback: ownerFull || null
         };
     } catch (_) {

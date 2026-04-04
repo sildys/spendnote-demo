@@ -83,7 +83,7 @@ const QUICK_PRESET = {
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260409-tx-resolve');
+        params.append('v', 'receipt-20260410-display-name');
         const currentTxId = getCurrentTxId();
         if (currentTxId) params.append('txId', currentTxId);
         params.append('bootstrap', '1');
@@ -800,11 +800,12 @@ html, body { height: auto !important; overflow: auto !important; }
                 const txDate = tx.transaction_date || tx.created_at;
                 const dateStr = txDate ? new Date(txDate).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }) : '—';
 
+                const receiptDisplayName = (typeof window.spendnoteReceiptProfileDisplayName === 'function')
+                    ? String(window.spendnoteReceiptProfileDisplayName(profile) || '').trim()
+                    : String(profile?.company_name || profile?.spendnote_receipt_sender_fallback || profile?.full_name || '').trim();
                 const companyName = safeText(
                     String(tx.sender_company_name_snapshot || '').trim()
-                        || profile?.company_name
-                        || profile?.spendnote_receipt_sender_fallback
-                        || profile?.full_name
+                        || receiptDisplayName
                         || cashBox?.name,
                     '—'
                 );
