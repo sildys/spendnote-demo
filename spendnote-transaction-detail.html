@@ -259,7 +259,16 @@
                 </div>
             </div>
             <div class="collapsible-content" id="proSection">
-                <div class="pro-content">
+                <div id="txProOptionsUserRoleNote" class="settings-card-subtitle" style="display:none;color:var(--text-muted);padding:0 16px 12px;line-height:1.55;">
+                    Pro receipt labels are managed by your team <strong>owner</strong> or an <strong>admin</strong>. Ask them if the wording needs to change.
+                </div>
+                <div class="pro-content" id="txProOptionsContent" style="position:relative;">
+                    <div id="txProOptionsUserRoleOverlay" style="display:none;position:absolute;inset:0;z-index:3;box-sizing:border-box;align-items:center;justify-content:center;padding:24px;text-align:center;background:rgba(248,250,252,0.93);backdrop-filter:blur(2px);border-radius:10px;font-size:14px;font-weight:600;color:var(--text-muted);line-height:1.55;">
+                        <div style="max-width:380px;">
+                            <i class="fas fa-lock" aria-hidden="true" style="display:block;margin-bottom:10px;opacity:0.5;font-size:1.35rem;"></i>
+                            <span>Receipt labels are set by your team <strong>owner</strong> or <strong>admin</strong>. Ask them if you need changes.</span>
+                        </div>
+                    </div>
                     <div class="pro-grid">
                         <div class="pro-field">
                             <label>Receipt Title</label>
@@ -357,7 +366,7 @@
 <script>loadNav();</script>
 <script src="assets/js/main.js?v=45"></script>
 <script>if (typeof showPageTip === 'function') showPageTip('tx-detail', 'From here you can <strong>print, download as PDF, or email</strong> this receipt to your contact.');</script>
-<script src="assets/js/transaction-detail-ui.js?v=55"></script>
+<script src="assets/js/transaction-detail-ui.js?v=20260415-pro-labels-user-lock"></script>
 <script src="assets/js/transaction-detail-data.js?v=20260413-rpc-owner-identity"></script>
 <script>
 window.addEventListener('message', (event) => {

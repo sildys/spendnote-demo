@@ -45,6 +45,21 @@ const QUICK_PRESET = {
     let currentCashBoxId = '';
     let txData = null;
 
+    /** Org role User cannot edit Pro receipt labels (same policy as Receipt Identity in User settings). */
+    let txProOptionsLockedForOrgUser = false;
+    let _lastTxProLabelsUserRoleMsgAt = 0;
+
+    const TX_PRO_LABELS_USER_ROLE_MESSAGE =
+        'Pro receipt labels are managed by your team owner or admin. You can view them here—ask the owner or an admin if they need to change.';
+
+    function showTxProLabelsUserRoleMessage() {
+        if (typeof showAlert !== 'function') return;
+        const now = Date.now();
+        if (now - _lastTxProLabelsUserRoleMsgAt < 2200) return;
+        _lastTxProLabelsUserRoleMsgAt = now;
+        showAlert(TX_PRO_LABELS_USER_ROLE_MESSAGE, { iconType: 'info' });
+    }
+
     function isUuid(value) {
         try {
             if (window.SpendNoteIds && typeof window.SpendNoteIds.isUuid === 'function') {
@@ -301,14 +316,61 @@ const QUICK_PRESET = {
         bindText(receivedEl, 'receivedByLabel');
         bindText(footerEl, 'footerNote');
 
-        // Disable label editing for non-Pro users
+        const proLabelFieldEls = [titleEl, totalEl, fromEl, toEl, descEl, amtEl, issuedEl, receivedEl, footerEl];
+
+        // Org User: same as User settings Receipt Identity — view only; owner/admin manage labels.
         (async () => {
+            let isOrgUserRole = false;
+            try {
+                const rawRole = await window.db?.orgMemberships?.getMyRole?.();
+                const role = String(rawRole ?? '').trim().toLowerCase();
+                isOrgUserRole = role === 'user';
+            } catch (_) {
+                isOrgUserRole = false;
+            }
+
+            txProOptionsLockedForOrgUser = isOrgUserRole;
+
+            const noteEl = document.getElementById('txProOptionsUserRoleNote');
+            const overlayEl = document.getElementById('txProOptionsUserRoleOverlay');
+
+            if (isOrgUserRole) {
+                proLabelFieldEls.forEach((el) => {
+                    if (!el) return;
+                    el.readOnly = true;
+                    el.style.opacity = '0.5';
+                    el.style.cursor = 'not-allowed';
+                    el.addEventListener('focus', () => {
+                        el.blur();
+                        showTxProLabelsUserRoleMessage();
+                    });
+                    el.addEventListener('click', () => {
+                        showTxProLabelsUserRoleMessage();
+                    });
+                });
+                const saveBtnUser = document.getElementById('txSaveLabelsBtn');
+                if (saveBtnUser) saveBtnUser.style.display = 'none';
+                if (noteEl) noteEl.style.display = 'block';
+                if (overlayEl) {
+                    overlayEl.style.display = 'flex';
+                    overlayEl.style.pointerEvents = 'auto';
+                }
+                return;
+            }
+
+            if (noteEl) noteEl.style.display = 'none';
+            if (overlayEl) {
+                overlayEl.style.display = 'none';
+                overlayEl.style.pointerEvents = 'none';
+            }
+
+            // Disable label editing for non-Pro subscription (owner/admin on lower tier)
             const canCustomize = await window.SpendNoteFeatures?.can('can_customize_labels');
             if (!canCustomize) {
                 const showProLock = () => {
                     window.SpendNoteUpgrade?.showLabelsUpgrade?.();
                 };
-                [titleEl, totalEl, fromEl, toEl, descEl, amtEl, issuedEl, receivedEl, footerEl].forEach(el => {
+                proLabelFieldEls.forEach((el) => {
                     if (!el) return;
                     el.readOnly = true;
                     el.style.opacity = '0.5';
@@ -1090,6 +1152,10 @@ html, body { height: auto !important; overflow: auto !important; }
         const saveLabelsBtn = document.getElementById('txSaveLabelsBtn');
         if (saveLabelsBtn) {
             saveLabelsBtn.addEventListener('click', async () => {
+                if (txProOptionsLockedForOrgUser) {
+                    showTxProLabelsUserRoleMessage();
+                    return;
+                }
                 if (!await window.SpendNoteFeatures?.can('can_customize_labels')) {
                     window.SpendNoteUpgrade?.showLabelsUpgrade?.();
                     return;
