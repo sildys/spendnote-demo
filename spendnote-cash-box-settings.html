@@ -981,16 +981,29 @@ function showCashBoxLogo(dataUrl) {
 }
 
 cbLogoUploadBtn?.addEventListener('click', async () => {
-    const canLogo = await window.SpendNoteFeatures?.can('can_upload_logo');
-    if (!canLogo) { window.SpendNoteUpgrade?.showPerBoxLogoUpgrade?.(); return; }
-    if (!cbLogoFileInput) return;
+    console.log('[CB Logo] Upload button clicked');
+    let canLogo = false;
+    try {
+        canLogo = await window.SpendNoteFeatures?.can('can_customize_labels');
+    } catch (err) {
+        console.warn('[CB Logo] Feature check threw:', err);
+    }
+    console.log('[CB Logo] can_customize_labels =', canLogo, 'tier =', window.SpendNoteFeatures?._tier);
+    if (!canLogo) {
+        console.log('[CB Logo] BLOCKED by feature gate');
+        window.SpendNoteUpgrade?.showPerBoxLogoUpgrade?.();
+        return;
+    }
+    if (!cbLogoFileInput) { console.warn('[CB Logo] cbLogoFileInput not found'); return; }
     try { cbLogoFileInput.value = ''; } catch (_) {}
     cbLogoFileInput.click();
+    console.log('[CB Logo] File picker opened');
 });
 
 cbLogoFileInput?.addEventListener('change', function(e) {
     const file = e.target?.files?.[0];
-    if (!file) return;
+    if (!file) { console.log('[CB Logo] No file selected'); return; }
+    console.log('[CB Logo] File selected:', file.name, file.size, 'bytes');
 
     if (file.size > 2 * 1024 * 1024) {
         showAlert('File size must be less than 2MB.', { iconType: 'warning' });
@@ -1006,10 +1019,14 @@ cbLogoFileInput?.addEventListener('change', function(e) {
             return;
         }
 
+        console.log('[CB Logo] Data URL ready, length =', dataUrl.length);
         pendingCashBoxLogo = dataUrl;
         pendingCashBoxLogoSettings = normalizeLogoSettings({ scale: 1, x: 0, y: 0 });
         showCashBoxLogo(dataUrl);
         reloadIframe();
+    };
+    reader.onerror = function(err) {
+        console.error('[CB Logo] FileReader error:', err);
     };
     reader.readAsDataURL(file);
     try { e.target.value = ''; } catch (_) {}
