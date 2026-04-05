@@ -1496,6 +1496,28 @@ function applyTxCashBoxSnapshot(tx) {
     return tx;
 }
 
+// cash_boxes.logo_settings: optional column; omit from SELECT if DB not migrated yet.
+let transactionsCashBoxEmbedLogoSettings = true;
+
+function __spendnoteCashBoxEmbedFieldList() {
+    const base = 'id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url';
+    const ls = transactionsCashBoxEmbedLogoSettings ? ', logo_settings' : '';
+    const rest = ', receipt_show_logo, receipt_show_addresses, receipt_show_tracking, receipt_show_additional, receipt_show_note, receipt_show_signatures, receipt_title, receipt_total_label, receipt_from_label, receipt_to_label, receipt_description_label, receipt_amount_label, receipt_notes_label, receipt_issued_by_label, receipt_received_by_label, receipt_footer_note';
+    return base + ls + rest;
+}
+
+function __spendnoteIsMissingLogoSettingsColumnError(err) {
+    const msg = String(err?.message || '').toLowerCase();
+    const det = String(err?.details || '').toLowerCase();
+    const hint = String(err?.hint || '').toLowerCase();
+    const combined = msg + ' ' + det + ' ' + hint;
+    if (!combined.includes('logo_settings')) return false;
+    return combined.includes('column')
+        || combined.includes('does not exist')
+        || combined.includes('schema cache')
+        || msg.includes('400');
+}
+
 function applyTxCashBoxSnapshotToPayload(payload, cashBox) {
     const next = payload && typeof payload === 'object' ? { ...payload } : {};
     const snapshot = buildTxCashBoxSnapshot(next, cashBox);
@@ -3497,11 +3519,12 @@ var db = {
             if (window.SpendNoteDebug) console.log('[DEBUG db.transactions.getById] start', { txId });
 
             if (transactionsJoinSupported) {
+                const cbJoinFields = __spendnoteCashBoxEmbedFieldList();
                 let joinedQuery = supabaseClient
                     .from('transactions')
                     .select(`
                         *,
-                        cash_box:cash_boxes(id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url, logo_settings, receipt_show_logo, receipt_show_addresses, receipt_show_tracking, receipt_show_additional, receipt_show_note, receipt_show_signatures, receipt_title, receipt_total_label, receipt_from_label, receipt_to_label, receipt_description_label, receipt_amount_label, receipt_notes_label, receipt_issued_by_label, receipt_received_by_label, receipt_footer_note),
+                        cash_box:cash_boxes(${cbJoinFields}),
                         contact:contacts(id, name, email, phone, address, sequence_number)
                     `)
                     .eq('id', txId);
@@ -3576,12 +3599,27 @@ var db = {
 
             try {
                 if (tx.cash_box_id) {
-                    const { data: cb } = await supabaseClient
-                        .from('cash_boxes')
-                        .select('id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url, logo_settings, receipt_show_logo, receipt_show_addresses, receipt_show_tracking, receipt_show_additional, receipt_show_note, receipt_show_signatures, receipt_title, receipt_total_label, receipt_from_label, receipt_to_label, receipt_description_label, receipt_amount_label, receipt_notes_label, receipt_issued_by_label, receipt_received_by_label, receipt_footer_note')
-                        .eq('id', tx.cash_box_id)
-                        .single();
-                    if (cb) tx.cash_box = cb;
+                    let selectList = __spendnoteCashBoxEmbedFieldList();
+                    for (let embedAttempt = 0; embedAttempt < 2; embedAttempt++) {
+                        const { data: cb, error: cbEnrichErr } = await supabaseClient
+                            .from('cash_boxes')
+                            .select(selectList)
+                            .eq('id', tx.cash_box_id)
+                            .single();
+                        if (!cbEnrichErr && cb) {
+                            tx.cash_box = cb;
+                            break;
+                        }
+                        if (cbEnrichErr && transactionsCashBoxEmbedLogoSettings && __spendnoteIsMissingLogoSettingsColumnError(cbEnrichErr)) {
+                            transactionsCashBoxEmbedLogoSettings = false;
+                            selectList = __spendnoteCashBoxEmbedFieldList();
+                            continue;
+                        }
+                        if (window.SpendNoteDebug && cbEnrichErr) {
+                            console.warn('[db.transactions.getById] cash_box enrich failed', cbEnrichErr);
+                        }
+                        break;
+                    }
                 }
 
                 if (tx.contact_id) {

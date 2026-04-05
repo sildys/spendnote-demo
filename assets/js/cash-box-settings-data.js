@@ -6,6 +6,7 @@ let currentCashBoxData = null;
 let hasInitialized = false;
 let supportsReceiptLabels = true;
 let supportsCashBoxLogo = true;
+let supportsCashBoxLogoSettings = true;
 let supportsReceiptVisibility = true;
 const RECEIPT_VISIBILITY_COLUMN_BY_FIELD = Object.freeze({
     logo: 'receipt_show_logo',
@@ -65,6 +66,52 @@ function writeStoredCashBoxLogo(cashBoxId, logoDataUrl) {
     } catch (_) {
         // Quota or private mode — DB path should still work when column exists
     }
+}
+
+function normalizeCashBoxLogoSettingsForDb(value) {
+    const src = (value && typeof value === 'object') ? value : {};
+    let scale = Number(src.scale);
+    if (!Number.isFinite(scale)) scale = 1;
+    scale = Math.round(Math.min(3, Math.max(0.5, scale)) * 100) / 100;
+    const x = Number.isFinite(Number(src.x)) ? Math.round(Number(src.x) * 100) / 100 : 0;
+    const y = Number.isFinite(Number(src.y)) ? Math.round(Number(src.y) * 100) / 100 : 0;
+    return { scale, x, y };
+}
+
+async function persistCashBoxLogoSettingsToDb(cashBoxId) {
+    const targetId = String(cashBoxId || '').trim();
+    if (!targetId || !window.supabaseClient) return { success: true };
+    if (!supportsCashBoxLogoSettings) return { success: true };
+
+    const rawGetter = window.getCashBoxLogoSettings;
+    const settings = typeof rawGetter === 'function'
+        ? normalizeCashBoxLogoSettingsForDb(rawGetter())
+        : normalizeCashBoxLogoSettingsForDb(null);
+
+    const { data, error } = await window.supabaseClient
+        .from('cash_boxes')
+        .update({ logo_settings: settings })
+        .eq('id', targetId)
+        .select('id, logo_settings')
+        .maybeSingle();
+
+    if (error) {
+        const errText = String(error?.message || '').toLowerCase();
+        const missingCol = errText.includes('logo_settings')
+            && (errText.includes('column') || errText.includes('schema cache'));
+        if (missingCol) {
+            supportsCashBoxLogoSettings = false;
+            return { success: true, localOnly: true };
+        }
+        console.warn('Could not save cash box logo_settings:', error);
+        return { success: false, error: error.message || 'Failed to save logo position/zoom.' };
+    }
+    if (data && typeof window.hydrateCashBoxLogoSettingsFromDb === 'function') {
+        try {
+            window.hydrateCashBoxLogoSettingsFromDb(data.logo_settings, targetId);
+        } catch (_) {}
+    }
+    return { success: true };
 }
 
 function isUuid(value) {
@@ -786,7 +833,12 @@ async function loadCashBoxData(id) {
             const storedLogo = readStoredCashBoxLogo(id);
             window.setCashBoxLogo(dbLogo || storedLogo || '');
         }
-        
+        if (typeof window.hydrateCashBoxLogoSettingsFromDb === 'function') {
+            try {
+                window.hydrateCashBoxLogoSettingsFromDb(cashBox.logo_settings, id);
+            } catch (_) {}
+        }
+
         if (DEBUG) console.log('Cash box data loaded:', cashBox.name);
 
         await renderCashBoxTeamMembersAccess();
@@ -1163,6 +1215,12 @@ async function handleSave(e) {
                         changed = true;
                     }
                 }
+                if (msg.includes('logo_settings')) {
+                    if (supportsCashBoxLogoSettings) {
+                        supportsCashBoxLogoSettings = false;
+                        changed = true;
+                    }
+                }
                 if (hasReceiptShowError) {
                     let visibilityChanged = false;
                     RECEIPT_VISIBILITY_FIELDS.forEach((field) => {
@@ -1230,6 +1288,11 @@ async function handleSave(e) {
                 // ignore
             }
 
+            const logoSettingsDbResult = await persistCashBoxLogoSettingsToDb(currentCashBoxId);
+            if (logoSettingsDbResult && logoSettingsDbResult.success === false) {
+                throw new Error(logoSettingsDbResult.error || 'Failed to save cash box logo layout.');
+            }
+
             if (DEBUG) console.log('Cash box updated:', updatePayload.name);
             await showAlert('Cash box updated successfully!', { iconType: 'success' });
         } else {
@@ -1274,6 +1337,11 @@ async function handleSave(e) {
                     }
                 } catch (_) {
                     // ignore
+                }
+
+                const logoSettingsCreateResult = await persistCashBoxLogoSettingsToDb(createdId);
+                if (logoSettingsCreateResult && logoSettingsCreateResult.success === false) {
+                    throw new Error(logoSettingsCreateResult.error || 'Failed to save cash box logo layout.');
                 }
             }
             

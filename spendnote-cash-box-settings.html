@@ -1107,6 +1107,25 @@ window.setCashBoxLogo = function(dataUrl) {
     showCashBoxLogo(loadedCashBoxLogo);
 };
 
+/** After load or DB save: prefer server logo_settings over localStorage fallback. */
+window.hydrateCashBoxLogoSettingsFromDb = function(dbValue, cashBoxId) {
+    const keyId = String(cashBoxId || currentCashBoxData?.id || '').trim();
+    const parsed = normalizeLogoSettings(dbValue);
+    const hasDb = dbValue !== null && dbValue !== undefined && typeof dbValue === 'object'
+        && (Number.isFinite(Number(dbValue.scale))
+            || Number.isFinite(Number(dbValue.x))
+            || Number.isFinite(Number(dbValue.y)));
+    if (hasDb) {
+        loadedCashBoxLogoSettings = parsed;
+        pendingCashBoxLogoSettings = null;
+        if (keyId) writeStoredCashBoxLogoSettings(keyId, parsed);
+    } else if (keyId) {
+        loadedCashBoxLogoSettings = readStoredCashBoxLogoSettings(keyId, true);
+        pendingCashBoxLogoSettings = null;
+    }
+    applyCashBoxLogoTransform();
+};
+
 // Expose for buildReceiptUrl
 window.getCashBoxLogo = function() {
     // pendingCashBoxLogo: null=no change (use loaded), ''=removed, 'data:...'=new
@@ -1151,7 +1170,7 @@ window.addEventListener('beforeunload', () => {
 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase-config.js?v=20260405-receipt-settings-fix"></script>
+<script src="assets/js/supabase-config.js?v=20260416-cash-box-logo-fix"></script>
 <script src="assets/js/auth-guard.js"></script>
 <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
 <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
@@ -1167,6 +1186,6 @@ if (typeof showPageTip === 'function') {
     }
 }
 </script>
-<script src="assets/js/cash-box-settings-data.js?v=20260415-member-avatars"></script>
+<script src="assets/js/cash-box-settings-data.js?v=20260416-cash-box-logo-settings-db"></script>
 </body>
 </html>
