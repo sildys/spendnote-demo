@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/main.css?v=23">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=21">
-    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260403-13">
+    <link rel="stylesheet" href="assets/css/dashboard.css?v=20260406-downgrade-locks">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
@@ -377,6 +377,24 @@
                         You can print a receipt now, or later from the transaction list.
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plan downgrade: pick active cash boxes (owner); see migration 066 -->
+    <div class="modal-overlay" id="tierCashBoxModal" aria-hidden="true" style="display:none;z-index:11000;">
+        <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="tierCashBoxModalTitle" style="max-width:480px;">
+            <div class="modal-header">
+                <h2 id="tierCashBoxModalTitle" style="margin:0;font-size:18px;font-weight:800;">Choose active cash boxes</h2>
+            </div>
+            <div class="modal-body" style="padding:16px 24px;">
+                <p id="tierCashBoxModalBody" style="color:var(--text-muted);font-size:14px;line-height:1.55;margin:0 0 16px;"></p>
+                <div id="tierCashBoxModalList" style="display:flex;flex-direction:column;gap:10px;max-height:50vh;overflow:auto;"></div>
+            </div>
+            <div class="form-actions" style="padding:16px 24px;border-top:1px solid var(--border);">
+                <button type="button" class="btn btn-primary" id="tierCashBoxModalSave" style="width:100%;">
+                    Save selection
+                </button>
             </div>
         </div>
     </div>
@@ -1670,16 +1688,16 @@
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260417-tx-receipt-snapshot"></script>
+    <script src="assets/js/supabase-config.js?v=20260406-downgrade-locks"></script>
     <script src="assets/js/auth-guard.js?v=20260223-1949"></script>
     <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
     <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
     <script>loadNav();</script>
     <script src="assets/js/main.js?v=45"></script>
-    <script src="assets/js/dashboard-ui.js?v=20260406-role-add-box"></script>
+    <script src="assets/js/dashboard-ui.js?v=20260406-downgrade-locks"></script>
     <script src="assets/js/dashboard-modal.js?v=20260406-user-role-gates"></script>
-    <script src="assets/js/dashboard-form.js?v=20260405-db-logo-only"></script>
-    <script src="assets/js/dashboard-data.js?v=20260415-creator-avatar-roster-ownerfix"></script>
+    <script src="assets/js/dashboard-form.js?v=20260406-downgrade-locks"></script>
+    <script src="assets/js/dashboard-data.js?v=20260406-downgrade-locks"></script>
 
     <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>

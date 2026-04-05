@@ -1093,7 +1093,7 @@
 
             // Load cashboxes with all fields needed
             const cashBoxes = await window.db.cashBoxes.getAll({
-                select: 'id, name, color, currency, icon, current_balance, sequence_number, id_prefix, sort_order'
+                select: 'id, name, color, currency, icon, current_balance, sequence_number, id_prefix, sort_order, transactions_blocked'
             });
 
             if (!Array.isArray(cashBoxes) || !cashBoxes.length) {
@@ -1106,11 +1106,22 @@
                 return;
             }
 
+            const recordableBoxes = cashBoxes.filter(function (cb) { return !cb.transactions_blocked; });
+            const txBoxes = recordableBoxes.length ? recordableBoxes : null;
+            if (!txBoxes) {
+                if (loadingEl) loadingEl.style.display = 'none';
+                if (errorEl) {
+                    errorEl.style.display = '';
+                    errorEl.innerHTML = '<i class="fas fa-lock"></i> No cash box can record transactions right now. Open the <a href="dashboard.html" style="color:inherit;font-weight:700;">dashboard</a> to finish your plan change (owner), or upgrade your plan.';
+                }
+                return;
+            }
+
             // Build hidden register-card DOM so dashboard-modal.js carousel works
-            buildRegisterCards(cashBoxes);
+            buildRegisterCards(txBoxes);
 
             // Build window.modalCashBoxes array directly (don't rely on DOM)
-            window.modalCashBoxes = cashBoxes.map(function (cb) {
+            window.modalCashBoxes = txBoxes.map(function (cb) {
                 const seq = Number(cb.sequence_number);
                 const displayId = Number.isFinite(seq) && seq > 0
                     ? 'SN-' + String(seq).padStart(3, '0')

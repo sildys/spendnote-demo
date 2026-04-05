@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     stripe_customer_id TEXT,
     stripe_subscription_id TEXT,
     seat_count INTEGER DEFAULT 0,
+    tier_cash_boxes_pending BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -255,6 +256,8 @@ CREATE TABLE IF NOT EXISTS public.cash_boxes (
     -- Cash box logo (Pro only)
     cash_box_logo_url TEXT,
     logo_settings JSONB DEFAULT NULL,
+
+    transactions_blocked BOOLEAN NOT NULL DEFAULT FALSE,
 
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()

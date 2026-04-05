@@ -4059,6 +4059,21 @@ var db = {
                 return { success: false, error: error.message };
             }
             return { success: true, data };
+        },
+
+        /** After plan downgrade: choose which cash boxes stay active (see migration 066). */
+        async resolveTierCashBoxes(keepIds) {
+            const user = await auth.getCurrentUser();
+            if (!user?.id) return { success: false, error: 'Not authenticated' };
+            const ids = Array.isArray(keepIds)
+                ? keepIds.map((id) => String(id || '').trim()).filter(Boolean)
+                : [];
+            if (!ids.length) return { success: false, error: 'Select at least one cash box.' };
+            const { error } = await supabaseClient.rpc('spendnote_resolve_tier_cash_boxes', { p_keep_ids: ids });
+            if (error) {
+                return { success: false, error: error.message || 'Failed to save cash box selection.' };
+            }
+            return { success: true };
         }
     },
 

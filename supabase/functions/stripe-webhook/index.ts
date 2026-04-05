@@ -132,6 +132,81 @@ const upsertProfileSubscription = async (
     .eq("id", userId);
 };
 
+/** Paid tiers only (preview is not sold via Stripe). */
+const subscriptionTierRank = (t: string): number => {
+  const x = String(t || "").trim().toLowerCase();
+  if (x === "free") return 0;
+  if (x === "standard") return 1;
+  if (x === "pro") return 2;
+  if (x === "preview") return 3;
+  return 0;
+};
+
+const maxCashBoxesForTier = (tier: string): number => {
+  const t = String(tier || "").trim().toLowerCase();
+  if (t === "free") return 1;
+  if (t === "standard") return 2;
+  return Number.POSITIVE_INFINITY;
+};
+
+const collectCashBoxIdsForBillingUser = async (
+  supabaseAdmin: ReturnType<typeof createClient>,
+  userId: string,
+): Promise<string[]> => {
+  const ids = new Set<string>();
+  const { data: ownedOrgs } = await supabaseAdmin.from("orgs").select("id").eq("owner_user_id", userId);
+  const orgIds = (ownedOrgs || []).map((r) => String(r.id || "").trim()).filter(Boolean);
+  if (orgIds.length) {
+    const { data: orgBoxes } = await supabaseAdmin.from("cash_boxes").select("id").in("org_id", orgIds);
+    (orgBoxes || []).forEach((r) => {
+      const id = String(r?.id || "").trim();
+      if (id) ids.add(id);
+    });
+  }
+  const { data: soloBoxes } = await supabaseAdmin
+    .from("cash_boxes")
+    .select("id")
+    .eq("user_id", userId)
+    .is("org_id", null);
+  (soloBoxes || []).forEach((r) => {
+    const id = String(r?.id || "").trim();
+    if (id) ids.add(id);
+  });
+  return Array.from(ids);
+};
+
+const clearCashBoxTierLocks = async (supabaseAdmin: ReturnType<typeof createClient>, userId: string) => {
+  const ids = await collectCashBoxIdsForBillingUser(supabaseAdmin, userId);
+  if (ids.length) {
+    await supabaseAdmin.from("cash_boxes").update({ transactions_blocked: false }).in("id", ids);
+  }
+  await supabaseAdmin.from("profiles").update({ tier_cash_boxes_pending: false }).eq("id", userId);
+};
+
+const applyCashBoxTierDowngrade = async (
+  supabaseAdmin: ReturnType<typeof createClient>,
+  userId: string,
+  newTier: string,
+) => {
+  const max = maxCashBoxesForTier(newTier);
+  if (!Number.isFinite(max)) {
+    await clearCashBoxTierLocks(supabaseAdmin, userId);
+    return;
+  }
+  const ids = await collectCashBoxIdsForBillingUser(supabaseAdmin, userId);
+  if (ids.length <= max) {
+    await supabaseAdmin.from("profiles").update({ tier_cash_boxes_pending: false }).eq("id", userId);
+    if (ids.length) {
+      await supabaseAdmin.from("cash_boxes").update({ transactions_blocked: false }).in("id", ids);
+    }
+    return;
+  }
+  await supabaseAdmin.from("profiles").update({ tier_cash_boxes_pending: true }).eq("id", userId);
+  if (ids.length) {
+    await supabaseAdmin.from("cash_boxes").update({ transactions_blocked: true }).in("id", ids);
+  }
+};
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -212,8 +287,24 @@ Deno.serve(async (req: Request) => {
       case "customer.subscription.updated": {
         const sub = event.data.object as Stripe.Subscription;
         const userId = await findUserIdFromSubscription(supabaseAdmin, sub);
-        if (userId) {
-          await upsertProfileSubscription(supabaseAdmin, userId, sub);
+        if (!userId) break;
+        const { data: prevRow } = await supabaseAdmin
+          .from("profiles")
+          .select("subscription_tier")
+          .eq("id", userId)
+          .maybeSingle();
+        const oldTier = String(prevRow?.subscription_tier || "free").toLowerCase();
+        await upsertProfileSubscription(supabaseAdmin, userId, sub);
+        const { data: nextRow } = await supabaseAdmin
+          .from("profiles")
+          .select("subscription_tier")
+          .eq("id", userId)
+          .maybeSingle();
+        const newTier = String(nextRow?.subscription_tier || oldTier).toLowerCase();
+        if (subscriptionTierRank(newTier) < subscriptionTierRank(oldTier)) {
+          await applyCashBoxTierDowngrade(supabaseAdmin, userId, newTier);
+        } else if (subscriptionTierRank(newTier) > subscriptionTierRank(oldTier)) {
+          await clearCashBoxTierLocks(supabaseAdmin, userId);
         }
         break;
       }
@@ -234,6 +325,7 @@ Deno.serve(async (req: Request) => {
               seat_count: 0,
             })
             .eq("id", userId);
+          await applyCashBoxTierDowngrade(supabaseAdmin, userId, "free");
         }
         break;
       }

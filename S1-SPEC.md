@@ -54,6 +54,8 @@ When a user downgrades to a plan with stricter limits (e.g. Pro → Standard):
 - Example: Pro → Standard with 5 cash boxes → 2 cash boxes active, 3 locked (no new transactions, no edit — but history visible).
 - User is shown a clear message explaining which resources are locked and how to unlock (upgrade).
 
+**Implementation (app + DB):** Migration `066_tier_downgrade_cash_box_locks.sql` — `cash_boxes.transactions_blocked`, `profiles.tier_cash_boxes_pending`, `spendnote_resolve_tier_cash_boxes`, Stripe `stripe-webhook` locks excess boxes on tier drop, dashboard modal for owner to pick active boxes. New transactions blocked in `spendnote_create_transaction` when `transactions_blocked` is true.
+
 ---
 
 ## 5. Account Deletion Behavior

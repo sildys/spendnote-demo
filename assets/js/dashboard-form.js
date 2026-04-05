@@ -447,6 +447,10 @@ function initTransactionForm() {
                     window.SpendNoteUpgrade?.showTransactionLimitUpgrade?.();
                     return;
                 } else
+                if (raw === 'CASH_BOX_TRANSACTIONS_BLOCKED' || lower.includes('cash_box_transactions_blocked')) {
+                    showAlert('This cash box cannot record new transactions under your current plan. Choose active cash boxes on the dashboard, or upgrade your plan.', { iconType: 'warning' });
+                    return;
+                } else
                 if (raw === 'FREE_TRIAL_EXPIRED' || lower.includes('free_trial_expired')) {
                     window.SpendNoteUpgrade?.showTrialExpiredUpgrade?.();
                     return;

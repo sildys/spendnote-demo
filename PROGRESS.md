@@ -115,7 +115,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **Void:** UI korábban tévesen csak org `owner`/`admin` szerepkörnél engedélyezett → szóló / org-nélküli tulajoknál (Standard, Free, stb.) a gomb tiltva volt, holott az RPC (`spendnote_void_transaction`) a kassza tulajdonost is engedi. **Javítva:** void kizárólag org szerepkör **`user`** (meghívott tag) esetén tiltva UI-n; bulk void ugyanígy (`transaction-detail-ui.js`, `transaction-history-data.js`). Commit: `b249946` (és kapcsolódó cache-bust HTML).
 
 **Hátra (nem tier-gating):**
-- **Downgrade viselkedés:** `S1-SPEC.md` §4 szerint többlet cash box **zárolás** (nem törlés); jelenleg inkább limit **új** létrehozásnál — döntés: implementálni a zárolást, **vagy** frissíteni a specet, ha elfogadott a gyengébb garancia.
+- **Downgrade viselkedés (2026-04-06):** Első hullám kész — `066_tier_downgrade_cash_box_locks.sql` + Stripe webhook (`applyCashBoxTierDowngrade` / `clearCashBoxTierLocks`) + dashboard owner modal + RPC `spendnote_resolve_tier_cash_boxes` + `CASH_BOX_TRANSACTIONS_BLOCKED` a create RPC-ben. **Hátra még:** downgrade email/toast copy, Pro→Standard team tag „locked out” üzenet, egyéb edge case-ek (lásd V1 Launch §5).
 - **Teljes lemondás:** Stripe `customer.subscription.deleted` → `free`; nincs dedikált downgrade UX/email.
 - **Üzenetek:** Upgrade után van dashboard **toast** (angol) + `upgrade_confirmed` email. **Downgrade** (vagy Pro→Standard) felé: még nincs párhuzamos toast/email — ha készül, **csak angol** szöveg + külön email handler (ne keverjük az upgrade copyval).
 - **S3 Stripe:** checkout / webhook / live teszt — lásd roadmap checklist.
@@ -203,7 +203,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [x] Team invite — custom modal + bekötés *(késznek jelölve — tulaj visszajelzés)*
 - [x] Free csomag gating — *(késznek jelölve)*
 - [x] **Standard** (és tier-keresztmetszet) gating — **lezárva** (lásd fenti 2026-04-06 blokk: paywallok, void UI, ID prefix, currency select)
-- [ ] Downgrade / többlet erőforrás: **S1 §4 zárolás** vs jelenlegi viselkedés — döntés + implementáció vagy spec frissítés
+- [~] Downgrade / többlet cash box: **S1 §4** első hullám — migráció `066`, Stripe webhook lock/clear, dashboard owner modal, create RPC `CASH_BOX_TRANSACTIONS_BLOCKED`; hátra: downgrade email/toast, team tag locked-out UX
 - [ ] Downgrade (és opcionálisan csomagváltás) **angol** in-app + email értesítés — upgrade mintájára, külön copy
 - [ ] Spot-check / regresszió: új oldalak vagy szerepkör-él esetek (nem blokkoló a tier launchra)
 - [ ] Free tier: 20 tx / 14 nap — regresszió teszt

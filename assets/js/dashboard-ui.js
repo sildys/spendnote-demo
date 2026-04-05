@@ -274,6 +274,12 @@ function initCashBoxCards() {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
+                if (btn.disabled || card.dataset.transactionsBlocked === '1') {
+                    if (typeof showAlert === 'function') {
+                        showAlert('This cash box cannot record new transactions under your current plan. Ask the workspace owner to choose active cash boxes or upgrade.', { iconType: 'info' });
+                    }
+                    return;
+                }
                 activateCard(card);
                 window.openModal?.({ cashBoxId: card.dataset.id, direction: btn.getAttribute('data-quick') });
             });

@@ -55,6 +55,104 @@ let dashboardLoadPromise = null;
 
 let dashboardTxController = null;
 
+async function maybeShowTierDowngradeModal(profile, cashBoxes) {
+    const overlay = document.getElementById('tierCashBoxModal');
+    const bodyEl = document.getElementById('tierCashBoxModalBody');
+    const listEl = document.getElementById('tierCashBoxModalList');
+    const saveBtn = document.getElementById('tierCashBoxModalSave');
+    if (!overlay || !bodyEl || !listEl || !saveBtn) return;
+    if (!profile?.tier_cash_boxes_pending) return;
+
+    const tier = String(profile.subscription_tier || 'free').toLowerCase();
+    const maxKeep = tier === 'free' ? 1 : tier === 'standard' ? 2 : 99;
+    const n = (cashBoxes || []).length;
+    if (n <= maxKeep) {
+        const allIds = (cashBoxes || []).map((b) => String(b?.id || '').trim()).filter(Boolean);
+        if (allIds.length && window.db?.profiles?.resolveTierCashBoxes) {
+            const res = await window.db.profiles.resolveTierCashBoxes(allIds);
+            if (res?.success && typeof loadDashboardData === 'function') {
+                await loadDashboardData();
+            }
+        }
+        return;
+    }
+
+    bodyEl.textContent = `Your plan allows ${maxKeep} active cash box${maxKeep === 1 ? '' : 'es'} for new transactions. You have ${n}. Select exactly ${maxKeep} to keep active. The rest stay visible with read-only recording until you upgrade.`;
+
+    listEl.innerHTML = '';
+    const ordered = [...(cashBoxes || [])].sort((a, b) => {
+        const ab = a?.transactions_blocked ? 1 : 0;
+        const bb = b?.transactions_blocked ? 1 : 0;
+        return ab - bb;
+    });
+    const selected = new Set(ordered.slice(0, maxKeep).map((b) => String(b?.id || '').trim()).filter(Boolean));
+
+    (cashBoxes || []).forEach((box) => {
+        const id = String(box?.id || '').trim();
+        if (!id) return;
+        const row = document.createElement('label');
+        row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer;';
+        const input = document.createElement('input');
+        input.type = maxKeep === 1 ? 'radio' : 'checkbox';
+        if (maxKeep === 1) input.name = 'tierKeepCashBox';
+        input.value = id;
+        input.checked = selected.has(id);
+        row.appendChild(input);
+        const span = document.createElement('span');
+        span.textContent = String(box?.name || id);
+        row.appendChild(span);
+        listEl.appendChild(row);
+
+        input.addEventListener('change', () => {
+            if (maxKeep === 1) {
+                selected.clear();
+                selected.add(id);
+                listEl.querySelectorAll('input[type="radio"]').forEach((r) => {
+                    if (r !== input) r.checked = false;
+                });
+            } else {
+                if (input.checked) {
+                    selected.add(id);
+                    while (selected.size > maxKeep) {
+                        const first = listEl.querySelector('input:checked');
+                        if (!first || first === input) break;
+                        const rid = String(first.value || '').trim();
+                        selected.delete(rid);
+                        first.checked = false;
+                    }
+                } else {
+                    selected.delete(id);
+                }
+            }
+        });
+    });
+
+    overlay.style.display = 'flex';
+    overlay.setAttribute('aria-hidden', 'false');
+
+    saveBtn.onclick = async () => {
+        if (selected.size !== maxKeep) {
+            if (typeof showAlert === 'function') {
+                showAlert(`Select exactly ${maxKeep} cash box${maxKeep > 1 ? 'es' : ''}.`, { iconType: 'warning' });
+            }
+            return;
+        }
+        const keepIds = Array.from(selected);
+        const res = await window.db?.profiles?.resolveTierCashBoxes?.(keepIds);
+        if (!res || res.success !== true) {
+            if (typeof showAlert === 'function') {
+                showAlert(String(res?.error || 'Could not save your selection.'), { iconType: 'error' });
+            }
+            return;
+        }
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+        if (typeof loadDashboardData === 'function') {
+            await loadDashboardData();
+        }
+    };
+}
+
 function createDashboardTransactionsController(ctx) {
     const debug = Boolean(window.SpendNoteDebug);
 
@@ -723,10 +821,14 @@ async function loadDashboardData() {
             const { hexToRgb, getIconClass, formatCurrency } = getSpendNoteHelpers();
 
             const cashBoxesPromise = dbApi.cashBoxes.getAll({
-                select: 'id, name, color, currency, icon, current_balance, created_at, sort_order, sequence_number'
+                select: 'id, name, color, currency, icon, current_balance, created_at, sort_order, sequence_number, transactions_blocked'
             });
 
-            const [cashBoxes] = await Promise.all([cashBoxesPromise]);
+            const profilePromise = typeof dbApi.profiles?.getCurrent === 'function'
+                ? dbApi.profiles.getCurrent()
+                : Promise.resolve(null);
+
+            const [cashBoxes, profileRow] = await Promise.all([cashBoxesPromise, profilePromise]);
 
             const getStoredOrderKey = (userId) => {
                 const uid = String(userId || '').trim();
@@ -783,12 +885,13 @@ async function loadDashboardData() {
             
             if (cashBoxes && cashBoxes.length > 0) {
                 const savedActiveId = String(localStorage.getItem('activeCashBoxId') || '').trim();
-                const hasSavedActive = savedActiveId
-                    ? cashBoxes.some((box) => String(box?.id || '').trim() === savedActiveId)
-                    : false;
-                const defaultActiveId = hasSavedActive
+                const firstUnblocked = cashBoxes.find((box) => !box?.transactions_blocked);
+                const savedOk = savedActiveId
+                    && cashBoxes.some((box) => String(box?.id || '').trim() === savedActiveId)
+                    && !cashBoxes.find((box) => String(box?.id || '').trim() === savedActiveId)?.transactions_blocked;
+                const defaultActiveId = savedOk
                     ? savedActiveId
-                    : String(cashBoxes[0]?.id || '').trim();
+                    : String(firstUnblocked?.id || cashBoxes[0]?.id || '').trim();
                 
                 // Remove loading indicator
                 const loadingSlide = swiperWrapper.querySelector('.loading-slide');
@@ -812,6 +915,8 @@ async function loadDashboardData() {
                     const rgb = hexToRgb(color);
                     const iconClass = getIconClass(box.icon);
                     const isActive = (defaultActiveId && box.id === defaultActiveId) ? 'active' : '';
+                    const txBlocked = Boolean(box?.transactions_blocked);
+                    const blockedClass = txBlocked ? ' register-card--blocked' : '';
 
                     const seq = Number(box.sequence_number);
                     const displayCode = Number.isFinite(seq) && seq > 0
@@ -824,7 +929,7 @@ async function loadDashboardData() {
                     // Create slide HTML
                     allSlidesHTML += `
                         <div class="swiper-slide">
-                            <div class="register-card ${isActive}" 
+                            <div class="register-card ${isActive}${blockedClass}" 
                                  data-id="${box.id}" 
                                  data-name="${box.name}" 
                                  data-currency="${String(box.currency || 'USD').toUpperCase()}"
@@ -832,6 +937,7 @@ async function loadDashboardData() {
                                   data-rgb="${rgb}"
                                  data-display-code="${displayCode}"
                                  data-sequence-number="${Number.isFinite(seq) ? seq : ''}"
+                                 data-transactions-blocked="${txBlocked ? '1' : ''}"
                                  style="--card-color: ${color}; --card-rgb: ${rgb};"
                                  role="button" 
                                  tabindex="0">
@@ -856,7 +962,7 @@ async function loadDashboardData() {
                                 <div class="register-balance">${formattedBalance}</div>
 
                                 <div class="register-quick-actions">
-                                    <button type="button" class="register-quick-btn in" data-quick="in">
+                                    <button type="button" class="register-quick-btn in" data-quick="in"${txBlocked ? ' disabled aria-disabled="true"' : ''}>
                                         <span class="quick-icon" aria-hidden="true">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8 3V12" stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -865,7 +971,7 @@ async function loadDashboardData() {
                                         </span>
                                         <span class="quick-label">IN</span>
                                     </button>
-                                    <button type="button" class="register-quick-btn out" data-quick="out">
+                                    <button type="button" class="register-quick-btn out" data-quick="out"${txBlocked ? ' disabled aria-disabled="true"' : ''}>
                                         <span class="quick-icon" aria-hidden="true">
                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8 13V4" stroke="white" stroke-width="2" stroke-linecap="round"/>
@@ -962,6 +1068,27 @@ async function loadDashboardData() {
                 
                 // Update modal cash box dropdown
                 updateModalCashBoxDropdown(cashBoxes);
+
+                try {
+                    await maybeShowTierDowngradeModal(profileRow, cashBoxes);
+                } catch (e) {
+                    if (debug) console.warn('[Downgrade modal]', e);
+                }
+
+                try {
+                    const hasBlocked = (cashBoxes || []).some((b) => Boolean(b?.transactions_blocked));
+                    if (hasBlocked && myOrgRole === 'admin' && !profileRow?.tier_cash_boxes_pending) {
+                        const wrap = document.querySelector('main.main-content');
+                        if (wrap && !document.getElementById('snDowngradeAdminNotice')) {
+                            const note = document.createElement('div');
+                            note.id = 'snDowngradeAdminNotice';
+                            note.setAttribute('role', 'status');
+                            note.style.cssText = 'margin:0 0 12px;padding:12px 14px;border-radius:10px;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.35);color:var(--text);font-size:13px;line-height:1.5;';
+                            note.textContent = 'Some cash boxes cannot record transactions until the subscription owner finishes the plan change on their account.';
+                            wrap.insertBefore(note, wrap.firstChild);
+                        }
+                    }
+                } catch (_) {}
             } else if (debug) {
                 console.log('ℹ️ No cash boxes found in database');
             }
@@ -1037,23 +1164,24 @@ function updateModalCashBoxDropdown(cashBoxes) {
 
     const { getIconClass, hexToRgb } = getSpendNoteHelpers();
 
+    const recordable = cashBoxes.filter((box) => !box?.transactions_blocked);
+    const pool = recordable.length ? recordable : cashBoxes;
+
     const savedActiveId = String(localStorage.getItem('activeCashBoxId') || '').trim();
-    const hasSavedActive = savedActiveId
-        ? cashBoxes.some((box) => String(box?.id || '').trim() === savedActiveId)
-        : false;
-    const defaultActiveId = hasSavedActive
+    const savedInPool = savedActiveId && pool.some((box) => String(box?.id || '').trim() === savedActiveId);
+    const defaultActiveId = savedInPool
         ? savedActiveId
-        : String(cashBoxes[0]?.id || '').trim();
+        : String(pool[0]?.id || '').trim();
     
     // Clear existing options
     modalRegisterSelect.innerHTML = '';
     
     // Add options for each cash box
-    cashBoxes.forEach((box, index) => {
+    pool.forEach((box, index) => {
         const color = box.color || '#059669';
         const option = document.createElement('option');
         option.value = box.id;
-        option.textContent = box.name;
+        option.textContent = box.transactions_blocked ? `${box.name} (read-only)` : box.name;
         option.setAttribute('data-color', color);
         option.setAttribute('data-rgb', hexToRgb(color));
         option.setAttribute('data-icon', getIconClass(box.icon));
