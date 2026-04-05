@@ -679,7 +679,7 @@
             return data;
         }
 
-        const CONTACT_DELETE_DENIED_HU = 'Nincs jogosultságod kontakt törléséhez. Kérd meg a csapat Owner vagy Admin szerepű tagját.';
+        const CONTACT_DELETE_DENIED_MSG = "You don't have permission to delete contacts. Ask your workspace Owner or Admin.";
 
         function setHeaderActions(isNew = false, allowDelete = false) {
             let deleteBtn = '';
@@ -691,7 +691,7 @@
                 </button>`;
                 } else {
                     deleteBtn = `
-                <button type="button" class="btn btn-danger" id="deleteContactBtn" style="margin-left: auto; opacity: 0.5; cursor: not-allowed;" data-delete-restricted="1" title="${CONTACT_DELETE_DENIED_HU.replace(/"/g, '&quot;')}">
+                <button type="button" class="btn btn-danger" id="deleteContactBtn" style="margin-left: auto; opacity: 0.5; cursor: not-allowed;" data-delete-restricted="1" title="${CONTACT_DELETE_DENIED_MSG.replace(/"/g, '&quot;')}">
                     <i class="fas fa-trash"></i> Delete
                 </button>`;
                 }
@@ -711,7 +711,7 @@
                 document.getElementById('deleteContactBtn')?.addEventListener('click', async () => {
                     const delBtn = document.getElementById('deleteContactBtn');
                     if (delBtn?.getAttribute('data-delete-restricted') === '1') {
-                        await showAlert(CONTACT_DELETE_DENIED_HU, { iconType: 'info' });
+                        await showAlert(CONTACT_DELETE_DENIED_MSG, { iconType: 'info' });
                         return;
                     }
                     if (!await showConfirm('Are you sure you want to delete this contact? This cannot be undone.', { title: 'Delete Contact', iconType: 'danger', okLabel: 'Delete', danger: true })) return;

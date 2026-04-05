@@ -928,7 +928,7 @@
                 .replace(/'/g, '&#39;');
         }
 
-        const CONTACT_DELETE_DENIED_HU = 'Nincs jogosultságod kontakt törléséhez. Kérd meg a csapat Owner vagy Admin szerepű tagját.';
+        const CONTACT_DELETE_DENIED_MSG = "You don't have permission to delete contacts. Ask your workspace Owner or Admin.";
 
         async function applyContactBulkDeleteState() {
             const bulkBtn = document.getElementById('bulkDelete');
@@ -944,13 +944,13 @@
                     bulkBtn.setAttribute('data-delete-restricted', '1');
                     bulkBtn.style.opacity = '0.5';
                     bulkBtn.style.cursor = 'not-allowed';
-                    bulkBtn.setAttribute('title', CONTACT_DELETE_DENIED_HU);
+                    bulkBtn.setAttribute('title', CONTACT_DELETE_DENIED_MSG);
                 }
             } catch (_) {
                 bulkBtn.setAttribute('data-delete-restricted', '1');
                 bulkBtn.style.opacity = '0.5';
                 bulkBtn.style.cursor = 'not-allowed';
-                bulkBtn.setAttribute('title', CONTACT_DELETE_DENIED_HU);
+                bulkBtn.setAttribute('title', CONTACT_DELETE_DENIED_MSG);
             }
         }
 
@@ -1698,7 +1698,7 @@
         document.getElementById('bulkDelete').addEventListener('click', async () => {
             const bulkDelBtn = document.getElementById('bulkDelete');
             if (bulkDelBtn?.getAttribute('data-delete-restricted') === '1') {
-                await showAlert(CONTACT_DELETE_DENIED_HU, { iconType: 'info' });
+                await showAlert(CONTACT_DELETE_DENIED_MSG, { iconType: 'info' });
                 return;
             }
             const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
