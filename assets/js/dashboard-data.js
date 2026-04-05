@@ -97,19 +97,20 @@ async function maybeShowTierDowngradeModal(profile, cashBoxes) {
         titleEl.textContent = `You can only use ${maxKeep} cash box${isMulti ? 'es' : ''} on this plan`;
     }
 
-    let descHtml = `You currently have ${n} cash boxes, but your plan allows only ${maxKeep}.<br>The others will stop recording new transactions and become read-only.`;
+    bodyEl.innerHTML = `You currently have ${n} cash boxes, but your plan allows only ${maxKeep}.<br>The others will stop recording new transactions and become read-only.`;
 
-    if (tier === 'standard' || tier === 'free') {
+    const teamWarnEl = document.getElementById('tierCashBoxModalTeamWarn');
+    if (teamWarnEl && (tier === 'standard' || tier === 'free')) {
         const teamLine = teamCount > 0
             ? `Your ${teamCount === 1 ? '1 team member has' : teamCount + ' team members have'} lost access to your cash boxes.`
             : 'Team management is no longer available on this plan.';
-        descHtml += `<div style="margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);color:#b91c1c;font-size:13px;font-weight:600;line-height:1.5;">
+        teamWarnEl.innerHTML = `<div style="margin:0 0 16px;padding:10px 14px;border-radius:10px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);color:#b91c1c;font-size:13px;font-weight:600;line-height:1.5;text-align:left;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             ${teamLine}<br>
             <span style="font-weight:400;color:#92400e;">Invite members and share cash boxes with Pro.</span>
         </div>`;
+        teamWarnEl.style.display = 'block';
     }
-    bodyEl.innerHTML = descHtml;
 
     const upgradeBtn = document.getElementById('tierCashBoxModalUpgrade');
     if (upgradeBtn) {
