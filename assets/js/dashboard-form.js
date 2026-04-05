@@ -317,6 +317,17 @@ function initTransactionForm() {
                 }
             } catch (_) {}
 
+            try {
+                const cbId = payload.cash_box_id;
+                if (cbId && window.db?.cashBoxes?.getById) {
+                    const cb = await window.db.cashBoxes.getById(cbId);
+                    const cbLogo = String(cb?.cash_box_logo_url || '').trim();
+                    if (cbLogo) {
+                        payload.sender_profile_logo_url_snapshot = cbLogo;
+                    }
+                }
+            } catch (_) {}
+
             // If user selected a contact from autocomplete, link by UUID.
             try {
                 const selectedIdRaw = String(document.getElementById('modalContactId')?.value || '').trim();

@@ -382,9 +382,10 @@ const QUICK_PRESET = {
             }
         })();
 
+        const snapshotLogo = String(t.sender_profile_logo_url_snapshot || '').trim();
         receiptLogoUrl = String(
-            cb.cash_box_logo_url
-                || String(t.sender_profile_logo_url_snapshot || '').trim()
+            snapshotLogo
+                || cb.cash_box_logo_url
                 || profile?.account_logo_url
                 || ''
         ).trim();

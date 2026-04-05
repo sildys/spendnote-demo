@@ -1251,8 +1251,8 @@ if (urlParams.get('signatures') === '0') {
         try {
           if (urlParams.get('logo') !== '0') {
             const preferredLogo = safeText(
-              tx?.cash_box?.cash_box_logo_url
-                || String(tx.sender_profile_logo_url_snapshot || '').trim()
+              String(tx.sender_profile_logo_url_snapshot || '').trim()
+                || tx?.cash_box?.cash_box_logo_url
                 || profile?.account_logo_url,
               ''
             );
