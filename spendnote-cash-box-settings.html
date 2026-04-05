@@ -981,7 +981,7 @@ function showCashBoxLogo(dataUrl) {
 }
 
 cbLogoUploadBtn?.addEventListener('click', async () => {
-    const canLogo = await window.SpendNoteFeatures?.can('can_customize_labels');
+    const canLogo = await window.SpendNoteFeatures?.can('can_upload_logo');
     if (!canLogo) { window.SpendNoteUpgrade?.showPerBoxLogoUpgrade?.(); return; }
     if (!cbLogoFileInput) return;
     try { cbLogoFileInput.value = ''; } catch (_) {}
