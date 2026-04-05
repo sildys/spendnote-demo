@@ -689,7 +689,7 @@ function createDashboardTransactionsController(ctx) {
                 <td><div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarData.url}" alt="${safeText(createdByName, '—')}"${avatarStyle}></div></div></td>
                 <td>
                     <div class="tx-actions">
-                        <button type="button" class="tx-action btn-duplicate" data-tx-id="${safeText(tx?.id, '')}" data-cash-box-id="${safeText(cashBoxId, '')}" data-direction="${isIncome ? 'in' : 'out'}" data-amount="${safeText(tx?.amount, '')}" data-contact-id="${safeText(contactId, '')}" data-description="${descEnc}" data-contact-name="${contactEnc}">
+                        <button type="button" class="tx-action btn-duplicate" data-tx-id="${safeText(tx?.id, '')}" data-cash-box-id="${safeText(cashBoxId, '')}" data-direction="${isIncome ? 'in' : 'out'}" data-amount="${safeText(tx?.amount, '')}" data-contact-id="${safeText(contactId, '')}" data-description="${descEnc}" data-contact-name="${contactEnc}" data-cb-blocked="${tx?.cash_box?.transactions_blocked ? '1' : ''}">
                             <i class="fas fa-copy"></i>
                             <span>Duplicate</span>
                         </button>

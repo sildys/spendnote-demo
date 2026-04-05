@@ -1,5 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.25.0?target=deno";
+import { renderSubscriptionDowngradedTemplate } from "../_shared/email-templates.ts";
 
 const corsHeaders: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
@@ -207,6 +208,50 @@ const applyCashBoxTierDowngrade = async (
   }
 };
 
+const sendDowngradeEmail = async (
+  supabaseAdmin: ReturnType<typeof createClient>,
+  userId: string,
+  oldTier: string,
+  newTier: string,
+) => {
+  try {
+    const resendApiKey = Deno.env.get("RESEND_API_KEY") || "";
+    const from = Deno.env.get("SPENDNOTE_EMAIL_FROM") || "SpendNote <no-reply@spendnote.app>";
+    if (!resendApiKey) return;
+
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("full_name")
+      .eq("id", userId)
+      .maybeSingle();
+
+    const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(userId);
+    const email = String(authUser?.user?.email || "").trim();
+    if (!email) return;
+
+    const ids = await collectCashBoxIdsForBillingUser(supabaseAdmin, userId);
+    const max = maxCashBoxesForTier(newTier);
+
+    const capitalize = (s: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+    const tpl = renderSubscriptionDowngradedTemplate({
+      fullName: profile?.full_name || "",
+      oldPlan: capitalize(oldTier),
+      newPlan: capitalize(newTier),
+      maxCashBoxes: Number.isFinite(max) ? max : 999,
+      totalCashBoxes: ids.length,
+      dashboardUrl: "https://spendnote.app/dashboard.html",
+    });
+
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to: [email], subject: tpl.subject, html: tpl.html, text: tpl.text }),
+    });
+  } catch (_) {
+    // non-critical; don't fail the webhook
+  }
+};
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -303,6 +348,7 @@ Deno.serve(async (req: Request) => {
         const newTier = String(nextRow?.subscription_tier || oldTier).toLowerCase();
         if (subscriptionTierRank(newTier) < subscriptionTierRank(oldTier)) {
           await applyCashBoxTierDowngrade(supabaseAdmin, userId, newTier);
+          await sendDowngradeEmail(supabaseAdmin, userId, oldTier, newTier);
         } else if (subscriptionTierRank(newTier) > subscriptionTierRank(oldTier)) {
           await clearCashBoxTierLocks(supabaseAdmin, userId);
         }
@@ -313,6 +359,12 @@ Deno.serve(async (req: Request) => {
         const sub = event.data.object as Stripe.Subscription;
         const userId = await findUserIdFromSubscription(supabaseAdmin, sub);
         if (userId) {
+          const { data: delPrevRow } = await supabaseAdmin
+            .from("profiles")
+            .select("subscription_tier")
+            .eq("id", userId)
+            .maybeSingle();
+          const deletedOldTier = String(delPrevRow?.subscription_tier || "standard").toLowerCase();
           await supabaseAdmin
             .from("profiles")
             .update({
@@ -326,6 +378,7 @@ Deno.serve(async (req: Request) => {
             })
             .eq("id", userId);
           await applyCashBoxTierDowngrade(supabaseAdmin, userId, "free");
+          await sendDowngradeEmail(supabaseAdmin, userId, deletedOldTier, "free");
         }
         break;
       }

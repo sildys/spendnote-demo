@@ -778,7 +778,7 @@
                 <td><div class="tx-createdby"><div class="user-avatar user-avatar-small"><img src="${avatarData.url}" alt="${createdBy}"${avatarStyle}></div></div></td>
                 <td>
                     <div class="tx-actions">
-                        <button type="button" class="tx-action btn-duplicate" data-tx-id="${safeText(tx.id, '')}" data-cash-box-id="${safeText(tx.cash_box_id || tx.cash_box?.id, '')}" data-direction="${isIncome ? 'in' : 'out'}" data-amount="${safeText(tx.amount, '')}" data-contact-id="${safeText(tx.contact_id || tx.contact?.id, '')}" data-description="${encodeURIComponent(safeText(tx.description, ''))}" data-contact-name="${encodeURIComponent(safeText(contactName, ''))}">
+                        <button type="button" class="tx-action btn-duplicate" data-tx-id="${safeText(tx.id, '')}" data-cash-box-id="${safeText(tx.cash_box_id || tx.cash_box?.id, '')}" data-direction="${isIncome ? 'in' : 'out'}" data-amount="${safeText(tx.amount, '')}" data-contact-id="${safeText(tx.contact_id || tx.contact?.id, '')}" data-description="${encodeURIComponent(safeText(tx.description, ''))}" data-contact-name="${encodeURIComponent(safeText(contactName, ''))}" data-cb-blocked="${tx.cash_box?.transactions_blocked ? '1' : ''}">
                             <i class="fas fa-copy"></i>
                             <span>Duplicate</span>
                         </button>

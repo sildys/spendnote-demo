@@ -1521,7 +1521,7 @@ function applyTxCashBoxSnapshot(tx) {
 let transactionsCashBoxEmbedLogoSettings = true;
 
 function __spendnoteCashBoxEmbedFieldList() {
-    const base = 'id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url';
+    const base = 'id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url, transactions_blocked';
     const ls = transactionsCashBoxEmbedLogoSettings ? ', logo_settings' : '';
     const rest = ', receipt_show_logo, receipt_show_addresses, receipt_show_tracking, receipt_show_additional, receipt_show_note, receipt_show_signatures, receipt_title, receipt_total_label, receipt_from_label, receipt_to_label, receipt_description_label, receipt_amount_label, receipt_notes_label, receipt_issued_by_label, receipt_received_by_label, receipt_footer_note';
     return base + ls + rest;

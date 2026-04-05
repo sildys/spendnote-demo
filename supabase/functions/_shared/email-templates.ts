@@ -443,3 +443,48 @@ export const renderPasswordChangedTemplate = (): BaseEmailTemplate => {
   const text = `Your SpendNote password was changed\n\nYour password was updated successfully. If you made this change, no action is needed.\n\nIf you didn't make this change, contact us at support@spendnote.app immediately.`;
   return { subject, html, text };
 };
+
+// ─── Subscription downgraded ────────────────────────────────────────────────────
+
+export const renderSubscriptionDowngradedTemplate = (args: {
+  fullName?: string;
+  oldPlan: string;
+  newPlan: string;
+  maxCashBoxes: number;
+  totalCashBoxes: number;
+  dashboardUrl: string;
+}): BaseEmailTemplate => {
+  const name = esc(String(args.fullName || "there").trim() || "there");
+  const oldPlan = esc(String(args.oldPlan || "Pro").trim());
+  const newPlan = esc(String(args.newPlan || "Free").trim());
+  const max = Number(args.maxCashBoxes) || 1;
+  const total = Number(args.totalCashBoxes) || 0;
+  const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
+  const pricingUrl = "https://spendnote.app/spendnote-pricing.html";
+  const subject = `Your SpendNote plan changed to ${args.newPlan || "Free"}`;
+
+  const needsAction = total > max;
+  const actionBlock = needsAction
+    ? `<p style="margin:0 0 14px;">You have <strong>${total} cash boxes</strong> but your new plan allows <strong>${max}</strong>. Log in to choose which ${max === 1 ? "one stays" : "ones stay"} active &mdash; the rest become read-only.</p>`
+    : `<p style="margin:0 0 14px;">Your ${total} cash ${total === 1 ? "box fits" : "boxes fit"} within the new limit, so nothing was changed.</p>`;
+
+  const html = appCard(
+    `Plan changed: ${oldPlan} &rarr; ${newPlan}`,
+    "Your cash box data is safe &mdash; nothing was deleted.",
+    `
+      <p style="margin:0 0 10px;">Hi ${name},</p>
+      <p style="margin:0 0 14px;">Your SpendNote plan moved from <strong>${oldPlan}</strong> to <strong>${newPlan}</strong>.</p>
+      ${actionBlock}
+      <div style="margin:18px 0 10px;">
+        <a href="${dashboardUrl}" style="${CTA_STYLE}">${needsAction ? "Choose active cash boxes" : "Open SpendNote"} &rarr;</a>
+      </div>
+      <div style="margin:0 0 16px;">
+        <a href="${pricingUrl}" style="color:#1d4ed8;font-size:13px;font-weight:600;">Upgrade to keep all cash boxes active &rarr;</a>
+      </div>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Past transactions and data are never deleted. Need help? <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a></p>
+    `,
+  );
+
+  const text = `Your SpendNote plan changed to ${args.newPlan}\n\nHi ${args.fullName || "there"}, your plan moved from ${args.oldPlan} to ${args.newPlan}.\n${needsAction ? `You have ${total} cash boxes but the new limit is ${max}. Log in to choose which to keep active.` : "Your cash boxes fit within the new limit."}\n\nOpen SpendNote: ${args.dashboardUrl}`;
+  return { subject, html, text };
+};

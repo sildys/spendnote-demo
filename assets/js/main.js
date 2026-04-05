@@ -1605,6 +1605,13 @@ document.addEventListener('click', function(e) {
     const txId = btn.dataset.txId;
     if (!txId) return;
 
+    if (btn.dataset.cbBlocked === '1') {
+        if (typeof showAlert === 'function') {
+            showAlert('This transaction belongs to a read-only cash box. Choose an active cash box on the Dashboard first.', { iconType: 'warning' });
+        }
+        return;
+    }
+
     const decode = (v) => {
         if (v === undefined || v === null) return '';
         try { return decodeURIComponent(String(v)); } catch { return String(v); }

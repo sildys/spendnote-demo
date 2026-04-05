@@ -1444,6 +1444,19 @@
                     window.updateMenuColors(color);
                 }
 
+                if (cashBox.transactions_blocked) {
+                    const mainEl = document.querySelector('main.main-content');
+                    if (mainEl && !document.getElementById('snCashBoxBlockedBanner')) {
+                        const banner = document.createElement('div');
+                        banner.id = 'snCashBoxBlockedBanner';
+                        banner.setAttribute('role', 'status');
+                        banner.style.cssText = 'margin:0 0 16px;padding:14px 18px;border-radius:12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#92400e;font-size:13px;line-height:1.55;display:flex;align-items:flex-start;gap:10px;';
+                        banner.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+                            + '<span>This cash box is <strong>read-only</strong> under your current plan. You can view past transactions but cannot record new ones. <a href="dashboard.html" style="color:#b45309;font-weight:600;">Go to Dashboard</a> to manage your active cash boxes.</span>';
+                        mainEl.insertBefore(banner, mainEl.firstChild);
+                    }
+                }
+
                 const settingsBtn = document.getElementById('detailSettingsBtn');
                 if (settingsBtn) {
                     let orgRole = '';
@@ -1480,12 +1493,12 @@
     
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260417-tx-receipt-snapshot"></script>
+    <script src="assets/js/supabase-config.js?v=20260406-downgrade-blocked"></script>
     <script src="assets/js/auth-guard.js"></script>
     <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
     <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
     <script>loadNav();</script>
-    <script src="assets/js/main.js?v=45"></script>
+    <script src="assets/js/main.js?v=46"></script>
     <script>if (typeof showPageTip === 'function') showPageTip('cashbox-detail', 'View all transactions for this cash box. Use <strong>filters</strong> to find specific entries or <strong>export</strong> them.');</script>
     <script src="assets/js/transaction-history-data.js?v=20260405-void-solo-owner"></script>
 </body>
