@@ -96,7 +96,40 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-04-04 — Welcome email + login flow fix + email audit)
+## Where we are now (last updated: 2026-04-05 — Receipt logó + snapshot szabályok, iframe előnézet)
+
+### 2026-04-05 frissítés — Receipt / logó architektúra, tranzakció részlete snapshot, előnézet URL-limit
+
+**Cél:** Logó és receipt megjelenés **adatbázis** és **tranzakció-snapshot** köré rendezése; localStorage nélkül; előnézetek megbízhatóak maradjanak hosszú `data:` URL esetén is.
+
+**1) Logó: nincs localStorage (app-wide)**
+- Receipthez kötődő logó **nem** tárolódik böngésző `localStorage`-ban (profil / cash box / `logoKey` / legacy `proLogo` kulcsok eltávolítva).
+- Források: **Supabase** (`profiles.account_logo_url`, `cash_boxes.cash_box_logo_url`) + nyugta URL **`logoUrl`** paraméter; tranzakciós nyugta: **`txId` + bootstrap**.
+- Érintett többek között: `assets/js/logo-editor.js`, `assets/js/user-settings.js`, `assets/js/cash-box-settings-data.js`, `spendnote-cash-box-settings.html`, `spendnote-pdf-receipt.html`, `spendnote-email-receipt.html`, `spendnote-receipt-print-two-copies.html`.
+- Cash box logó mentés: ha hiányzik az oszlop / nem támogatott séma → **hiba**, nem „csak lokális” fallback.
+- **Commit:** `b8fb190`
+
+**2) Hosszú logó URL az előnézet iframe-ben → `postMessage`**
+- Böngésző **URL-hossz limit** miatt a cash box **beállítások** előnézete és a **tranzakció részlete** iframe: ha a logó hosszabb ~2048 karakternél vagy `data:`, akkor `previewLogoInject=1` + szülő `postMessage({ spendnote: 'previewLogo', logoUrl })` (same-origin, `source === parent`).
+- Nyugta oldalak: `previewLogoInject` + (`demo=1` **vagy** érvényes `txId`).
+- **Commitok:** `5c3f885`, `b015661`
+
+**3) Tranzakció részlete / már létező receipt: csak snapshot**
+- **Logó a nyugtán:** kizárólag `transactions.sender_profile_logo_url_snapshot` — **nem** élő cash box, **nem** aktuális profil logó (`receiptLogoUrl`, bootstrap `preferredLogo` összhangban).
+- **Címkék** (`receipt_title`, stb.) és **toggle-ok** (`receipt_show_*`): kizárólag a **tranzakció sor** mezői; **nincs** visszaesés az élő `cash_boxes` értékekre. Üres/NULL snapshotnál: beépített default szövegek és default láthatóság (séma komment szerint eredetileg is ez volt a kliens fallback).
+- **Commitok:** `e8472de`, `ffe8be4`
+- Köztes „cash box előbb mint snapshot” próba (`67d8c35`) **visszavonva** a fenti szabályra.
+
+**4) Kapcsolódó korábbi alap (ugyanazon időszak / előtte)**
+- Receipt snapshot mezők tranzakciókon, cash box receipt toggle mentés, tx detail `logo_settings` enrich: **`d8686a8`** és kapcsolódó migrációk (`064`, `065` jelleg).
+
+**5) Termék / QA jegyzet**
+- **Teamkezelés** admin oldalon stabilnak tapasztalva (meghívás, szerepek, cash box hozzárendelés) — részletes kódváltozás ebben a PROGRESS blokkban nem részletezve, státusz: működik.
+
+**Következő lehetséges lépés (nem kötelező):**
+- `logo_settings` (nagyítás/pozíció) jelenleg tx detail iframe URL-ben még a **beágyazott cash box**-ból jöhet; tökéletes történelmi hűséghez később **tranzakció-szintű snapshot** kellene (séma + insert).
+
+---
 
 ### 2026-04-04 frissítés — Welcome email + login flow fix + teljes email audit
 
