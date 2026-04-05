@@ -3501,7 +3501,7 @@ var db = {
                     .from('transactions')
                     .select(`
                         *,
-                        cash_box:cash_boxes(id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url),
+                        cash_box:cash_boxes(id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url, logo_settings, receipt_show_logo, receipt_show_addresses, receipt_show_tracking, receipt_show_additional, receipt_show_note, receipt_show_signatures, receipt_title, receipt_total_label, receipt_from_label, receipt_to_label, receipt_description_label, receipt_amount_label, receipt_notes_label, receipt_issued_by_label, receipt_received_by_label, receipt_footer_note),
                         contact:contacts(id, name, email, phone, address, sequence_number)
                     `)
                     .eq('id', txId);
@@ -3578,7 +3578,7 @@ var db = {
                 if (tx.cash_box_id) {
                     const { data: cb } = await supabaseClient
                         .from('cash_boxes')
-                        .select('id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url')
+                        .select('id, name, color, currency, icon, sequence_number, id_prefix, user_id, cash_box_logo_url, logo_settings, receipt_show_logo, receipt_show_addresses, receipt_show_tracking, receipt_show_additional, receipt_show_note, receipt_show_signatures, receipt_title, receipt_total_label, receipt_from_label, receipt_to_label, receipt_description_label, receipt_amount_label, receipt_notes_label, receipt_issued_by_label, receipt_received_by_label, receipt_footer_note')
                         .eq('id', tx.cash_box_id)
                         .single();
                     if (cb) tx.cash_box = cb;
