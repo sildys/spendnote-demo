@@ -550,17 +550,6 @@ async function sendWelcomeEmail() {
         if (!uid) return;
         const sentKey = 'spendnote.welcome.sent.v2.' + uid;
         if (localStorage.getItem(sentKey) === '1') return;
-        if (typeof window.spendnoteShouldSendOwnerWelcomeEmail === 'function') {
-            try {
-                const ok = await window.spendnoteShouldSendOwnerWelcomeEmail();
-                if (!ok) {
-                    try { localStorage.setItem(sentKey, '1'); } catch (_) {}
-                    return;
-                }
-            } catch (_) {
-                // fall through to edge function (server also enforces)
-            }
-        }
         console.log('[SN-WELCOME] Sending welcome email via functions.invoke...');
         const { data, error } = await window.supabaseClient.functions.invoke(
             'send-user-event-email',

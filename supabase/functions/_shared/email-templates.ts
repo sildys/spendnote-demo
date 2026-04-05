@@ -320,6 +320,46 @@ export const renderUpgradeConfirmedTemplate = (args: {
   return { subject, html, text };
 };
 
+// ─── Welcome (invited team member) ───────────────────────────────────────────────
+
+export const renderWelcomeInvitedMemberTemplate = (args: {
+  fullName?: string;
+  inviterName?: string;
+  orgName?: string;
+  role: string;
+  dashboardUrl: string;
+}): BaseEmailTemplate => {
+  const name = esc(String(args.fullName || "there").trim() || "there");
+  const inviter = esc(String(args.inviterName || "Your team admin").trim() || "Your team admin");
+  const org = esc(String(args.orgName || "your team").trim() || "your team");
+  const role = esc(String(args.role || "User").trim());
+  const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
+  const subject = `You're in — welcome to ${args.orgName || "your team"}`;
+
+  const html = appCard(
+    `Welcome to ${org}`,
+    `You're now part of the team as ${role}.`,
+    `
+      <p style="margin:0 0 10px;">Hi ${name},</p>
+      <p style="margin:0 0 10px;">${inviter} added you to <strong>${org}</strong> on SpendNote. You're set up as <strong>${role}</strong>.</p>
+      <p style="margin:0 0 14px;">Your team uses SpendNote to track cash handoffs &mdash; who took it, when, and how much. Every transaction you record is instantly visible to your team.</p>
+      <div style="margin:18px 0 16px;">
+        <a href="${dashboardUrl}" style="${CTA_STYLE}">Open your dashboard &rarr;</a>
+      </div>
+      <p style="margin:0 0 6px;color:#374151;font-size:13px;"><strong>What you can do:</strong></p>
+      <ul style="margin:0 0 14px;padding-left:18px;color:#374151;font-size:13px;">
+        <li>Record cash movements on Cash Boxes assigned to you</li>
+        <li>Generate receipts for every handoff</li>
+        <li>See your transaction history</li>
+      </ul>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://spendnote.app/spendnote-faq.html" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+    `,
+  );
+
+  const text = `Welcome to ${args.orgName || "your team"}\n\nHi ${args.fullName || "there"},\n\n${args.inviterName || "Your team admin"} added you to ${args.orgName || "your team"} on SpendNote as ${args.role || "User"}.\n\nOpen your dashboard: ${args.dashboardUrl}\n\nNeed help? https://spendnote.app/spendnote-faq.html or support@spendnote.app`;
+  return { subject, html, text };
+};
+
 // ─── Password changed ───────────────────────────────────────────────────────────
 
 export const renderPasswordChangedTemplate = (): BaseEmailTemplate => {

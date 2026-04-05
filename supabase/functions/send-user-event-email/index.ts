@@ -6,11 +6,13 @@ import {
   renderTrialExpiryWarningTemplate,
   renderUpgradeConfirmedTemplate,
   renderWelcomeAccountCreatedTemplate,
+  renderWelcomeInvitedMemberTemplate,
 } from "../_shared/email-templates.ts";
 
 type EventBody = {
   eventType:
     | "welcome_account_created"
+    | "welcome_invited_member"
     | "password_changed"
     | "invite_accepted_admin"
     | "first_transaction_created"
@@ -139,12 +141,37 @@ Deno.serve(async (req: Request) => {
             return String(row?.owner_user_id || "").trim() === uid;
           });
           if (!ownsAny) {
+            // Invited member — send team welcome instead of solo welcome
+            const firstMembership = memberships[0] as Record<string, unknown>;
+            const mOrgId = String(firstMembership?.org_id || "").trim();
+            const mRole = String(firstMembership?.role || "user").trim();
+            const mRoleLabel = mRole === "admin" ? "Admin" : "User";
+
+            let mOrgName = "your team";
+            let mInviterName = "Your team admin";
+
+            if (mOrgId) {
+              const { data: mOrgRow } = await supabaseAdmin.from("orgs").select("name, owner_user_id").eq("id", mOrgId).single();
+              if (mOrgRow) {
+                mOrgName = String(mOrgRow.name || "your team").trim() || "your team";
+                const mOwnerId = String(mOrgRow.owner_user_id || "").trim();
+                if (mOwnerId) {
+                  const { data: mOwnerProfile } = await supabaseAdmin.from("profiles").select("full_name").eq("id", mOwnerId).single();
+                  if (mOwnerProfile?.full_name) mInviterName = String(mOwnerProfile.full_name).trim();
+                }
+              }
+            }
+
+            const invitedRendered = renderWelcomeInvitedMemberTemplate({
+              fullName: userName,
+              inviterName: mInviterName,
+              orgName: mOrgName,
+              role: mRoleLabel,
+              dashboardUrl: "https://spendnote.app/dashboard.html",
+            });
+            const invitedData = await sendViaResend([userEmail], invitedRendered.subject, invitedRendered.html, invitedRendered.text);
             return new Response(
-              JSON.stringify({
-                success: true,
-                skipped: true,
-                reason: "team_member_not_workspace_owner",
-              }),
+              JSON.stringify({ success: true, data: invitedData, type: "welcome_invited_member" }),
               {
                 status: 200,
                 headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -157,6 +184,57 @@ Deno.serve(async (req: Request) => {
       const rendered = renderWelcomeAccountCreatedTemplate({
         fullName: userName,
         loginUrl: "https://spendnote.app/spendnote-login.html",
+      });
+      const data = await sendViaResend([userEmail], rendered.subject, rendered.html, rendered.text);
+      return new Response(JSON.stringify({ success: true, data }), {
+        status: 200,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    if (eventType === "welcome_invited_member") {
+      // Invited team member welcome — look up org + inviter context
+      const { data: memberships } = await supabaseAdmin
+        .from("org_memberships")
+        .select("org_id, role")
+        .eq("user_id", user.id);
+
+      const membership = Array.isArray(memberships) && memberships.length > 0
+        ? memberships[0] as Record<string, unknown>
+        : null;
+
+      if (!membership) {
+        return new Response(
+          JSON.stringify({ success: true, skipped: true, reason: "no_org_membership" }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+
+      const orgId = String(membership.org_id || "").trim();
+      const memberRole = String(membership.role || "User").trim();
+      const roleLabel = memberRole === "admin" ? "Admin" : "User";
+
+      let orgName = "your team";
+      let inviterName = "Your team admin";
+
+      if (orgId) {
+        const { data: orgRow } = await supabaseAdmin.from("orgs").select("name, owner_user_id").eq("id", orgId).single();
+        if (orgRow) {
+          orgName = String(orgRow.name || "your team").trim() || "your team";
+          const ownerId = String(orgRow.owner_user_id || "").trim();
+          if (ownerId) {
+            const { data: ownerProfile } = await supabaseAdmin.from("profiles").select("full_name").eq("id", ownerId).single();
+            if (ownerProfile?.full_name) inviterName = String(ownerProfile.full_name).trim();
+          }
+        }
+      }
+
+      const rendered = renderWelcomeInvitedMemberTemplate({
+        fullName: userName,
+        inviterName,
+        orgName,
+        role: roleLabel,
+        dashboardUrl: "https://spendnote.app/dashboard.html",
       });
       const data = await sendViaResend([userEmail], rendered.subject, rendered.html, rendered.text);
       return new Response(JSON.stringify({ success: true, data }), {
