@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.25.0?target=deno";
-import { renderSubscriptionDowngradedTemplate, renderTeamMemberRemovedTemplate } from "../_shared/email-templates.ts";
+import { renderSubscriptionDowngradedTemplate } from "../_shared/email-templates.ts";
 
 const corsHeaders: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
@@ -269,85 +269,6 @@ const sendDowngradeEmail = async (
   }
 };
 
-const revokeTeamOnDowngrade = async (
-  supabaseAdmin: ReturnType<typeof createClient>,
-  userId: string,
-) => {
-  try {
-    const resendApiKey = Deno.env.get("RESEND_API_KEY") || "";
-    const from = Deno.env.get("SPENDNOTE_EMAIL_FROM") || "SpendNote <no-reply@spendnote.app>";
-
-    const { data: ownedOrgs } = await supabaseAdmin
-      .from("orgs")
-      .select("id, name")
-      .eq("owner_user_id", userId);
-    if (!ownedOrgs?.length) return;
-
-    for (const org of ownedOrgs) {
-      const orgId = String(org.id || "").trim();
-      const orgName = String(org.name || "your team").trim() || "your team";
-      if (!orgId) continue;
-
-      const { data: members } = await supabaseAdmin
-        .from("org_memberships")
-        .select("user_id, role")
-        .eq("org_id", orgId)
-        .neq("user_id", userId);
-      if (!members?.length) continue;
-
-      const { data: orgBoxes } = await supabaseAdmin
-        .from("cash_boxes")
-        .select("id")
-        .eq("org_id", orgId);
-      const orgBoxIds = (orgBoxes || []).map((r) => String(r?.id || "")).filter(Boolean);
-
-      for (const mem of members) {
-        const memUserId = String(mem.user_id || "").trim();
-        if (!memUserId) continue;
-
-        if (orgBoxIds.length) {
-          await supabaseAdmin
-            .from("cash_box_memberships")
-            .delete()
-            .eq("user_id", memUserId)
-            .in("cash_box_id", orgBoxIds);
-        }
-
-        await supabaseAdmin
-          .from("org_memberships")
-          .delete()
-          .eq("org_id", orgId)
-          .eq("user_id", memUserId);
-
-        if (!resendApiKey) continue;
-        try {
-          const { data: memProfile } = await supabaseAdmin
-            .from("profiles")
-            .select("full_name")
-            .eq("id", memUserId)
-            .maybeSingle();
-          const { data: authData } = await supabaseAdmin.auth.admin.getUserById(memUserId);
-          const memEmail = String(authData?.user?.email || "").trim();
-          if (!memEmail) continue;
-
-          const tpl = renderTeamMemberRemovedTemplate({
-            fullName: memProfile?.full_name || undefined,
-            orgName,
-            dashboardUrl: "https://spendnote.app/dashboard.html",
-          });
-          await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ from, to: [memEmail], subject: tpl.subject, html: tpl.html, text: tpl.text }),
-          });
-        } catch (_) {}
-      }
-    }
-  } catch (_) {
-    // non-critical
-  }
-};
-
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -444,9 +365,6 @@ Deno.serve(async (req: Request) => {
         const newTier = String(nextRow?.subscription_tier || oldTier).toLowerCase();
         if (subscriptionTierRank(newTier) < subscriptionTierRank(oldTier)) {
           await applyCashBoxTierDowngrade(supabaseAdmin, userId, newTier);
-          if (oldTier === "pro" && newTier !== "pro") {
-            await revokeTeamOnDowngrade(supabaseAdmin, userId);
-          }
           await sendDowngradeEmail(supabaseAdmin, userId, oldTier, newTier);
         } else if (subscriptionTierRank(newTier) > subscriptionTierRank(oldTier)) {
           await clearCashBoxTierLocks(supabaseAdmin, userId);
@@ -477,9 +395,6 @@ Deno.serve(async (req: Request) => {
             })
             .eq("id", userId);
           await applyCashBoxTierDowngrade(supabaseAdmin, userId, "free");
-          if (deletedOldTier === "pro") {
-            await revokeTeamOnDowngrade(supabaseAdmin, userId);
-          }
           await sendDowngradeEmail(supabaseAdmin, userId, deletedOldTier, "free");
         }
         break;
