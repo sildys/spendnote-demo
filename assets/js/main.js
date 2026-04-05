@@ -1423,10 +1423,10 @@ window.SpendNoteUpgrade = {
             <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#eef2ff,#e0e7ff);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M10 7V5a2 2 0 1 1 4 0v2"/><rect x="3" y="7" width="18" height="13" rx="2"/></svg>
             </div>
-            <div style="font-size:19px;font-weight:800;color:#0f172a;margin-bottom:10px;line-height:1.3;">Custom receipt ID prefix</div>
-            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">Set your own prefix (instead of SN) so receipt numbers match your brand or filing system.<br>On Standard, receipts use the default prefix.</div>
+            <div style="font-size:19px;font-weight:800;color:#0f172a;margin-bottom:10px;line-height:1.3;">Use your own receipt numbering</div>
+            <div style="font-size:14px;color:#475569;margin-bottom:24px;line-height:1.6;">Match receipts to your internal system (client, project, or location).<br>Default prefix is fine for testing &mdash; not for real use.</div>
             <a href="${planUrl}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#4f46e5;color:#fff;border-radius:10px;padding:13px 28px;font-size:15px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;">
-              Upgrade to Pro
+              Unlock custom prefixes
             </a>
             <button type="button" id="sn-upgrade-overlay-secondary" style="appearance:none;border:none;background:none;color:#cbd5e1;font-size:12px;font-weight:400;cursor:pointer;margin-top:14px;padding:4px;">Not now</button>
             <div style="font-size:12px;color:#94a3b8;margin-top:8px;line-height:1.4;">Included with Pro</div>

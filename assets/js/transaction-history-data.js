@@ -1794,10 +1794,11 @@
         try {
             if (debug) console.log('[TxHistory] Fetching cash boxes...');
             try {
-                const r = String(await window.db?.orgMemberships?.getMyRole?.() || '').trim().toLowerCase();
-                txHistoryCanVoidTransactions = r === 'owner' || r === 'admin';
+                const r = String(await window.db?.orgMemberships?.getMyRole?.() ?? '').trim().toLowerCase();
+                // Solo (no org) + owner + admin: void OK. Only invited org role `user` is blocked (matches RPC auth).
+                txHistoryCanVoidTransactions = r !== 'user';
             } catch (_) {
-                txHistoryCanVoidTransactions = false;
+                txHistoryCanVoidTransactions = true;
             }
 
             const cashBoxes = await window.db.cashBoxes.getAll({ select: 'id, name, color, currency, sequence_number' });

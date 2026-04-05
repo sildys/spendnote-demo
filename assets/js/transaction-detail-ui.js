@@ -1118,7 +1118,8 @@ html, body { height: auto !important; overflow: auto !important; }
             });
         }
 
-        const setVoidAccessUi = (isAdmin) => {
+        /** Solo / Standard / Free: void allowed (server checks cash box owner). Only org role `user` (invited member) is blocked in UI. */
+        const setVoidAccessUi = (canVoid) => {
             if (!voidBtn || !voidNote) return;
 
             if (currentTxIsVoided) {
@@ -1126,25 +1127,29 @@ html, body { height: auto !important; overflow: auto !important; }
                 return;
             }
 
-            voidBtn.disabled = !isAdmin;
-            voidNote.textContent = isAdmin ? 'Owner/Admin verified' : 'Owner/Admin required';
+            voidBtn.disabled = !canVoid;
+            voidNote.textContent = canVoid
+                ? 'You can void this transaction.'
+                : 'Owner or Admin required — invited team members cannot void.';
         };
 
         (async () => {
-            let isAdmin = false;
+            let canVoid = true;
             const user = await window.auth?.getCurrentUser?.();
 
             if (user) {
                 try {
                     const rawRole = await window.db?.orgMemberships?.getMyRole?.();
-                    const role = String(rawRole || '').trim().toLowerCase();
-                    isAdmin = role === 'owner' || role === 'admin';
+                    const role = String(rawRole ?? '').trim().toLowerCase();
+                    if (role === 'user') {
+                        canVoid = false;
+                    }
                 } catch (_) {
-                    isAdmin = false;
+                    canVoid = true;
                 }
             }
 
-            setVoidAccessUi(isAdmin);
+            setVoidAccessUi(canVoid);
 
             if (voidBtn) {
                 voidBtn.addEventListener('click', async () => {
@@ -1179,7 +1184,7 @@ html, body { height: auto !important; overflow: auto !important; }
                     } finally {
                         // If we didn't reload (failed), restore UI
                         voidBtn.innerHTML = prev;
-                        voidBtn.disabled = currentTxIsVoided ? true : !isAdmin;
+                        voidBtn.disabled = currentTxIsVoided ? true : !canVoid;
                     }
                 });
             }
