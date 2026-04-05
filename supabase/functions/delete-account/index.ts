@@ -137,9 +137,28 @@ Deno.serve(async (req: Request) => {
         .filter(Boolean);
     }
 
+    // Non-owner: block deletion if user still has cash box access
+    const isOwner = ownedOrgIds.length > 0;
+    if (!isOwner) {
+      const { count: cbAccessCount } = await supabaseAdmin
+        .from("cash_box_memberships")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId);
+
+      if (Number(cbAccessCount || 0) > 0) {
+        return new Response(JSON.stringify({
+          error: "You still have Cash Box access. Ask your team owner or admin to remove your access first, then try again.",
+          code: "HAS_CASH_BOX_ACCESS",
+          cashBoxAccessCount: Number(cbAccessCount || 0),
+        }), {
+          status: 409,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     if (mode === "preview") {
       try {
-        const isOwner = ownedOrgIds.length > 0;
         const memberOrgRows = isOwner
           ? []
           : (await supabaseAdmin
@@ -165,18 +184,10 @@ Deno.serve(async (req: Request) => {
               ownedOrgCount: 0,
               teamMembershipCount: await countByEq("org_memberships", "user_id", userId),
               pendingInviteCount: 0,
-              // Backward-compatible aggregate keys currently used by UI.
-              cashBoxCount: await countByEq("cash_boxes", "user_id", userId),
-              contactCount: await countByEq("contacts", "user_id", userId),
-              transactionCount: await countByEq("transactions", "user_id", userId),
-              // New explicit split for better non-owner messaging.
               personalCashBoxCount: await countByEq("cash_boxes", "user_id", userId),
               personalContactCount: await countByEq("contacts", "user_id", userId),
               personalTransactionCount: await countByEq("transactions", "user_id", userId),
               sharedOrgCount: memberOrgIds.length,
-              sharedCashBoxCount: await countByIn("cash_boxes", "org_id", memberOrgIds),
-              sharedContactCount: await countByIn("contacts", "org_id", memberOrgIds),
-              sharedTransactionCount: await countByIn("transactions", "org_id", memberOrgIds),
             };
 
         return new Response(JSON.stringify({ success: true, mode: "preview", summary }), {
