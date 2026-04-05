@@ -11,7 +11,9 @@ If a chat thread freezes / context is lost: in the new thread say:
 - Prefer implementing fixes over explaining them.
 - Avoid long explanations, hedging, or repetitive confirmations.
 - Be professional and forward-looking (anticipate edge cases, choose robust solutions).
-- Communicate in **Hungarian only**.
+- **Chat a termék tulajdonossal:** magyar (kivéve, ha mást kér).
+- **PROGRESS.md** (státusz, „Where we are now”, teendők): **magyar**, hogy egy helyen követhető legyen a magyar egyeztetés.
+- **Az app felhasználói felülete:** kizárólag **angol** — UI szöveg, toast, modal, **email sablonok és küldött emailek** mind angolul; ne írjunk felhasználónak magyar szöveget, ne kétnyelvű (HU+EN) üdvözlőket.
 - Aim for the **fastest, most ideal** solution that is still robust.
 - Do **everything you can autonomously** (code changes, refactors, searches, commits) without asking.
 - Ask me only for:
@@ -96,7 +98,26 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-04-05 — Receipt logó + snapshot szabályok, iframe előnézet)
+## Where we are now (last updated: 2026-04-06 — Nyelvi szabály + billing hátralék)
+
+### Nyelv: PROGRESS vs app (kanonikus)
+
+- **PROGRESS + fejlesztői kommunikáció:** magyar.
+- **SpendNote app (production UI + emailek):** **csak angol.** Bármilyen új üzenet (upgrade/downgrade toast, email, gating szöveg) implementáláskor angol copy; nincs magyar user-facing szöveg az appban.
+
+### 2026-04-06 — Billing / csomagok (státusz és hátralék)
+
+**Kész (visszajelzés alapján):**
+- Invite UX rendben.
+- **Free** csomag gating rendben (ellenőrizve).
+
+**Hátra:**
+- **Standard** csomag: teljes QA (owner/admin fő folyamatok — új tx, export, max 2 cash box, logo vs Pro címkék lock, email receipt tiltás, team invite tiltás). Forrás: `SpendNoteFeatures._FLAGS.standard` + `S1-SPEC.md` (figyelem: a spec táblázat „layout” vs „custom labels” sorai könnyen félreérthetők; a kódban Standardnál `can_customize_labels: false`).
+- **Downgrade viselkedés:** `S1-SPEC.md` §4 szerint többlet cash box **zárolás** (nem törlés); jelenleg inkább limit **új** létrehozásnál — döntés: implementálni a zárolást, **vagy** frissíteni a specet, ha elfogadott a gyengébb garancia.
+- **Teljes lemondás:** Stripe `customer.subscription.deleted` → `free`; nincs dedikált downgrade UX/email.
+- **Üzenetek:** Upgrade után van dashboard **toast** (angol) + `upgrade_confirmed` email. **Downgrade** (vagy Pro→Standard) felé: még nincs párhuzamos toast/email — ha készül, **csak angol** szöveg + külön email handler (ne keverjük az upgrade copyval).
+
+---
 
 ### 2026-04-05 frissítés — Receipt / logó architektúra, tranzakció részlete snapshot, előnézet URL-limit
 
@@ -176,9 +197,13 @@ If a chat thread freezes / context is lost: in the new thread say:
 ---
 
 **PENDING feladatok:**
-- [ ] Team invite — custom modal + bekötés
-- [ ] Teljes gating QA: tesztelés minden oldalon
-- [ ] Free tier transaction limit: 20 tx / 14 nap — tesztelés
+- [x] Team invite — custom modal + bekötés *(késznek jelölve — tulaj visszajelzés)*
+- [x] Free csomag gating — *(késznek jelölve)*
+- [ ] **Standard** csomag gating — teljes QA (lásd 2026-04-06 blokk)
+- [ ] Downgrade / többlet erőforrás: **S1 §4 zárolás** vs jelenlegi viselkedés — döntés + implementáció vagy spec frissítés
+- [ ] Downgrade (és opcionálisan csomagváltás) **angol** in-app + email értesítés — upgrade mintájára, külön copy
+- [ ] Teljes gating QA: maradék oldalak / szerepkörök
+- [ ] Free tier: 20 tx / 14 nap — regresszió teszt
 - [ ] Pricing → signup flow ellenőrzés
 - [ ] Checkout + webhook teszt (4242 kártya)
 
