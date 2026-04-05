@@ -1,7 +1,7 @@
 -- 062: Atomic function to re-assign all org data from a departing user to the org owner.
 -- Called by delete-account Edge Function BEFORE profile deletion.
--- Disables the balance trigger on transactions to avoid spurious recalculations
--- (changing user_id does not affect amounts, so the trigger is unnecessary here).
+-- The balance trigger fires but is harmless: user_id changes don't affect amounts,
+-- so OLD.amount - NEW.amount = 0 (net zero balance change).
 
 BEGIN;
 
@@ -14,7 +14,6 @@ AS $$
 DECLARE
   rec RECORD;
 BEGIN
-  -- For each org where this user has data, find the org owner and re-assign.
   FOR rec IN
     SELECT DISTINCT o.id AS org_id, o.owner_user_id
     FROM public.orgs o
@@ -26,15 +25,10 @@ BEGIN
         OR EXISTS (SELECT 1 FROM public.cash_boxes cb WHERE cb.user_id = p_user_id AND cb.org_id = o.id)
       )
   LOOP
-    -- Disable the balance trigger to avoid spurious recalculations
-    ALTER TABLE public.transactions DISABLE TRIGGER update_cash_box_balance_trigger;
-
     UPDATE public.transactions
     SET user_id = rec.owner_user_id
     WHERE user_id = p_user_id
       AND org_id = rec.org_id;
-
-    ALTER TABLE public.transactions ENABLE TRIGGER update_cash_box_balance_trigger;
 
     UPDATE public.contacts
     SET user_id = rec.owner_user_id
