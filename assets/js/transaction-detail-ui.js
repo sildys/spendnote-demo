@@ -149,7 +149,7 @@ const QUICK_PRESET = {
             'email': 'spendnote-email-receipt.html'
         };
         const params = new URLSearchParams();
-        params.append('v', 'receipt-20260406-snapshot-logo-only');
+        params.append('v', 'receipt-20260406-snapshot-labels-toggles');
         const currentTxId = getCurrentTxId();
         if (currentTxId) params.append('txId', currentTxId);
         params.append('bootstrap', '1');
@@ -296,26 +296,21 @@ const QUICK_PRESET = {
         return isQuick ? 'quick' : 'detailed';
     }
 
-    function initReceiptUiFromCashBox(cashBox, profile, tx) {
-        const cb = cashBox || {};
+    function initReceiptUiFromCashBox(_cashBox, _profile, tx) {
         const t = tx || {};
-        const resolveReceiptText = (txValue, cbValue) => {
-            const fromTx = String(txValue || '').trim();
-            if (fromTx) return fromTx;
-            return String(cbValue || '').trim();
-        };
+        const receiptLabelFromSnapshot = (v) => String(v ?? '').trim();
 
-        // Transaction-specific labels override cash box defaults
-        receiptText.receiptTitle = resolveReceiptText(t.receipt_title, cb.receipt_title);
-        receiptText.totalLabel = resolveReceiptText(t.receipt_total_label, cb.receipt_total_label);
-        receiptText.fromLabel = resolveReceiptText(t.receipt_from_label, cb.receipt_from_label);
-        receiptText.toLabel = resolveReceiptText(t.receipt_to_label, cb.receipt_to_label);
-        receiptText.descriptionLabel = resolveReceiptText(t.receipt_description_label, cb.receipt_description_label);
-        receiptText.amountLabel = resolveReceiptText(t.receipt_amount_label, cb.receipt_amount_label);
-        receiptText.notesLabel = resolveReceiptText(t.receipt_notes_label, cb.receipt_notes_label);
-        receiptText.issuedByLabel = resolveReceiptText(t.receipt_issued_by_label, cb.receipt_issued_by_label);
-        receiptText.receivedByLabel = resolveReceiptText(t.receipt_received_by_label, cb.receipt_received_by_label);
-        receiptText.footerNote = resolveReceiptText(t.receipt_footer_note, cb.receipt_footer_note);
+        // Receipt labels: transaction row only (frozen at create time). No live cash box fallback.
+        receiptText.receiptTitle = receiptLabelFromSnapshot(t.receipt_title);
+        receiptText.totalLabel = receiptLabelFromSnapshot(t.receipt_total_label);
+        receiptText.fromLabel = receiptLabelFromSnapshot(t.receipt_from_label);
+        receiptText.toLabel = receiptLabelFromSnapshot(t.receipt_to_label);
+        receiptText.descriptionLabel = receiptLabelFromSnapshot(t.receipt_description_label);
+        receiptText.amountLabel = receiptLabelFromSnapshot(t.receipt_amount_label);
+        receiptText.notesLabel = receiptLabelFromSnapshot(t.receipt_notes_label);
+        receiptText.issuedByLabel = receiptLabelFromSnapshot(t.receipt_issued_by_label);
+        receiptText.receivedByLabel = receiptLabelFromSnapshot(t.receipt_received_by_label);
+        receiptText.footerNote = receiptLabelFromSnapshot(t.receipt_footer_note);
 
         const titleEl = document.getElementById('txReceiptTitle');
         const totalEl = document.getElementById('txTotalLabel');
@@ -449,19 +444,16 @@ const QUICK_PRESET = {
             return fallback;
         };
 
-        const txOrCbReceiptBool = (key) => {
-            const tv = t[key];
-            if (tv !== undefined && tv !== null) return tv;
-            return cb[key];
-        };
+        const txReceiptShow = (key) => t[key];
 
+        // Visibility toggles: transaction snapshot columns only. If NULL (legacy row), use the same defaults as insert-time snapshot.
         displayOptions = {
-            logo: resolveVisibilityBool(txOrCbReceiptBool('receipt_show_logo'), true) ? '1' : '0',
-            addresses: resolveVisibilityBool(txOrCbReceiptBool('receipt_show_addresses'), true) ? '1' : '0',
-            tracking: resolveVisibilityBool(txOrCbReceiptBool('receipt_show_tracking'), true) ? '1' : '0',
-            additional: resolveVisibilityBool(txOrCbReceiptBool('receipt_show_additional'), false) ? '1' : '0',
-            note: resolveVisibilityBool(txOrCbReceiptBool('receipt_show_note'), false) ? '1' : '0',
-            signatures: resolveVisibilityBool(txOrCbReceiptBool('receipt_show_signatures'), true) ? '1' : '0'
+            logo: resolveVisibilityBool(txReceiptShow('receipt_show_logo'), true) ? '1' : '0',
+            addresses: resolveVisibilityBool(txReceiptShow('receipt_show_addresses'), true) ? '1' : '0',
+            tracking: resolveVisibilityBool(txReceiptShow('receipt_show_tracking'), true) ? '1' : '0',
+            additional: resolveVisibilityBool(txReceiptShow('receipt_show_additional'), false) ? '1' : '0',
+            note: resolveVisibilityBool(txReceiptShow('receipt_show_note'), false) ? '1' : '0',
+            signatures: resolveVisibilityBool(txReceiptShow('receipt_show_signatures'), true) ? '1' : '0'
         };
 
         (async () => {
