@@ -177,20 +177,26 @@ BEGIN
   END IF;
 
   IF v_subscription_tier IN ('preview', 'free') THEN
-    SELECT COUNT(*)
-    INTO v_active_tx_count
-    FROM public.transactions t
-    WHERE t.user_id = v_actor
-      AND coalesce(t.status, 'active') = 'active'
-      AND coalesce(t.is_system, false) = false;
-
     IF (v_subscription_tier = 'preview' OR v_billing_status = 'preview') THEN
+      SELECT COUNT(*)
+      INTO v_active_tx_count
+      FROM public.transactions t
+      WHERE t.user_id = v_actor
+        AND coalesce(t.status, 'active') = 'active'
+        AND coalesce(t.is_system, false) = false;
+
       IF v_active_tx_count >= v_preview_cap THEN
         RAISE EXCEPTION 'PREVIEW_RECEIPT_LIMIT_REACHED';
       END IF;
     END IF;
 
     IF v_subscription_tier = 'free' THEN
+      SELECT COUNT(*)
+      INTO v_active_tx_count
+      FROM public.transactions t
+      WHERE t.user_id = v_actor
+        AND coalesce(t.is_system, false) = false;
+
       IF v_active_tx_count >= 20 THEN
         RAISE EXCEPTION 'FREE_TRANSACTION_LIMIT';
       END IF;
