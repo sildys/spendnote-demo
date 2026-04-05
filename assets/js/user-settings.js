@@ -641,7 +641,7 @@ const computeAndApplyRole = async () => {
                 } else if (currentRole === 'user') {
                     dangerWarningText.innerHTML = `<strong>Invited member — delete your own account only</strong>
                         <ul>
-                            <li>First, ask your team <strong>owner</strong> or <strong>admin</strong> to remove your Cash Box access (Team → manage access for your member).</li>
+                            <li>First, ask your team <strong>owner</strong> to remove your Cash Box access (Team → manage access for your member).</li>
                             <li>After you no longer have access to any shared Cash Boxes, you can delete your SpendNote login and profile data below.</li>
                             <li>The team’s Cash Boxes, transactions, and receipts stay with the organization.</li>
                         </ul>`;
@@ -649,7 +649,7 @@ const computeAndApplyRole = async () => {
                     dangerWarningText.innerHTML = `<strong>Warning: This action cannot be undone</strong>
                         <ul>
                             <li>Your account and personal data will be permanently deleted</li>
-                            <li>You will be removed from the team</li>
+                            <li>First, ask the team <strong>owner</strong> to remove you from the team</li>
                             <li>The organization's data will not be affected</li>
                         </ul>`;
                 }

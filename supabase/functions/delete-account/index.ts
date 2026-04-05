@@ -167,7 +167,7 @@ Deno.serve(async (req: Request) => {
 
         if (Number(cbAccessCount || 0) > 0) {
           return new Response(JSON.stringify({
-            error: "You still have Cash Box access. Ask your team owner or admin to remove your access first, then try again.",
+            error: "You still have Cash Box access. Ask your team owner to remove your access first, then try again.",
             code: "HAS_CASH_BOX_ACCESS",
             cashBoxAccessCount: Number(cbAccessCount || 0),
           }), {
