@@ -452,39 +452,64 @@ export const renderSubscriptionDowngradedTemplate = (args: {
   newPlan: string;
   maxCashBoxes: number;
   totalCashBoxes: number;
+  teamMemberCount?: number;
   dashboardUrl: string;
 }): BaseEmailTemplate => {
   const name = esc(String(args.fullName || "there").trim() || "there");
-  const oldPlan = esc(String(args.oldPlan || "Pro").trim());
+  const oldPlanLower = String(args.oldPlan || "").trim().toLowerCase();
   const newPlan = esc(String(args.newPlan || "Free").trim());
   const max = Number(args.maxCashBoxes) || 1;
   const total = Number(args.totalCashBoxes) || 0;
+  const teamCount = Number(args.teamMemberCount) || 0;
   const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
   const pricingUrl = "https://spendnote.app/spendnote-pricing.html";
-  const subject = `Your SpendNote plan changed to ${args.newPlan || "Free"}`;
+  const subject = `Your SpendNote plan was downgraded to ${args.newPlan || "Free"}`;
 
-  const needsAction = total > max;
-  const actionBlock = needsAction
-    ? `<p style="margin:0 0 14px;">You have <strong>${total} cash boxes</strong> but your new plan allows <strong>${max}</strong>. Log in to choose which ${max === 1 ? "one stays" : "ones stay"} active &mdash; the rest become read-only.</p>`
-    : `<p style="margin:0 0 14px;">Your ${total} cash ${total === 1 ? "box fits" : "boxes fit"} within the new limit, so nothing was changed.</p>`;
+  const needsCashBoxAction = total > max;
+  const lostTeam = oldPlanLower === "pro" && teamCount > 0;
+
+  let consequenceHtml = "";
+
+  if (needsCashBoxAction) {
+    consequenceHtml += `<p style="margin:0 0 8px;">You currently have <strong>${total} cash boxes</strong>, but your new plan allows only <strong>${max}</strong>.</p>
+      <p style="margin:0 0 4px;color:#b91c1c;font-weight:600;">The others will stop recording new transactions and become read-only.</p>`;
+  }
+
+  if (lostTeam) {
+    const memberWord = teamCount === 1 ? "team member" : `${teamCount} team members`;
+    consequenceHtml += `<p style="margin:${needsCashBoxAction ? "12px" : "0"} 0 4px;color:#b91c1c;font-weight:600;">Your ${memberWord} will lose access to your cash boxes.</p>
+      <p style="margin:0 0 4px;color:#6b7280;font-size:13px;">Team management is only available on Pro. Without it, invited members can no longer view or record transactions.</p>`;
+  }
+
+  if (!needsCashBoxAction && !lostTeam) {
+    consequenceHtml = `<p style="margin:0 0 4px;">Your ${total} cash ${total === 1 ? "box fits" : "boxes fit"} within the new limit, so nothing was changed.</p>`;
+  }
+
+  const needsAction = needsCashBoxAction || lostTeam;
+  const primaryCta = needsAction
+    ? `<a href="${pricingUrl}" style="${CTA_STYLE}">Keep tracking across all locations &rarr;</a>`
+    : `<a href="${dashboardUrl}" style="${CTA_STYLE}">Open SpendNote &rarr;</a>`;
+
+  const secondaryCta = needsCashBoxAction
+    ? `<div style="margin:12px 0 0;"><a href="${dashboardUrl}" style="color:#64748b;font-size:13px;font-weight:600;text-decoration:underline;">Choose which cash boxes to keep active &rarr;</a></div>`
+    : "";
 
   const html = appCard(
-    `Plan changed: ${oldPlan} &rarr; ${newPlan}`,
-    "Your cash box data is safe &mdash; nothing was deleted.",
+    `Your plan was downgraded to ${newPlan}`,
+    "Action may be required.",
     `
       <p style="margin:0 0 10px;">Hi ${name},</p>
-      <p style="margin:0 0 14px;">Your SpendNote plan moved from <strong>${oldPlan}</strong> to <strong>${newPlan}</strong>.</p>
-      ${actionBlock}
+      <p style="margin:0 0 14px;">Your SpendNote plan has been changed to <strong>${newPlan}</strong>.</p>
+      <div style="margin:0 0 18px;">${consequenceHtml}</div>
       <div style="margin:18px 0 10px;">
-        <a href="${dashboardUrl}" style="${CTA_STYLE}">${needsAction ? "Choose active cash boxes" : "Open SpendNote"} &rarr;</a>
+        ${primaryCta}
       </div>
-      <div style="margin:0 0 16px;">
-        <a href="${pricingUrl}" style="color:#1d4ed8;font-size:13px;font-weight:600;">Upgrade to keep all cash boxes active &rarr;</a>
-      </div>
-      <p style="margin:0;color:#6b7280;font-size:12px;">Past transactions and data are never deleted. Need help? <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a></p>
+      ${secondaryCta}
+      <p style="margin:20px 0 0;color:#94a3b8;font-size:12px;line-height:1.5;">Your data is safe &mdash; nothing will be deleted. Need help? <a href="mailto:support@spendnote.app" style="color:#94a3b8;">support@spendnote.app</a></p>
     `,
   );
 
-  const text = `Your SpendNote plan changed to ${args.newPlan}\n\nHi ${args.fullName || "there"}, your plan moved from ${args.oldPlan} to ${args.newPlan}.\n${needsAction ? `You have ${total} cash boxes but the new limit is ${max}. Log in to choose which to keep active.` : "Your cash boxes fit within the new limit."}\n\nOpen SpendNote: ${args.dashboardUrl}`;
+  const teamText = lostTeam ? `\nYour ${teamCount} team member${teamCount === 1 ? "" : "s"} will lose access to your cash boxes. Team management is only available on Pro.` : "";
+  const text = `Your SpendNote plan was downgraded to ${args.newPlan}\n\nHi ${args.fullName || "there"}, your plan has been changed to ${args.newPlan}.\n${needsCashBoxAction ? `You have ${total} cash boxes but the new limit is ${max}. The others will stop recording and become read-only.` : "Your cash boxes fit within the new limit."}${teamText}\n\nKeep all features: ${pricingUrl}\n${needsCashBoxAction ? `Choose which to keep: ${args.dashboardUrl}\n` : ""}Your data is safe — nothing will be deleted.`;
   return { subject, html, text };
 };

@@ -232,6 +232,22 @@ const sendDowngradeEmail = async (
     const ids = await collectCashBoxIdsForBillingUser(supabaseAdmin, userId);
     const max = maxCashBoxesForTier(newTier);
 
+    let teamMemberCount = 0;
+    if (oldTier.toLowerCase() === "pro") {
+      try {
+        const { data: ownedOrgs } = await supabaseAdmin.from("orgs").select("id").eq("owner_user_id", userId);
+        const orgIds = (ownedOrgs || []).map((r: { id: string }) => String(r.id || "")).filter(Boolean);
+        if (orgIds.length) {
+          const { count } = await supabaseAdmin
+            .from("org_memberships")
+            .select("id", { count: "exact", head: true })
+            .in("org_id", orgIds)
+            .neq("user_id", userId);
+          teamMemberCount = Number(count) || 0;
+        }
+      } catch (_) {}
+    }
+
     const capitalize = (s: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
     const tpl = renderSubscriptionDowngradedTemplate({
       fullName: profile?.full_name || "",
@@ -239,6 +255,7 @@ const sendDowngradeEmail = async (
       newPlan: capitalize(newTier),
       maxCashBoxes: Number.isFinite(max) ? max : 999,
       totalCashBoxes: ids.length,
+      teamMemberCount,
       dashboardUrl: "https://spendnote.app/dashboard.html",
     });
 
