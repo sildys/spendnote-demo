@@ -115,10 +115,10 @@ If a chat thread freezes / context is lost: in the new thread say:
 - **Void:** UI korábban tévesen csak org `owner`/`admin` szerepkörnél engedélyezett → szóló / org-nélküli tulajoknál (Standard, Free, stb.) a gomb tiltva volt, holott az RPC (`spendnote_void_transaction`) a kassza tulajdonost is engedi. **Javítva:** void kizárólag org szerepkör **`user`** (meghívott tag) esetén tiltva UI-n; bulk void ugyanígy (`transaction-detail-ui.js`, `transaction-history-data.js`). Commit: `b249946` (és kapcsolódó cache-bust HTML).
 
 **Hátra (nem tier-gating):**
-- **Downgrade viselkedés (2026-04-06):** Első hullám kész — `066_tier_downgrade_cash_box_locks.sql` + Stripe webhook (`applyCashBoxTierDowngrade` / `clearCashBoxTierLocks`) + dashboard owner modal + RPC `spendnote_resolve_tier_cash_boxes` + `CASH_BOX_TRANSACTIONS_BLOCKED` a create RPC-ben. **Hátra még:** downgrade email/toast copy, Pro→Standard team tag „locked out” üzenet, egyéb edge case-ek (lásd V1 Launch §5).
-- **Teljes lemondás:** Stripe `customer.subscription.deleted` → `free`; nincs dedikált downgrade UX/email.
-- **Üzenetek:** Upgrade után van dashboard **toast** (angol) + `upgrade_confirmed` email. **Downgrade** (vagy Pro→Standard) felé: még nincs párhuzamos toast/email — ha készül, **csak angol** szöveg + külön email handler (ne keverjük az upgrade copyval).
-- **S3 Stripe:** checkout / webhook / live teszt — lásd roadmap checklist.
+- **Downgrade viselkedés:** Kész — `066`, Stripe webhook lock/clear, owner **email** (`renderSubscriptionDowngradedTemplate` a `stripe-webhook`-ban), dashboard owner modal (cash box választás + team figyelmeztetés Standard/Free-nél), cash box detail blocked banner, duplicate guard, free tx limit voidoltakat is számol. **Döntés:** meghívott **team usereknek nem küldünk** külön emailt downgrade-kor; `org_memberships` / cash box grantek **megmaradnak**, vissza-Pro-nál gyorsan helyreáll a hozzáférés.
+- **Teljes lemondás:** Stripe `customer.subscription.deleted` → `free` + ugyanaz a downgrade email + cash box flow mint subscription.updated downgrade-nél.
+- **Üzenetek:** Upgrade: dashboard **toast** + `upgrade_confirmed` email (client). Downgrade: owner email a webhookból; opcionális **in-app toast** downgrade észlelésre még nincs (nem kötelező).
+- **S3 Stripe:** checkout / webhook / **live** teszt — lásd roadmap checklist.
 
 ---
 
@@ -203,8 +203,8 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [x] Team invite — custom modal + bekötés *(késznek jelölve — tulaj visszajelzés)*
 - [x] Free csomag gating — *(késznek jelölve)*
 - [x] **Standard** (és tier-keresztmetszet) gating — **lezárva** (lásd fenti 2026-04-06 blokk: paywallok, void UI, ID prefix, currency select)
-- [~] Downgrade / többlet cash box: **S1 §4** első hullám — migráció `066`, Stripe webhook lock/clear, dashboard owner modal, create RPC `CASH_BOX_TRANSACTIONS_BLOCKED`; hátra: downgrade email/toast, team tag locked-out UX
-- [ ] Downgrade (és opcionálisan csomagváltás) **angol** in-app + email értesítés — upgrade mintájára, külön copy
+- [x] Downgrade / többlet cash box (**S1 §4**): migráció `066`, Stripe webhook, owner modal + team szöveg a modalban, owner downgrade email, blocked UX (detail, duplicate), voidolt tx a free limitben; **team tagoknak nincs email** (szándékos).
+- [ ] Opcionális: downgrade **in-app toast** (owner), ha külön kell az email mellé; upgrade email megbízhatóság webhook-backup-pal (`sn.lastKnownTier` edge case).
 - [ ] Spot-check / regresszió: új oldalak vagy szerepkör-él esetek (nem blokkoló a tier launchra)
 - [ ] Free tier: 20 tx / 14 nap — regresszió teszt
 - [ ] Pricing → signup flow ellenőrzés
@@ -2045,10 +2045,7 @@ Minden email implicit kérdése: eljutott-e az aha momentig (első tranzakció)?
 - Lista amit elveszített + "Your data is safe. Upgrade anytime."
 - CTA: "Resubscribe"
 
-**Team access revoked** (trigger: owner tier Pro → Standard/Free)
-- Team member-eknek (az org összes nem-owner tagjának): "Your team's subscription has expired. You no longer have access to [Org Name]."
-- "Contact [owner name] at [owner email] to restore access, or create your own account."
-- CTA: "Create your own account" → pricing page
+**Team access revoked** — **nem küldünk** külön emailt a meghívott tagoknak downgrade-kor (termék döntés: membership megmarad, vissza-Pro-nál gyors helyreállás; owner kap downgrade emailt + modal). Opcionális később: in-app üzenet bejelentkezéskor a tagoknak (lásd V1 locked-out UX jegyzetek), **nem** email.
 
 #### Technikai infrastruktúra
 
