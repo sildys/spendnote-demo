@@ -589,6 +589,30 @@ body {
     document.querySelectorAll('.void-watermark').forEach((el) => (el.style.display = 'block'));
   }
   const resolveLogoUrl = () => String(urlParams.get('logoUrl') || '').trim();
+
+  (function spendnoteBindSettingsPreviewLogoMessage() {
+    if (urlParams.get('previewLogoInject') !== '1' || urlParams.get('demo') !== '1') return;
+    window.addEventListener('message', (e) => {
+      try {
+        if (!window.parent || e.source !== window.parent) return;
+        if (e.origin !== window.location.origin) return;
+        const d = e.data;
+        if (!d || d.spendnote !== 'previewLogo') return;
+        const src = String(d.logoUrl || '').trim();
+        if (!src) return;
+        document.querySelectorAll('.logo-box').forEach((box) => {
+          box.textContent = '';
+          box.style.display = '';
+          const img = document.createElement('img');
+          img.className = 'logo-img';
+          img.alt = 'Company logo';
+          img.src = src;
+          box.appendChild(img);
+        });
+        document.querySelectorAll('.header-rule').forEach((el) => el.classList.remove('full-width'));
+      } catch (_) {}
+    });
+  })();
   
   // Custom text replacements
   const forcedIdPrefixRaw = String(urlParams.get('idPrefix') || '').trim().toUpperCase();
@@ -815,6 +839,19 @@ body {
     document.querySelectorAll('.logo, .logo-box, .logo-img, .sn-logo').forEach(el => el.style.display = 'none');
     // Make header-rule full width when logo is hidden
     document.querySelectorAll('.header-rule').forEach(el => el.classList.add('full-width'));
+  } else if (urlParams.get('previewLogoInject') === '1' && urlParams.get('demo') === '1') {
+    document.querySelectorAll('.logo-box').forEach((box) => {
+      box.textContent = '';
+      box.style.display = '';
+    });
+    document.querySelectorAll('.header-rule').forEach((el) => el.classList.remove('full-width'));
+    try {
+      const scaleRaw = urlParams.get('logoScale');
+      const s = parseFloat(scaleRaw || '1');
+      if (Number.isFinite(s) && s >= 0.5 && s <= 3.0) {
+        document.querySelectorAll('.receipt').forEach(r => r.style.setProperty('--logo-scale', String(s)));
+      }
+    } catch (_) {}
   } else {
     const logo = resolveLogoUrl();
     if (logo) {
@@ -868,7 +905,7 @@ body {
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="assets/js/supabase-config.js?v=20260405-db-logo-only"></script>
+    <script src="assets/js/supabase-config.js?v=20260405-preview-logo-pm"></script>
     <script src="assets/js/auth-guard.js?v=20260207-2310"></script>
     <script src="assets/js/main.js?v=44"></script>
 

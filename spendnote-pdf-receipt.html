@@ -737,6 +737,28 @@ try {
 
 const resolveLogoUrl = () => String(urlParams.get('logoUrl') || '').trim();
 
+(function spendnoteBindSettingsPreviewLogoMessage() {
+  if (urlParams.get('previewLogoInject') !== '1' || urlParams.get('demo') !== '1') return;
+  window.addEventListener('message', (e) => {
+    try {
+      if (!window.parent || e.source !== window.parent) return;
+      if (e.origin !== window.location.origin) return;
+      const d = e.data;
+      if (!d || d.spendnote !== 'previewLogo') return;
+      const src = String(d.logoUrl || '').trim();
+      if (!src) return;
+      const svgLogo = document.querySelector('svg.logo');
+      if (svgLogo && svgLogo.parentNode) {
+        const img = document.createElement('img');
+        img.className = 'logo';
+        img.alt = 'Company logo';
+        img.src = src;
+        svgLogo.parentNode.replaceChild(img, svgLogo);
+      }
+    } catch (_) {}
+  });
+})();
+
 // Custom text replacements
 const forcedIdPrefixRaw = String(urlParams.get('idPrefix') || '').trim().toUpperCase();
 const forcedIdPrefix = forcedIdPrefixRaw && forcedIdPrefixRaw !== 'REC-' ? forcedIdPrefixRaw : '';
@@ -966,6 +988,8 @@ if (isDemo) {
 // Logo
 if (urlParams.get('logo') === '0') {
     document.querySelectorAll('.logo, .logo-box, .logo-img, .sn-logo').forEach(el => el.style.display = 'none');
+} else if (urlParams.get('previewLogoInject') === '1' && urlParams.get('demo') === '1') {
+    // Placeholder SVG until parent postMessage provides the image (long data URLs).
 } else {
     const logo = resolveLogoUrl();
     if (logo) {
@@ -1015,7 +1039,7 @@ if (urlParams.get('signatures') === '0') {
   
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="assets/js/supabase-config.js?v=20260405-db-logo-only"></script>
+  <script src="assets/js/supabase-config.js?v=20260405-preview-logo-pm"></script>
   <script src="assets/js/auth-guard.js?v=20260207-2310"></script>
   <script src="assets/js/main.js?v=44"></script>
 

@@ -512,6 +512,8 @@ let displayOptions = { ...QUICK_PRESET };
 
 const LOGO_SETTINGS_MIN_SCALE = 0.5;
 const LOGO_SETTINGS_MAX_SCALE = 3.0;
+/** Above this, logo is sent via postMessage to the preview iframe (avoids browser URL length limits). */
+const PREVIEW_LOGO_MAX_QUERY_CHARS = 2048;
 
 function clampLogoScale(value) {
     const n = Number(value);
@@ -539,7 +541,8 @@ function buildReceiptUrl(format) {
     };
     
     const params = new URLSearchParams();
-    params.append('v', 'settings-preview-16');
+    window.__spendnoteSettingsPreviewLogoPm = '';
+    params.append('v', 'settings-preview-17');
     params.append('demo', '1');
     if (format === 'pdf') {
         params.append('preview', '1');
@@ -555,19 +558,26 @@ function buildReceiptUrl(format) {
     params.append('itemsMode', receiptMode === 'quick' ? 'single' : 'full');
     params.append('recordedBy', '0');
 
-    // Cash box logo takes priority over profile logo; preview uses logoUrl query only (no localStorage).
+    // Cash box logo takes priority over profile logo. Short URLs use logoUrl; long data URLs use previewLogoInject + postMessage.
     if (!isLogoEnabled) {
         params.delete('logoKey');
         params.delete('logoUrl');
+        params.delete('previewLogoInject');
         params.set('logo', '0');
     } else {
         const cbLogo = typeof window.getCashBoxLogo === 'function' ? String(window.getCashBoxLogo() || '').trim() : '';
         const profileLogo = String(DUMMY_PROFILE.account_logo_url || '').trim();
         const logoToUse = cbLogo || profileLogo;
         params.delete('logoKey');
+        params.delete('previewLogoInject');
         if (logoToUse) {
             params.delete('logo');
-            params.set('logoUrl', logoToUse);
+            if (logoToUse.length > PREVIEW_LOGO_MAX_QUERY_CHARS) {
+                window.__spendnoteSettingsPreviewLogoPm = logoToUse;
+                params.set('previewLogoInject', '1');
+            } else {
+                params.set('logoUrl', logoToUse);
+            }
         } else {
             params.delete('logoUrl');
         }
@@ -1026,6 +1036,19 @@ window.addEventListener('DOMContentLoaded', async function() {
     if (receiptFrame) {
         receiptFrame.addEventListener('load', () => {
             scheduleZoomUpdate();
+            try {
+                const pm = String(window.__spendnoteSettingsPreviewLogoPm || '').trim();
+                if (!pm) return;
+                const w = receiptFrame.contentWindow;
+                if (!w) return;
+                const origin = window.location.origin;
+                const send = () => {
+                    try {
+                        w.postMessage({ spendnote: 'previewLogo', logoUrl: pm }, origin);
+                    } catch (_) {}
+                };
+                requestAnimationFrame(() => requestAnimationFrame(send));
+            } catch (_) {}
         });
     }
 
@@ -1085,7 +1108,7 @@ applyCashBoxLogoTransform();
 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase-config.js?v=20260405-db-logo-only"></script>
+<script src="assets/js/supabase-config.js?v=20260405-preview-logo-pm"></script>
 <script src="assets/js/auth-guard.js"></script>
 <script src="assets/js/modal-dialogs.js?v=20260208-1900"></script>
 <script src="assets/js/nav-loader.js?v=20260223-2101"></script>
