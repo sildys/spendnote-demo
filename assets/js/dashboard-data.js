@@ -77,7 +77,7 @@ async function maybeShowTierDowngradeModal(profile, cashBoxes) {
         return;
     }
 
-    const { formatCurrency } = getSpendNoteHelpers();
+    const { formatCurrency, getIconClass, hexToRgb } = getSpendNoteHelpers();
     const isMulti = maxKeep > 1;
 
     bodyEl.textContent = `Your plan now includes ${maxKeep} active cash box${isMulti ? 'es' : ''}. Pick ${isMulti ? 'the ones' : 'the one'} you want to keep recording into.`;
@@ -101,6 +101,8 @@ async function maybeShowTierDowngradeModal(profile, cashBoxes) {
         const id = String(box?.id || '').trim();
         if (!id) return;
         const color = box?.color || '#059669';
+        const rgb = hexToRgb(color);
+        const iconClass = getIconClass(box?.icon);
         const balance = formatCurrency(box?.current_balance || 0, box?.currency || 'USD');
         const currency = String(box?.currency || 'USD').toUpperCase();
 
@@ -117,7 +119,9 @@ async function maybeShowTierDowngradeModal(profile, cashBoxes) {
 
         item.innerHTML = `
             <div class="${indicatorClass}">${indicatorInner}</div>
-            <div class="tier-modal-item-color" style="background:${color};"></div>
+            <div class="tier-modal-item-icon" style="background:rgba(${rgb},0.12);color:${color};">
+                <i class="fas ${iconClass}"></i>
+            </div>
             <div class="tier-modal-item-info">
                 <div class="tier-modal-item-name">${String(box?.name || id).replace(/</g, '&lt;')}</div>
                 <div class="tier-modal-item-meta">${currency} · ${balance}</div>

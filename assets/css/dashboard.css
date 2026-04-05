@@ -311,11 +311,15 @@
         .tier-modal-item.selected .tier-modal-item-check svg {
             opacity: 1;
         }
-        .tier-modal-item-color {
+        .tier-modal-item-icon {
             flex-shrink: 0;
-            width: 10px;
-            height: 36px;
-            border-radius: 5px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
         }
         .tier-modal-item-info {
             flex: 1;
