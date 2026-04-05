@@ -92,20 +92,21 @@ async function maybeShowTierDowngradeModal(profile, cashBoxes) {
         }
     } catch (_) {}
 
-    const lostTeam = teamCount > 0 && (tier === 'standard' || tier === 'free');
-
     const titleEl = document.getElementById('tierCashBoxModalTitle');
     if (titleEl) {
         titleEl.textContent = `You can only use ${maxKeep} cash box${isMulti ? 'es' : ''} on this plan`;
     }
 
     let descHtml = `You currently have ${n} cash boxes, but your plan allows only ${maxKeep}.<br>The others will stop recording new transactions and become read-only.`;
-    if (lostTeam) {
-        const memberWord = teamCount === 1 ? '1 team member' : `${teamCount} team members`;
+
+    if (tier === 'standard' || tier === 'free') {
+        const teamLine = teamCount > 0
+            ? `Your ${teamCount === 1 ? '1 team member has' : teamCount + ' team members have'} lost access to your cash boxes.`
+            : 'Team management is no longer available on this plan.';
         descHtml += `<div style="margin-top:12px;padding:10px 14px;border-radius:10px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);color:#b91c1c;font-size:13px;font-weight:600;line-height:1.5;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:4px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Your ${memberWord} will lose access to your cash boxes.<br>
-            <span style="font-weight:400;color:#92400e;">Team management is only available on Pro.</span>
+            ${teamLine}<br>
+            <span style="font-weight:400;color:#92400e;">Invite members and share cash boxes with Pro.</span>
         </div>`;
     }
     bodyEl.innerHTML = descHtml;
@@ -113,9 +114,8 @@ async function maybeShowTierDowngradeModal(profile, cashBoxes) {
     const upgradeBtn = document.getElementById('tierCashBoxModalUpgrade');
     if (upgradeBtn) {
         try {
-            const targetPlan = lostTeam ? 'pro' : 'standard';
-            const planUrl = window.SpendNoteUpgrade?._buildPlanUrl?.(targetPlan, 'Cash Boxes')
-                || `/spendnote-pricing.html?minPlan=${targetPlan}&feature=Cash+Boxes`;
+            const planUrl = window.SpendNoteUpgrade?._buildPlanUrl?.('pro', 'Cash Boxes')
+                || '/spendnote-pricing.html?minPlan=pro&feature=Cash+Boxes';
             upgradeBtn.href = planUrl;
         } catch (_) {}
     }
