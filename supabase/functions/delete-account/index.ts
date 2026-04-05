@@ -137,23 +137,34 @@ Deno.serve(async (req: Request) => {
         .filter(Boolean);
     }
 
-    // Non-owner: block deletion if user still has cash box access
+    // Non-owner: block deletion only if user is STILL an active team member
+    // with cash box access. If they were already removed from the team
+    // (no org_memberships rows), they can freely delete their solo account.
     const isOwner = ownedOrgIds.length > 0;
     if (!isOwner) {
-      const { count: cbAccessCount } = await supabaseAdmin
-        .from("cash_box_memberships")
-        .select("*", { count: "exact", head: true })
+      const { data: activeMemberships } = await supabaseAdmin
+        .from("org_memberships")
+        .select("org_id")
         .eq("user_id", userId);
 
-      if (Number(cbAccessCount || 0) > 0) {
-        return new Response(JSON.stringify({
-          error: "You still have Cash Box access. Ask your team owner or admin to remove your access first, then try again.",
-          code: "HAS_CASH_BOX_ACCESS",
-          cashBoxAccessCount: Number(cbAccessCount || 0),
-        }), {
-          status: 409,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+      const isActiveTeamMember = Array.isArray(activeMemberships) && activeMemberships.length > 0;
+
+      if (isActiveTeamMember) {
+        const { count: cbAccessCount } = await supabaseAdmin
+          .from("cash_box_memberships")
+          .select("*", { count: "exact", head: true })
+          .eq("user_id", userId);
+
+        if (Number(cbAccessCount || 0) > 0) {
+          return new Response(JSON.stringify({
+            error: "You still have Cash Box access. Ask your team owner or admin to remove your access first, then try again.",
+            code: "HAS_CASH_BOX_ACCESS",
+            cashBoxAccessCount: Number(cbAccessCount || 0),
+          }), {
+            status: 409,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
       }
     }
 
