@@ -239,6 +239,36 @@ export const renderFirstTransactionTemplate = (args: {
   return { subject, html, text };
 };
 
+// ─── First transaction (team member) ─────────────────────────────────────────────
+
+export const renderFirstTransactionTeamTemplate = (args: {
+  fullName?: string;
+  orgName?: string;
+  dashboardUrl: string;
+}): BaseEmailTemplate => {
+  const name = esc(String(args.fullName || "there").trim() || "there");
+  const org = esc(String(args.orgName || "your team").trim() || "your team");
+  const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
+  const subject = "Your first transaction is on record";
+
+  const html = appCard(
+    "First transaction recorded",
+    `${org} can now see this handoff.`,
+    `
+      <p style="margin:0 0 10px;">Nice work, ${name}.</p>
+      <p style="margin:0 0 10px;">Your first cash movement is now documented &mdash; who, when, how much. Your team can see it instantly.</p>
+      <p style="margin:0 0 14px;font-weight:700;">Keep going. Every handoff you record makes ${org} more accountable.</p>
+      <div style="margin:18px 0 16px;">
+        <a href="${dashboardUrl}" style="${CTA_STYLE}">Record the next one &rarr;</a>
+      </div>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://spendnote.app/spendnote-faq.html" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+    `,
+  );
+
+  const text = `Your first transaction is on record\n\nNice work, ${args.fullName || "there"}. Your first cash movement is documented and your team can see it.\n\nKeep going: ${args.dashboardUrl}`;
+  return { subject, html, text };
+};
+
 // ─── Trial expiry warning ───────────────────────────────────────────────────────
 
 export const renderTrialExpiryWarningTemplate = (args: {

@@ -1,6 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import {
   renderFirstTransactionTemplate,
+  renderFirstTransactionTeamTemplate,
   renderInviteAcceptedAdminTemplate,
   renderPasswordChangedTemplate,
   renderTrialExpiryWarningTemplate,
@@ -370,12 +371,41 @@ Deno.serve(async (req: Request) => {
     }
 
     if (eventType === "first_transaction_created") {
-      const rendered = renderFirstTransactionTemplate({
-        fullName: userName,
-        dashboardUrl: "https://spendnote.app/dashboard.html",
-      });
+      // Check if user is an invited team member (not owner)
+      const { data: ftMemberships } = await supabaseAdmin
+        .from("org_memberships")
+        .select("org_id")
+        .eq("user_id", user.id);
+
+      let isInvitedMember = false;
+      let ftOrgName = "your team";
+
+      if (Array.isArray(ftMemberships) && ftMemberships.length > 0) {
+        const ftOrgIds = [...new Set(ftMemberships.map((m) => String((m as Record<string, unknown>)?.org_id || "").trim()).filter(Boolean))];
+        if (ftOrgIds.length > 0) {
+          const { data: ftOrgRows } = await supabaseAdmin.from("orgs").select("id, name, owner_user_id").in("id", ftOrgIds);
+          const uid = String(user.id || "").trim();
+          const ownsAny = (ftOrgRows || []).some((o) => String((o as Record<string, unknown>)?.owner_user_id || "").trim() === uid);
+          if (!ownsAny) {
+            isInvitedMember = true;
+            const firstOrg = (ftOrgRows || [])[0] as Record<string, unknown> | undefined;
+            if (firstOrg?.name) ftOrgName = String(firstOrg.name).trim() || "your team";
+          }
+        }
+      }
+
+      const rendered = isInvitedMember
+        ? renderFirstTransactionTeamTemplate({
+            fullName: userName,
+            orgName: ftOrgName,
+            dashboardUrl: "https://spendnote.app/dashboard.html",
+          })
+        : renderFirstTransactionTemplate({
+            fullName: userName,
+            dashboardUrl: "https://spendnote.app/dashboard.html",
+          });
       const data = await sendViaResend([userEmail], rendered.subject, rendered.html, rendered.text);
-      return new Response(JSON.stringify({ success: true, data }), {
+      return new Response(JSON.stringify({ success: true, data, type: isInvitedMember ? "first_tx_team" : "first_tx_solo" }), {
         status: 200,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
