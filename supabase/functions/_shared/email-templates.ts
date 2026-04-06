@@ -471,6 +471,16 @@ export const renderSubscriptionCanceledTemplate = (args: {
   const pricingUrl = esc(args.pricingUrl || "https://spendnote.app/spendnote-pricing.html");
   const subject = `Your SpendNote ${args.plan || ""} subscription has been canceled`;
 
+  const isPro = String(args.plan || "").trim().toLowerCase() === "pro";
+  const loseItems = isPro
+    ? `<li>Extra Cash Boxes (Free allows 1)</li>
+        <li>Unlimited transactions</li>
+        <li>Team access and invitations</li>
+        <li>Email receipts and custom labels</li>`
+    : `<li>Extra Cash Boxes (Free allows 1)</li>
+        <li>Unlimited transactions</li>
+        <li>Custom logo and receipt layouts</li>`;
+
   const html = appCard(
     "Subscription canceled",
     `Your ${plan} plan stays active until ${periodEnd}.`,
@@ -480,9 +490,7 @@ export const renderSubscriptionCanceledTemplate = (args: {
       <p style="margin:0 0 14px;">After that, your plan changes to Free. Your data stays safe &mdash; you can always view and export it.</p>
       <p style="margin:0 0 6px;color:#374151;font-size:13px;"><strong>On Free, you'll lose:</strong></p>
       <ul style="margin:0 0 14px;padding-left:18px;color:#374151;font-size:13px;">
-        <li>Extra Cash Boxes (Free allows 1)</li>
-        <li>Team access and invitations</li>
-        <li>Email receipts and custom labels</li>
+        ${loseItems}
       </ul>
       <p style="margin:0 0 14px;">Changed your mind? Resubscribe anytime before ${periodEnd} and nothing changes.</p>
       <div style="margin:18px 0 16px;">
