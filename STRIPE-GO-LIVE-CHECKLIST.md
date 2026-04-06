@@ -102,20 +102,50 @@ Copy webhook signing secret from Stripe endpoint to:
    - `stripe_price_id = null`
    - `billing_cycle = null`
 
-## D) Rollout guardrails
+## D) Stripe Dashboard — business profile, invoices, receipts, portal
+
+Do this in **Live mode** so checkout/portal customers see the right branding and documents.
+
+### D1) Account & public appearance
+
+1. **Settings → Account details** — legal business name, support email/phone, address (where Stripe expects it).
+2. **Settings → Branding** — logo, icon, brand color (used on Checkout and Customer Portal).
+3. **Settings → Public details** — **Statement descriptor** / short name on card statements (keep within card-network limits).
+
+### D2) Invoices & payment emails (Stripe-generated)
+
+Subscriptions create **Stripe Invoices**. Configure:
+
+1. **Settings → Billing → Customer emails** (or **Emails** in Settings) — turn on **Successful payments** / **Customer receipt** if you want Stripe to email payment confirmations (in addition to your SpendNote product emails).
+2. **Settings → Billing → Invoice template** (or **Customization → invoices**) — footer text, memo, business VAT/tax ID on PDF if applicable.
+3. If you sell in the EU/UK and need VAT: **Settings → Tax** — Stripe Tax or tax registrations as appropriate (product/legal decision).
+
+### D3) Customer Portal (required for `create-portal-session`)
+
+1. **Settings → Billing → Customer portal**.
+2. Enable at least: **Update payment method**, **Cancel subscription** (and optionally **View invoice history**).
+3. **Business information** and **Terms / Privacy policy links** — point to `spendnote.app` pages if required.
+4. **Products / prices** — portal can only offer changes to prices you allow; align with your live Standard/Pro prices (SpendNote also uses `update-subscription` for some plan changes — verify portal vs app flow in testing).
+
+### D4) Payouts & compliance
+
+1. **Balances → Payouts** — bank account verified.
+2. Complete **verification / compliance** prompts in Dashboard so charges are not blocked.
+
+## E) Rollout guardrails
 
 1. Deploy functions only after all live secrets are set.
 2. Keep Stripe logs + Supabase Edge logs open during first live transactions.
-3. Keep rollback path documented (disable upgrade CTA / temporary maintenance message).
+3. Keep rollback path documented: set `STRIPE_LIVE = false` in `supabase-config.js` + redeploy/cache-bust HTML so pricing shows **Coming Soon**.
 4. Verify CORS behavior from production origin after deploy.
 
-## E) Code references
+## F) Code references
 
 - Checkout session: `supabase/functions/create-checkout-session/index.ts`
 - Portal session: `supabase/functions/create-portal-session/index.ts`
 - Webhook processor: `supabase/functions/stripe-webhook/index.ts`
 
-## F) Completion criteria
+## G) Completion criteria
 
 Mark Stripe go-live ready when:
 - All live secrets are configured

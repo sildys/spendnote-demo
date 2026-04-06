@@ -421,6 +421,81 @@ export const renderTeamMemberRemovedTemplate = (args: {
   return { subject, html, text };
 };
 
+// ─── Payment failed (revenue recovery) ───────────────────────────────────────────
+
+export const renderPaymentFailedTemplate = (args: {
+  fullName?: string;
+  plan: string;
+  portalUrl: string;
+}): BaseEmailTemplate => {
+  const name = esc(String(args.fullName || "there").trim() || "there");
+  const plan = esc(String(args.plan || "your").trim());
+  const portalUrl = esc(args.portalUrl || "https://spendnote.app/spendnote-user-settings.html");
+  const subject = `Action required: your SpendNote payment failed`;
+
+  const html = appCard(
+    "Payment failed",
+    "Update your payment method to keep your plan.",
+    `
+      <p style="margin:0 0 10px;">Hi ${name},</p>
+      <p style="margin:0 0 10px;">We couldn't process your payment for <strong>SpendNote ${plan}</strong>. This usually means the card on file was declined or expired.</p>
+      <p style="margin:0 0 14px;color:#b91c1c;font-weight:600;">If your payment isn't resolved, your subscription will be canceled and your plan will change to Free.</p>
+      <div style="margin:18px 0 16px;">
+        <a href="${portalUrl}" style="${CTA_STYLE}">Update payment method &rarr;</a>
+      </div>
+      <p style="margin:0 0 6px;color:#374151;font-size:13px;"><strong>What happens if not resolved:</strong></p>
+      <ul style="margin:0 0 14px;padding-left:18px;color:#374151;font-size:13px;">
+        <li>Your plan will change to Free</li>
+        <li>New transactions and receipts will be restricted</li>
+        <li>Your existing data stays safe &mdash; nothing is deleted</li>
+      </ul>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+    `,
+  );
+
+  const text = `Action required: your SpendNote payment failed\n\nHi ${args.fullName || "there"},\n\nWe couldn't process your payment for SpendNote ${args.plan || "your plan"}.\n\nIf not resolved, your subscription will be canceled and your plan will change to Free.\n\nUpdate payment method: ${args.portalUrl}\n\nYour existing data stays safe.`;
+  return { subject, html, text };
+};
+
+// ─── Subscription canceled (active until period end) ─────────────────────────────
+
+export const renderSubscriptionCanceledTemplate = (args: {
+  fullName?: string;
+  plan: string;
+  periodEndDate: string;
+  pricingUrl: string;
+}): BaseEmailTemplate => {
+  const name = esc(String(args.fullName || "there").trim() || "there");
+  const plan = esc(String(args.plan || "your").trim());
+  const periodEnd = esc(String(args.periodEndDate || "soon").trim());
+  const pricingUrl = esc(args.pricingUrl || "https://spendnote.app/spendnote-pricing.html");
+  const subject = `Your SpendNote ${args.plan || ""} subscription has been canceled`;
+
+  const html = appCard(
+    "Subscription canceled",
+    `Your ${plan} plan stays active until ${periodEnd}.`,
+    `
+      <p style="margin:0 0 10px;">Hi ${name},</p>
+      <p style="margin:0 0 10px;">Your <strong>SpendNote ${plan}</strong> subscription has been canceled. You'll keep full access until <strong>${periodEnd}</strong>.</p>
+      <p style="margin:0 0 14px;">After that, your plan changes to Free. Your data stays safe &mdash; you can always view and export it.</p>
+      <p style="margin:0 0 6px;color:#374151;font-size:13px;"><strong>On Free, you'll lose:</strong></p>
+      <ul style="margin:0 0 14px;padding-left:18px;color:#374151;font-size:13px;">
+        <li>Extra Cash Boxes (Free allows 1)</li>
+        <li>Team access and invitations</li>
+        <li>Email receipts and custom labels</li>
+      </ul>
+      <p style="margin:0 0 14px;">Changed your mind? Resubscribe anytime before ${periodEnd} and nothing changes.</p>
+      <div style="margin:18px 0 16px;">
+        <a href="${pricingUrl}" style="${CTA_STYLE}">Keep my plan &rarr;</a>
+      </div>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+    `,
+  );
+
+  const text = `Your SpendNote ${args.plan} subscription has been canceled\n\nHi ${args.fullName || "there"},\n\nYour ${args.plan} plan stays active until ${args.periodEndDate || "the end of your billing period"}. After that, your plan changes to Free.\n\nYour data stays safe.\n\nChanged your mind? Resubscribe: ${args.pricingUrl}`;
+  return { subject, html, text };
+};
+
 // ─── Password changed ───────────────────────────────────────────────────────────
 
 export const renderPasswordChangedTemplate = (): BaseEmailTemplate => {

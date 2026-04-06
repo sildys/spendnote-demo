@@ -117,8 +117,8 @@ If a chat thread freezes / context is lost: in the new thread say:
 **Hátra (nem tier-gating):**
 - **Downgrade viselkedés:** Kész — `066`, Stripe webhook lock/clear, owner **email** (`renderSubscriptionDowngradedTemplate` a `stripe-webhook`-ban), dashboard owner modal (cash box választás + team figyelmeztetés Standard/Free-nél), cash box detail blocked banner, duplicate guard, free tx limit voidoltakat is számol. **Döntés:** meghívott **team usereknek nem küldünk** külön emailt downgrade-kor; `org_memberships` / cash box grantek **megmaradnak**, vissza-Pro-nál gyorsan helyreáll a hozzáférés.
 - **Teljes lemondás:** Stripe `customer.subscription.deleted` → `free` + ugyanaz a downgrade email + cash box flow mint subscription.updated downgrade-nél.
-- **Üzenetek:** Upgrade: dashboard **toast** + `upgrade_confirmed` email (client). Downgrade: owner email a webhookból; opcionális **in-app toast** downgrade észlelésre még nincs (nem kötelező).
-- **S3 Stripe:** checkout / webhook / **live** teszt — lásd roadmap checklist.
+- **Üzenetek:** Upgrade: dashboard **toast** + `upgrade_confirmed` email (kliens + webhook dupla biztosítás). Downgrade: owner email a webhookból. **Payment failed** email (`renderPaymentFailedTemplate`) a `invoice.payment_failed` webhook-ból (revenue recovery). **Subscription canceled** email (`renderSubscriptionCanceledTemplate`) a `cancel_at_period_end` detekciónál (user lemondta de még aktív a period végéig). Opcionális **in-app toast** downgrade észlelésre még nincs (nem kötelező).
+- **S3 Stripe live wiring + Dashboard: KÉSZ.** Live price ID-k, `sk_live`, `whsec`, webhook (6 esemény), Edge Function deployok készen. **Stripe Tax:** `automatic_tax: { enabled: true }` + `customer_update: { address: "auto" }` a `create-checkout-session`-ben — EU B2B reverse charge automatikus (ÁFA szám megadásával). **Stripe Dashboard:** branding, invoice/receipt email, Customer Portal, Stripe Tax — mind konfigurálva. **Nyilvános web:** `STRIPE_LIVE = false` (`supabase-config.js`) — pricing / settings checkout továbbra is „Coming Soon”, amíg szándékosan nem kapcsolod. **Hátra:** `STRIPE_LIVE = true` + cache-bust + E2E teszt. Részlet: `STRIPE-GO-LIVE-CHECKLIST.md`.
 
 ---
 
@@ -204,11 +204,14 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [x] Free csomag gating — *(késznek jelölve)*
 - [x] **Standard** (és tier-keresztmetszet) gating — **lezárva** (lásd fenti 2026-04-06 blokk: paywallok, void UI, ID prefix, currency select)
 - [x] Downgrade / többlet cash box (**S1 §4**): migráció `066`, Stripe webhook, owner modal + team szöveg a modalban, owner downgrade email, blocked UX (detail, duplicate), voidolt tx a free limitben; **team tagoknak nincs email** (szándékos).
-- [ ] Opcionális: downgrade **in-app toast** (owner), ha külön kell az email mellé; upgrade email megbízhatóság webhook-backup-pal (`sn.lastKnownTier` edge case).
+- [x] **Billing emailek teljes csomag:** upgrade email webhook-backup (`sendUpgradeEmail` a `stripe-webhook`-ban), `renderPaymentFailedTemplate` + webhook trigger (`invoice.payment_failed`), `renderSubscriptionCanceledTemplate` + webhook trigger (`cancel_at_period_end`). Statikus HTML preview fájlok: `upgrade-confirmed.html`, `payment-failed.html`, `subscription-canceled.html`.
+- [ ] Opcionális: downgrade **in-app toast** (owner), ha külön kell az email mellé.
 - [ ] Spot-check / regresszió: új oldalak vagy szerepkör-él esetek (nem blokkoló a tier launchra)
 - [ ] Free tier: 20 tx / 14 nap — regresszió teszt
 - [ ] Pricing → signup flow ellenőrzés
-- [ ] Checkout + webhook teszt (4242 kártya)
+- [x] Stripe live wiring — secretek, webhook endpoint, Edge Function deploy (2026-04-06)
+- [ ] Nyilvános checkout: `STRIPE_LIVE = true` + cache-bust + valódi checkout teszt (amikor készen állsz)
+- [ ] Stripe Dashboard: branding, invoice/receipt email, Customer Portal — lépésről lépésre: `STRIPE-DASHBOARD-WALKTHROUGH-HU.md`; összefoglaló: `STRIPE-GO-LIVE-CHECKLIST.md` §D
 
 ---
 

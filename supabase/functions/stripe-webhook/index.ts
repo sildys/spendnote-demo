@@ -1,6 +1,11 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Stripe from "https://esm.sh/stripe@14.25.0?target=deno";
-import { renderSubscriptionDowngradedTemplate } from "../_shared/email-templates.ts";
+import {
+  renderSubscriptionDowngradedTemplate,
+  renderUpgradeConfirmedTemplate,
+  renderPaymentFailedTemplate,
+  renderSubscriptionCanceledTemplate,
+} from "../_shared/email-templates.ts";
 
 const corsHeaders: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
@@ -269,6 +274,123 @@ const sendDowngradeEmail = async (
   }
 };
 
+const sendUpgradeEmail = async (
+  supabaseAdmin: ReturnType<typeof createClient>,
+  userId: string,
+  newTier: string,
+) => {
+  try {
+    const resendApiKey = Deno.env.get("RESEND_API_KEY") || "";
+    const from = Deno.env.get("SPENDNOTE_EMAIL_FROM") || "SpendNote <no-reply@spendnote.app>";
+    if (!resendApiKey) return;
+
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("full_name")
+      .eq("id", userId)
+      .maybeSingle();
+
+    const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(userId);
+    const email = String(authUser?.user?.email || "").trim();
+    if (!email) return;
+
+    const capitalize = (s: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+    const tpl = renderUpgradeConfirmedTemplate({
+      fullName: profile?.full_name || "",
+      plan: capitalize(newTier),
+      dashboardUrl: "https://spendnote.app/dashboard.html",
+    });
+
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to: [email], subject: tpl.subject, html: tpl.html, text: tpl.text }),
+    });
+  } catch (_) {
+    // non-critical
+  }
+};
+
+const sendPaymentFailedEmail = async (
+  supabaseAdmin: ReturnType<typeof createClient>,
+  customerId: string,
+) => {
+  try {
+    const resendApiKey = Deno.env.get("RESEND_API_KEY") || "";
+    const from = Deno.env.get("SPENDNOTE_EMAIL_FROM") || "SpendNote <no-reply@spendnote.app>";
+    if (!resendApiKey) return;
+
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("id, full_name, subscription_tier")
+      .eq("stripe_customer_id", customerId)
+      .maybeSingle();
+    if (!profile?.id) return;
+
+    const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(profile.id);
+    const email = String(authUser?.user?.email || "").trim();
+    if (!email) return;
+
+    const capitalize = (s: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+    const tpl = renderPaymentFailedTemplate({
+      fullName: profile.full_name || "",
+      plan: capitalize(String(profile.subscription_tier || "Standard")),
+      portalUrl: "https://spendnote.app/spendnote-user-settings.html",
+    });
+
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to: [email], subject: tpl.subject, html: tpl.html, text: tpl.text }),
+    });
+  } catch (_) {
+    // non-critical
+  }
+};
+
+const sendSubscriptionCanceledEmail = async (
+  supabaseAdmin: ReturnType<typeof createClient>,
+  userId: string,
+  tier: string,
+  periodEnd: number | null,
+) => {
+  try {
+    const resendApiKey = Deno.env.get("RESEND_API_KEY") || "";
+    const from = Deno.env.get("SPENDNOTE_EMAIL_FROM") || "SpendNote <no-reply@spendnote.app>";
+    if (!resendApiKey) return;
+
+    const { data: profile } = await supabaseAdmin
+      .from("profiles")
+      .select("full_name")
+      .eq("id", userId)
+      .maybeSingle();
+
+    const { data: authUser } = await supabaseAdmin.auth.admin.getUserById(userId);
+    const email = String(authUser?.user?.email || "").trim();
+    if (!email) return;
+
+    const capitalize = (s: string) => s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+    const endDate = periodEnd
+      ? new Date(periodEnd * 1000).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+      : "the end of your billing period";
+
+    const tpl = renderSubscriptionCanceledTemplate({
+      fullName: profile?.full_name || "",
+      plan: capitalize(tier),
+      periodEndDate: endDate,
+      pricingUrl: "https://spendnote.app/spendnote-pricing.html",
+    });
+
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${resendApiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ from, to: [email], subject: tpl.subject, html: tpl.html, text: tpl.text }),
+    });
+  } catch (_) {
+    // non-critical
+  }
+};
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -352,10 +474,11 @@ Deno.serve(async (req: Request) => {
         if (!userId) break;
         const { data: prevRow } = await supabaseAdmin
           .from("profiles")
-          .select("subscription_tier")
+          .select("subscription_tier, stripe_cancel_at_period_end")
           .eq("id", userId)
           .maybeSingle();
         const oldTier = String(prevRow?.subscription_tier || "free").toLowerCase();
+        const wasCanceling = Boolean(prevRow?.stripe_cancel_at_period_end);
         await upsertProfileSubscription(supabaseAdmin, userId, sub);
         const { data: nextRow } = await supabaseAdmin
           .from("profiles")
@@ -368,6 +491,17 @@ Deno.serve(async (req: Request) => {
           await sendDowngradeEmail(supabaseAdmin, userId, oldTier, newTier);
         } else if (subscriptionTierRank(newTier) > subscriptionTierRank(oldTier)) {
           await clearCashBoxTierLocks(supabaseAdmin, userId);
+          await sendUpgradeEmail(supabaseAdmin, userId, newTier);
+        }
+
+        // Detect cancel_at_period_end becoming true (user canceled but still active)
+        if (sub.cancel_at_period_end && !wasCanceling && sub.status === "active") {
+          await sendSubscriptionCanceledEmail(
+            supabaseAdmin,
+            userId,
+            newTier || oldTier,
+            sub.current_period_end || null,
+          );
         }
         break;
       }
@@ -408,6 +542,7 @@ Deno.serve(async (req: Request) => {
             .from("profiles")
             .update({ billing_status: "past_due" })
             .eq("stripe_customer_id", customerId);
+          await sendPaymentFailedEmail(supabaseAdmin, customerId);
         }
         break;
       }

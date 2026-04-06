@@ -14,7 +14,7 @@ try {
 }
 
 if (window.SpendNoteDebug) console.log('SpendNote supabase-config.js build 20260301-2141');
-window.__spendnoteSupabaseConfigBuild = '20260406-admin-shared-receipt-identity';
+window.__spendnoteSupabaseConfigBuild = '20260407-stripe-live';
 
 const __spendnoteGetResponseRequestId = (resp) => {
     try {
@@ -567,8 +567,7 @@ window.SpendNoteEmailEvents = {
 };
 
 // ── Stripe billing gate ──
-// Flip to true when Stripe is activated with live keys + adószám.
-const STRIPE_LIVE = false;
+const STRIPE_LIVE = true;
 window.STRIPE_LIVE = STRIPE_LIVE;
 
 window.SpendNoteStripe = {
@@ -1181,10 +1180,13 @@ try {
                 }
 
                 if (token_hash && type) {
-                    if (type !== 'signup' && type !== 'recovery') {
+                    // Supabase may redirect with type=email for signup confirmation; signup/magiclink are legacy.
+                    const typeLc = String(type || '').toLowerCase();
+                    const tokenHashOtpTypes = new Set(['signup', 'recovery', 'email', 'magiclink', 'invite', 'email_change']);
+                    if (!tokenHashOtpTypes.has(typeLc)) {
                         return { handled: false, success: false, type, error: null };
                     }
-                    const { data, error } = await supabaseClient.auth.verifyOtp({ token_hash, type });
+                    const { data, error } = await supabaseClient.auth.verifyOtp({ token_hash, type: typeLc });
                     if (error) {
                         return { handled: true, success: false, type, error: String(error.message || error) };
                     }

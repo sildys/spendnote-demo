@@ -26,6 +26,8 @@ These are sent by `send-user-event-email`:
 - `first_transaction_created` — congratulations + nudge to record another
 - `trial_expiry_warning` — loss-framed trial warning with tx count
 - `upgrade_confirmed` — plan confirmation with unlocked features
+- `payment_failed` — revenue recovery, card declined
+- `subscription_canceled` — user canceled, active until period end
 - `invite_accepted_admin` — admin notification when invite is accepted
 - `password_changed` — security notification
 
