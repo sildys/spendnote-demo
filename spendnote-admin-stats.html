@@ -12,178 +12,111 @@
     <link rel="stylesheet" href="assets/css/main.css?v=23">
     <link rel="stylesheet" href="assets/css/app-layout.css?v=21">
     <style>
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-        .stat-card {
-            background: #fff;
-            border: 1px solid var(--border, #e2e8f0);
-            border-radius: 14px;
-            padding: 22px 20px;
+        .summary-bar {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 6px;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: #f8fafc;
+            border: 1px solid var(--border, #e2e8f0);
+            border-radius: 10px;
         }
-        .stat-card .stat-label {
+        .summary-item {
             font-size: 12px;
-            font-weight: 600;
             color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            white-space: nowrap;
         }
-        .stat-card .stat-value {
-            font-size: 32px;
-            font-weight: 900;
+        .summary-item strong {
             color: #0f172a;
-            line-height: 1.1;
+            font-weight: 800;
+            margin-right: 3px;
         }
-        .stat-card .stat-sub {
-            font-size: 12px;
-            color: #94a3b8;
-        }
-        .stat-card.highlight {
-            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+        .summary-item.highlight {
+            background: #ecfdf5;
             border-color: rgba(5, 150, 105, 0.2);
         }
-        .stat-card.highlight .stat-value {
+        .summary-item.highlight strong {
             color: #059669;
-        }
-        .stat-card.warn {
-            background: linear-gradient(135deg, #fffbeb, #fef3c7);
-            border-color: rgba(245, 158, 11, 0.2);
-        }
-        .stat-card.warn .stat-value {
-            color: #d97706;
         }
 
         .section-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             color: #0f172a;
-            margin: 32px 0 14px;
+            margin: 24px 0 10px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         .section-title i {
             color: #64748b;
-            font-size: 14px;
+            font-size: 13px;
         }
 
-        .chart-container {
+        .table-wrap {
             background: #fff;
             border: 1px solid var(--border, #e2e8f0);
-            border-radius: 14px;
-            padding: 20px;
+            border-radius: 12px;
+            overflow-x: auto;
             margin-bottom: 20px;
         }
-        .chart-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #64748b;
-            margin-bottom: 14px;
-        }
-        .bar-chart {
-            display: flex;
-            align-items: flex-end;
-            gap: 3px;
-            height: 120px;
-            padding-top: 8px;
-        }
-        .bar-col {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            height: 100%;
-            position: relative;
-        }
-        .bar {
-            width: 100%;
-            max-width: 18px;
-            background: #059669;
-            border-radius: 3px 3px 0 0;
-            min-height: 2px;
-            transition: height 0.3s ease;
-        }
-        .bar-label {
-            font-size: 9px;
-            color: #94a3b8;
-            margin-top: 4px;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            transform: rotate(180deg);
-            max-height: 40px;
-            overflow: hidden;
-        }
-        .bar-value {
-            font-size: 9px;
-            color: #64748b;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
 
-        .pie-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .pie-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 8px 14px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #0f172a;
-        }
-        .pie-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .pie-count {
-            color: #64748b;
-            font-weight: 400;
-            margin-left: 2px;
-        }
-
-        .recent-table {
+        .user-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 12px;
         }
-        .recent-table th {
+        .user-table th {
             text-align: left;
             font-weight: 700;
             color: #64748b;
-            font-size: 11px;
+            font-size: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 8px 12px;
+            padding: 8px 10px;
             border-bottom: 2px solid #e2e8f0;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            z-index: 2;
         }
-        .recent-table td {
-            padding: 10px 12px;
+        .user-table th:hover {
+            color: #0f172a;
+        }
+        .user-table th .sort-icon {
+            margin-left: 3px;
+            font-size: 9px;
+            color: #94a3b8;
+        }
+        .user-table th .sort-icon.active {
+            color: #059669;
+        }
+        .user-table td {
+            padding: 7px 10px;
             border-bottom: 1px solid #f1f5f9;
             color: #334155;
+            white-space: nowrap;
         }
-        .recent-table tr:hover td {
+        .user-table tr:hover td {
             background: #f8fafc;
         }
+        .user-table tr.unconfirmed td {
+            opacity: 0.5;
+        }
+
         .tier-badge {
             display: inline-block;
-            padding: 2px 8px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
         }
@@ -191,6 +124,66 @@
         .tier-free { background: #f1f5f9; color: #64748b; }
         .tier-standard { background: #fef3c7; color: #b45309; }
         .tier-pro { background: #dbeafe; color: #1d4ed8; }
+        .tier-admin { background: #fce7f3; color: #be185d; }
+        .tier-user { background: #f0fdf4; color: #15803d; }
+        .tier-owner { background: #dbeafe; color: #1d4ed8; }
+        .tier-unknown { background: #f1f5f9; color: #94a3b8; }
+
+        .team-info {
+            font-size: 10px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .team-info i { font-size: 9px; }
+
+        .date-cell {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+        .date-cell.recent {
+            color: #059669;
+            font-weight: 600;
+        }
+        .date-cell.stale {
+            color: #dc2626;
+        }
+
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .filter-btn {
+            font-size: 11px;
+            padding: 4px 10px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #64748b;
+        }
+        .filter-btn:hover { background: #f8fafc; }
+        .filter-btn.active {
+            background: #0f172a;
+            color: #fff;
+            border-color: #0f172a;
+        }
+
+        .search-input {
+            font-size: 12px;
+            padding: 5px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            outline: none;
+            width: 200px;
+        }
+        .search-input:focus {
+            border-color: #059669;
+        }
 
         .loading-state {
             text-align: center;
@@ -229,23 +222,21 @@
             box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
             z-index: 100;
         }
-        .refresh-btn:hover {
-            background: #1e293b;
-        }
+        .refresh-btn:hover { background: #1e293b; }
         .generated-at {
             font-size: 11px;
             color: #94a3b8;
             text-align: right;
             margin-top: 8px;
         }
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-        @media (max-width: 768px) {
-            .two-col { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+        .count-badge {
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 8px;
+            margin-left: 6px;
         }
     </style>
 </head>
@@ -296,15 +287,6 @@
 <script src="assets/js/main.js?v=44"></script>
 <script>
 (async function() {
-    const TIER_COLORS = {
-        preview: '#818cf8',
-        free: '#94a3b8',
-        standard: '#f59e0b',
-        pro: '#3b82f6',
-        unknown: '#cbd5e1'
-    };
-    const CURRENCY_COLORS = ['#059669','#3b82f6','#f59e0b','#ef4444','#8b5cf6','#ec4899','#14b8a6','#f97316','#6366f1','#84cc16'];
-
     window.loadStats = async function() {
         const content = document.getElementById('statsContent');
         const refreshBtn = document.getElementById('refreshBtn');
@@ -346,6 +328,11 @@
         }
     };
 
+    let _allUsers = [];
+    let _currentFilter = 'all';
+    let _currentSort = { col: 'created', dir: 'desc' };
+    let _searchQuery = '';
+
     function renderStats(d) {
         const content = document.getElementById('statsContent');
         const u = d.users;
@@ -353,114 +340,65 @@
         const cb = d.cashBoxes;
         const t = d.teams;
 
+        _allUsers = u.recentSignups || [];
+
         let html = '';
 
-        // --- TOP CARDS ---
-        html += '<div class="stats-grid">';
-        html += statCard('Összes felhasználó', u.total, 'fa-users', '', 'highlight');
-        html += statCard('Fizető felhasználó', u.paying, 'fa-credit-card', '', u.paying > 0 ? 'highlight' : '');
-        html += statCard('Összes tranzakció', tx.total, 'fa-receipt');
-        html += statCard('Cash box-ok', cb.total, 'fa-cash-register');
-        html += statCard('Teamek', t.totalOrgs, 'fa-building');
-        html += statCard('Kontaktok', d.contacts.total, 'fa-address-book');
+        // --- COMPACT SUMMARY BAR ---
+        html += '<div class="summary-bar">';
+        html += `<span class="summary-item highlight"><strong>${u.total}</strong> felhasználó</span>`;
+        html += `<span class="summary-item ${u.paying > 0 ? 'highlight' : ''}"><strong>${u.paying}</strong> fizető</span>`;
+        html += `<span class="summary-item"><strong>${tx.total}</strong> tranzakció</span>`;
+        html += `<span class="summary-item"><strong>${cb.total}</strong> kassza</span>`;
+        html += `<span class="summary-item"><strong>${t.totalOrgs}</strong> team</span>`;
+        html += `<span class="summary-item"><strong>${d.contacts.total}</strong> kontakt</span>`;
+        html += `<span class="summary-item"><strong>${u.thisWeek}</strong> reg (7d)</span>`;
+        html += `<span class="summary-item"><strong>${tx.thisWeek}</strong> tx (7d)</span>`;
+        if (t.pendingInvites > 0) html += `<span class="summary-item" style="background:#fffbeb;border-color:#fbbf24;"><strong>${t.pendingInvites}</strong> pending invite</span>`;
         html += '</div>';
 
-        // --- RECENT ACTIVITY ---
-        html += '<div class="stats-grid">';
-        html += statCard('Mai regisztráció', u.today, 'fa-user-plus', 'ma');
-        html += statCard('Heti regisztráció', u.thisWeek, 'fa-calendar-week', 'utolsó 7 nap');
-        html += statCard('Havi regisztráció', u.thisMonth, 'fa-calendar', 'utolsó 30 nap');
-        html += statCard('Mai tranzakció', tx.today, 'fa-plus-circle', 'ma');
-        html += statCard('Heti tranzakció', tx.thisWeek, 'fa-chart-line', 'utolsó 7 nap');
-        html += statCard('Havi tranzakció', tx.thisMonth, 'fa-chart-bar', 'utolsó 30 nap');
-        html += '</div>';
-
-        // --- CHARTS ---
-        html += '<div class="two-col">';
-
-        // Registration trend
-        html += '<div class="chart-container">';
-        html += '<div class="chart-title">Regisztrációs trend (30 nap)</div>';
-        html += renderBarChart(u.registrationTrend, '#059669');
-        html += '</div>';
-
-        // Tx trend
-        html += '<div class="chart-container">';
-        html += '<div class="chart-title">Tranzakciós trend (30 nap)</div>';
-        html += renderBarChart(tx.trend, '#3b82f6');
-        html += '</div>';
-
-        html += '</div>';
-
-        // --- BREAKDOWNS ---
-        html += '<div class="two-col">';
-
-        // Tier breakdown
-        html += '<div class="chart-container">';
-        html += '<div class="chart-title">Előfizetési szint eloszlás</div>';
-        html += '<div class="pie-row">';
-        for (const [tier, count] of Object.entries(u.tiers).sort((a, b) => b[1] - a[1])) {
-            const color = TIER_COLORS[tier] || TIER_COLORS.unknown;
-            const label = tier.charAt(0).toUpperCase() + tier.slice(1);
-            html += `<div class="pie-item"><span class="pie-dot" style="background:${color}"></span>${label} <span class="pie-count">(${count})</span></div>`;
+        // --- FILTER + SEARCH ---
+        html += '<div class="filter-bar">';
+        html += '<input type="text" class="search-input" id="userSearch" placeholder="Keresés (email, név)..." />';
+        const filters = [
+            { key: 'all', label: 'Mind' },
+            { key: 'paying', label: 'Fizető' },
+            { key: 'free', label: 'Free' },
+            { key: 'team_owner', label: 'Team owner' },
+            { key: 'team_member', label: 'Team member' },
+            { key: 'unconfirmed', label: 'Nem megerősített' },
+            { key: 'active_7d', label: 'Aktív (7d)' },
+            { key: 'inactive', label: 'Inaktív' },
+        ];
+        for (const f of filters) {
+            html += `<button class="filter-btn ${f.key === _currentFilter ? 'active' : ''}" data-filter="${f.key}">${f.label}</button>`;
         }
-        html += '</div></div>';
-
-        // Currency breakdown
-        html += '<div class="chart-container">';
-        html += '<div class="chart-title">Pénznem eloszlás</div>';
-        html += '<div class="pie-row">';
-        const currencies = Object.entries(cb.currencies).sort((a, b) => b[1] - a[1]);
-        currencies.forEach(([cur, count], i) => {
-            const color = CURRENCY_COLORS[i % CURRENCY_COLORS.length];
-            html += `<div class="pie-item"><span class="pie-dot" style="background:${color}"></span>${cur} <span class="pie-count">(${count})</span></div>`;
-        });
-        html += '</div></div>';
-
         html += '</div>';
 
-        // --- INVITES ---
-        html += '<div class="section-title"><i class="fas fa-envelope"></i> Meghívók</div>';
-        html += '<div class="stats-grid">';
-        html += statCard('Függőben', t.pendingInvites, 'fa-clock', '', t.pendingInvites > 0 ? 'warn' : '');
-        html += statCard('Elfogadva', t.acceptedInvites, 'fa-check-circle');
-        html += '</div>';
-
-        // --- UNCONFIRMED USERS ---
-        if (d.unconfirmed && d.unconfirmed.length > 0) {
-            html += '<div class="section-title"><i class="fas fa-exclamation-circle" style="color:#d97706;"></i> Nem megerősített regisztrációk</div>';
-            html += '<div class="chart-container" style="padding:0;overflow-x:auto;">';
-            html += '<table class="recent-table"><thead><tr><th>Email</th><th>Regisztráció</th></tr></thead><tbody>';
-            for (const u2 of d.unconfirmed) {
-                const date = u2.created ? new Date(u2.created).toLocaleDateString('hu-HU', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
-                html += `<tr>
-                    <td style="font-weight:600;color:#d97706;">${esc(u2.email)}</td>
-                    <td style="font-size:12px;color:#94a3b8;white-space:nowrap;">${date}</td>
-                </tr>`;
-            }
-            html += '</tbody></table></div>';
+        // --- TABLE ---
+        html += '<div class="section-title"><i class="fas fa-users"></i> Felhasználók <span class="count-badge" id="userCount">${_allUsers.length}</span></div>';
+        html += '<div class="table-wrap" style="max-height:70vh;overflow-y:auto;">';
+        html += '<table class="user-table" id="userTable">';
+        html += '<thead><tr>';
+        const cols = [
+            { key: 'email', label: 'Email' },
+            { key: 'name', label: 'Név' },
+            { key: 'tier', label: 'Szint/Role' },
+            { key: 'team', label: 'Team' },
+            { key: 'cashBoxes', label: 'Kasszák' },
+            { key: 'transactions', label: 'Receiptek' },
+            { key: 'lastSignIn', label: 'Utolsó login' },
+            { key: 'lastTx', label: 'Utolsó tx' },
+            { key: 'created', label: 'Regisztráció' },
+        ];
+        for (const c of cols) {
+            const isActive = _currentSort.col === c.key;
+            const arrow = isActive ? (_currentSort.dir === 'asc' ? '▲' : '▼') : '⇅';
+            html += `<th data-sort="${c.key}">${c.label} <span class="sort-icon ${isActive ? 'active' : ''}">${arrow}</span></th>`;
         }
-
-        // --- ALL SIGNUPS ---
-        html += '<div class="section-title"><i class="fas fa-user-plus"></i> Összes felhasználó (részletes)</div>';
-        html += '<div class="chart-container" style="padding:0;overflow-x:auto;">';
-        html += '<table class="recent-table"><thead><tr><th>Email</th><th>Név</th><th>Szint</th><th>Cash Box</th><th>Pénznem</th><th>Tranzakció</th><th>Billing</th><th>Regisztráció</th></tr></thead><tbody>';
-        for (const s of u.recentSignups) {
-            const tierClass = 'tier-' + (s.tier || 'unknown');
-            const date = s.created ? new Date(s.created).toLocaleDateString('hu-HU', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
-            const currencies = (s.currencies || []).join(', ') || '-';
-            html += `<tr>
-                <td style="font-weight:600;">${esc(s.email)}</td>
-                <td>${esc(s.name || '-')}</td>
-                <td><span class="tier-badge ${tierClass}">${esc(s.tier || '?')}</span></td>
-                <td style="text-align:center;font-weight:700;">${s.cashBoxes || 0}</td>
-                <td style="font-size:12px;">${esc(currencies)}</td>
-                <td style="text-align:center;font-weight:700;">${s.transactions || 0}</td>
-                <td style="font-size:12px;color:#64748b;">${esc(s.billing || '-')}</td>
-                <td style="font-size:12px;color:#94a3b8;white-space:nowrap;">${date}</td>
-            </tr>`;
-        }
-        html += '</tbody></table></div>';
+        html += '</tr></thead>';
+        html += '<tbody id="userTableBody"></tbody>';
+        html += '</table></div>';
 
         // --- GENERATED AT ---
         if (d.generatedAt) {
@@ -469,32 +407,121 @@
         }
 
         content.innerHTML = html;
+
+        // Bind events
+        document.getElementById('userSearch')?.addEventListener('input', (e) => {
+            _searchQuery = String(e.target.value || '').trim().toLowerCase();
+            renderUserTable();
+        });
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                _currentFilter = btn.dataset.filter;
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderUserTable();
+            });
+        });
+        document.querySelectorAll('th[data-sort]').forEach(th => {
+            th.addEventListener('click', () => {
+                const col = th.dataset.sort;
+                if (_currentSort.col === col) {
+                    _currentSort.dir = _currentSort.dir === 'asc' ? 'desc' : 'asc';
+                } else {
+                    _currentSort = { col, dir: 'desc' };
+                }
+                renderStats(d);
+            });
+        });
+
+        renderUserTable();
     }
 
-    function statCard(label, value, icon, sub, cls) {
-        return `<div class="stat-card ${cls || ''}">
-            <div class="stat-label"><i class="fas ${icon}" style="margin-right:4px;"></i>${label}</div>
-            <div class="stat-value">${value ?? '-'}</div>
-            ${sub ? `<div class="stat-sub">${sub}</div>` : ''}
-        </div>`;
-    }
+    function renderUserTable() {
+        const now = new Date();
+        const weekAgo = new Date(now.getTime() - 7 * 86400000).toISOString();
 
-    function renderBarChart(data, color) {
-        if (!data) return '<div style="color:#94a3b8;font-size:12px;">Nincs adat</div>';
-        const entries = Object.entries(data);
-        const maxVal = Math.max(...entries.map(e => e[1]), 1);
-        let html = '<div class="bar-chart">';
-        for (const [date, val] of entries) {
-            const h = Math.max((val / maxVal) * 100, 2);
-            const dayLabel = date.slice(5);
-            html += `<div class="bar-col" title="${date}: ${val}">
-                ${val > 0 ? `<div class="bar-value">${val}</div>` : ''}
-                <div class="bar" style="height:${h}%;background:${color};"></div>
-                <div class="bar-label">${dayLabel}</div>
-            </div>`;
+        let rows = [..._allUsers];
+
+        // Filter
+        if (_currentFilter === 'paying') rows = rows.filter(s => s.billing === 'active');
+        else if (_currentFilter === 'free') rows = rows.filter(s => s.rawTier === 'free' || s.tier === 'free');
+        else if (_currentFilter === 'team_owner') rows = rows.filter(s => s.orgRole === 'owner');
+        else if (_currentFilter === 'team_member') rows = rows.filter(s => s.orgRole && s.orgRole !== 'owner');
+        else if (_currentFilter === 'unconfirmed') rows = rows.filter(s => s.confirmed === false);
+        else if (_currentFilter === 'active_7d') rows = rows.filter(s => s.lastSignIn && s.lastSignIn >= weekAgo);
+        else if (_currentFilter === 'inactive') rows = rows.filter(s => !s.lastSignIn || s.lastSignIn < weekAgo);
+
+        // Search
+        if (_searchQuery) {
+            rows = rows.filter(s =>
+                String(s.email || '').toLowerCase().includes(_searchQuery) ||
+                String(s.name || '').toLowerCase().includes(_searchQuery) ||
+                String(s.orgName || '').toLowerCase().includes(_searchQuery)
+            );
         }
-        html += '</div>';
-        return html;
+
+        // Sort
+        const col = _currentSort.col;
+        const dir = _currentSort.dir === 'asc' ? 1 : -1;
+        rows.sort((a, b) => {
+            let va = a[col], vb = b[col];
+            if (col === 'team') { va = a.orgName || ''; vb = b.orgName || ''; }
+            if (col === 'cashBoxes' || col === 'transactions') return (Number(va || 0) - Number(vb || 0)) * dir;
+            return String(va || '').localeCompare(String(vb || '')) * dir;
+        });
+
+        // Update count
+        const countEl = document.getElementById('userCount');
+        if (countEl) countEl.textContent = rows.length;
+
+        const now2 = Date.now();
+        const tbody = document.getElementById('userTableBody');
+        if (!tbody) return;
+
+        let html = '';
+        for (const s of rows) {
+            const tierClass = 'tier-' + (s.tier || 'unknown');
+            const tierLabel = (s.tier || '?').charAt(0).toUpperCase() + (s.tier || '?').slice(1);
+            const unconfClass = s.confirmed === false ? ' unconfirmed' : '';
+
+            // Team column
+            let teamHtml = '-';
+            if (s.orgName) {
+                const roleIcon = s.orgRole === 'owner' ? 'fa-crown' : s.orgRole === 'admin' ? 'fa-user-shield' : 'fa-user';
+                teamHtml = `<div class="team-info"><i class="fas ${roleIcon}"></i> ${esc(s.orgName)} <span style="opacity:0.6;">(${s.teamSize || 1})</span></div>`;
+            }
+
+            // Date formatting helper
+            const fmtDate = (d) => {
+                if (!d) return '-';
+                return new Date(d).toLocaleDateString('hu-HU', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+            };
+            const dateClass = (d) => {
+                if (!d) return 'date-cell';
+                const ms = now2 - new Date(d).getTime();
+                if (ms < 2 * 86400000) return 'date-cell recent';
+                if (ms > 14 * 86400000) return 'date-cell stale';
+                return 'date-cell';
+            };
+
+            html += `<tr class="${unconfClass}">
+                <td style="font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;">${esc(s.email)}${s.confirmed === false ? ' <i class="fas fa-exclamation-circle" style="color:#d97706;font-size:10px;" title="Nem megerősített"></i>' : ''}</td>
+                <td>${esc(s.name || '-')}</td>
+                <td><span class="tier-badge ${tierClass}">${tierLabel}</span></td>
+                <td>${teamHtml}</td>
+                <td style="text-align:center;font-weight:700;">${s.cashBoxes || 0}</td>
+                <td style="text-align:center;font-weight:700;">${s.transactions || 0}</td>
+                <td class="${dateClass(s.lastSignIn)}">${fmtDate(s.lastSignIn)}</td>
+                <td class="${dateClass(s.lastTx)}">${fmtDate(s.lastTx)}</td>
+                <td class="date-cell">${fmtDate(s.created)}</td>
+            </tr>`;
+        }
+
+        if (rows.length === 0) {
+            html = '<tr><td colspan="9" style="text-align:center;color:#94a3b8;padding:20px;">Nincs találat</td></tr>';
+        }
+
+        tbody.innerHTML = html;
     }
 
     function esc(s) {

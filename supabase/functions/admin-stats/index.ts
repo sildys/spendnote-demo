@@ -124,8 +124,8 @@ Deno.serve(async (req: Request) => {
     const { count: totalContacts } = await db.from("contacts").select("id", { count: "exact", head: true });
 
     // --- PER-USER DETAILS ---
-    const { data: allCashBoxes } = await db.from("cash_boxes").select("id, user_id, currency");
-    const { data: allTx } = await db.from("transactions").select("id, user_id");
+    const { data: allCashBoxes } = await db.from("cash_boxes").select("id, user_id, org_id, currency");
+    const { data: allTx } = await db.from("transactions").select("id, user_id, created_at");
 
     const cbByUser: Record<string, { count: number; currencies: string[] }> = {};
     for (const cb of (allCashBoxes || [])) {
@@ -138,33 +138,108 @@ Deno.serve(async (req: Request) => {
     }
 
     const txByUser: Record<string, number> = {};
+    const lastTxByUser: Record<string, string> = {};
     for (const t of (allTx || [])) {
       if (!t.user_id) continue;
       txByUser[t.user_id] = (txByUser[t.user_id] || 0) + 1;
+      const txDate = String(t.created_at || "");
+      if (!lastTxByUser[t.user_id] || txDate > lastTxByUser[t.user_id]) {
+        lastTxByUser[t.user_id] = txDate;
+      }
     }
 
-    // --- UNCONFIRMED AUTH USERS ---
+    // --- ORG MEMBERSHIPS (who is in which org, with what role) ---
+    const { data: allMemberships } = await db.from("org_memberships").select("org_id, user_id, role");
+    const { data: allOrgs } = await db.from("orgs").select("id, name, owner_user_id");
+
+    const orgById: Record<string, { name: string; owner_user_id: string }> = {};
+    for (const o of (allOrgs || [])) {
+      orgById[String(o.id)] = { name: String(o.name || ""), owner_user_id: String(o.owner_user_id || "") };
+    }
+
+    // Count members per org
+    const membersPerOrg: Record<string, number> = {};
+    for (const m of (allMemberships || [])) {
+      const oid = String(m.org_id || "");
+      if (oid) membersPerOrg[oid] = (membersPerOrg[oid] || 0) + 1;
+    }
+
+    // Build per-user org context
+    type OrgContext = { orgId: string; orgName: string; role: string; teamSize: number };
+    const orgByUser: Record<string, OrgContext> = {};
+    for (const m of (allMemberships || [])) {
+      const uid = String(m.user_id || "");
+      const oid = String(m.org_id || "");
+      if (!uid || !oid) continue;
+      const org = orgById[oid];
+      // Keep highest-privilege role if multiple
+      const roleRank = (r: string) => r === "owner" ? 3 : r === "admin" ? 2 : 1;
+      const existing = orgByUser[uid];
+      if (!existing || roleRank(String(m.role || "user")) > roleRank(existing.role)) {
+        orgByUser[uid] = {
+          orgId: oid,
+          orgName: org?.name || "",
+          role: String(m.role || "user"),
+          teamSize: membersPerOrg[oid] || 1,
+        };
+      }
+    }
+
+    // --- AUTH USERS (last sign in + unconfirmed) ---
     const { data: authUsers } = await db.auth.admin.listUsers({ perPage: 1000 });
-    const unconfirmedUsers = (authUsers?.users || []).filter(
-      (u: any) => !u.email_confirmed_at && u.email
-    ).map((u: any) => ({
-      email: u.email,
-      created: u.created_at,
-    }));
+    const authById: Record<string, { lastSignIn: string | null; confirmed: boolean }> = {};
+    const unconfirmedUsers: { email: string; created: string }[] = [];
+    for (const u of (authUsers?.users || [])) {
+      const au = u as Record<string, unknown>;
+      const uid = String(au.id || "");
+      const email = String(au.email || "");
+      const confirmed = Boolean(au.email_confirmed_at);
+      const lastSignIn = au.last_sign_in_at ? String(au.last_sign_in_at) : null;
+      if (uid) authById[uid] = { lastSignIn, confirmed };
+      if (!confirmed && email) {
+        unconfirmedUsers.push({ email, created: String(au.created_at || "") });
+      }
+    }
 
     // --- ALL SIGNUPS (enriched) ---
     const recentSignups = allProfiles
-      .sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""))
-      .map(p => ({
-        email: p.email,
-        name: p.full_name,
-        tier: p.subscription_tier,
-        billing: p.billing_status,
-        created: p.created_at,
-        cashBoxes: cbByUser[p.id]?.count || 0,
-        currencies: cbByUser[p.id]?.currencies || [],
-        transactions: txByUser[p.id] || 0,
-      }));
+      .sort((a: Record<string, unknown>, b: Record<string, unknown>) => (String(b.created_at || "")).localeCompare(String(a.created_at || "")))
+      .map((p: Record<string, unknown>) => {
+        const uid = String(p.id || "");
+        const orgCtx = orgByUser[uid];
+        const auth = authById[uid];
+        // Display tier: if user is an invited member (not owner), show role instead of tier
+        let displayTier = String(p.subscription_tier || "unknown");
+        let orgRole: string | null = null;
+        let orgName: string | null = null;
+        let teamSize: number | null = null;
+        if (orgCtx) {
+          orgRole = orgCtx.role;
+          orgName = orgCtx.orgName || null;
+          teamSize = orgCtx.teamSize;
+          if (orgCtx.role !== "owner") {
+            // Invited member — show role instead of tier
+            displayTier = orgCtx.role; // "admin" or "user"
+          }
+        }
+        return {
+          email: p.email,
+          name: p.full_name,
+          tier: displayTier,
+          rawTier: p.subscription_tier,
+          billing: p.billing_status,
+          created: p.created_at,
+          lastSignIn: auth?.lastSignIn || null,
+          lastTx: lastTxByUser[uid] || null,
+          cashBoxes: cbByUser[uid]?.count || 0,
+          currencies: cbByUser[uid]?.currencies || [],
+          transactions: txByUser[uid] || 0,
+          orgRole,
+          orgName,
+          teamSize,
+          confirmed: auth?.confirmed ?? true,
+        };
+      });
 
     const result = {
       users: {
