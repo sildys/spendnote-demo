@@ -1875,14 +1875,126 @@ Full "profi app" mobilnézet implementálva. Minden változtatás CSS+JS szinten
 - ⏳ Pro: team page-re irányítás Stripe checkout után (return_url)
 - ⏳ Standard: dashboard-ra visszatérés, sima folytatás
 
-### NEM KÉSZ / Következő lépések:
-- ⚠️ **`STRIPE_LIVE = false`** (`supabase-config.js` ~302) — checkout/portal client-oldalon kikapcsolva
-- ⏳ **Stripe end-to-end teszt** — pricing → checkout → subscription aktív → tier frissül → limitek feloldva
-- ⏳ **Post-payment onboarding audit** — végigmenni a flow-n, Stripe redirect → toast → activation
-- ⏳ **Downgrade flow** — kidolgozva (2026-04-03), részletek a V1 Launch terv szekció alatt
-- ⏳ **Preview → Free átállás** — meglévő preview userek tierje átírása, 30% kupon generálás
-- ⏳ **Preview banner eltávolítása/frissítése** — SEO oldalakon + app oldalakon
-- ⏳ **Pricing oldal optimalizálás** — copy, positioning, conversion
+### ✅ KÉSZ — App Launch (2026-04-06):
+- ✅ **Stripe ÉLES** — `STRIPE_LIVE = true`, checkout, billing portal, webhooks, tax ID collection, billing address
+- ✅ **Stripe QA** — teljes end-to-end: pricing → checkout → subscription aktív → tier frissül → limitek feloldva
+- ✅ **Post-payment onboarding** — Stripe redirect → celebration toast → dashboard/team page
+- ✅ **Downgrade flow** — cash box lock modal, deferred downgrade (billing period end), webhook handling, downgrade email
+- ✅ **Preview → Free átállás** — új regisztrációk `free` tierrel indulnak, preview bannerek eltávolítva
+- ✅ **Preview cleanup** — preview consent, preview terms, preview bannerek eltávolítva ~30+ oldalról
+- ✅ **Schema.org** — structured data frissítve freemium pricing tierekkel
+- ✅ **Password reset security** — login megakadályozása jelszócsere nélkül
+- ✅ **Supabase config.toml** — JWT verification kikapcsolva Edge Functions-ön
+
+---
+
+## 2026-04-04 → 2026-04-06: APP LAUNCH sprint (88 commit, 115 fájl)
+
+### Team működés véglegesítés
+
+#### Team User role (invited member, role='user')
+- ✅ **RLS scoped visibility** (migration 058+059) — User role csak hozzárendelt kasszák adatait látja (transactions, cash_boxes, contacts); revoke = teljes elvonás, még saját org tranzakcióit sem látja
+- ✅ **Fióktörlés block** — Edge Function 409-cel blokkol amíg van cash_box_memberships
+- ✅ **Fióktörlés cleanup** — `spendnote_reassign_org_data` RPC: departing member org adatai átkerülnek ownerhez (migration 062)
+- ✅ **Team removal flow** — `remove-org-member` Edge Function: email értesítés a membernek, CB membership cleanup, üres solo cash box automatikus törlése
+- ✅ **CB membership cleanup trigger** — DB trigger: org_member eltávolításakor a cash_box_memberships is törlődik (migration 060)
+- ✅ **RLS contacts/cash_boxes** — org_id guard + personal-only delete preview (migration 061)
+- ✅ **Void tiltás** — User role nem tud void-olni (gomb rejtve, RPC is tiltja)
+- ✅ **Receipt identity** — owner receipt identity jelenik meg (nem a member sajátja)
+- ✅ **Settings** — receipt identity read-only, Save/Reset rejtve
+- ✅ **Team oldal** — nem érhető el User role-nak (redirect)
+- ✅ **Cash Box hozzáadás** — tiltva User role-nak
+- ✅ **Contact törlés** — tiltva (owner/admin only, migration 057)
+- ✅ **Nav menü** — Team link rejtve User role-nak
+
+#### Team Admin role (role='admin')
+- ✅ **Owner receipt identity** sharing RPC (migration 049+050)
+- ✅ **Admin edits** patch owner profile via RPC
+- ✅ **Receipt identity** — read-only nézet Admin role-nak
+- ✅ **Minden kassza** — Admin automatikusan mindent lát (owner/admin ág az RLS-ben)
+- ✅ **Void** — Admin tud void-olni (Owner + Admin jogosultság az RPC-ben)
+- ✅ **Team page** — elérhető, invite/remove/role change engedélyezve
+
+#### Team Emails (Edge Functions)
+- ✅ **Invite email** — dynamic subject, inviter name, team name
+- ✅ **Welcome invited member** — külön template: team name, role, inviter neve
+- ✅ **First transaction (team)** — külön template: "Your team can now see this handoff"
+- ✅ **Remove notification** — email a membernek eltávolításkor
+- ✅ **Trial expiry** — csak ownernek megy, invited member nem kapja
+- ✅ **Downgrade email** — team loss warning az ownernek
+
+#### Team avatars & peers
+- ✅ Profile photos: team lists, dashboard "Created by", tx history
+- ✅ Google/OAuth picture sync → profiles.avatar_url (migration 053-054)
+- ✅ `org_memberships` peer read via SECURITY DEFINER (RLS recursion fix)
+
+#### Contacts org scope
+- ✅ Sequence per org (migration 055-056)
+- ✅ Delete restricted to owner/admin only (migration 057)
+
+### Receipt & Logo javítások
+- ✅ **Receipt logo snapshot** — tx creation-kor snapshottol, display-nél mindig snapshot-first
+- ✅ **postMessage** — long logo-k iframe-en keresztül (cash box settings + tx detail)
+- ✅ **Receipt labels/toggles** — tx snapshot-ból, nem a cash box aktuális állapotából
+- ✅ **logo_settings** — DB-ben persist (migration 063)
+- ✅ **receipt_show_* oszlopok** — cash box SELECT-be bekerültek team receipt-ekhez (migration 065)
+- ✅ **Transaction receipt snapshot** — migration 064
+
+### Tier Gating véglegesítés
+- ✅ **Standard tier** — 2 cash box limit, void gated, currency dropdown (nem text input)
+- ✅ **Pro tier** — custom ID prefix, custom receipt labels, team features
+- ✅ **Custom ID prefix** — Pro-only gating + upgrade modal
+- ✅ **Free tier tx limit** — összes tranzakció számít (voided is)
+
+### Downgrade flow
+- ✅ **Cash box lock** — excess kasszák zárolása, polished card-style selection modal
+- ✅ **Stripe webhook** — `customer.subscription.updated` → tier downgrade handling
+- ✅ **Deferred downgrade** — billing period end-ig aktív marad
+- ✅ **Blocked cash box banner** — dashboard-on blocked CB jelzés
+- ✅ **Downgrade email** — tier-specific feature list, team loss warning, retention CTA
+- ✅ **Cancel email** — tier-specific feature list Standard vs Pro
+- ✅ **Team membership** — downgrade-kor membership megmarad (nem törlődik), vissza-Pro-nál gyors helyreállás
+- ✅ **Downgrade modal** — team loss warning, dual CTA (upgrade + continue)
+
+### Stripe élesítés
+- ✅ **`STRIPE_LIVE = true`** — checkout/portal client-oldalon engedélyezve
+- ✅ **Billing address** — kötelező checkout-nál (invoicing)
+- ✅ **Tax ID collection** — engedélyezve
+- ✅ **Cancel on delete** — Stripe subscription cancel fióktörléskor
+- ✅ **Nav dropdown fix** — Settings/Team link clicks az avatar dropdown-ban
+
+### Preview → Free átállás
+- ✅ Új regisztrációk `free` tierrel indulnak (nem preview)
+- ✅ Preview bannerek, consent, terms szekció eltávolítva ~30+ oldalról
+- ✅ Schema.org structured data frissítve freemium tierekkel
+- ✅ Preview tier rank fix dashboard upgrade detection-ben
+
+### Security
+- ✅ **Password reset** — login megakadályozása jelszócsere nélkül
+- ✅ **Supabase config.toml** — JWT verification config
+
+### DB migrációk (058–066 — mind futtatva)
+| Migration | Leírás |
+|-----------|--------|
+| 058 | User role cash_box_memberships scoped visibility (tx, cash_boxes, contacts) |
+| 059 | Revoked members can't see own org tx |
+| 060 | CB membership cleanup trigger on org member remove |
+| 061 | Contacts/cash_boxes org_id guard + personal-only delete |
+| 062 | Reassign org data before account delete (SECURITY DEFINER RPC) |
+| 063 | Cash boxes logo_settings column |
+| 064 | Transactions receipt snapshot columns |
+| 065 | Cash boxes receipt_show + notes_label |
+| 066 | Tier downgrade cash box locks |
+
+### Deployed Edge Functions
+| Function | Változás |
+|----------|---------|
+| `send-user-event-email` | welcome team, first tx team, trial expiry routing, downgrade email |
+| `delete-account` | CB access block, org data reassign, personal-only preview, Stripe cancel |
+| `remove-org-member` | ÚJ: email + CB cleanup + empty solo box delete |
+| `stripe-webhook` | downgrade, cancel, period end, tax |
+| `create-checkout-session` | billing address, tax |
+| `update-subscription` | deferred downgrade |
 
 ---
 
@@ -2292,24 +2404,14 @@ Technikai:
 
 ## Backlog (UX + bugs)
 - **High**
-  - Optional: add invite resend/revoke actions in UI.
-- **High (upcoming)**
-  - Permissions & roles (owner/admin/user) + org/team model:
-    - Add `orgs` table (explicit org/team).
-    - Multi-location (e.g. multiple restaurants) is handled as **multiple orgs**.
-    - Add per-cash-box memberships (`cash_box_memberships`) with role per cash box.
-    - Admins default to access for **all** cash boxes via auto-created memberships (still enforced via `cash_box_memberships` so it can be restricted later).
-    - Contacts are org-level (shared across cash boxes).
-    - Implement real invite flow (token/link) and acceptance.
-    - No extra notifications for access changes (user sees access appear/disappear in UI).
-    - Audit log: owner-only visibility, append-only (immutable) in v1.
-    - Enforce access via RLS for cash_boxes / transactions / contacts.
-    - Owner-only: subscription + account/cash box delete.
-    - Admin: create cash boxes, invite/add users, void transactions.
-    - User: record only in cash boxes they are a member of.
+  - ~~Permissions & roles (owner/admin/user) + org/team model~~ — ✅ KÉSZ (2026-04-06)
+  - ~~Stripe élesítés~~ — ✅ KÉSZ (2026-04-06)
 - **Medium**
   - Table column widths need adjustment.
   - Navigation underline styling is still inconsistent.
   - "Save to Contacts" checkbox: add a short inline hint ("so you can reuse it later").
+  - Debug console.log-ok eltávolítása (cleanup pass)
+  - Admin stats tábla javítás — unconfirmed kiszűrés + szűrés/rendezés
 - **Low**
   - Footer redesign.
+  - Google Ads launch ($10-20/day, targeting "petty cash app", "cash tracking app")
