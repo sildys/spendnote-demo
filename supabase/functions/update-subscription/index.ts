@@ -204,7 +204,7 @@ Deno.serve(async (req: Request) => {
 
     const updated = await stripe.subscriptions.update(subscriptionId, {
       items,
-      proration_behavior: "none",
+      proration_behavior: isDowngrade ? "none" : "always_invoice",
       metadata: {
         user_id: user.id,
         plan: newPlan,

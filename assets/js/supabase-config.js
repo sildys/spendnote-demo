@@ -643,8 +643,8 @@ window.SpendNoteStripe = {
 const PREVIEW_RECEIPT_LIMIT = 200;
 const PREVIEW_RECEIPT_LIMIT_ERROR = 'PREVIEW_RECEIPT_LIMIT_REACHED';
 const PREVIEW_RECEIPT_LIMIT_OVERRIDE_KEY = 'spendnote.preview.receiptLimit.enabled.v1';
-const PREVIEW_SUBSCRIPTION_TIER = 'preview';
-const PREVIEW_BILLING_STATUS = 'preview';
+const PREVIEW_SUBSCRIPTION_TIER = 'free';
+const PREVIEW_BILLING_STATUS = 'free';
 
 const isPreviewReceiptLimitEnabled = () => {
     try {
