@@ -251,14 +251,14 @@ function initNavEvents() {
         const clickedMobileAvatar = e.target && (e.target.closest ? e.target.closest('#mobileUserAvatarBtn') : null);
         const clickedMobileDropdown = e.target && (e.target.closest ? e.target.closest('#mobileUserDropdown') : null);
 
-        if (clickedAvatar && userDropdown) {
+        if (clickedAvatar && userDropdown && !clickedDropdown) {
             e.preventDefault();
             userDropdown.classList.toggle('show');
             if (mobileDropdown) mobileDropdown.classList.remove('show');
             return;
         }
 
-        if (clickedMobileAvatar && mobileDropdown) {
+        if (clickedMobileAvatar && mobileDropdown && !clickedMobileDropdown) {
             e.preventDefault();
             mobileDropdown.classList.toggle('show');
             if (userDropdown) userDropdown.classList.remove('show');
