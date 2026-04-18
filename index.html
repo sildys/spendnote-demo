@@ -1084,13 +1084,14 @@
 
         .period {
             color: #000000;
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.5rem;
             display: block;
             font-size: 0.95rem;
         }
 
         .pricing-card ul {
             list-style: none;
+            margin-top: 1.5rem;
             margin-bottom: 2rem;
         }
 
@@ -2027,19 +2028,19 @@
                 features: ['1 Cash Box', '1 user', '20 transactions (or 14 days)', 'Basic receipt template', 'Basic PDF report'] 
             },
             starter: { 
-                price: '$190', 
-                breakdown: 'Just $15.83/month',
-                savings: 'Save $38 vs monthly',
-                period: 'per year',
+                price: '$15.83', 
+                breakdown: 'billed annually — $190/yr',
+                savings: 'Save $38 vs paying monthly',
+                period: '/month',
                 bestFor: 'Solo users & small teams',
                 features: ['2 Cash Boxes', '1 user', 'Unlimited transactions', 'Custom logo upload', 'Customizable receipt layouts', 'Printable + downloadable PDF', 'CSV export'],
                 popular: true
             },
             pro: { 
-                price: '$290', 
-                breakdown: 'Just $24.17/month',
-                savings: 'Save $58 vs monthly',
-                period: 'per year',
+                price: '$24.17', 
+                breakdown: 'billed annually — $290/yr',
+                savings: 'Save $58 vs paying monthly',
+                period: '/month',
                 bestFor: 'Growing teams',
                 features: ['Customizable text & labels (localization)', '3 users included', '+$5/mo per additional user', 'Unlimited Cash Boxes', 'Unlimited transactions', 'Email receipts directly', 'Role-based permissions', 'All Standard features'] 
             }
@@ -2092,9 +2093,9 @@
                 <h3>Starter</h3>
                 <p class="pricing-best-for">${data.starter.bestFor}</p>
                 <div class="price">${data.starter.price}</div>
+                <span class="period">${data.starter.period}</span>
                 ${data.starter.breakdown ? `<div class="price-breakdown">${data.starter.breakdown}</div>` : ''}
                 ${data.starter.savings ? `<div class="savings">${data.starter.savings}</div>` : ''}
-                <span class="period">${data.starter.period}</span>
                 <ul>
                     ${data.starter.features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('')}
                 </ul>
@@ -2106,9 +2107,9 @@
                 <h3>Pro</h3>
                 <p class="pricing-best-for">${data.pro.bestFor}</p>
                 <div class="price">${data.pro.price}</div>
+                <span class="period">${data.pro.period}</span>
                 ${data.pro.breakdown ? `<div class="price-breakdown">${data.pro.breakdown}</div>` : ''}
                 ${data.pro.savings ? `<div class="savings">${data.pro.savings}</div>` : ''}
-                <span class="period">${data.pro.period}</span>
                 <ul>
                     ${data.pro.features.map(f => `<li><i class="fas fa-check"></i> ${f}</li>`).join('')}
                 </ul>
