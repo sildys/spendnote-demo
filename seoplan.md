@@ -32,6 +32,49 @@ A 04-18-i terv első három új oldala (`cash-float-vs-petty-cash`, `payroll-cas
 
 `.cursor/rules/seo-noindex-guard.mdc` — minden új internal link előtt mindkét oldalon (source + target) ellenőrizzük a `<meta name="robots">` tagot. Linkelni csak `index, follow` ↔ `index, follow` között szabad. A 04-25-i `noindex` audit lista a rule-ban benne van.
 
+## 5. AI Overview tanulság (a 04-25-i SERP-check után)
+
+A `two-person-cash-count-policy` 0% CTR-jének SERP-check-je (Google US, uncached) kimutatta, hogy az **AI Overview** sok info-jellegű petty-cash query-n a SERP tetején, az organic eredmények ELŐTT, generál összefoglalót. A user a választ click nélkül kapja meg — innen a 0% CTR. **Ez nem leküzdhető**, csak körbejárható.
+
+### Mit jelent ez a stratégiánkra:
+
+- **Új oldalakat ezentúl előnyben részesítjük tool/template/form/comparison/longtail intent-tel**, ahol az AI Overview ritka:
+  - Tool/app intent: `app for X`, `best X app`, `X tracking app` (a `petty-cash-app` ide tartozik)
+  - Template/form intent: `X template`, `X form download`, `X printable PDF` (a `two-person-cash-count-policy` Free Template angle ide tartozik)
+  - Comparison: `X vs Y`, `compare X` (a `petty-cash-app-vs-excel` ide tartozik)
+  - Longtail (5+ szavas, specifikus): `petty cash policy template for small nonprofit`, `cash float for event staff`
+- **Új info-oldalakat (`what is X`, `how does X work`) nem írunk többet** — ott Investopedia + .gov + AI Overview verhetetlen.
+- **AI Overview citation-be kerülés** mint mellékstratégia: TL;DR direct-answer paragrafus minden info-page tetejére, FAQ schema, konkrét számok és példák. Ma elindítva `petty-cash-how-much-to-keep`-en (`Most small businesses keep $100-$500...`), szisztematikusan kiterjesztendő.
+
+### Konzekvencia a 04-18-i ÚJ-OLDAL tervre (lent):
+
+A 04-18-i terv jelölt új oldalai közül **prioritás-sorrend kell**, AI-Overview-szempontból:
+
+| Eredeti rang | Slug | AI Overview-rizikó | Új rang |
+|---|---|---|---|
+| 🥇 | `cash-float-vs-petty-cash` | **Magas** (info/comparison) | Megmarad — comparison angle erős, AI Overview itt ritka |
+| 🥈 | `payroll-cash-receipt` | Közepes (info+template) | Megmarad — receipt = template-jellegű |
+| 🥉 | `petty-cash-for-restaurants` | Közepes (industry-specific) | Megmarad — niche, kevés AI Overview |
+| Új | `petty-cash-app-comparison` v. `best-petty-cash-app-2026` | **Alacsony** (commercial intent) | **Új #2-be** beemelni a 14-napos checkpoint után |
+
+**Konkrét rangsorolást a 2026-05-02-i 7-napos checkpoint adatai után véglegesítjük.**
+
+## 6. Új teszt-ablak (baseline-reset)
+
+A 8 commit + új oldal mennyisége miatt **régi GSC adatok már nem összehasonlítási alap**. Új teszt indul most.
+
+| Időpont | Mit nézünk | Mire jó |
+|---|---|---|
+| **Baseline (most)** | GSC export `spendnote.app-Performance-on-Search-2026-04-25/` | "Before" snapshot |
+| **2026-05-02 (7 nap)** | GSC 7-napos view + friss export | Korai jelek: új oldal indexbe került? Reindex shake lecsengett? |
+| **2026-05-09 (14 nap)** | GSC 7-napos + 28-napos + friss export | Érdemi értékelés: pos/CTR változás, új query-k a `petty-cash-app`-ra |
+
+**Reindex-lépések 2026-04-25 estére:**
+1. GSC URL Inspection → Request Indexing **18 URL-re** (Tier 1-5, fenti listában).
+2. `Sitemaps → Resubmit`: `https://spendnote.app/sitemap.xml`.
+3. Bing Webmaster Tools-ban szintén submit-elni a sitemap-et (AI Overview kerülő-stratégia része).
+4. **Nem nézni** a GSC "24 óra" view-t hétfő estéig (real-time pipeline 6-12 órás csúszással megy, hétvégén 8-12 órás).
+
 ---
 
 # 🎯 AKTUÁLIS TERV — Keyword Research alapján (2026-04-18)

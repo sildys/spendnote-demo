@@ -98,6 +98,69 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
+## Where we are now (last updated: 2026-04-25 — SEO sprint: 8 commit, új landing page, noindex-guard rule, AI Overview stratégia)
+
+### 2026-04-25 — SEO sprint nap (8 commit, baseline-reset)
+
+**Kontextus:** A 04-13-i terv (csak 2 oldal piszkálása) helyett egy nagy, fókuszált akciós nap készült a friss GSC export (2026-04-25, 7 napos) + a felhasználó által megosztott Bing query-data alapján. **Új teszt-baseline kezdődik most**, mert a változtatások mennyisége + új oldal érkezése miatt a régi ablak nem összehasonlítási alap.
+
+**Mi készült el (8 commit, mind élesben):**
+
+| Commit | Mit | Miért |
+|---|---|---|
+| `9f79873` | Title/meta tightening 3 oldalon: `petty-cash-replenishment-form`, `petty-cash-policy-template`, `petty-cash-reconciliation` | Mobil SERP cut-off + Bing tool-intent illesztés |
+| `68a3db2` | Title fix 5 oldalon: `cash-drawer-reconciliation`, `digital-receipt-book`, `cash-handoff-receipt`, `petty-cash-audit-checklist`, `two-person-cash-count-policy` | Handoff→handover US English, mobil SERP |
+| `d6984cb` | **Új oldal**: `petty-cash-app.html` (sitemap priority 0.9) + bejövő linkek `spendnote-resources` és `petty-cash-app-vs-excel` oldalakról | Bing query-k: "app for petty cash", "petty cash management app", "digital petty cash apps" |
+| `8a1efe2` | **Trust-fix**: hamis "Free Template/Sample/Checklist" claim-ek eltávolítása 4 oldalon | A SERP-cím azt ígérte hogy van letölthető template — de nem volt. Misleading → trust-loss → low CTR |
+| `193a0ca` | 10 belső link a `petty-cash-app.html`-re a clustertagokról + 2 link visszavonás `noindex` source-okról + 1 broken `noindex` target fix | Felhasználó észrevette: olyan oldalakra/oldalakról linkeltünk amik `noindex`-ek → 0 link equity |
+| `1f7a213` | `boss-cant-see-where-cash-goes` teljes keyword-refaktor (title, H1, H2-k, FAQ, schema) | Az oldal nulla impressiont kapott pedig releváns; rhetorical-style cím nem matchelt a search query-kkel |
+| `96c5775` | `petty-cash-how-much-to-keep` snippet enhance (TL;DR + új `$100 float breakdown` table) + `who-has-the-cash-right-now` H1/H2 keyword refactor (boss-page minta) + `seo-noindex-guard.mdc` Cursor rule + `seoplan.md` munkanapló | Featured-snippet farming; rhetorical → keyword shift; noindex-link hiba prevention |
+| `dca526f` | `two-person-cash-count-policy` — Free Template claim front-load (a SERP-check után) | SERP-check megerősítette: a top-5 competitor mind front-load-olja a "Template"/"Example" keyword-öt; az oldalon van valós PDF download, így a claim honest |
+
+**Új infrastruktúra:**
+- `.cursor/rules/seo-noindex-guard.mdc` — kötelező pre-flight check minden új internal link előtt (source + target robots tag), 04-25-i `noindex` audit baseline lista benne. **Megakadályozza** a 193a0ca-típusú hiba ismétlődését.
+
+**Tanulság: AI Overview**
+A `two-person-cash-count-policy` 0% CTR-jének diagnózisa (SERP-check subagent-tel) feltárta hogy az **AI Overview** több info-jellegű petty-cash query-n a SERP tetején válaszol, mielőtt az organic eredményeket elérné a user. Ez **nem leküzdhető**, csak körbejárható:
+
+| Stratégia | Mit jelent | Példa SpendNote-on |
+|---|---|---|
+| **Kerülni** | Olyan query-ket célozni ahol nincs AI Overview: tool/template/form/comparison/longtail | `petty-cash-app`, `petty-cash-app-vs-excel`, `cash count sign-off form` (ezek mind ide tartoznak) |
+| **Citation-be kerülni** | TL;DR direct-answer + FAQ schema + bullet/numbered list + konkrét számok | Ma elindítva `petty-cash-how-much-to-keep`-en (TL;DR), szisztematikusan kiterjeszteni |
+| **Google-en kívül** | Bing/Reddit/email/app store | Bing már most produkál intent-et (Bing query-cluster); érdemes Bing Webmaster Tools-ban is sitemap-et resubmit-elni |
+
+**Konzekvencia a 04-18-i tervre (lent `seoplan.md`-ben):** `What is X` típusú info-oldalakat **NEM** írunk többet (Investopedia + .gov + AI Overview verhetetlen). A jelölt új oldalakat át kell rangsorolni tool/template/comparison célpontokra. Konkrét rangsorolást a 7-napos checkpoint adatai után csináljuk.
+
+**Új teszt-ablak:**
+
+| Időpont | Mit nézünk | Mire jó |
+|---|---|---|
+| **2026-05-02 (7 nap)** | GSC 7-napos view + friss export | Korai jelek: új oldal indexbe került? Reindex shake lecsengett? |
+| **2026-05-09 (14 nap)** | GSC 7-napos + 28-napos + friss export | Érdemi értékelés: pos/CTR változás a refaktorozott oldalakon, új query-k a `petty-cash-app`-ra |
+
+**Mit figyelünk a 4 csoporton:**
+1. **Új oldal** (`petty-cash-app`) — első impressionek a Bing tool-intent query-kre. 14 nap után 0 imp → kézi diagnosztika kell.
+2. **Major refactor 4 oldal** (`boss-cant-see`, `who-has-the-cash`, `how-much-to-keep`, `two-person`) — pos mozgás (`how-much-to-keep` pos 14 → top 10 várható).
+3. **Trust-fix 4 oldal** — CTR mozgás. Várt: nem csökken jelentősen (most honest cím).
+4. **Snippet tuning 3 oldal** — kis CTR mozgás.
+
+**Reindex lépések (mit a felhasználó csinál ma):**
+1. Request Indexing 18 URL-re (a `seoplan.md` munkanapló végén szereplő lista alapján).
+2. `Sitemaps → Resubmit`: `https://spendnote.app/sitemap.xml`.
+3. GSC 7-napos view-t hagyni békén minimum 2026-05-02-ig.
+
+**Státusz:** ✅ ÉLES, baseline-reset folyamatban. Következő lépés: 2026-05-02-i checkpoint.
+
+---
+
+### 2026-04-17/18 — Belső link cleanup + near-top-10 title sharpening (commit `47e9c3b`, retroaktív naplózás)
+
+**Mit csináltunk:** Site-wide belső link cleanup (noindex oldalakra mutató inbound linkek eltávolítása) + a top-10 közeli oldalak (pos 11-15) title/meta finomítása. Ez tette tisztává a graph-ot, hogy a 04-25-i sprint mérhető legyen.
+
+**Miért most került be PROGRESS-be:** akkor csak commit-ban dokumentáltuk, PROGRESS.md-ben nem — most pótolva, hogy a 04-13 → 04-25 közötti ablak ne legyen tartalmilag üres.
+
+---
+
 ## Where we are now (last updated: 2026-04-13 — SEO: tool intent megerősítés terv 2 oldalra)
 
 ### 2026-04-13 — SEO: tool intent megerősítés (PENDING — ne nyúlj hozzá amíg nem kérem)
