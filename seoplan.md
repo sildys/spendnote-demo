@@ -1,3 +1,90 @@
+# 🛡️ STRATEGIC GUARDRAILS — 2026-04-25 ESTE (ChatGPT-review után)
+
+> Ez a blokk a 2026-04-25-i sprint **utáni** stratégiai irányt rögzíti — külső review (ChatGPT) megerősítette az irányt, néhány hangsúlyt finomított. Ez most a **legfrissebb iránymutatás**, minden alábbi (régebbi) szekciót ennek fényében olvass.
+
+## A. 7-napos szabály (2026-04-25 → 2026-05-02): NE PISZKÁLJUK
+
+8 commit + új landing + trust-fix + internal link átépítés + két nagy keyword refactor + schema frissítés + noindex guard + sitemap/reindex egyetlen napon — ez bőven elég jel a Google-nak. **Ezen 7 napon belül NEM csinálunk újabb átírást.**
+
+Megengedett aktivitás:
+- Request Indexing (egyenként, GSC URL Inspection-ön).
+- Sitemap resubmit (Google + Bing).
+- GSC export napi/heti mentése.
+- SERP screenshot fontos query-kre.
+- **Nincs új rewrite, nincs új landing, nincs új H2.**
+
+## B. 14-napos checkpoint (2026-05-09): mérünk és döntünk
+
+Ekkor (és csak ekkor) értékeljük:
+1. `petty-cash-app` — kapott-e impressiont és melyik query-kre?
+2. `petty-cash-how-much-to-keep` — bemegy-e top 10-be a TL;DR + `$100 breakdown` után?
+3. `who-has-the-cash-right-now` — a keyword-anchored noun-phrase H1/H2-k után kap-e releváns query-t?
+4. `boss-cant-see-where-cash-goes` — a teljes refaktor után kap-e impressiont?
+5. `two-person-cash-count-policy` — hoz-e adjacent template/form intent query-ket a "Free Sign-Off Template" pivot után?
+6. **Trust-fix oldalak** — csökkent-e vagy javult-e a CTR a hamis "Free X" claim-ek eltávolítása után?
+
+## C. FAQ/HowTo schema reality-check (review-correction)
+
+**Korábbi feltevés:** FAQ schema = AI Overview citation chance + rich result.
+**Korrigált realitás:**
+- **Google FAQ rich result** ma már gyakorlatilag csak **autoritatív kormányzati / egészségügyi** oldalakon jelenik meg rendszeresen. Egy fiatal SaaS site nem fog rich-snippetet kapni FAQ-tól.
+- **Google HowTo rich result desktopon deprecated** (Google saját közlése).
+- **AI Overview-höz nincs külön schema-követelmény** — Google szerint ugyanazok az alap-SEO-elvek számítanak (indexelhetőség, snippetre jogosultság, szövegben elérhető fontos tartalom, structured data ↔ visible content egyezés).
+
+**Konzekvencia:**
+- A meglévő FAQPage schema-kat **nem szedjük ki** — segítenek a tartalom strukturálásában és a Google parsing-jában.
+- **NEM építünk rájuk stratégiát** — a stratégia maga a query-választás (tool/template/comparison intent), nem a schema-trükk.
+- Új oldalon FAQ schema csak akkor, ha a content tényleg Q&A-jellegű és a látható szöveggel 100%-ig egyezik.
+
+## D. Honest CTR-magnet vocabulary (a Free X trust-fix után)
+
+A trust-fix nem azt jelenti, hogy CTR-magnet nélkül maradunk — azt jelenti, hogy **csak igaz csábítás** marad. Engedélyezett vocab:
+
+| Magnet | Akkor használható, ha tényleg... |
+|---|---|
+| **"Printable PDF"** | van letölthető PDF az oldalon (pl. `two-person-cash-count-policy`) |
+| **"Copyable Policy Rules"** | van inline szöveg, ami másolható (pl. policy bekezdések) |
+| **"Step-by-Step"** | van numbered list, lépésekkel (pl. `how-to-fill-out-petty-cash-voucher`) |
+| **"Formula + Examples"** | van képlet és számolt példa (pl. `petty-cash-how-much-to-keep` $100 breakdown) |
+| **"Sign & Print"** | van nyomtatható/menthető form a content-ben |
+| **"Free Tier"** | van valóban használható ingyenes tier az appban (pl. `petty-cash-app`) |
+
+**Tilos:** "Free Template" / "Free Sample" / "Free Checklist" — bármilyen "Free X" assets-ígéret, ami nincs valóban letölthető fájlként az oldalon.
+
+## E. `petty-cash-app` további erősítések (ma alkalmazva)
+
+A 2026-04-25-i `petty-cash-app.html` páron belül 3 új blokk került fel a ChatGPT-review után:
+
+1. **Pozicionálás-fix a hero-ban** — *"Not another expense platform. SpendNote is built specifically for real cash boxes — not a Ramp, Brex, or Spendesk competitor."* Cél: differentiation a generic expense-management appoktól.
+2. **"What You Can Do in 30 Seconds" blokk** — közvetlenül a hero alatt, action-listával: record, snap, see, watch, generate, export. Cél: tool-intent query-kre érkező user 5 másodperc alatt látja, hogy ez tényleg app, nem SEO-cikk.
+3. **Strukturált comparison table** — Paper / Excel / Generic expense app / POS / Accounting software vs SpendNote, 3 oszlopban (eszköz / probléma / SpendNote-megoldás). A korábbi `<ul>` + 2 paragrafus helyett.
+
+## F. Conditional PENDING task (NE csináljuk most): Cash Count Sign-Off Form külön landing
+
+**NEM most.** 14 nap monitoring után döntünk.
+
+**Trigger feltételek (mindhárom kell):**
+1. GSC: `cash count sign-off form` v. `two-person cash count form` query-re kap impressiont a `two-person-cash-count-policy` oldal.
+2. Az oldal nem tud belépni top 20-ba erre a query-re (vagyis a teljes oldal nem winner ehhez az intenthez).
+3. A SERP egyértelműen PDF/form/template-intent (nem policy-intent).
+
+**Ha mind3 igaz 2026-05-09-ig:** új oldalt csinálunk `/cash-count-sign-off-form` slug-on, *asset page* jelleggel (nem SEO-cikk):
+- PDF letöltés gomb (a meglévő `two-person-cash-count-policy` PDF-jéből kivett rövid form-only verzió).
+- Rendered preview kép.
+- "When to use it" rövid bekezdés.
+- "How to fill it out" 5-lépéses lista.
+- Link az `/petty-cash-app`-ra ("Or skip the paper form and use our app").
+
+**Ha NEM teljesül a trigger:** marad a jelenlegi `two-person-cash-count-policy` mint single page, és nem fragmentáljuk fel.
+
+## G. Bing-irány (review-megerősítés)
+
+- **Google = fő csatorna**, **Bing = query-lab + másodlagos validációs terep**.
+- Bingnek: sitemap resubmit, index coverage figyelés, Bing query-k alapján Google-oldalötletek.
+- **Nem csinálunk Bing-only optimalizációt** — a 04-25-i sprint Bing-data inspirálta új landing-jén (`petty-cash-app`) kívül nem írunk Bing-specifikus content-et.
+
+---
+
 # 📜 MUNKANAPLÓ — 2026-04-25 (snippet/keyword sprint, Bing-data alapján)
 
 > **Státusz:** A 04-18-i tervet (lent) elhalasztottuk. Helyette egy **akciós napot** csináltunk a 2026-04-25 GSC + a felhasználó által megosztott Bing query-data alapján. Cél: **mai snippet/title/keyword fix-ek**, plusz egy új landing page Bing tool-intent klaszterre.

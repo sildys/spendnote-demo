@@ -151,6 +151,45 @@ A `two-person-cash-count-policy` 0% CTR-jének diagnózisa (SERP-check subagent-
 
 **Státusz:** ✅ ÉLES, baseline-reset folyamatban. Következő lépés: 2026-05-02-i checkpoint.
 
+### 2026-04-25 ESTE — ChatGPT external review + petty-cash-app erősítések
+
+A 8-commit-os sprint után külső review (ChatGPT) megerősítette az irányt és néhány hangsúlyt finomított. **Részletes guardrails-ek:** `seoplan.md` legtetején, "🛡️ STRATEGIC GUARDRAILS" szekció.
+
+**TL;DR-eredmények:**
+
+1. **Irány-validáció:** A trust-fix, a `petty-cash-app` landing, a noindex-guard és a rhetorical→keyword refactor mind helyes döntés volt.
+
+2. **Schema reality-check (correction):**
+   - **HowTo rich result desktopon deprecated** (Google), FAQ rich result gyakorlatilag csak gov/health-en jelenik meg.
+   - **AI Overview-höz nincs külön schema-követelmény** — alap-SEO-elvek (indexelhetőség, snippetre jogosultság, szövegben elérhető tartalom, structured data ↔ visible content egyezés) számítanak.
+   - **Konzekvencia:** FAQPage schema-kat **nem szedjük ki**, de **nem építünk rájuk stratégiát**. A stratégia maga a query-választás (tool/template/comparison intent).
+
+3. **`petty-cash-app.html` 3 új blokk (commit kerül ma):**
+   - **Hero pozicionálás-fix:** *"Not another expense platform. SpendNote is built specifically for real cash boxes — not a Ramp, Brex, or Spendesk competitor."*
+   - **"What You Can Do in 30 Seconds" blokk** — action-list (record, snap, see, watch, generate, export). Cél: tool-intent user 5 másodperc alatt látja, hogy ez tényleg app, nem SEO-cikk.
+   - **Strukturált comparison table** — Paper / Excel / Generic expense app / POS / Accounting software vs SpendNote (3 oszlop: eszköz / probléma / SpendNote-megoldás). Korábbi `<ul>` + 2 paragrafus helyett.
+
+4. **Honest CTR-magnet vocabulary** (a "Free X" trust-fix utáni engedélyezett szótár):
+   - "Printable PDF" — csak ha tényleg van PDF
+   - "Copyable Policy Rules" — csak ha inline szöveg másolható
+   - "Step-by-Step" — csak ha numbered list van
+   - "Formula + Examples" — csak ha képlet + példa
+   - "Sign & Print" — csak ha nyomtatható form
+   - "Free Tier" — csak ha appoldal és van valódi free tier
+
+5. **7+14 napos szabály (mostantól érvényes):**
+   - **2026-04-25 → 2026-05-02 (7 nap):** NE PISZKÁLJUK az oldalakat. Megengedett: Request Indexing, sitemap resubmit (Google + Bing), GSC export mentés, SERP screenshot. **Nincs új rewrite, nincs új landing.**
+   - **2026-05-09 (14 nap):** értékelés (`petty-cash-app` impressionek? `how-much-to-keep` top 10? trust-fix CTR?). **Csak ekkor** dönthetünk újabb rewrite-okról.
+
+6. **Conditional PENDING task: `/cash-count-sign-off-form` külön landing — NE MOST.**
+   Trigger feltételek (mindhárom kell 2026-05-09-ig):
+   - GSC: `cash count sign-off form` query-re kap impressiont a `two-person-cash-count-policy`.
+   - Az oldal NEM tud belépni top 20-ba a query-re.
+   - SERP egyértelműen PDF/form/template intent (nem policy intent).
+   Ha mind3 igaz: új *asset page* (PDF letöltés + preview + when to use + how to fill + link `/petty-cash-app`-ra). **Ha nem teljesül: marad single page.**
+
+7. **Bing-irány:** Google = fő csatorna, Bing = query-lab + másodlagos validáció. **Nem csinálunk Bing-only optimalizációt.**
+
 ---
 
 ### 2026-04-17/18 — Belső link cleanup + near-top-10 title sharpening (commit `47e9c3b`, retroaktív naplózás)
