@@ -317,6 +317,52 @@ A 04-28 ÉJSZAKAI 2 tweak (`petty-cash-app` cloud/online + `custom-cash-receipt-
 
 **Záró tanulság a 04-29 00:05 source-mining batch-re:** A research-fázis ezzel végleg lezárható — **a brainstorm-források kimerültek** (saját + Reddit + Pleo blog + FAQ-pattern + iparág-vertikál). A 14-napos checkpoint (2026-05-12) marad a következő érdemi pont, post-checkpoint pedig az iparág-vertikál pipeline (`hair salon` → `food truck` → `dentist`) az elsődleges next-action terület.
 
+#### F.2.K Cash advance for expenses ("elszámolásra kiadott pénz") batch — 2026-04-29 00:15 SERP-evidence (felhasználó-intent driven)
+
+**Kontextus:** Felhasználói kérdés: "elszámolásra kiadott vagy átvett pénz körüli oldalunk van már???". Magyar adminisztratív szakszó: **elszámolási előleg** = pénz, amit valakinek odaadnak üzleti kiadásokra azzal a feltétellel, hogy később elszámolnak vele (receipts + maradék = előleg). Ez egy **dedikált scenarió**, NEM lefedve egyik meglévő oldalunk által:
+
+- `employee-cash-advance-receipt` = salary advance (bérelőleg, bérből levonva)
+- `contractor-advance-payment-receipt` = work advance (munkadíj-előleg, munkával ledolgozva)
+- `office-expense-reimbursement-form` = utólagos reimburse (saját zsebből költött, és visszakapja)
+- `petty-cash-replenishment-form` = custodian feltöltés
+- `cash-handoff-receipt` = generic pénzátadás
+
+**SERP-tesztelt query-k (4):**
+
+| # | Query | SpendNote pozíció | Top 5 | Diagnózis |
+|---|---|---|---|---|
+| 1 | `cash advance for business expenses receipt` | **TOP 1** | **`employee-cash-advance-receipt`** + BizzLibrary template + Brex (IRS receipt requirements) + PayWavez (merchant cash advance funding — irreleváns) + ExpenseOnDemand | ⚠️ **TOP 1 — DE content-mismatch!** Az oldal salary advance-ról szól, nem expense advance-ról. Felhasználó találja, de **mást** kap, mint amit vár. Bouncerate-rontó. |
+| 2 | `travel cash advance receipt` | NINCS top 5-ben | BizzLibrary + AllBusinessTemplates + UC Berkeley + UTexas | ❌ Template provider + .edu policy fal. Bad SERP fit. |
+| 3 | `imprest advance receipt` | NINCS top 5-ben | GetMoss + Investopedia + PaymentCloud + NIANP (Indian gov) + AccountingTools | ❌ Authority-fal (Investopedia, AccountingTools). Bad SERP fit. |
+| 4 | `cash advance settlement form template` | NINCS top 5-ben | Easy-agreement loan template + Paperform legal settlement + SignNow + Template.net debt settlement + PandaDoc | ❌ **Rossz intent** — a query "cash advance" itt **lawsuit settlement / debt settlement / payday loan agreement** értelemben jön elő. SpendNote intent-mismatch. |
+
+**Két fontos felismerés:**
+
+**1. TOP 1 content-mismatch**: A `employee-cash-advance-receipt` oldalunk TOP 1-en NYER egy olyan query-re (`cash advance for business expenses`), aminek **content-szempontból nem felel meg**. A felhasználó keresi az "elszámolásra kiadott pénz" intent-et, megtalál TOP 1-en, és nem kapja meg, amit keres (salary advance-ról szól, nem expense advance-ról). Ez bouncerate-rontó.
+
+**2. SERP-szegény angle**: Az `expense advance` / `travel advance` / `imprest` queryk mindegyike **bad SERP fit**: template-provider dominancia, .edu/.gov policy-fal, authority (Investopedia, AccountingTools), vagy teljesen más intent (lawsuit settlement). Az "elszámolásra kiadott pénz" magyar intent **nem fordul jól** angol piaci query-térbe.
+
+**Két lehetséges akció (mindkettő post-checkpoint, NEM most):**
+
+| Variáns | Mit tesz | Kockázat | Mikor |
+|---|---|---|---|
+| **B — Content-bővítés** | `employee-cash-advance-receipt`-re egy új H2 szekció "Also covers: business expense advances and travel advances" + 2 új FAQ + JSON-LD update — a TOP 1 ne fail-en nyerjen | **Alacsony** (meglévő oldal, content-only) | 2026-05-12 utáni elsők között |
+| **C — Új dedikált oldal** | `cash-advance-for-expenses.html` (vagy `expense-advance-receipt.html`) — SpendNote pont erre is jó (előleg-rögzítés + receipt-attaching + záró elszámolás) | **Magasabb** (új URL, új sleep-on-it) | Post-checkpoint, csak ha az iparág-vertikál pipeline beváltja |
+
+**Trigger feltétel a 2026-05-12-i checkpointhoz:**
+
+- Ha az `employee-cash-advance-receipt` oldalon a `cash advance for business expenses` query-re jelentős impressziókat kapunk a 14 napban (élesen mérhető bounce vagy alacsony CTR) → **B variáns** azonnali (alacsony-kockázatú content-tweak, ne fail-en nyerjünk)
+- Ha az iparág-vertikál pipeline (salon/food truck/dentist) beváltja az ígéretét → **C variáns** is mehet utána
+
+**Conditional backlog (post-2026-05-12 — NEM most):**
+
+| Akció | Miért |
+|---|---|
+| `employee-cash-advance-receipt` content-bővítés (B variáns) | TOP 1 mismatch fix — ne félrevezetően nyerjünk |
+| `cash-advance-for-expenses.html` új oldal (C variáns) | Csak ha B variáns vagy iparág-vertikál pipeline validálta a content-strategiát |
+
+**Záró tanulság a F.2.K batch-re:** A felhasználói intent-driven research **valódi gap-ot tárt fel** (TOP 1 content-mismatch + dedikált scenarió hiánya), DE a SERP-tér 3/4 query-n nehéz (template + .edu + authority + intent-miss). Az alacsony-kockázatú akció (B variáns content-bővítés) a 14-napos checkpoint utáni első tételek között lehet.
+
 #### F.2.B Tier 2 — Pages already winning (NE PISZKÁLJUK)
 
 - **`cash-drawer-reconciliation`** — `cash drawer reconciliation` cluster 50+ imp/28d, top 10-25 többségében. **Hagyjuk békén**, már működik.

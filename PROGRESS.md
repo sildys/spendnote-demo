@@ -191,6 +191,29 @@ A felhasználó a 11:25 PM-i visszajelzéssel megerősítette: a SpendNote Pro p
 
 **Záró tanulság a teljes ma esti research-ra (6 batch, ~30 SERP-teszt):** A brainstorm-források kimerültek (saját + GSC + cloud/online + iparág-vertikál + Reddit + Pleo + FAQ-pattern). Új query-jelölt nincs, **DE az iparág-vertikál batch (F.2.I) hozott 3 valós post-checkpoint kandidatúrát** (salon, food truck, dentist), amik a 2026-05-12 utáni elsődleges next-action területet adják.
 
+### 2026-04-29 00:15 — Cash advance for expenses batch (7. SERP-batch — felhasználói intent-driven)
+
+**Kontextus:** Felhasználói kérdés: "elszámolásra kiadott vagy átvett pénz körüli oldalunk van már???". Magyar adminisztratív szakszó: **elszámolási előleg** = pénz, amit valakinek odaadnak üzleti kiadásokra, utólagos elszámolással (receipts + maradék).
+
+**Felfedezés: dedikált oldal hiánya.** Egyik létező "advance" oldalunk sem fedi le pontosan ezt a scenariót:
+- `employee-cash-advance-receipt` = salary advance (bérelőleg)
+- `contractor-advance-payment-receipt` = work advance (munkadíj-előleg)
+- `office-expense-reimbursement-form` = utólagos reimburse
+- `petty-cash-replenishment-form` = custodian feltöltés
+
+**4 SERP-test eredménye (4/0/1/2/1 mismatch):**
+- ⚠️ **1 TOP 1 content-mismatch felfedezés**: `cash advance for business expenses receipt` → `employee-cash-advance-receipt` TOP 1, **DE az salary advance-ról szól, nem expense advance-ról**. Felhasználó nyer pozíciót, de **mást** kap, mint amit vár. **Bouncerate-rontó**.
+- ❌ **3 bad SERP fit**: `travel cash advance receipt` (BizzLibrary + AllBusinessTemplates + UC Berkeley + UTexas — template + .edu fal); `imprest advance receipt` (Investopedia + AccountingTools authority); `cash advance settlement form template` (lawsuit settlement / payday loan intent — totál mismatch).
+
+**Konzekvencia:**
+- **0 új landing-jelölt MOST**, mert moratórium érvényben.
+- **2 post-checkpoint backlog-tétel**:
+  - **B variáns** (alacsony-kockázatú): `employee-cash-advance-receipt` content-bővítés egy új H2 + 2 FAQ-val ("Also covers: business expense advances and travel advances") — ne TOP 1-en hamisan nyerjünk. Ez a 2026-05-12 utáni elsők között lehet.
+  - **C variáns** (magasabb-kockázatú): új `cash-advance-for-expenses.html` oldal — csak ha B variáns vagy az iparág-vertikál pipeline validálja.
+- **Trigger feltétel a 14-napos checkpointra**: ha az `employee-cash-advance-receipt` oldal jelentős impressziókat kap a `cash advance for business expenses`-szerű query-kre (élesen mérhető bounce / alacsony CTR), akkor B variáns azonnali.
+
+**Záró tanulság**: a felhasználói intent-driven research valódi gap-ot tárt fel (TOP 1 content-mismatch + dedikált scenarió hiánya), DE a SERP-tér 3/4 query-n nehéz. Részletek: `seoplan.md` F.2.K szekció.
+
 ### 2026-04-28 ESTE — 4 meta-tweak + saját brainstorm 19 query-re (commit `4df7b48`)
 
 **Kontextus:** A felhasználó kérte, hogy ne csak GSC-export adataiból, hanem saját agyamból is brainstormoljak új keyword-clustereket. 19 ötletet teszteltem élő SERP-pel.
