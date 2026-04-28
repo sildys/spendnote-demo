@@ -346,8 +346,8 @@ A 04-28 ÉJSZAKAI 2 tweak (`petty-cash-app` cloud/online + `custom-cash-receipt-
 
 | Variáns | Mit tesz | Kockázat | Mikor |
 |---|---|---|---|
-| **B — Content-bővítés** | `employee-cash-advance-receipt`-re egy új H2 szekció "Also covers: business expense advances and travel advances" + 2 új FAQ + JSON-LD update — a TOP 1 ne fail-en nyerjen | **Alacsony** (meglévő oldal, content-only) | 2026-05-12 utáni elsők között |
-| **C — Új dedikált oldal** | `cash-advance-for-expenses.html` (vagy `expense-advance-receipt.html`) — SpendNote pont erre is jó (előleg-rögzítés + receipt-attaching + záró elszámolás) | **Magasabb** (új URL, új sleep-on-it) | Post-checkpoint, csak ha az iparág-vertikál pipeline beváltja |
+| **B — Content-bővítés** ✅ **VÉGREHAJTVA 2026-04-29 00:30** | `employee-cash-advance-receipt`-re egy új H2 szekció "Also Covers: Business Expense & Travel Advances" + 3 use-case-box (business expense / travel / petty cash advance) + 2 új FAQ (body + JSON-LD) + meta description bővítés ("salary, business expense, and travel advances") + JSON-LD Article description update + dateModified bump | **Alacsony** (meglévő oldal, content-only, salary-advance fő-pozíció megmaradt — title/H1/hero érintetlen) | **MOST** — a felhasználó pushback-je: "ha a mostani nem jó, akkor mi a faszra várunk?" Helyes érv: ez bouncerate-fix, nem post-checkpoint kísérlet. Az oldal 2026-03-06 óta él, NEM része a 14-napos moratórium-hatókörnek. |
+| **C — Új dedikált oldal** | `cash-advance-for-expenses.html` (vagy `expense-advance-receipt.html`) — SpendNote pont erre is jó (előleg-rögzítés + receipt-attaching + záró elszámolás) | **Magasabb** (új URL, új sleep-on-it) | Post-checkpoint, csak ha B variáns érdemi javulást hoz CTR/bounce metrikákban, vagy ha az iparág-vertikál pipeline beváltja |
 
 **Trigger feltétel a 2026-05-12-i checkpointhoz:**
 
@@ -361,7 +361,7 @@ A 04-28 ÉJSZAKAI 2 tweak (`petty-cash-app` cloud/online + `custom-cash-receipt-
 | `employee-cash-advance-receipt` content-bővítés (B variáns) | TOP 1 mismatch fix — ne félrevezetően nyerjünk |
 | `cash-advance-for-expenses.html` új oldal (C variáns) | Csak ha B variáns vagy iparág-vertikál pipeline validálta a content-strategiát |
 
-**Záró tanulság a F.2.K batch-re:** A felhasználói intent-driven research **valódi gap-ot tárt fel** (TOP 1 content-mismatch + dedikált scenarió hiánya), DE a SERP-tér 3/4 query-n nehéz (template + .edu + authority + intent-miss). Az alacsony-kockázatú akció (B variáns content-bővítés) a 14-napos checkpoint utáni első tételek között lehet.
+**Záró tanulság a F.2.K batch-re:** A felhasználói intent-driven research **valódi gap-ot tárt fel** (TOP 1 content-mismatch + dedikált scenarió hiánya), DE a SERP-tér 3/4 query-n nehéz (template + .edu + authority + intent-miss). Az alacsony-kockázatú akció (B variáns content-bővítés) — eredetileg a 14-napos checkpoint utáni első tételek között lett volna — **a felhasználó pushback-je miatt MA ESTE végrehajtásra került** (lásd fenti táblázat B variáns "VÉGREHAJTVA" blokkját). Helyes döntés: ez bouncerate-fix, nem post-checkpoint kísérlet, és az érintett oldal NEM része a 14-napos moratórium-hatókörnek.
 
 #### F.2.B Tier 2 — Pages already winning (NE PISZKÁLJUK)
 

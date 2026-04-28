@@ -214,6 +214,39 @@ A felhasználó a 11:25 PM-i visszajelzéssel megerősítette: a SpendNote Pro p
 
 **Záró tanulság**: a felhasználói intent-driven research valódi gap-ot tárt fel (TOP 1 content-mismatch + dedikált scenarió hiánya), DE a SERP-tér 3/4 query-n nehéz. Részletek: `seoplan.md` F.2.K szekció.
 
+### 2026-04-29 00:30 — B variáns végrehajtva: employee-cash-advance-receipt content-bővítés (TOP 1 mismatch fix)
+
+**Felhasználói pushback:** "de ha a mostani nem jó, akkor mi a faszra várunk?". Jogos: ez bouncerate-fix, nem post-checkpoint kísérlet. Az `employee-cash-advance-receipt` oldal 2026-03-06 óta él, **NEM része** a 14-napos moratórium-hatókörnek (ami a frissen módosított oldalakra szól). Minden nap, amíg a TOP 1 content-mismatch fennáll, rontjuk a CTR-t és bounce rate-et.
+
+**Végrehajtott B variáns content-bővítés:**
+
+- **Meta description / og:description / twitter:description**: bővítés "salary advances" → **"salary, business expense, and travel advances"**
+- **JSON-LD Article description**: bővítés "How employers can document salary advances paid in cash..." → **"How employers can document cash advances paid to employees — salary advances, business expense advances, and travel advances..."**
+- **JSON-LD `dateModified`**: 2026-03-06 → **2026-04-29T00:30:00+00:00**
+- **Új H2 szekció a body-ban** ("Who This Is For" után): **"Also Covers: Business Expense & Travel Advances"** — 1 vezető paragraph + 3 use-case-box:
+  - Business Expense Advance ($300 office supplies vendor)
+  - Travel Advance ($800 client visit, May 12-15)
+  - Petty Cash Advance to a Team Member (pending receipt)
+  - + záró paragraph: "Salary, expense, travel, petty cash — same flow"
+- **Új 2 FAQ a body-ban + JSON-LD-ben**:
+  - "Can I use this for business expense advances or travel advances?"
+  - "What is the difference between a salary advance and an expense advance?"
+- **`sitemap.xml`**: `lastmod` bump 2026-04-28 → **2026-04-29**
+
+**Megőrzött elemek (a TOP 1 pozíció védelme)**:
+- Title (`Cash Advance Receipt — Instant Proof for Employee Cash Advances`) — **változatlan**
+- og:title / twitter:title — **változatlan**
+- H1 (`Employee Cash Advance Receipt`) — **változatlan**
+- Hero lead text — **változatlan**
+
+**Stratégiai logika**: nem akarjuk kockáztatni a `employee-cash-advance-receipt` oldal salary-advance fő-pozícióját. A title / H1 / hero a primary intent-et tartja, a content-bővítés pedig megnyitja a secondary intent-et (expense/travel advance), hogy a TOP 1 ne mismatch-en nyerjen.
+
+**Várható hatás (14-napos checkpointon mérendő)**:
+- `cash advance for business expenses` query → már TOP 1, de most a content **megfelel** a query intent-jének → bouncerate-csökkenés várható
+- További query-jelöltek, amikre a bővítés helyzetbe hozhat: `business expense advance receipt`, `travel cash advance receipt`, `cash advance and reconciliation`, `imprest advance to employee` (utóbbi authority-fal, nem várhatunk sokat)
+
+**Indexelési akció holnap**: a `employee-cash-advance-receipt` oldalra **reindexelési kérelem** is mehet a 4 maradék kvóta-tétel közé (`construction-site-petty-cash`, `event-cash-handling`, `who-took-money-from-cash-box` mellé) — vagy elsőbbséget kap, hiszen a content-mismatch fix sürgősebb mint a meta-tweakek.
+
 ### 2026-04-28 ESTE — 4 meta-tweak + saját brainstorm 19 query-re (commit `4df7b48`)
 
 **Kontextus:** A felhasználó kérte, hogy ne csak GSC-export adataiból, hanem saját agyamból is brainstormoljak új keyword-clustereket. 19 ötletet teszteltem élő SERP-pel.
