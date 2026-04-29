@@ -531,7 +531,7 @@
 
     <!-- Top bar -->
     <div class="nt-topbar">
-        <a href="dashboard.html" class="nt-back-btn" aria-label="Back to dashboard">
+        <a href="/dashboard" class="nt-back-btn" aria-label="Back to dashboard">
             <i class="fas fa-arrow-left"></i>
         </a>
         <span class="nt-topbar-title">New Transaction</span>
@@ -1101,7 +1101,7 @@
                 if (errorEl) {
                     errorEl.style.display = '';
                     errorEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> You need to create a Cash Box first. ' +
-                        '<a href="spendnote-cash-box-settings.html" style="color:inherit;font-weight:700;">Create one →</a>';
+                        '<a href="/spendnote-cash-box-settings" style="color:inherit;font-weight:700;">Create one →</a>';
                 }
                 return;
             }
@@ -1112,7 +1112,7 @@
                 if (loadingEl) loadingEl.style.display = 'none';
                 if (errorEl) {
                     errorEl.style.display = '';
-                    errorEl.innerHTML = '<i class="fas fa-lock"></i> No cash box can record transactions right now. Open the <a href="dashboard.html" style="color:inherit;font-weight:700;">dashboard</a> to finish your plan change (owner), or upgrade your plan.';
+                    errorEl.innerHTML = '<i class="fas fa-lock"></i> No cash box can record transactions right now. Open the <a href="/dashboard" style="color:inherit;font-weight:700;">dashboard</a> to finish your plan change (owner), or upgrade your plan.';
                 }
                 return;
             }

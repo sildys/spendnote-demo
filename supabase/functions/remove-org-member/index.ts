@@ -230,7 +230,7 @@ Deno.serve(async (req: Request) => {
         const rendered = renderTeamMemberRemovedTemplate({
           fullName: fullName || undefined,
           orgName,
-          dashboardUrl: "https://spendnote.app/dashboard.html",
+          dashboardUrl: "https://spendnote.app/",
         });
 
         try {

@@ -94,7 +94,7 @@ export const renderWelcomeAccountCreatedTemplate = (args: {
   loginUrl: string;
 }): BaseEmailTemplate => {
   const name = esc(String(args.fullName || "there").trim() || "there");
-  const loginUrl = esc(args.loginUrl || "https://spendnote.app/spendnote-login.html");
+  const loginUrl = esc(args.loginUrl || "https://");
   const subject = `You're in — now track your first cash movement`;
 
   const html = appCard(
@@ -114,11 +114,11 @@ export const renderWelcomeAccountCreatedTemplate = (args: {
         <li>Get an instant receipt you can print or share</li>
         <li>Every handoff is logged with who, when, and how much</li>
       </ul>
-      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://spendnote.app/spendnote-faq.html" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
     `,
   );
 
-  const text = `You're in — now track your first cash movement\n\nHi ${args.fullName || "there"},\n\nEvery unrecorded cash handoff is money you can't account for later.\n\nRight now, you have no record of your cash.\n\nStart now. It takes 30 seconds.\n\nOpen SpendNote: ${args.loginUrl}\n\nNeed help? https://spendnote.app/spendnote-faq.html or support@spendnote.app`;
+  const text = `You're in — now track your first cash movement\n\nHi ${args.fullName || "there"},\n\nEvery unrecorded cash handoff is money you can't account for later.\n\nRight now, you have no record of your cash.\n\nStart now. It takes 30 seconds.\n\nOpen SpendNote: ${args.loginUrl}\n\nNeed help? https:// or support@spendnote.app`;
   return { subject, html, text };
 };
 
@@ -164,7 +164,7 @@ export const renderInviteAcceptedAdminTemplate = (args: {
   const acceptedUser = esc(String(args.acceptedUserName || "A user").trim() || "A user");
   const acceptedUserEmail = esc(args.acceptedUserEmail || "");
   const orgName = esc(String(args.orgName || "your team").trim() || "your team");
-  const teamUrl = esc(args.teamUrl || "https://spendnote.app/spendnote-team.html");
+  const teamUrl = esc(args.teamUrl || "https://");
   const subject = `${args.acceptedUserName || args.acceptedUserEmail || "A user"} joined your team`;
 
   const html = appCard(
@@ -218,7 +218,7 @@ export const renderFirstTransactionTemplate = (args: {
   dashboardUrl: string;
 }): BaseEmailTemplate => {
   const name = esc(String(args.fullName || "there").trim() || "there");
-  const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
+  const dashboardUrl = esc(args.dashboardUrl || "https://");
   const subject = "Your first cash movement is on record";
 
   const html = appCard(
@@ -248,7 +248,7 @@ export const renderFirstTransactionTeamTemplate = (args: {
 }): BaseEmailTemplate => {
   const name = esc(String(args.fullName || "there").trim() || "there");
   const org = esc(String(args.orgName || "your team").trim() || "your team");
-  const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
+  const dashboardUrl = esc(args.dashboardUrl || "https://");
   const subject = "Your first transaction is on record";
 
   const html = appCard(
@@ -261,7 +261,7 @@ export const renderFirstTransactionTeamTemplate = (args: {
       <div style="margin:18px 0 16px;">
         <a href="${dashboardUrl}" style="${CTA_STYLE}">Record the next one &rarr;</a>
       </div>
-      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://spendnote.app/spendnote-faq.html" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
     `,
   );
 
@@ -279,7 +279,7 @@ export const renderTrialExpiryWarningTemplate = (args: {
 }): BaseEmailTemplate => {
   const name = esc(String(args.fullName || "there").trim() || "there");
   const days = Math.max(0, args.daysLeft || 0);
-  const pricingUrl = esc(args.pricingUrl || "https://spendnote.app/spendnote-pricing.html");
+  const pricingUrl = esc(args.pricingUrl || "https://");
   const urgency = days <= 1 ? "expires today" : `expires in ${days} days`;
   const subject = `Your SpendNote trial ${urgency}`;
   const txCount = args.txCount ?? 0;
@@ -304,7 +304,7 @@ export const renderTrialExpiryWarningTemplate = (args: {
         <li><strong>Standard</strong> &mdash; 2 Cash Boxes, printable receipts, CSV export</li>
         <li><strong>Pro</strong> &mdash; Unlimited Cash Boxes, team access, email receipts</li>
       </ul>
-      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://spendnote.app/spendnote-faq.html" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
     `,
   );
 
@@ -324,7 +324,7 @@ export const renderUpgradeConfirmedTemplate = (args: {
 }): BaseEmailTemplate => {
   const name = esc(String(args.fullName || "there").trim() || "there");
   const plan = esc(String(args.plan || "Standard").trim());
-  const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
+  const dashboardUrl = esc(args.dashboardUrl || "https://");
   const subject = `Welcome to SpendNote ${args.plan || "Standard"}`;
 
   const isPro = String(args.plan || "").toLowerCase() === "pro";
@@ -342,7 +342,7 @@ export const renderUpgradeConfirmedTemplate = (args: {
       <div style="margin:18px 0 16px;">
         <a href="${dashboardUrl}" style="${CTA_STYLE}">Open SpendNote &rarr;</a>
       </div>
-      <p style="margin:0;color:#6b7280;font-size:12px;">Manage your subscription anytime from Settings. Need help? Visit our <a href="https://spendnote.app/spendnote-faq.html" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Manage your subscription anytime from Settings. Need help? Visit our <a href="https://" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
     `,
   );
 
@@ -363,7 +363,7 @@ export const renderWelcomeInvitedMemberTemplate = (args: {
   const inviter = esc(String(args.inviterName || "Your team admin").trim() || "Your team admin");
   const org = esc(String(args.orgName || "your team").trim() || "your team");
   const role = esc(String(args.role || "User").trim());
-  const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
+  const dashboardUrl = esc(args.dashboardUrl || "https://");
   const subject = `You're in — welcome to ${args.orgName || "your team"}`;
 
   const html = appCard(
@@ -382,11 +382,11 @@ export const renderWelcomeInvitedMemberTemplate = (args: {
         <li>Generate receipts for every handoff</li>
         <li>See your transaction history</li>
       </ul>
-      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://spendnote.app/spendnote-faq.html" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Need help? Visit our <a href="https://" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
     `,
   );
 
-  const text = `Welcome to ${args.orgName || "your team"}\n\nHi ${args.fullName || "there"},\n\n${args.inviterName || "Your team admin"} added you to ${args.orgName || "your team"} on SpendNote as ${args.role || "User"}.\n\nOpen your dashboard: ${args.dashboardUrl}\n\nNeed help? https://spendnote.app/spendnote-faq.html or support@spendnote.app`;
+  const text = `Welcome to ${args.orgName || "your team"}\n\nHi ${args.fullName || "there"},\n\n${args.inviterName || "Your team admin"} added you to ${args.orgName || "your team"} on SpendNote as ${args.role || "User"}.\n\nOpen your dashboard: ${args.dashboardUrl}\n\nNeed help? https:// or support@spendnote.app`;
   return { subject, html, text };
 };
 
@@ -399,7 +399,7 @@ export const renderTeamMemberRemovedTemplate = (args: {
 }): BaseEmailTemplate => {
   const name = esc(String(args.fullName || "there").trim() || "there");
   const org = esc(String(args.orgName || "your team").trim() || "your team");
-  const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
+  const dashboardUrl = esc(args.dashboardUrl || "https://");
   const subject = `You've been removed from ${args.orgName || "a team"} on SpendNote`;
 
   const html = appCard(
@@ -412,7 +412,7 @@ export const renderTeamMemberRemovedTemplate = (args: {
       <div style="margin:18px 0 16px;">
         <a href="${dashboardUrl}" style="${CTA_STYLE}">Open your dashboard &rarr;</a>
       </div>
-      <p style="margin:0;color:#6b7280;font-size:12px;">Questions? Visit our <a href="https://spendnote.app/spendnote-faq.html" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
+      <p style="margin:0;color:#6b7280;font-size:12px;">Questions? Visit our <a href="https://" style="color:#1d4ed8;">FAQ</a> or contact <a href="mailto:support@spendnote.app" style="color:#1d4ed8;">support@spendnote.app</a>.</p>
     `,
   );
 
@@ -430,7 +430,7 @@ export const renderPaymentFailedTemplate = (args: {
 }): BaseEmailTemplate => {
   const name = esc(String(args.fullName || "there").trim() || "there");
   const plan = esc(String(args.plan || "your").trim());
-  const portalUrl = esc(args.portalUrl || "https://spendnote.app/spendnote-user-settings.html");
+  const portalUrl = esc(args.portalUrl || "https://");
   const subject = `Action required: your SpendNote payment failed`;
 
   const html = appCard(
@@ -468,7 +468,7 @@ export const renderSubscriptionCanceledTemplate = (args: {
   const name = esc(String(args.fullName || "there").trim() || "there");
   const plan = esc(String(args.plan || "your").trim());
   const periodEnd = esc(String(args.periodEndDate || "soon").trim());
-  const pricingUrl = esc(args.pricingUrl || "https://spendnote.app/spendnote-pricing.html");
+  const pricingUrl = esc(args.pricingUrl || "https://");
   const subject = `Your SpendNote ${args.plan || ""} subscription has been canceled`;
 
   const isPro = String(args.plan || "").trim().toLowerCase() === "pro";
@@ -508,7 +508,7 @@ export const renderSubscriptionCanceledTemplate = (args: {
 
 export const renderPasswordChangedTemplate = (): BaseEmailTemplate => {
   const subject = "Your SpendNote password was changed";
-  const loginUrl = "https://spendnote.app/spendnote-login.html";
+  const loginUrl = "https://";
 
   const html = appCard(
     "Password changed",
@@ -544,8 +544,8 @@ export const renderSubscriptionDowngradedTemplate = (args: {
   const max = Number(args.maxCashBoxes) || 1;
   const total = Number(args.totalCashBoxes) || 0;
   const teamCount = Number(args.teamMemberCount) || 0;
-  const dashboardUrl = esc(args.dashboardUrl || "https://spendnote.app/dashboard.html");
-  const pricingUrl = "https://spendnote.app/spendnote-pricing.html";
+  const dashboardUrl = esc(args.dashboardUrl || "https://");
+  const pricingUrl = "https://";
   const subject = `Your SpendNote plan was downgraded to ${args.newPlan || "Free"}`;
 
   const needsCashBoxAction = total > max;

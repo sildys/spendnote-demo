@@ -144,8 +144,8 @@ Deno.serve(async (req: Request) => {
       });
     }
 
-    const defaultSuccess = appBaseUrl ? `${appBaseUrl.replace(/\/$/, "")}/spendnote-user-settings.html?billing=success` : "https://spendnote.app/spendnote-user-settings.html?billing=success";
-    const defaultCancel = appBaseUrl ? `${appBaseUrl.replace(/\/$/, "")}/spendnote-pricing.html?billing=cancel` : "https://spendnote.app/spendnote-pricing.html?billing=cancel";
+    const defaultSuccess = appBaseUrl ? `${appBaseUrl.replace(/\/$/, "")}/?billing=success` : "https://spendnote.app/?billing=success";
+    const defaultCancel = appBaseUrl ? `${appBaseUrl.replace(/\/$/, "")}/?billing=cancel` : "https://spendnote.app/?billing=cancel";
     const successUrl = normalizeReturnUrl(body?.successUrl, defaultSuccess, appBaseUrl);
     const cancelUrl = normalizeReturnUrl(body?.cancelUrl, defaultCancel, appBaseUrl);
 

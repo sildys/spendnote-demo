@@ -281,7 +281,7 @@ const sendDowngradeEmail = async (
       maxCashBoxes: Number.isFinite(max) ? max : 999,
       totalCashBoxes: ids.length,
       teamMemberCount,
-      dashboardUrl: "https://spendnote.app/dashboard.html",
+      dashboardUrl: "https://spendnote.app/",
     });
 
     await fetch("https://api.resend.com/emails", {
@@ -318,7 +318,7 @@ const sendUpgradeEmail = async (
     const tpl = renderUpgradeConfirmedTemplate({
       fullName: profile?.full_name || "",
       plan: capitalize(newTier),
-      dashboardUrl: "https://spendnote.app/dashboard.html",
+      dashboardUrl: "https://spendnote.app/",
     });
 
     await fetch("https://api.resend.com/emails", {
@@ -355,7 +355,7 @@ const sendPaymentFailedEmail = async (
     const tpl = renderPaymentFailedTemplate({
       fullName: profile.full_name || "",
       plan: capitalize(String(profile.subscription_tier || "Standard")),
-      portalUrl: "https://spendnote.app/spendnote-user-settings.html",
+      portalUrl: "https://spendnote.app/",
     });
 
     await fetch("https://api.resend.com/emails", {
@@ -398,7 +398,7 @@ const sendSubscriptionCanceledEmail = async (
       fullName: profile?.full_name || "",
       plan: capitalize(tier),
       periodEndDate: endDate,
-      pricingUrl: "https://spendnote.app/spendnote-pricing.html",
+      pricingUrl: "https://spendnote.app/",
     });
 
     await fetch("https://api.resend.com/emails", {
