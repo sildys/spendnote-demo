@@ -98,7 +98,70 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-01 ESTE — `/petty-cash-app` Google-discoverability sprint + 3-page SoftwareApplication schema price alignment)
+## Where we are now (last updated: 2026-05-02 ÉJSZAKA — Compliance-border hard-rule + 4-page disclaimer hardening + 8-bucket post-checkpoint brainstorm szűrve)
+
+### 2026-05-02 ÉJSZAKA — Compliance-border hard-rule + disclaimer audit + 4-page hardening (commit `a3ef5cf`) + post-checkpoint brainstorm-pipeline szűrve (`seoplan.md` `## F.`)
+
+**Kontextus:** A 2026-05-01-i brainstorm-session során a felhasználó proaktívan tisztázta a SpendNote pozícionálását: **"a spendnote nem hivatalos könyvelési szoftver, csak egy nyilvántartó és receipt adó eszköz. Egyetlen fontos kikötésem van, hogy jogszabályba vagy adóköteles ügybe ne keveredjünk."** Ez egy hard-rule értékű direktíva, ami minden jövő-thread és minden új landing-validation default-szabálya kell legyen.
+
+**Háromrészes válasz:**
+
+#### 1. Hard-rule a `seoplan.md`-be — `## F. Compliance-border policy`
+
+Új top-level szekció a 2026-05-01-i guardrails-blokk végére:
+
+- **Pozicionálás-kanon** rögzítve: "SpendNote = operatív nyilvántartó + receipt-generáló eszköz. NEM accounting software, NEM tax-tool, NEM legal-advisor."
+- **Tilos-lista** (6 területre): tax-advice (IRS/HMRC/ATO/CRA-rules, deduction-rules, 1099/W-9/W-2, sales-tax/VAT/GST, payroll-tax), accounting principles (journal entries, GAAP/IFRS, double-entry, ledger-treatment), legal-template-content, compliance-szabályok (donor-receipt, 501(c)(3), Form 990), external/tax/compliance-audit procedure, donor-receipts/charity/nonprofit (megerősítve a F.2-ből).
+- **Kötelező pozicionálás**-mondat minden tax/legal-adjacent jelöltre: "SpendNote helps you record and prove. Your accountant classifies, files, and reports. Different jobs."
+- **SERP-validation előtti compliance-border-check** kötelezővé téve: ha a query top-5-jében dominál tax-authority (Investopedia, IRS.gov, QuickBooks-tax-tag, Bench/Pilot, Avalara, AccountingTools), automatikus SKIP.
+
+#### 2. TIER standard a disclaimer-coverage-re — `## F.1` szekció
+
+Új standard rögzítve, a `payroll-cash-receipt.html` mintára: minden új tax/legal-adjacent landing **kötelezően TIER A** disclaimert kap (5 elem):
+
+1. `.top-disclaimer` warning-box közvetlenül a hero alá (fas-triangle-exclamation ikon, sárga 2px border)
+2. Dedikált H2 szekció "This Is Not a [X]" + strukturált "It is / It is not" lista
+3. `.disclaimer-box` reminder a CTA fölé
+4. 2 dedikált FAQ ("Is this a [tax/legal/payroll] document?" — "No. ..." + 1 másik)
+5. JSON-LD FAQPage entries mindkét FAQ-ról (schema-szintű disclaimer)
+
+TIER B (single in-body disclaimer) és TIER C (footer-only) **nem elfogadható** új landingen.
+
+#### 3. Audit-eredmény + 4-page hardening — `## F.2` szekció + commit `a3ef5cf`
+
+**Audit:** Az összes 8 borderline meglévő SEO oldal disclaimer-coverage-e ellenőrizve grep-batch-csel + manuális olvasással:
+
+| Oldal | Audit-eredmény | Tier-kód |
+|---|---|---|
+| `payroll-cash-receipt.html` | Best-in-class. 4-elemű "Not this" red box + 2 FAQ + JSON-LD FAQ. | **TIER A** (no action) |
+| `employee-cash-advance-receipt.html` | Disclaimer-box + dedikált H2 "This Is Not a Payroll Document" + FAQ. | **TIER A** (no action) |
+| `contractor-advance-payment-receipt.html` | Disclaimer-box + H2 "The Invoice Comes Later" + "This IS / This IS NOT" lista + FAQ. | **TIER A** (no action) |
+| `cash-deposit-receipt.html` | Disclaimer-box + H2 "This Is Not a Legal Agreement" + FAQ + JSON-LD-ben is. | **TIER A** (no action) |
+| `cash-refund-receipt.html` | Disclaimer-box + 1 FAQ ("difference between refund receipt and credit note"), de nincs dedikált H2. | **TIER B** (hardening kell) |
+| `petty-cash-audit-checklist.html` | Disclaimer-box, hero említi "internal or external audit", de nincs dedikált body-H2 a megkülönböztetésre. | **TIER B** (hardening kell) |
+| `petty-cash-policy-template.html` | **CSAK footer-disclaimer.** Single highest-risk page: felhasználó letöltheti és tényleges céges policy-ként adoptálhatja. | **TIER C** (hardening kell) |
+| `office-expense-reimbursement-form.html` | **CSAK footer-disclaimer.** Reimbursement → expense-tax-deductibility-territory. | **TIER C** (hardening kell) |
+
+**Hardening végrehajtva (commit `a3ef5cf`):**
+
+- **`petty-cash-policy-template.html` (TIER C → TIER A):** Új `.top-disclaimer` + `.disclaimer-box` CSS classes. `.top-disclaimer` warning-banner közvetlenül a hero alá ("Read this first — this template is a starting point, not a legal document"), explicit "not a legal document, not a regulated compliance template, not a substitute for advice from your accountant or attorney". Plus `.disclaimer-box` reminder a CTA fölé, restating "the sample policy clauses are common-sense starting points for small teams. They are not legally binding, not jurisdiction-specific".
+- **`office-expense-reimbursement-form.html` (TIER C → TIER A):** Ugyanazok a CSS classes. `.top-disclaimer` warning-banner a hero alá, explicit "not an expense-reimbursement system in the accounting sense, not a payroll deduction tool, not a tax-deductibility advisor".
+- **`cash-refund-receipt.html` (TIER B → TIER A-near):** Új dedikált H2 "This Is Not a Credit Note or Tax Document" a meglévő disclaimer-box után, strukturált "It is / It is not" listával, explicit elhatárolás credit note / tax invoice adjustment / sales-tax/VAT refund record-tól.
+- **`petty-cash-audit-checklist.html` (TIER B → TIER A-near):** Új dedikált H2 "Internal Audit vs External / Tax Audit — What This Checklist Covers" a meglévő disclaimer-box után, strukturált "Internal audit (covered) / External or tax audit (NOT covered)" lista, explicit redirect az accountant-hez external/tax-audit case-ekben.
+
+**Mit nem csináltunk (TIER A-near maradt):** A `cash-refund-receipt` és `petty-cash-audit-checklist` még nem teljes TIER A — nincs `.top-disclaimer` warning-banner és nincs schema-szintű FAQ-disclaimer-bővítés. De a meglévő disclaimer-box + új H2 + meglévő FAQ-k együttes coverage-e elegendő. **Schema-szintű disclaimer-bővítés a következő nagyobb compliance-pass-ban (post-2026-05-15) mehet** — most a 14-napos checkpoint-ig nem érdemes újabb aktivitást generálni.
+
+#### 4. 8-bucket post-checkpoint brainstorm szűrve (`seoplan.md` `## F.3`)
+
+A 2026-05-01 23:30-i brainstorm-session 8 új angle-bucket-ét átszűrtük a F. policy-n. Eredmény (a teljes táblázat a `seoplan.md` `## F.3`-ban):
+
+- ✅ **15 jelölt tiszta** (post-checkpoint SERP-validation-re mehetnek): iparág-vertikál (vet, auto-repair, property-mgmt, cleaning, daycare, salon, food-truck, dentist, coffee-shop, barbershop, nail-salon, spa, hvac, landscaping, photography), 4 role-driven (office-manager, executive-assistant, site-foreman, restaurant-manager), 5 use-case (snacks, parking, lunches, postage, emergency-repairs), 3 pain-driven (receipt-missing, custodian-quitting, multiple-people), 2 comparison (quickbooks-alternative, expensify-vs-spendnote), 3 workflow-concept (when-to-replenish, vs-change-fund, vs-cash-drawer), 4 migration (corporate-card-switch, qb-migration, csv-export-for-accountant, replace-with-app).
+- ⚠️ **9 jelölt át kell keretezni**: bookkeeper-role, hr-manager-role, client-gifts-use-case, short-deduct-or-write-off, balance-vs-ledger-mismatch, 3 comparison-page (Pleo/Wave/FreshBooks), imprest-system-explained, 3 seasonal (year-end-checklist, q4-audit-prep, setup-new-business).
+- ❌ **5 jelölt SKIP**: `petty-cash-stolen-what-to-do` (police/insurance/legal territory), `petty-cash-accounting-entries` (GAAP/journal-entries territory), `petty-cash-tax-season-prep` (explicit tax pozicionálás), `mint-vs-spendnote` (Mint shutdown + intent-mismatch), `petty-cash-for-church/charity/nonprofit` (donor-receipt jogi kockázat — már korábban SKIPPED).
+
+**Validáció a hard-rule alapján:** A felhasználói intuíció ("a régi oldalakon komoly jogi disclaimer van mindegyiken") **75%-ban igaz**: 4/8 oldal TIER A volt eredetileg, 4/8 hardening-et igényelt. A 8-bucket brainstorm szűrés azt mutatja, hogy a következő 1-2 hónap content-iránya (iparág-vertikál + role-driven + use-case + workflow-concept) **természetesen kompatibilis** a hard-rule-lal — nem szükséges drasztikus stratégia-átalakítás, csak jövőre minden új landing-jelölt **explicit compliance-border-check**-en kell átesnie a SERP-validation előtt.
+
+**Mi nem változott:** A `seoplan.md` `## A. Mit csináltunk ma (2026-05-01) — felhasználói override` szekció és a 04-28 ÉJSZAKA REFERENCIA blokk változatlan. A 2026-05-15 14-napos checkpoint továbbra is érvényes. A `tools/validate-schema.mjs` helper script érintetlen.
 
 ### 2026-05-01 ESTE — `/petty-cash-app` Google-discoverability micro-sprint (commit `421e5b9`) + SoftwareApplication schema annual-price alignment (commit `03d39a8`)
 

@@ -103,7 +103,66 @@ Felhasználó **3 ajánlatot kapott** (IndexNow ping script / AlternativeTo list
 
 Külön capterra-retry / SourceForge-update / SaaSHub-refresh / G2 Featured Comparison submission **továbbra is felhasználói feladat** — nincs erre AI-tooling.
 
+## F. Compliance-border policy — HARD RULE (felhasználói direktíva, 2026-05-02 01:30)
 
+**Pozicionálás (felhasználói szóhasználattal):**
+
+> SpendNote = operatív nyilvántartó + receipt-generáló eszköz. **NEM hivatalos könyvelési szoftver, NEM tax-tool, NEM legal-advisor.** Csak nyilvántartó és receipt-adó eszköz a kliens operatív rétegén; az accountant / bookkeeper / tax-advisor a felette dolgozó réteg.
+
+**Tilos oldal-jelölt vagy content-bővítés bármelyik alábbi területen:**
+
+- **Tax-advice** — IRS/HMRC/ATO/CRA-rules, deduction-rules, 1099/W-9/W-2-tanácsadás, sales-tax/VAT/GST treatment, payroll-tax kalkuláció.
+- **Accounting principles** — journal entries, GAAP/IFRS, double-entry, ledger-treatment, chart-of-accounts mapping.
+- **Legal-template-content** — legal disclaimer-writing, contract clauses, employment-law-related, statutory-wage-statement-pótlás.
+- **Compliance-szabályok** — donor-receipt rules (charity, nonprofit, 501(c)(3), Gift Aid), Form 990, Charity Commission filings, country-specific regulatory compliance.
+- **External / tax / compliance-audit procedure** — audit-procedure-tanácsadás kifelé (NOT internal owner-audit, ami OK).
+- **Donor-receipts / charity / nonprofit** — már SKIPPED a F.2-ben (jogi kockázat), itt explicit megerősítve.
+
+**Kötelező pozicionálás minden tax/legal-adjacent jelöltnél:**
+
+> SpendNote helps you record and prove. Your accountant classifies, files, and reports. Different jobs.
+
+**SERP-validation előtt minden új jelöltnél explicit compliance-border-check kötelező.** Ha a query top-5-jében dominál tax-authority (Investopedia, IRS.gov, QuickBooks-blog tax-tag, Bench/Pilot, Avalara, AccountingTools), automatikus SKIP.
+
+### F.1 Disclaimer-coverage TIER standard (minden új landing-jelöltre)
+
+Minden új tax/legal-adjacent oldal **kötelezően TIER A-szintű disclaimert kap** (a `payroll-cash-receipt.html` mintára):
+
+1. **`.top-disclaimer` box** közvetlenül a hero alá, az első H2 előtt — sárga warning-style border (`#f59e0b`), `fas-triangle-exclamation` ikon, "Read this first — what SpendNote does and does not do" headline-nal.
+2. **Dedikált H2 szekció** "This Is Not a [X]" formában, strukturált "It is / It is not" listával.
+3. **`.disclaimer-box` reminder** a CTA fölé, restating a fő kockázati pontokat.
+4. **2 dedikált FAQ** ("Is this a [tax/legal/payroll] document?" — "No. ..." + 1 másik border-clarification).
+5. **JSON-LD FAQPage entries** mindkét FAQ-ról — schema-szintű disclaimer is.
+
+**TIER B (single in-body disclaimer-box, no dedicated H2)** és **TIER C (footer-only)** **NEM elfogadható** új landing-jelöltön. A jelenlegi pages közül a 2026-05-02-i compliance-hardening sweep-pel mind TIER A-ra vagy TIER A-near-re lettek emelve.
+
+### F.2 2026-05-02 audit-eredmény (8 borderline meglévő oldal státusza)
+
+**TIER A (változatlanul jó, no action):**
+
+- `payroll-cash-receipt.html` — best-in-class reference (top-disclaimer + "not this" red box + reminder + 2 FAQ + schema)
+- `employee-cash-advance-receipt.html`
+- `contractor-advance-payment-receipt.html`
+- `cash-deposit-receipt.html`
+
+**Hardening végrehajtva 2026-05-02-en (commit `a3ef5cf`):**
+
+- `petty-cash-policy-template.html` (TIER C → TIER A) — top-disclaimer + reminder a CTA fölé. Single highest-risk page on the site (template-letöltés).
+- `office-expense-reimbursement-form.html` (TIER C → TIER A) — top-disclaimer.
+- `cash-refund-receipt.html` (TIER B → TIER A-near) — dedikált H2 "This Is Not a Credit Note or Tax Document" + "It is / It is not" lista.
+- `petty-cash-audit-checklist.html` (TIER B → TIER A-near) — dedikált H2 "Internal Audit vs External / Tax Audit — What This Checklist Covers".
+
+**Megjegyzés:** A `cash-refund-receipt` és `petty-cash-audit-checklist` még nem teljes TIER A (nincs schema-szintű FAQ-disclaimer + nincs `.top-disclaimer` warning-banner). De a meglévő disclaimer-box + új H2 + meglévő FAQ-k együttesen elég coverage-et adnak. Schema-szintű disclaimer-bővítés a következő nagyobb compliance-pass-ban (post-2026-05-15) mehet.
+
+### F.3 8 brainstorm-bucket átszűrve a hard-rule alapján (2026-05-02)
+
+A 2026-05-02 01:30-i brainstorm-session-ben összegyűjtött 8 új angle-bucket átszűrve a F. policy-vel:
+
+- ✅ **15 jelölt tiszta** (azonnal SERP-validation-re mehetnek post-checkpoint)
+- ⚠️ **9 jelölt át kell keretezni** (compliance-border-fit framing-gel működhetnek)
+- ❌ **5 jelölt SKIP** (`petty-cash-stolen-what-to-do`, `petty-cash-accounting-entries`, `petty-cash-tax-season-prep`, `mint-vs-spendnote`, korábbról `petty-cash-for-church/charity/nonprofit`)
+
+A teljes szűrt lista a `PROGRESS.md`-ben a 2026-05-02 brainstorm-szekciója alatt.
 
 # 🛡️ STRATEGIC GUARDRAILS — 2026-04-28 ÉJSZAKA (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis) — REFERENCIA
 
