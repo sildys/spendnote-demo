@@ -1,10 +1,119 @@
-# 🛡️ STRATEGIC GUARDRAILS — 2026-04-28 ÉJSZAKA (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis)
+# 🛡️ STRATEGIC GUARDRAILS — 2026-05-01 ESTE (`/petty-cash-app` Google-discoverability micro-sprint + 3-page SoftwareApplication schema annual-price alignment)
 
-> **Ez most a legfrissebb iránymutatás.** A 04-25-ös guardrails-blokk (lentebb) a **megelőző** állapotot rögzíti — a stratégiai irányt megerősíti, csak a teendőlistát váltja le.
+> **Ez most a legfrissebb iránymutatás.** A 04-28-ös guardrails-blokk (lentebb) a **megelőző** állapotot rögzíti — a stratégiai irányt megerősíti, csak a teendőlistát váltja le.
+
+## A. Mit csináltunk ma (2026-05-01) — felhasználói override a 04-28-i `## A. NE PISZKÁLJUK` szabályra
+
+A 04-28-i guardrails **tiltotta** az internal-link átépítést (`Új internal-link átépítés` a tilos listán) a 2026-04-29 → 2026-05-19 moratórium alatt. A felhasználó 2026-05-01 18:16 GMT+2-kor explicit zöld jelzést adott mind a 3 javasolt fix-re ("egyébként mehet mind a három módosítás, csináld"). A változtatások mind **technical SEO szintűek** (schema + 2 belső link + 2 anchor-szöveg), nem új URL és nem H1/H2 rewrite — kockázat-szempontból ekvivalensek a 04-29 00:30-as `employee-cash-advance-receipt` content-mismatch-fix-szel.
+
+**Diagnózis (a sprint indokolása):** A `/petty-cash-app` oldal **továbbra sem jelenik meg Google-on** "petty cash app", "online petty cash app", "browser-based petty cash app" intent-query-kre, holott **Bing már TOP 1-3-ban rangsorolja** (04-28-i live SERP-evidence). 3 root-cause:
+1. **Hiányzó homepage→/petty-cash-app belső link** — a homepage (legmagasabb authority a domainen) nem linkelt erre az oldalra. A 13 incoming internal link mind alacsonyabb-authority oldalakról jött (related-cardok). A leg-nagyobb értékű link-equity transfer kimaradt.
+2. **Hiányzó SoftwareApplication schema a `/petty-cash-app`-en** — csak `Article` + `FAQPage` schema volt. Google nem kapott explicit "ez egy software" jelet, ami "app"-intent query-knél kritikus.
+3. **Anchor-text over-optimization** — 13 incoming linkből ~10 az "Petty Cash App" / "petty cash app" exact-match anchor-szöveg variánsait használta. Anchor-diversity zéró.
+
+**Plus mellékfelfedezés:** SoftwareApplication schema árazási inkonzisztencia 3 oldalon — `index.html` + `spendnote-pricing.html` + (újonnan hozzáadott) `petty-cash-app.html` 3 különböző "SpendNote" SoftwareApplication-entitást deklaráltak 3 különböző ár-claim-mel. Ennek 04-18-i (`a23bffd`) eredete dokumentálva a `PROGRESS.md`-ben (post-mortem szekció).
+
+### A.1 Commit `421e5b9` — `/petty-cash-app` discoverability micro-sprint
+
+| Oldal | Mit | Cél |
+|---|---|---|
+| `index.html` (hero subnote, 1563. sor) | Új belső link → `/petty-cash-app`, anchor: **"browser-based petty cash app"**, inline style: `color: inherit; font-weight: inherit; text-decoration: underline;` (csak underline; betűszín és súly nem változik a felhasználó UI-kérése szerint) | Direkt link-equity transfer a homepage-ről (legmagasabb authority az oldalon) |
+| `index.html` (features description, 1638. sor) | Új belső link → `/petty-cash-app`, anchor: **"SpendNote petty cash app"**, ugyanaz az inline-style | Második homepage-link, **eltérő anchor** (anchor-diversity), a meglévő `/petty-cash-receipt-generator` és `/petty-cash-policy-template` inline-linkek mellé |
+| `petty-cash-app.html` (3. JSON-LD blokk) | **Új `SoftwareApplication` schema** (Article + FAQPage mellé) — `applicationCategory: BusinessApplication`, `applicationSubCategory: "Petty Cash Management"`, `alternateName: "SpendNote Petty Cash App"`, `operatingSystem: "Web Browser (Chrome, Safari, Firefox, Edge)"`, full `featureList` (8 elem), 2 offer (`$0` Free + `$15.83` Standard, P1Y annual) | Explicit "ez software, nem cikk" jel Google-nak — "app"-intent query-knél kritikus |
+| `cash-float-vs-petty-cash.html` (189. sor) | Inline anchor variáció: "petty cash app" → **"browser-based petty cash app"** | Anchor-diversity, exact-match-burden csökkentése |
+| `petty-cash-how-much-to-keep.html` (106. sor) | Inline anchor variáció: "petty cash app" → **"cloud petty cash tool"** | Anchor-diversity, exact-match-burden csökkentése |
+| `tools/validate-schema.mjs` | 16-soros Node.js helper a JSON-LD blokkok lokális gyors-validálására (`node tools/validate-schema.mjs <file.html>`) | Rich Results Test előtti smoke-check |
+
+**Anchor-diversity stratégia (NEM piszkáltuk):** A 11 related-card link a cluster-oldalakon ("Related Resources" szekciók) **változatlan maradt** — strukturált navigációs elemek, az UX-konzisztencia értékesebb mint az anchor-variáció. Csak a body-text inline anchor-okat variáltuk (2 hely).
+
+### A.2 Commit `03d39a8` — SoftwareApplication schema 3-oldalas annual-price alignment
+
+| Fájl | Schema offer-ek **ELŐTT** | Schema offer-ek **UTÁN** |
+|---|---|---|
+| `index.html` (line 37-79 SoftwareApplication) | `$0` Free + `$19` Standard (P1M monthly) + `$29` Pro (P1M monthly) | `$0` Free + `$15.83` Standard (P1Y annual, $190/yr) + `$24.17` Pro (P1Y annual, $290/yr) |
+| `spendnote-pricing.html` (line 44-91 SoftwareApplication) | `$0` Free + `$19.00` Standard (MO) + `$29.00` Pro (MO) | `$0` Free + `$15.83` Standard (MO + P1Y annual) + `$24.17` Pro (MO + P1Y annual) |
+| `petty-cash-app.html` (3. JSON-LD blokk) | `$0` Free + `$15.83` Standard (no Pro) | `$0` Free + `$15.83` Standard (P1Y) + `$24.17` Pro (P1Y) — Pro hozzáadva |
+
+Minden offer-en új `description: "Billed annually — $X/yr"` + új `priceSpecification.billingDuration: "P1Y"` — Google explicit `annual prepaid, displayed per-month` szignált kap.
+
+**Pricing toggle JS data NEM változott:** `index.html` (line 2025-2073) és `spendnote-pricing.html` (line 845-925) `pricingData` objektumban a `monthly: { standard: '$19', pro: '$29' }` változatlan. A `$19/$29` ott reális, felhasználó által átkapcsolható monthly billing cycle-érték — ez nem schema claim, hanem UI toggle-data.
+
+## B. Új moratórium: 2026-05-01 → 2026-05-15
+
+**Tilos (változatlan a 04-28-i listához képest, csak az újraszámlálás új):**
+- Új oldal
+- Új title-rewrite
+- Új H1/H2 átírás
+- Új internal-link átépítés (a mai 2 homepage-link kivételével — a többit **NE** bővítsük tovább)
+- Új meta-tweak hullám
+
+**Megengedett (változatlan):**
+- Indexelési kérés (egyenként, max 5/nap kvóta)
+- Sitemap resubmit
+- Search Console figyelése (heti max 1×)
+- GSC export napi/heti mentése
+
+**Cél:** Hagyni a Google-t feldolgozni a teljes 04-25 → 05-01 közötti tartalmi + technikai changes-flowt (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content + employee-cash-advance B variáns + mai 3-fix sprint) mielőtt újabb hullámot indítunk.
+
+## C. Indexelési teendő — felhasználó GSC-n holnap (2026-05-02)
+
+Prioritás-sorrendben (5/nap kvóta belefér):
+
+| # | URL | Indok |
+|---|---|---|
+| 1 | `https://spendnote.app/petty-cash-app` | TOP PRIORITÁS — sprint elsődleges célpontja, új SoftwareApplication schema + új homepage incoming link |
+| 2 | `https://spendnote.app/` | 2 új belső link `/petty-cash-app`-re + SoftwareApplication schema árazás javítva |
+| 3 | `https://spendnote.app/spendnote-pricing` | SoftwareApplication schema árazás 3-oldalas alignement keretében javítva |
+| 4 | *(opcionális)* `https://spendnote.app/cash-float-vs-petty-cash` | Inline anchor variáció |
+| 5 | *(opcionális)* `https://spendnote.app/petty-cash-how-much-to-keep` | Inline anchor variáció |
+
+**Rich Results Test elsőként (request indexing előtt):**
+- `https://search.google.com/test/rich-results?url=https%3A%2F%2Fspendnote.app%2F`
+- `https://search.google.com/test/rich-results?url=https%3A%2F%2Fspendnote.app%2Fpetty-cash-app`
+- `https://search.google.com/test/rich-results?url=https%3A%2F%2Fspendnote.app%2Fspendnote-pricing`
+
+Mindháromnak látnia kell a `SoftwareApplication` item-et 3 offer-rel ($0, $15.83, $24.17). Ha igen → request indexing.
+
+## D. Új 14-napos checkpoint: 2026-05-15
+
+A 04-28-i `B. 14-napos checkpoint (2026-05-12)` változatlanul érvényes a 04-25 sprintre — az ottani 6 értékelési pont marad. A mai (05-01) sprintnek **saját** 14-napos checkpointja van **2026-05-15-én**:
+
+1. **`/petty-cash-app` Pages → Queries audit** — bejönnek-e új "app"-intent query impressziók? (most: 0)
+2. **`/petty-cash-app` average position** — javul-e? (most: nem rangsorol)
+3. **SoftwareApplication rich result** — megjelenik-e a SERP-en (price, rating, etc.)? GSC > Enhancements szekció.
+4. **Homepage `/` Pages → Queries** — változik-e a `simple petty cash software` (jelenleg pos 3.2) körüli query-mix?
+5. **Anchor-diverzifikációs hatás** — a 2 inline-anchor változás mérhető-e a `cash-float-vs-petty-cash` és `petty-cash-how-much-to-keep` query-profilján?
+6. **Pricing schema árazás konzisztencia** — Google Knowledge Graph árazás frissül-e $15.83-ra? (Bing Webmaster Tools-on is mérhető.)
+
+**Decision-tree a 2026-05-15 checkpoint-on:**
+
+| Kimenet | Action |
+|---|---|
+| Pos 30 alatt 2-3 "app"-intent query a `/petty-cash-app`-en | ✅ Stratégia működik, csak idő. Várunk tovább 14 napot. |
+| 0 új query impresszió, de SoftwareApplication rich result megjelenik | ⚠️ Schema van, de cluster authority gyenge. **H1 rewrite** + **further internal link injection** mehet. |
+| 0 mozgás semmin, Bing pos 1-3 marad | ❌ Google-specifikus probléma (nem content). **Direkt outreach + AlternativeTo / Capterra retry + Reddit organic mention** szükséges. Lehet hogy a `/petty-cash-app` **content rewrite** kell (more user-facing, fewer SEO-flags). |
+
+## E. Mit nem csináltunk MA (átmentve későbbre)
+
+Felhasználó **3 ajánlatot kapott** (IndexNow ping script / AlternativeTo listing draft / Reddit post draft) ma este — **egyiket sem rendelte meg**. Ezek a backlogban maradnak, post-2026-05-15 checkpoint döntéshez kötve:
+
+- **F.M.1 IndexNow API ping helper script** — `tools/indexnow-ping.mjs`. Bing/Yandex/Yep instant URL-update notification. ~30 perc impl, ingyenes, nincs daily limit. Akkor érdemes ha 05-15-re Google nem mozdul de Bing-en tovább erősíteni akarjuk a `/petty-cash-app`-et.
+- **F.M.2 AlternativeTo listing draft** — submission szöveg `/petty-cash-app`-re mint "alternative to QuickBooks Petty Cash, NetSuite Petty Cash, Excel petty cash sheet". Indexelhető backlink + qualified traffic. Akkor érdemes ha 05-15-re Google nem mozdul és külső authority-jelekkel akarjuk pumpálni.
+- **F.M.3 Reddit / IndieHackers post draft** — 1 értékes 300-500 szavas post r/smallbusiness vagy r/Bookkeeping subreddit-en, természetesen említve a `/petty-cash-app`-et és/vagy `/petty-cash-how-much-to-keep`-et. Reddit linkek nofollow-ek de Google általuk fedezi fel az új URL-eket (crawl discovery).
+
+Külön capterra-retry / SourceForge-update / SaaSHub-refresh / G2 Featured Comparison submission **továbbra is felhasználói feladat** — nincs erre AI-tooling.
+
+
+
+# 🛡️ STRATEGIC GUARDRAILS — 2026-04-28 ÉJSZAKA (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis) — REFERENCIA
+
+> **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).
 >
 > **2026-04-28 ÉJSZAKA-update:** A felhasználó override-ja után a 23:30-as SERP-evidence (F.2.F + F.2.G) alapján **2 további meta/content-tweak** is végrehajtásra került ma (lásd a fenti két szekció VÉGREHAJTVA blokkjait). Ezzel az "A. NE PISZKÁLJUK" moratóriumot **a holnaptól (2026-04-29)** számoljuk újra. Új URL-t továbbra sem adunk hozzá, és új H1-rewrite sincs az érintett 2 oldalon kívül.
+>
+> **2026-05-01 ESTE-update:** A 04-29 → 05-19 moratóriumot a felhasználó override-ja után megszakítottuk a `/petty-cash-app` Google-discoverability micro-sprint-tel (lásd fent, `STRATEGIC GUARDRAILS — 2026-05-01 ESTE` szakasz). Az új moratórium-ablak: **2026-05-01 → 2026-05-15**. Az alábbi 04-28-i blokk teendőlistája (## A.) ezzel **lezárult**; a stratégiai irányok (## C. brainstorm, ## D. solo-business backlog, ## E. csatorna-stratégia, ## F. kutatás-backlog) változatlanul referencia.
 
-## A. NE PISZKÁLJUK 2-3 hetet (2026-04-29 → 2026-05-19)
+## A. NE PISZKÁLJUK 2-3 hetet (2026-04-29 → 2026-05-19) — LEZÁRVA 2026-05-01-EN
 
 3 új oldal kiment 2 nap alatt (`cash-float-vs-petty-cash`, `payroll-cash-receipt`, `petty-cash-custodian`) + meta-tweak 4 oldalon (04-28 ESTE) + cloud/online framing-tweak `petty-cash-app`-on + Pro Custom Labels conversion-content `custom-cash-receipt-with-logo`-n (04-28 ÉJSZAKA) + 28-oldalas trust-fix sweep ("Free tier" → "Free 14-day trial") + 1 cím-pivot (`employee-cash-advance-receipt`) + sitemap `lastmod` bump 40+ oldalon. Ez bőven elég jel a Google-nak.
 

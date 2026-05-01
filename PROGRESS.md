@@ -98,7 +98,77 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-04-28 ÉJSZAKA — Cloud/online framing tweak + Pro Custom Labels conversion-content)
+## Where we are now (last updated: 2026-05-01 ESTE — `/petty-cash-app` Google-discoverability sprint + 3-page SoftwareApplication schema price alignment)
+
+### 2026-05-01 ESTE — `/petty-cash-app` Google-discoverability micro-sprint (commit `421e5b9`) + SoftwareApplication schema annual-price alignment (commit `03d39a8`)
+
+**Kontextus:** Felhasználói pushback a 04-29 utáni Google-passzív várakozási fázisban: a `/petty-cash-app` oldal **továbbra sem jelenik meg Google-on** "petty cash app", "online petty cash app", "browser-based petty cash app" intent-query-kre, holott **Bing már TOP 1-3-ban rangsorolja** (lásd 04-28-i live SERP-evidence). Kérdés: hogyan lehet rávenni Google-t hogy az app-cluster oldalakat is megmutassa.
+
+**Diagnózis (research a sprint előtt):**
+1. **Hiányzó homepage→/petty-cash-app belső link** — a homepage (Google legfontosabb hub-ja a domainen) nem linkelt a `/petty-cash-app`-re. A 13 incoming internal link mind alacsonyabb-authority oldalakról jött (related-cardok). A leg-nagyobb értékű link-equity transfer kimaradt.
+2. **Hiányzó SoftwareApplication schema a `/petty-cash-app`-en** — csak `Article` + `FAQPage` schema volt. Google nem kapott explicit "ez egy software" jelet, ami "app"-intent query-knél kritikus.
+3. **Anchor-text over-optimization** — 13 incoming linkből ~10 az "Petty Cash App" / "petty cash app" exact match anchor-szöveg variánsait használta. Anchor-diversity zéró.
+4. **(Mellékfelfedezés a sprint közben) SoftwareApplication schema árazási inkonzisztencia 3 oldalon** — `index.html` és `spendnote-pricing.html` SoftwareApplication offer-ei `$19/$29 monthly` értékeket deklaráltak, miközben a teljes site (hero copy + meta description + 46 SEO oldal hero pricing note) `$15.83/mo annual-billed`-re alignelt 04-18 óta (commit `a23bffd`). A 04-18-i commit **explicit kihagyta** a JSON-LD schema-kat ("'19'/'190' figures still accurate" — igaz volt a monthly toggle-ra, de nem a schema canonical-ra). 3 különböző "SpendNote" SoftwareApplication-entitás 3 különböző ár-claim-mel.
+
+**Felhasználói override a 04-28-i `## A. NE PISZKÁLJUK` szabályra (2026-04-29 → 2026-05-19):** A 04-28-i guardrails **tiltotta** az internal-link átépítést. A felhasználó 2026-05-01 18:16 GMT+2-kor explicit zöld jelzést adott mind a 3 javasolt fix-re ("egyébként mehet mind a három módosítás, csináld"). A változtatások mind **technical SEO szintűek** (schema + 2 belső link + 2 anchor-szöveg), nem új URL és nem H1/H2 rewrite — kockázat-szempontból ekvivalensek a 04-29 00:30-as `employee-cash-advance-receipt` content-mismatch-fix-szel (ami szintén override-dal lett kihúzva a moratóriumból).
+
+**Mit csináltunk:**
+
+#### Commit `421e5b9` — `/petty-cash-app` discoverability micro-sprint
+
+| Oldal | Mit | Cél |
+|---|---|---|
+| `index.html` (hero subnote, 1563. sor) | Új belső link → `/petty-cash-app`, anchor: **"browser-based petty cash app"**, inline style: `color: inherit; font-weight: inherit; text-decoration: underline;` (csak underline, betűszín és súly nem változik a felhasználó UI-kérése szerint) | Direkt link-equity transfer a homepage-ről (legmagasabb authority az oldalon) — első hely, ahol a hero-szövegben természetesen elfér |
+| `index.html` (features description, 1638. sor) | Új belső link → `/petty-cash-app`, anchor: **"SpendNote petty cash app"**, ugyanaz az inline-style | Második homepage-link, **eltérő anchor** (anchor-diversity), a meglévő `/petty-cash-receipt-generator` és `/petty-cash-policy-template` inline-linkek mellé |
+| `petty-cash-app.html` (3. JSON-LD blokk) | **Új `SoftwareApplication` schema** (Article + FAQPage mellé) — `applicationCategory: BusinessApplication`, `applicationSubCategory: "Petty Cash Management"`, `alternateName: "SpendNote Petty Cash App"`, `operatingSystem: "Web Browser (Chrome, Safari, Firefox, Edge)"`, full `featureList` (8 elem), 2 offer (`$0` Free + `$15.83` Standard) | Explicit "ez software, nem cikk" jel Google-nak — kritikus "app"-intent query-knél |
+| `cash-float-vs-petty-cash.html` (189. sor) | Inline anchor variáció: "petty cash app" → **"browser-based petty cash app"** | Anchor-diversity, exact-match-burden csökkentése |
+| `petty-cash-how-much-to-keep.html` (106. sor) | Inline anchor variáció: "petty cash app" → **"cloud petty cash tool"** | Anchor-diversity, exact-match-burden csökkentése |
+| `tools/validate-schema.mjs` (új helper) | 16-soros Node.js script, parse-olja egy HTML összes `<script type="application/ld+json">` blokkját és visszajelez melyik valid, melyik invalid | JSON-LD lokális gyors-validálás (Rich Results Test előtt) |
+
+**Anchor-diversity stratégia (NEM piszkáltuk):**
+A 11 related-card link a cluster-oldalakon ("Related Resources" szekciók) **változatlan maradt** — azok strukturált navigációs elemek, az UX-konzisztencia értékesebb mint az anchor-variáció. Csak a body-text inline anchor-okat variáltuk (2 hely).
+
+#### Commit `03d39a8` — SoftwareApplication schema 3-oldalas annual-price alignment
+
+| Fájl | Schema offer-ek **ELŐTT** | Schema offer-ek **UTÁN** |
+|---|---|---|
+| `index.html` (line 37-79 SoftwareApplication) | `$0` Free + `$19` Standard (P1M monthly) + `$29` Pro (P1M monthly) | `$0` Free + `$15.83` Standard (P1Y annual, $190/yr) + `$24.17` Pro (P1Y annual, $290/yr) |
+| `spendnote-pricing.html` (line 44-91 SoftwareApplication) | `$0` Free + `$19.00` Standard (MO) + `$29.00` Pro (MO) | `$0` Free + `$15.83` Standard (MO + P1Y annual) + `$24.17` Pro (MO + P1Y annual) |
+| `petty-cash-app.html` (3. JSON-LD blokk, az imént hozzáadott) | `$0` Free + `$15.83` Standard (no Pro) | `$0` Free + `$15.83` Standard (P1Y) + `$24.17` Pro (P1Y) — Pro hozzáadva |
+
+Minden offer-en új `description: "Billed annually — $X/yr"` + új `priceSpecification.billingDuration: "P1Y"` (vagy `unitCode: "MO" + billingDuration: "P1Y"`) — Google explicit `annual prepaid, displayed per-month` szignált kap.
+
+**Pricing toggle JS data nem változott:** `index.html` (line 2025-2073) és `spendnote-pricing.html` (line 845-925) `pricingData` objektumban a `monthly: { standard: '$19', pro: '$29' }` változatlan. A `$19/$29` ott reális, felhasználó által átkapcsolható monthly billing cycle-érték — ez nem schema claim, hanem UI toggle-data.
+
+**Validálás:**
+- `tools/validate-schema.mjs` mind a 3 fájlon ✓ (3 SoftwareApplication, mind 3 offer-rel valid)
+- ReadLints mind a 4 érintett HTML-en ✓ (no errors)
+
+**Reindex teendők (felhasználó GSC-n holnap megcsinálja):**
+1. **`https://spendnote.app/petty-cash-app`** (TOP PRIORITÁS — sprint elsődleges célpontja)
+2. **`https://spendnote.app/`** (2 új belső link + schema árazás)
+3. **`https://spendnote.app/spendnote-pricing`** (schema árazás-alignement)
+4. *(opcionális)* `https://spendnote.app/cash-float-vs-petty-cash` (anchor variáció)
+5. *(opcionális)* `https://spendnote.app/petty-cash-how-much-to-keep` (anchor variáció)
+
+**Várható hatás (dátumos milestone-ok, nem "7-14 nap" homályos becslés):**
+
+| Dátum | Mit kell látnod (és hol nézd) |
+|---|---|
+| **2026-05-02 reggel** | GSC > URL Inspection a 3 fő URL-en → "Test Live URL" → "Enhancements" szekcióban "Detected items" között **SoftwareApplication** megjelenik 3 offer-rel ($0/$15.83/$24.17). Schema technikai-OK signal. |
+| **2026-05-03–04** | "Last crawl date" timestamp frissül a 3 fő URL-en. Ha 48h után még nem → reindex resubmit. |
+| **2026-05-05–06** | Cloudflare Analytics-ban a `/petty-cash-app` page view-ai picit emelkednek (Googlebot crawl + esetleges qualified traffic). |
+| **2026-05-07–08** | GSC Performance > Pages-en a `/petty-cash-app` mellett **legalább néhány új query impresszió** jön be — még ha pos 50+ is. Első jel hogy Google új query-cluster-ekkel kezd asszociálni. |
+| **2026-05-09** | Eredeti 04-25-i 14-napos checkpoint — `seoplan.md` `B. 14-napos checkpoint (2026-05-12)` még él, **de** ezzel egybe lehet kötni: a 04-29-i 3 új oldal + a mai sprint együttes értékelése. |
+| **2026-05-15** | **Új** 14-napos checkpoint a mai (05-01) sprint értékelésére — Pages → Queries audit a `/petty-cash-app`-en. Ha pos 30 alatt 2-3 "app"-intent query → működik a stratégia. Ha 0 mozgás → komolyabb intervenció (H1 rewrite, direkt outreach). |
+
+**Stratégiai megjegyzések:**
+- **Sprint mérete tudatosan kicsi** (3-fix, 5 fájl, ~30 perc munka) — ne robbantsuk fel a 04-25 → 05-19 moratórium szellemét. Ezek **technical-SEO + linking fix-ek**, nem új tartalom.
+- **A `seoplan.md` `## A. NE PISZKÁLJUK` szabálya továbbra is érvényes** mindenre amit ma NEM csináltunk — új oldal továbbra is tilos, új H1/H2 rewrite tilos, új meta-tweak hullám tilos. A mai 3 fix kivétel volt felhasználói override-dal, dokumentált indokkal.
+- **`tools/validate-schema.mjs`** menthető eszköz — bármikor használható egyetlen HTML JSON-LD-blokkjainak gyors-validálására Rich Results Test előtt. Nincs CI-integráció, manuális futtatás: `node tools/validate-schema.mjs <file.html>`.
+
+**`a23bffd` (2026-04-18) hibájának post-mortem:**
+A 04-18-i `seo: align hero pricing notes with .83/mo annual-billed headline` commit message explicit megfogalmazta: *"Pricing toggle data in index.html and spendnote-pricing.html left untouched: the '19'/'190' figures there are the monthly plan and the full annual total, both still accurate."* Ez technikailag igaz volt **a `pricingData` JS toggle-objektumra** (line 2025-2073 / 845-925), DE a megfogalmazás **összemosta** a JS toggle-data-t és a JSON-LD SoftwareApplication offer-eket. A schema-k 04-18 óta `$19/$29 monthly`-n álltak, miközben a teljes user-facing site `$15.83/mo annual`-on. Ma korrigálva.
 
 ### 2026-04-28 ÉJSZAKA — `petty-cash-app` cloud/online framing + `custom-cash-receipt-with-logo` Pro Custom Labels szekció
 
