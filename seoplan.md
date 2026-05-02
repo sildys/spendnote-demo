@@ -164,6 +164,106 @@ A 2026-05-02 01:30-i brainstorm-session-ben összegyűjtött 8 új angle-bucket 
 
 A teljes szűrt lista a `PROGRESS.md`-ben a 2026-05-02 brainstorm-szekciója alatt.
 
+### F.4 Felhasználói extra-brainstorm 4 új bucket — 2026-05-02 01:50 (vita-/félreértés-elkerülés + everyday vocab + spreadsheet + carbonless paper)
+
+**Felhasználói felvetés:** *"esetleg más szavakat vagy más megközelítést mit használhatnánk. egyrészt az igazoás kp kiadásról vagy igazolás kb átvételről, a viták vagy a félreértések elkerülése miatt. vagy más hétköznapi szavak használata mint money vagy mittudomén mit használnak amerikában... nem csak excellel hasonlítanám hanem google sheettel is... olyasmivel ami hétköznapi, carbonless nyugtatömbbel..."*
+
+**4 új angle-bucket azonosítva** (F. compliance-border-check átfutva, 24/24 jelölt clean):
+
+- **Bucket 9 — Dispute prevention / proof framing** (7 jelölt: `proof-of-cash-handover`, `avoid-petty-cash-disputes`, `did-i-give-him-the-money`, `cash-payment-without-witness`, `proof-i-paid-the-contractor-cash`, `proof-i-paid-the-employee-cash`, `cash-receipt-template-prevent-disputes`)
+- **Bucket 10 — Everyday/colloquial vocabulary** (5 jelölt: `office-money-tracker`, `track-office-money-app`, `simple-money-tracking-small-team`, `company-cash-log-app`, `office-money-box-tracker`)
+- **Bucket 11 — Spreadsheet expansion (Google Sheets / Numbers / Notion / Airtable)** (4 jelölt: `petty-cash-google-sheets-vs-app`, `petty-cash-spreadsheet-vs-app` umbrella, `airtable-petty-cash-vs-spendnote`, `notion-petty-cash-tracker-vs-app`)
+- **Bucket 12 — Physical/analog alternatives (carbonless receipt books, paper logs)** (4 jelölt: `carbonless-receipt-book-vs-app`, `digitize-paper-cash-log`, `paper-petty-cash-log-vs-app`, `triplicate-receipt-book-vs-app`)
+
+**Lay-vocabulary blacklist (Bucket 10 melléktermék — F.-policy bővítés):** `slush fund` (corruption), `walking-around money` (US political bribery), `off the books cash` (tax-evasion), `under the table` (illegal payment), `kickback` (bribery), `cash on hand` (banking/accounting term — F.-tilos territory).
+
+#### F.4.A Élő SERP-validation 10 query-n (2026-05-02 01:55, WebSearch-tool)
+
+A 4 bucket-ből 8 prioritált query + 2 bonus pain-trigger query lefuttatva. Eredmények:
+
+**MI MÁR DOMINÁLUNK 7/10 query-n (TOP 1 vagy TOP 5):**
+
+| Query | Top eredmény | SpendNote helyezés | Bucket |
+|---|---|---|---|
+| `petty cash google sheets template alternative app` | **`spendnote.app/index.html`** | **TOP 1** | 11 |
+| `notion petty cash template tracker` | Notion templates × 4 | **TOP 5** (`petty-cash-log-template`) | 11 |
+| `carbonless receipt book vs app digital alternative` | **`spendnote.app/digital-receipt-book`** | **TOP 1** | 12 |
+| `replace paper petty cash receipt book digital` | 4/5 SpendNote-oldal a top 5-ben! | TOP 1+2+3+5 | 12 |
+| `paper petty cash log book alternative small office` | **`spendnote.app/petty-cash-log-template`** | **TOP 1** | 12 |
+| `how to avoid disputes over petty cash small team` | beancount.io | **TOP 2 + TOP 3** (`security-tips` + `how-to-manage-pcsb`) | 9 |
+| `how to prove cash payment to employee no receipt` | findlaw.com (legal) | **TOP 2** (`payroll-cash-receipt`) | bonus 9 |
+
+**F.-tilos area 1/10:**
+
+| Query | SERP top-5 | Diagnózis |
+|---|---|---|
+| `proof of cash payment without receipt small business 2026` | beancount, AOL-IRS, Torrington-IRS, sparkreceipt-IRS | **F.-tilos**: IRS/tax-territory dominál — auto-SKIP |
+
+**SaaS-fal / brand-confusion 2/10:**
+
+| Query | SERP top-5 | Diagnózis |
+|---|---|---|
+| `office money tracker app small business` | FreshBooks, CNBC, Expensify, Reddit, Wave | SaaS-óriás verseny — SKIP (közvetlen FreshBooks/Expensify-fal) |
+| `track company cash app simple` | Cash.app × 4, digitalcitizen | **Brand-confusion**: Cash App (Square brand) dominál — SKIP |
+
+#### F.4.B 4 kulcs-felfedezés ami megváltoztatja a stratégiát
+
+**1. NE új landing Bucket 11/12-re — már TOP 1-en vagyunk.** Egy új `petty-cash-google-sheets-vs-app` vagy `carbonless-receipt-book-vs-app` landing **content-cannibalize-elne** a meglévő dominanciával. **Helyette: meglévő oldalak augmentation** post-2026-05-15-en (lásd F.4.C hibrid-koncepció).
+
+**2. Bucket 9 már lefedve, DE noindex-paradox.** A `how to avoid disputes over petty cash` query-n MÁR TOP 2-3-ban vagyunk, **DE** a `how-to-manage-petty-cash-small-business` **noindex**! Tipikus Bing-discovery-pattern (mint 04-29-i F.2.J `how much petty cash should i keep` TOP 1 felfedezés). **Action**: 2026-05-15-i checkpoint-on újra-megfontolni a noindex-státuszát.
+
+**3. Bucket 10 (everyday vocabulary) — DEAD-END.** A "money" + "company" + "office" terminológia túlságosan brand/SaaS/personal-finance-territory-szennyezett. **NE menjünk ide.** Vocabulary-blacklist tovább bővítve (lásd F.4.A vége).
+
+**4. TIER A disclaimer bizonyítottan működik.** A `payroll-cash-receipt` TOP 2-ben van legal-authority-falon (FindLaw, SetarehLaw, JustAnswer) — Google érti hogy mi NEM legal-tool vagyunk a multilayered disclaimer miatt. **Retroaktív validáció** a 2026-05-02 hardening döntésnek (commit `a3ef5cf`).
+
+#### F.4.C Hibrid-koncepció (C kontingens output) — `digital-receipt-book.html` augmentation
+
+A SERP-evidence alapján **NEM új landing**, hanem **a meglévő `digital-receipt-book.html` augmentation** egy új H2-vel ami a 4-bucket query-tért lefedi (Bucket 9 disputes + 10 office-cash light vocab + 11 spreadsheet + 12 carbonless paper):
+
+**Új H2 javaslat (post-2026-05-15 implementation):** "Why a Paper Receipt Book or Spreadsheet Won't Prevent Cash Disputes"
+
+```
+Lead: When two people agree on a cash handover, the question isn't
+"did the money change hands?" — it's "can we prove it tomorrow, next
+month, or two years from now?" A paper receipt book sits in one
+drawer. A Google Sheet lives in one person's account. Neither one is
+what you reach for when a partner says "I never got that money."
+
+Sub-headers:
+1. The carbonless receipt book — "instant, but bound to one place"
+2. The Excel or Google Sheet — "everyone edits, no one signs"
+3. The 'I'll text you the receipt' workflow — "until somebody loses
+   the thread"
+
+Closing: SpendNote = a third option. Printable+signed PDF receipt
+with a unique ID. Searchable years later. Plus TIER A disclaimer:
+"Not a credit note, payslip, or accounting record."
+```
+
+#### F.4.D Backlog — 1 valós új landing-jelölt (post-2026-05-15)
+
+**`notion-petty-cash-vs-app`** — egyetlen jelölt ami **valós new-landing-potenciálú**:
+- A `notion petty cash template tracker` query-n MI MÁR TOP 5-ben vagyunk (`petty-cash-log-template`)
+- Top 4 mind Notion native template (Daily Petty Cash, community templates)
+- NINCS SaaS-óriás a top 5-ben
+- Notion-user audience tech-forward, magas conversion-intent
+- **Realisztikus pos 3-5** dedikált landinggel
+- **F.-policy clean** (no tax/legal angle, pure tool-comparison)
+
+**Trigger feltétel a 2026-05-15 checkpoint-on:** ha a `petty-cash-log-template` Bing-en stabilan rangsorol és Google-on is impressziókat kap a Notion-relevant query-kre, akkor `notion-petty-cash-vs-app.html` mehet a post-checkpoint listára.
+
+#### F.4.E Konzekvencia összefoglaló
+
+A 4 új bucket × 20 jelölt × 10 SERP-test eredménye:
+
+- **0 azonnali új landing** szükséges (moratórium-szellemű)
+- **1 hibrid-augmentation** kandidatúra: `digital-receipt-book.html` új H2 (post-2026-05-15)
+- **1 new-landing kandidatúra**: `notion-petty-cash-vs-app.html` (post-2026-05-15, trigger-feltételes)
+- **1 noindex-revision kandidatúra**: `how-to-manage-petty-cash-small-business.html` (post-2026-05-15, ha bevált a Bing-discovery-pattern)
+- **Vocabulary blacklist bővítve** 6 új tételle (a F. policy-be permanently)
+
+**Stratégiai tanulság**: A felhasználói brainstorm-pushback ("more vocabulary, more angles") gyakran megerősíti, hogy **MÁR jobban lefedjük a területet, mint ahogy a saját self-assessment alapján gondoltuk**. A `petty-cash` cluster mély és széles, és a Bing-discovery-pattern (`how much petty cash should i keep` 04-29-en, `how to avoid disputes` 05-02-én) azt mutatja, hogy a **GSC-data 4-8 hetes lag-je miatt nem látjuk reálisan, mi rangsorol már most**. SERP-evidence > GSC-export.
+
 # 🛡️ STRATEGIC GUARDRAILS — 2026-04-28 ÉJSZAKA (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis) — REFERENCIA
 
 > **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).

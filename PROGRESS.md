@@ -98,7 +98,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-02 ÉJSZAKA — Compliance-border hard-rule + 4-page disclaimer hardening + 8-bucket post-checkpoint brainstorm szűrve)
+## Where we are now (last updated: 2026-05-02 ÉJJEL — Felhasználói extra-brainstorm 4 új bucket + 10-query élő SERP-validation + hibrid-augmentation backlog)
 
 ### 2026-05-02 ÉJSZAKA — Compliance-border hard-rule + disclaimer audit + 4-page hardening (commit `a3ef5cf`) + post-checkpoint brainstorm-pipeline szűrve (`seoplan.md` `## F.`)
 
@@ -162,6 +162,78 @@ A 2026-05-01 23:30-i brainstorm-session 8 új angle-bucket-ét átszűrtük a F.
 **Validáció a hard-rule alapján:** A felhasználói intuíció ("a régi oldalakon komoly jogi disclaimer van mindegyiken") **75%-ban igaz**: 4/8 oldal TIER A volt eredetileg, 4/8 hardening-et igényelt. A 8-bucket brainstorm szűrés azt mutatja, hogy a következő 1-2 hónap content-iránya (iparág-vertikál + role-driven + use-case + workflow-concept) **természetesen kompatibilis** a hard-rule-lal — nem szükséges drasztikus stratégia-átalakítás, csak jövőre minden új landing-jelölt **explicit compliance-border-check**-en kell átesnie a SERP-validation előtt.
 
 **Mi nem változott:** A `seoplan.md` `## A. Mit csináltunk ma (2026-05-01) — felhasználói override` szekció és a 04-28 ÉJSZAKA REFERENCIA blokk változatlan. A 2026-05-15 14-napos checkpoint továbbra is érvényes. A `tools/validate-schema.mjs` helper script érintetlen.
+
+### 2026-05-02 ÉJJEL — Felhasználói extra-brainstorm 4 új bucket (vita-elkerülés + everyday vocab + Google Sheets/Notion + carbonless paper) → 10-query élő SERP-validation → hibrid-augmentation backlog (`seoplan.md` `## F.4`)
+
+**Kontextus:** A felhasználó a `## F.3`-ban szűrt 8-bucket brainstorm után **proaktív extra-brainstorm-pushback-ot** adott: *"esetleg más szavakat vagy más megközelítést mit használhatnánk. egyrészt az igazolás kp kiadásról vagy igazolás kp átvételről, a viták vagy a félreértések elkerülése miatt. vagy más hétköznapi szavak használata mint money vagy mittudomén mit használnak amerikában... nem csak excellel hasonlítanám hanem google sheettel is... olyasmivel ami hétköznapi, carbonless nyugtatömbbel..."* — 4 új angle-irányt javasolva.
+
+**4-bucket azonosítás (24 jelölt, F.-policy-clean):**
+
+- **Bucket 9** — Dispute prevention / proof framing (7 jelölt)
+- **Bucket 10** — Everyday/colloquial vocabulary ("money", "office cash") (5 jelölt)
+- **Bucket 11** — Spreadsheet expansion (Google Sheets, Notion, Airtable, Numbers) (4 jelölt)
+- **Bucket 12** — Physical/analog alternatives (carbonless receipt books, paper logs) (4 jelölt)
+
+#### 1. Élő SERP-validation 10 query-n (WebSearch-tool, 2026-05-02 01:55 GMT+2)
+
+A 4 bucket-ből 8 prioritált query + 2 bonus pain-trigger query lefuttatva. **Brutális eredmény: MI MÁR DOMINÁLUNK 7/10 query-n.**
+
+| Query | SpendNote helyezés | Bucket |
+|---|---|---|
+| `petty cash google sheets template alternative app` | **TOP 1** (homepage) | 11 |
+| `notion petty cash template tracker` | **TOP 5** (`petty-cash-log-template`) | 11 |
+| `carbonless receipt book vs app digital alternative` | **TOP 1** (`digital-receipt-book`) | 12 |
+| `replace paper petty cash receipt book digital` | **4/5 SpendNote-oldal a top 5-ben!** | 12 |
+| `paper petty cash log book alternative small office` | **TOP 1** (`petty-cash-log-template`) | 12 |
+| `how to avoid disputes over petty cash small team` | **TOP 2 + TOP 3** (`security-tips` + `how-to-manage-pcsb`) | 9 |
+| `how to prove cash payment to employee no receipt` | **TOP 2** (`payroll-cash-receipt`) | bonus 9 |
+
+**1/10 F.-tilos:** `proof of cash payment without receipt small business 2026` — IRS-territory dominál (4/5 IRS/tax content) → auto-SKIP a F. policy alapján.
+
+**2/10 dead-end:**
+- `office money tracker app small business` — SaaS-óriás-fal (FreshBooks, Expensify, CNBC, Wave)
+- `track company cash app simple` — brand-confusion (Cash App = Square brand dominálja)
+
+#### 2. 4 kulcs-felfedezés ami megváltoztatja a stratégiát
+
+**Felfedezés 1:** **NE új landing Bucket 11/12-re.** A spreadsheet (Google Sheets / Notion) és carbonless/paper területeken MÁR TOP 1-en vagy TOP 5-ben vagyunk **dedikált oldal nélkül**. Egy új `petty-cash-google-sheets-vs-app` vagy `carbonless-receipt-book-vs-app` landing **content-cannibalize-elne** a meglévő dominanciával. Helyette: **meglévő oldalak augmentation** post-2026-05-15-en.
+
+**Felfedezés 2:** Bucket 9 már lefedve, **DE noindex-paradox**. A `how to avoid disputes over petty cash` query-n MÁR TOP 2-3-ban vagyunk a `petty-cash-security-tips` + `how-to-manage-petty-cash-small-business`-szel — DE az utóbbi **noindex**! Tipikus Bing-discovery-pattern (mint a 04-29-i F.2.J source-mining batch-ben felfedezett `how much petty cash should i keep` TOP 1 case). Action: **2026-05-15-i checkpoint-on újra-megfontolni a noindex-státuszát**.
+
+**Felfedezés 3:** Bucket 10 (everyday vocabulary) — **DEAD-END**. A "money" + "company" + "office" terminológia túlságosan brand/SaaS/personal-finance-territory-szennyezett. Vocabulary-blacklist bővítve 6 új tételle a F. policy-be (slush fund, walking-around money, off the books cash, under the table, kickback, cash on hand).
+
+**Felfedezés 4:** **TIER A disclaimer bizonyítottan működik.** A `payroll-cash-receipt` TOP 2-ben van legal-authority-falon (FindLaw, SetarehLaw, JustAnswer) — Google érti hogy mi NEM legal-tool vagyunk a multilayered disclaimer miatt. **Retroaktív validáció** a 2026-05-02 hardening döntésnek (commit `a3ef5cf`).
+
+#### 3. Hibrid-koncepció (a felhasználó-kért C kontingens) — `digital-receipt-book.html` augmentation
+
+A SERP-evidence alapján a leg-erősebb hibrid-megoldás **NEM új landing**, hanem a meglévő `digital-receipt-book.html` augmentation egy új H2-vel ami a 4-bucket query-tért **egyetlen szekcióban** lefedi:
+
+**Új H2 javaslat (post-2026-05-15 implementation):** "Why a Paper Receipt Book or Spreadsheet Won't Prevent Cash Disputes"
+
+3 sub-headerrel a 3 alternatívát végigjárja (carbonless receipt book / Excel-Google Sheet / "I'll text you the receipt" workflow), és a closing-ban SpendNote = third option, plus TIER A disclaimer ("Not a credit note, payslip, or accounting record"). Ez **a 4 bucket egyetlen H2-ben** lefedi (Bucket 9 disputes + Bucket 10 office-cash light vocab + Bucket 11 spreadsheet + Bucket 12 carbonless paper). NEM új landing → moratórium-szellemű, viszont **post-checkpoint mehet**.
+
+#### 4. Backlog — 1 valós új landing-jelölt (post-2026-05-15)
+
+**`notion-petty-cash-vs-app`** — egyetlen jelölt ami **valós new-landing-potenciálú** a 24 új jelöltből:
+- Mi MÁR TOP 5-ben vagyunk a `petty-cash-log-template`-pel
+- Top 4 mind Notion native template (Daily Petty Cash, community templates)
+- NINCS SaaS-óriás a top 5-ben (Notion-template-tér tiszta)
+- Notion-user audience tech-forward, magas conversion-intent
+- F.-policy clean (no tax/legal angle, pure tool-comparison)
+
+Trigger feltétel a 2026-05-15 checkpoint-on: ha a `petty-cash-log-template` Bing-en stabilan rangsorol és Google-on is impressziókat kap a Notion-relevant query-kre, akkor `notion-petty-cash-vs-app.html` mehet a post-checkpoint listára.
+
+#### Konzekvencia összefoglaló — 4 új bucket × 24 jelölt × 10 SERP-test eredménye
+
+- **0 azonnali új landing** szükséges (moratórium-szellemű)
+- **1 hibrid-augmentation kandidatúra** post-2026-05-15: `digital-receipt-book.html` új H2 (4-bucket query-tért lefedi)
+- **1 new-landing kandidatúra** post-2026-05-15 trigger-feltételesen: `notion-petty-cash-vs-app.html`
+- **1 noindex-revision kandidatúra** post-2026-05-15: `how-to-manage-petty-cash-small-business.html`
+- **Vocabulary blacklist bővítve** 6 új tételle (a F. policy-be permanently)
+
+**Stratégiai tanulság:** A felhasználói brainstorm-pushback ("more vocabulary, more angles") gyakran megerősíti, hogy **MÁR jobban lefedjük a területet, mint ahogy a saját self-assessment alapján gondoltuk**. A `petty-cash` cluster mély és széles, és a Bing-discovery-pattern (`how much petty cash should i keep` 04-29-en, `how to avoid disputes over petty cash` 05-02-én) azt mutatja, hogy a **GSC-data 4-8 hetes lag-je miatt nem látjuk reálisan, mi rangsorol már most**. **SERP-evidence > GSC-export.**
+
+**Mit nem csináltunk:** Nem írtunk új HTML kódot, nem érintettük a meglévő oldalakat. A 2026-05-02 ÉJSZAKA blokk (compliance hardening, commit `a3ef5cf`) teljesen érintetlen marad. Csak documentation-update: `seoplan.md` `## F.4` új subsection (5 sub-block: F.4.A SERP-tábla, F.4.B 4 felfedezés, F.4.C hibrid-koncepció, F.4.D backlog, F.4.E konzekvencia).
 
 ### 2026-05-01 ESTE — `/petty-cash-app` Google-discoverability micro-sprint (commit `421e5b9`) + SoftwareApplication schema annual-price alignment (commit `03d39a8`)
 
