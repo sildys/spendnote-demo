@@ -98,7 +98,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-02 02:16 — Methodology-revision: SERP-test aszimmetrikus értéke (F.4.F), SKIP-decisions > priority-rankings)
+## Where we are now (last updated: 2026-05-02 02:30 — Snippet-rewrite hipotézis-teszt `petty-cash-how-much-to-keep.html`-en, 7-napos megfigyelés)
 
 ### 2026-05-02 ÉJSZAKA — Compliance-border hard-rule + disclaimer audit + 4-page hardening (commit `a3ef5cf`) + post-checkpoint brainstorm-pipeline szűrve (`seoplan.md` `## F.`)
 
@@ -278,6 +278,38 @@ Trigger feltétel a 2026-05-15 checkpoint-on: ha a `petty-cash-log-template` Bin
 **Felhasználói filozófia mint alapelv:** Amit nem tudunk befolyásolni, azzal NE foglalkozzunk. Figyelem a **befolyásolható dolgokra**: mit írunk meg, mit nem, mit augmentálunk, hogyan disclaimer-positionálunk. A pontos Google-ranking = **kimenet, nem bemenet**.
 
 **Methodology-prioritás (új):** SKIP-decisions > priority-rankings. A 4 új bucket × 10 SERP-test (F.4.A) **leg-értékesebb** outputja a **3 SKIP-decision** (IRS-tax SKIP, SaaS-fal SKIP × 1, brand-confusion SKIP × 1) — nem a "TOP 1 vagyunk" claim.
+
+### 2026-05-02 02:30 — Snippet-rewrite hipotézis-teszt `petty-cash-how-much-to-keep.html`-en (felhasználói GSC-pushback nyomán)
+
+**Felhasználói pushback (2026-05-02 02:20):** GSC 24-órás export beérkezett. **0 klikk, 72 megjelenés, 0% CTR, átlagpos 12.4** a teljes site-on. A `petty-cash-how-much-to-keep` oldal **43 megjelenés, 0 klikk, pos 7.0** — pos 7-en várható ~1-2 klikk lenne (pos 7 átlag CTR ~2-3% Advanced Web Ranking 2025), tehát **enyhén alulteljesít**.
+
+**Diagnózis (3 baj sorrendben fontosság szerint):**
+
+1. **Meta description "answer-in-snippet" cannibalization** (legfontosabb) — A régi description **elmondta a választ**: "Most small businesses use $100–$500. Get the float formula...". A felhasználó megkapta amit akart a SERP-snippet-ben → nem kellett kattintania. Klasszikus self-cannibalization "how much"-style query-knél.
+2. **Title CTR-szempontból gyenge** — "Float Formula + $100 Breakdown" száraz/technikai (nem köznyelvi), "$100 Breakdown" zavart kelt (miért pont $100?), nincs differentiation a többi top-10 eredményhez (FreshBooks/QuickBooks).
+3. **Pos 7 + AI Overview-effect** — pos 7 átlag CTR ~2-3%, plus AI Overview "how much"-query-knél felfalja a top-10 klikkeket. Ezt nem tudjuk befolyásolni.
+
+**Mit csináltunk (snippet-rewrite, technical SEO micro-fix, moratórium-szellemű):**
+
+| Mező | Régi (168/60 char) | Új (126/62 char) |
+|---|---|---|
+| `<title>` | `How Much Petty Cash to Keep? Float Formula + $100 Breakdown` | `How Much Petty Cash to Keep? (Sizing Examples for Small Offices)` |
+| `meta description` | `How much petty cash to keep? Most small businesses use $100–$500. Get the float formula, typical amounts by business type, and a $100 denominations breakdown.` (válasz-spoiler) | `Most teams keep too much (theft risk) or too little (constant ATM runs). The float formula + real $ sizing examples by office size.` (pain-driven, no-spoiler) |
+| `og:title`, `twitter:title` | régi title | új title (szinkron) |
+| `og:description`, `twitter:description` | régi meta description | új meta description (szinkron) |
+| `Article` schema headline | régi title | új title (szinkron) |
+| `Article` schema description | régi spoiler | `Right-size your office petty cash float without the guesswork. The float formula explained, plus real-dollar sizing examples for offices of 5, 10, and 20+ people.` |
+| `dateModified` | `2026-04-25` | `2026-05-02` (Google "fresh content" signal → újra-crawl + re-rangsorolás) |
+
+**Mit NEM csináltunk:** H1 (`How Much Petty Cash Should You Keep?`) változatlan — query-formátumot követi, jól illik. A body-content érintetlen. NEM internal-link-átépítés, NEM új landing — moratórium-szellemű micro-fix mint a `421e5b9` és `03d39a8`.
+
+**Hipotézis (7-napos megfigyelés-target, 2026-05-09):**
+
+- **Hipotézis 1 (snippet-rewrite hat):** Ha 7 nap múlva ezen az oldalon **legalább 1-3 klikk** jelenik meg (pos ~5-10-en), akkor a snippet-rewrite hipotézis **megerősödik** → batch-ben újraírjuk a többi 15 oldal title/description-jét (`cash-drawer-reconciliation`, `how-to-track-cash-payments`, `where-to-keep-petty-cash`, etc.).
+- **Hipotézis 2 (AI Overview-effect a fő baj):** Ha 7 nap múlva **továbbra is 0 klikk** ezen az oldalon (de pos megmarad), akkor megerősíti hogy az AI Overview / People Also Ask felfalja a klikkeket → snippet-rewrite nem segít, **más stratégia kell** (pl. featured-snippet-targeting, schema bővítés, video-content).
+- **Hipotézis 3 (Bing-Google-discrepancy):** Ha 7 nap múlva sem klikk sem impresszió-mozgás → Bing-en jól rangsorolunk (04-29-i SERP-test TOP 1), de Google US-en valójában nem ott vagyunk ahol gondoljuk → SERP-test methodology pozitív evidencia újra-revízió (F.4.F megerősítés).
+
+**Validáció a methodology-fennel:** Ez **felhasználói pragmatikus filozófia** mentén van: amit befolyásolni tudjuk (snippet), azzal foglalkozunk; amit nem (Google ranking algorithmuk), azzal nem. A 7 napos hipotézis-teszt **minimum-cost** információt ad — JSON-LD valid, no lint errors, dateModified-frissítés Google-jelet ad az újra-crawl-ra.
 
 ### 2026-05-01 ESTE — `/petty-cash-app` Google-discoverability micro-sprint (commit `421e5b9`) + SoftwareApplication schema annual-price alignment (commit `03d39a8`)
 
