@@ -98,7 +98,78 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-02 02:30 — Snippet-rewrite hipotézis-teszt `petty-cash-how-much-to-keep.html`-en, 7-napos megfigyelés)
+## Where we are now (last updated: 2026-05-02 03:00 — Honest-claims-rule (`seoplan.md` `## H.`) + 6-oldalas bait-and-switch batch-fix + audit-checklist a jövőbeli új oldalakhoz)
+
+### 2026-05-02 03:00 — Honest-claims-rule (`seoplan.md` `## H.`) + 6-oldalas bait-and-switch batch-fix (felhasználói "csinálj meg mindent" nyomán)
+
+**Trigger:** A 02:30-i `petty-cash-how-much-to-keep` snippet-rewrite után audit derítette ki — közvetlen folytatásként a *"a template szót szándékosan száműztük mindenhonnan"* (felhasználói emlék) → *"nem emlélkszem már... biztos a helyezsée miatt nyúltunk hozzá"* (felhasználói korrekció) párbeszéd után —, hogy a **04-25-i `8a1efe2` commit nem cleanup-olta végig** a "Free / Template / (Free) / Free checklist included" claim-eket. **6 oldalon** maradt félrevezető SERP-snippet ahol **nincs valós letölthető fájl**:
+
+| Oldal | Index-státusz | Probléma | Tünet |
+|---|---|---|---|
+| `petty-cash-replenishment-form.html` | indexed | "(Free)" a title-ban + "Free guide" a meta-ban | **GSC pos=39.0** (impressionnel, klikk nélkül) |
+| `petty-cash-voucher-template.html` | noindex | "Free Petty Cash Voucher Template" mind az 5 helyen | preventív (ha visszaindexáljuk) |
+| `petty-cash-reconciliation.html` | indexed | "Free checklist included" a meta-ban | nem-mért, de structural false-claim |
+| `cash-count-sheet-template.html` | indexed | "Free cash count sheet" a meta-ban + "Template" a title-ban | nem-mért, de structural false-claim |
+| `daily-cash-report-template.html` | indexed | "Template" a title-ban (de meta már OK) | structural inkonzisztencia |
+| `petty-cash-log-template.html` | noindex | "Free petty cash log template" mind az 5 helyen | preventív (ha visszaindexáljuk) |
+
+**Háromrészes válasz (az 1.-2.-3. = "Opció B" amit a felhasználó "csinálj meg mindent"-nel jóváhagyott):**
+
+#### 1. 6-oldalas snippet-rewrite (mind az 5 head-block-mező + dateModified)
+
+Mind a 6 fájlon szinkronban:
+- `<title>` (4 oldalon: új honest-claims cím; 1 változatlan; reconciliation csak meta)
+- `<meta name="description">` (mind a 6 oldalon: új no-spoiler, no-false-claim verzió)
+- `og:title` / `og:description` (sync)
+- `twitter:title` / `twitter:description` (sync)
+- `Article` schema `headline` / `description` (sync)
+- `Article` schema `dateModified`: `2026-05-02` / `2026-05-02T03:00:00+00:00` (formátum-konzisztencia oldalanként)
+
+**A 6 új title (indexed-jelölve):**
+
+| Régi (bait-and-switch) | Új (honest, edukációs) | Index |
+|---|---|---|
+| Petty Cash Replenishment Request Form (Free) | Petty Cash Replenishment Request — Process and Approval | ✓ indexed |
+| Free Petty Cash Voucher Template — Printable + Digital | Petty Cash Voucher — Format, Fields, How to Fill Out | noindex |
+| Petty Cash Reconciliation: Step-by-Step Guide *(változatlan)* | Petty Cash Reconciliation: Step-by-Step Guide *(csak meta-fix)* | ✓ indexed |
+| Cash Count Sheet Template — Count by Denomination | Cash Count Sheet — Denominations, Total, Reconcile | ✓ indexed |
+| Daily Cash Report Template — End-of-Day Summary | Daily Cash Report — End-of-Day Summary for Small Teams | ✓ indexed |
+| Petty Cash Log Template — Track Every Transaction | Petty Cash Log — Auto-Built from Every Receipt You Generate | noindex |
+
+#### 2. Sitemap `<lastmod>` frissítve mind a 4 indexed URL-en
+
+- `/petty-cash-replenishment-form` → `2026-05-02` (volt: `2026-04-26`)
+- `/petty-cash-reconciliation` → `2026-05-02` (volt: `2026-04-25`)
+- `/cash-count-sheet-template` → `2026-05-02` (volt: `2026-04-26`)
+- `/daily-cash-report-template` → `2026-05-02` (volt: `2026-04-26`)
+
+A 2 noindex oldal helyesen **nincs** a sitemap-ben (és nem is került hozzáadásra). Ha valaha visszaindexáljuk őket, akkor lesz `lastmod` belőlük.
+
+#### 3. Új HARD RULE a `seoplan.md`-be — `## H. Title-policy / honest-claims-rule`
+
+Új top-level szekció (`## F.4.F` után, `🛡️ STRATEGIC GUARDRAILS` referencia-blokk előtt). Tartalom:
+
+- **Tilos szavak SERP-snippet-ekben:** Free, Template, Sample, Checklist, PDF, Form (Free), Download, Printable — **HACSAK** nincs valós `<a download>` link az oldalon.
+- **Mit szabad ehelyett:** edukációs / how-to / process-explainer címek (példák a 6-oldalas batch-fix-ből).
+- **Miért HARD RULE:** (1) bait-and-switch trust-penalty Google CTR/bounce-szignálokon, (2) 04-25-i felhasználói intuíció megerősítve (de korrigálva, hogy a memória részben pontatlan volt), (3) "Free Template" SERP-kategóriát QuickBooks/Smartsheet/Microsoft/Vertex42 dominálja — nem tudunk velük versenyezni a letölthető fájlon, csak az edukációs content-en, (4) a "template"-traffic rossz intent SaaS-konverziónak.
+- **Audit-checklist (kötelező új oldal előtt):** 6 pontos ellenőrzőlista a 5 head-mezőre + a download-link-realitásra.
+- **Kivétel:** "Free 14-day trial" megengedett body-ban / hero-pricing-note-ban, **DE NEM** SERP-snippet mezőkben (title, meta, og/twitter title).
+- **Kivétel:** `petty-cash-policy-template.html` filename URL-stabilitás miatt marad (a `<title>` "Petty Cash Policy" 03-29 óta).
+
+**JSON-LD validation (mind a 6 fájlra):** **12/12 blokk valid** (Article + FAQPage mindegyikben, `tools/validate-schema.mjs`).
+
+**Methodology-konzekvencia (a `## H.` szekció zárásában is rögzítve):** A jövőbeli "trust-fix sweep"-ek **NE csak `<title>`-t és heading-et** módosítsanak, hanem a **teljes head-block-ot** (meta description + og/twitter + schema headline + schema description + dateModified). Az audit-checklist ezt a hiányt zárja ki — ami most is a 04-25-i 8a1efe2 commit incomplete-cleanup-ja miatt jött fel.
+
+**Várható hatás:**
+- **`petty-cash-replenishment-form` (pos=39):** ha bait-and-switch trust-penalty volt (valószínű), akkor 14-21 napon belül **pos-emelkedés** várható (a Google a CTR-javulás után újraértékeli a relevanciát). Ha nem javul → más-okú low-ranking (gyenge backlink, tartalmi cannibalization).
+- **3 másik indexed oldal:** mostanáig 0 GSC-impression-history (ezek `2026-04-26`-i új oldalak), a fix preventív → várjuk meg a `2026-05-15`-i checkpoint GSC-export-ot.
+- **2 noindex oldal:** preventív cleanup, ha valaha indexáljuk őket.
+
+**Következő lépés:** a `2026-05-15`-i checkpoint-on (`2026-05-12` helyett, mert a `petty-cash-app` micro-sprint az új moratórium-kezdő-dátum) GSC Pages → Queries audit:
+1. `petty-cash-app` query-attribution (a 05-01-i sprint hatása)
+2. `petty-cash-how-much-to-keep` (02:30 snippet-rewrite eredménye)
+3. **`petty-cash-replenishment-form` (új: pos=39 → várjuk hova kerül)**
+4. **3 másik indexed oldal** (új: kapnak-e impressiont a honest title-lel)
 
 ### 2026-05-02 ÉJSZAKA — Compliance-border hard-rule + disclaimer audit + 4-page hardening (commit `a3ef5cf`) + post-checkpoint brainstorm-pipeline szűrve (`seoplan.md` `## F.`)
 

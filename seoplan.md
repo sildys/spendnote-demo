@@ -488,6 +488,66 @@ A 4 új bucket × 20 jelölt × 10 SERP-test eredménye:
 
 A pontos Google-ranking **kimenet, nem bemenet** — ezt majd GSC-export méri. **Methodology-prioritás**: SKIP-decisions > priority-rankings.
 
+## H. Title-policy / honest-claims-rule — HARD RULE (felhasználói direktíva, 2026-05-02 03:00)
+
+**Trigger:** A `petty-cash-how-much-to-keep` snippet-rewrite után audit derítette ki, hogy a 04-25-i `8a1efe2` commit **nem cleanup-olta végig** a "Free / Template / (Free) / Free checklist included" claim-eket — **6 oldalon** (4 indexed + 2 noindex) maradt félrevezető SERP-snippet ahol **nincs valós letölthető fájl**. A `petty-cash-replenishment-form` GSC pos=39.0 (impression van, klikk nincs) ennek a bait-and-switch trust-penalty-jának egyértelmű jele.
+
+**HARD RULE:** A SERP snippet-ekben (title, meta description, og/twitter title/description, Article schema headline/description) **NEM SZEREPELHETNEK** az alábbi claim-szavak / -kifejezések, **HACSAK** az adott oldalon **NINCS valós letölthető artifact** (PDF, .xlsx, .docx, képfájl `<a download>`-link mögött):
+
+| Tiltott szó / kifejezés | Mit jelent (Google SERP-ben) | Mit várnak el |
+|---|---|---|
+| **Free** (Free Template, Free Form, Free Guide, Free Checklist, Free PDF, Free Printable) | Ingyenes letölthető artifact most azonnal | Letölthető fájl `<a download>` linken |
+| **Template** | Sablon-fájl (Excel, Word, PDF) letöltésre | Letölthető template fájl |
+| **Sample** | Minta-dokumentum letöltésre | Letölthető minta fájl |
+| **Checklist** ("Free checklist included") | Letölthető ellenőrző-lista | Letölthető PDF/print |
+| **PDF** ("Free PDF", "PDF Download") | PDF-fájl letöltésre | Letölthető PDF link |
+| **Form (Free)** / Form Download | Letölthető form fájl | Letölthető template/form |
+| **Download** ("Download Now", "Free Download") | Bármilyen letölthető fájl | `<a download>`-link |
+| **Printable** ("Free Printable", "Printable + Digital") | Print-ready PDF letöltésre | Letölthető print-PDF |
+
+**Mit szabad ehelyett:** edukációs / how-to / process-explainer címek, melyek **a koncepciót / formátumot / mezőket / folyamatot** mutatják be. Példák a 2026-05-02-i 6-oldalas batch-fix-ből:
+
+| ❌ Régi cím (bait-and-switch) | ✅ Új cím (honest, edukációs) |
+|---|---|
+| Free Petty Cash Voucher Template — Printable + Digital | Petty Cash Voucher — Format, Fields, How to Fill Out |
+| Petty Cash Replenishment Request Form (Free) | Petty Cash Replenishment Request — Process and Approval |
+| Cash Count Sheet Template — Count by Denomination | Cash Count Sheet — Denominations, Total, Reconcile |
+| Daily Cash Report Template — End-of-Day Summary | Daily Cash Report — End-of-Day Summary for Small Teams |
+| Petty Cash Log Template — Track Every Transaction | Petty Cash Log — Auto-Built from Every Receipt You Generate |
+| (meta) "...Free checklist included." | (meta) "...add up the receipts, compare to the expected float, document any difference." |
+
+**Miért HARD RULE (felhasználói policy-pillér):**
+
+1. **Bait-and-switch trust-penalty:** Google a CTR-t és bounce-rate-et figyeli. Ha a felhasználó "Free Template"-re kattint és nem talál downloadot, **vissza-bouncel < 5 sec alatt** → **negatív SERP-signal** → degradálja a rankingot. (Pos=39.0 a `petty-cash-replenishment-form`-on ennek a hatásnak a manifesztációja.)
+
+2. **Korábbi felhasználói intuíció megerősítve (04-25-i emlék):** *"a template szót szándékosan száműztük mindenhonnan mert akkor a 80dik oldalon landolunk"* — a memória részben pontatlan volt (valójában csak `petty-cash-policy-template.html` címét ürítettük ki 03-29-en), DE a **szándék helyes**: a tisztán "template" intent-fal ahol QuickBooks/Smartsheet/Microsoft/Vertex42/Wave Apps a top 10, oda nem kell forrásnak lennünk. Az F.3.D `❌ SKIP-jelöltek` listán (`petty-cash-template-excel`, `printable-petty-cash-receipt-pdf`, `cash-receipt-pdf-download`) ugyanez a logika.
+
+3. **Kompetitor SERP-realitás:** A "Free Template / PDF / Download" kategória SERP-jét **letöltést kínáló oldalak** dominálják. Mi nem tudunk nekik felfutni a "letölthető fájl"-on (mert SaaS-konverziót akarunk, nem ingyenes Excel-template-et adunk), csak az **edukációs / process-content**-en, ahol kevésbé van fal.
+
+4. **Konverziós kontextus:** SpendNote SaaS — a felhasználó-célunk **regisztráljon a digital alternative-re**, nem letöltse az Excel-t. A "template" traffic pontosan a **rossz intent**: aki Excel-template-et akar, az nem akar SaaS-előfizetést. Lásd F-policy `📋 BLACKLIST: használhatatlan-vocabulary` szekciót — ugyanez a logika title-szinten is érvényes.
+
+**Audit-checklist (jövőbeli új oldal előtt, KÖTELEZŐ):**
+- [ ] Nincs "Free / Template / Sample / Checklist / PDF / Download / Printable / Form (Free)" a `<title>`-ben?
+- [ ] Nincs ugyanezekből a `<meta name="description">`-ben?
+- [ ] Nincs ugyanezekből az `og:title` / `twitter:title`-ben?
+- [ ] Nincs ugyanezekből az `og:description` / `twitter:description`-ben?
+- [ ] Nincs ugyanezekből az `Article` schema `headline` / `description`-ben?
+- [ ] Ha mégis VAN ilyen szó, **TÉNYLEGESEN VAN-E `<a href="..." download>` letölthető fájl** az oldalon?
+
+**Kivétel — ami ENGEDÉLYEZETT:**
+
+- **"Free 14-day trial" / "Free trial" / "Free for 14 days"** — pontos állítás az app-trial-ról. Megengedett a hero-pricing-note-ban, body-content-ben, CTA-ban. **DE NEM** a `<title>`-ben, **NEM** a `meta description`-ben, **NEM** az `og:title` / `twitter:title`-ben (mert ott a "Free" szó SERP-snippet kontextusban a letölthető-template-et asszociál a felhasználó számára, nem a 14-napos próbát).
+- **`petty-cash-policy-template.html`** filename — a 03-29-i refaktor óta a `<title>` "Petty Cash Policy" és NEM tartalmazza a "template" szót. A filename-ben benne maradt URL-stabilitás miatt (canonical, GSC-history). **Ez OK.**
+
+**Audit-státusz (2026-05-02 03:00):**
+- ✅ **Indexed bait-and-switch oldalak (4):** mind javítva (`petty-cash-replenishment-form`, `petty-cash-reconciliation`, `cash-count-sheet-template`, `daily-cash-report-template`).
+- ✅ **Noindex bait-and-switch oldalak (2):** mind javítva preventívan (`petty-cash-voucher-template`, `petty-cash-log-template`) — ha valaha visszaindexáljuk őket, már honest-claims állapotban lesznek.
+- ✅ **Sitemap `<lastmod>`** frissítve mind a 4 indexed URL-en `2026-05-02`-re.
+- ✅ **Schema `dateModified`** frissítve mind a 6 fájlban `2026-05-02` / `2026-05-02T03:00:00+00:00`-ra.
+- ✅ **JSON-LD validation:** 12/12 blokk valid (Article + FAQPage mindegyikben).
+
+**Methodology-konzekvencia:** A 04-25-i 8a1efe2 commit-tanulság — a "trust-fix sweep"-ek **ne csak `<title>`-t és heading-et** módosítsanak, hanem **a teljes head-block-ot** (meta description + og/twitter + schema). Az audit-checklist ezt a hiányt zárja ki a jövőre nézve.
+
 # 🛡️ STRATEGIC GUARDRAILS — 2026-04-28 ÉJSZAKA (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis) — REFERENCIA
 
 > **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).
