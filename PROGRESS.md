@@ -98,7 +98,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-02 02:10 — Brainstorm full-recovery: F.3.A–F.3.E rationale + target-keyword + priority-ranking + ⚠️-átkeretezés + ❌-indok)
+## Where we are now (last updated: 2026-05-02 02:16 — Methodology-revision: SERP-test aszimmetrikus értéke (F.4.F), SKIP-decisions > priority-rankings)
 
 ### 2026-05-02 ÉJSZAKA — Compliance-border hard-rule + disclaimer audit + 4-page hardening (commit `a3ef5cf`) + post-checkpoint brainstorm-pipeline szűrve (`seoplan.md` `## F.`)
 
@@ -260,6 +260,24 @@ Trigger feltétel a 2026-05-15 checkpoint-on: ha a `petty-cash-log-template` Bin
 5. `petty-cash-custodian-quitting` (pain, transition-crisis, HIGH conversion)
 
 **FONTOS warning:** Ez a Top 5 a **WebSearch-tool methodology hibájának fényében** post-2026-05-15-en újra-validálandó **GSC-impression-data + incognito Google US** kombinációval (lásd a 02:02-i felhasználói pushback: "ha ilyen jó helyeken vagyunk, miért nem kattint senki?"). Lehet hogy a "high impact" tier-besorolásom **felülbecsült**, mert a SERP-test nem feltétlenül reflektálja a Google US ranking-et.
+
+### 2026-05-02 02:16 — Methodology-revision: SERP-test értéke aszimmetrikus (`seoplan.md` `## F.4.F`)
+
+**Felhasználói pragmatikus átkeretezés:** *"egyelőre elég az az ellenőrzés amit csinálsz, abból legalább azt megtudjuk hogy mivel nem szabad foglalkozzunk, hogy hova rangsorola google az tökmindegy, úgyse tudunk vele semmit csinálni, majd kiderül az export adatokból"*
+
+**Új methodology-rule a F. policy-be:** A SERP-test (WebSearch-tool) értéke **aszimmetrikus**:
+
+- **Negatív evidence MEGBÍZHATÓ** (F-tilos territory, SaaS-fal, brand-confusion) → ezek a SERP-pattern-ek minden search engine-n hasonlóak, akkor is valid bizonyíték ha nem Google
+- **Pozitív evidence PRELIMINARY** (TOP 1, TOP 5) → mi-Google-vagy-más-engine-kérdésen áll, GSC-impression-data validálja
+
+**Konzekvencia:** SERP-test = **kiváló SKIP-szűrő**, **gyenge promóter**. Használat:
+1. F-policy-screening (negatív) → SERP-test ELÉG bizonyíték SKIP-hez
+2. Pozitív-claim validation → SERP-test KIEGÉSZÍTENDŐ GSC-impression-audit-tal
+3. Top-N priority-ranking (F.3.B) → post-2026-05-15-en újra-validálandó
+
+**Felhasználói filozófia mint alapelv:** Amit nem tudunk befolyásolni, azzal NE foglalkozzunk. Figyelem a **befolyásolható dolgokra**: mit írunk meg, mit nem, mit augmentálunk, hogyan disclaimer-positionálunk. A pontos Google-ranking = **kimenet, nem bemenet**.
+
+**Methodology-prioritás (új):** SKIP-decisions > priority-rankings. A 4 új bucket × 10 SERP-test (F.4.A) **leg-értékesebb** outputja a **3 SKIP-decision** (IRS-tax SKIP, SaaS-fal SKIP × 1, brand-confusion SKIP × 1) — nem a "TOP 1 vagyunk" claim.
 
 ### 2026-05-01 ESTE — `/petty-cash-app` Google-discoverability micro-sprint (commit `421e5b9`) + SoftwareApplication schema annual-price alignment (commit `03d39a8`)
 

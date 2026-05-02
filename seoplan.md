@@ -461,6 +461,33 @@ A 4 új bucket × 20 jelölt × 10 SERP-test eredménye:
 
 **Stratégiai tanulság**: A felhasználói brainstorm-pushback ("more vocabulary, more angles") gyakran megerősíti, hogy **MÁR jobban lefedjük a területet, mint ahogy a saját self-assessment alapján gondoltuk**. A `petty-cash` cluster mély és széles, és a Bing-discovery-pattern (`how much petty cash should i keep` 04-29-en, `how to avoid disputes` 05-02-én) azt mutatja, hogy a **GSC-data 4-8 hetes lag-je miatt nem látjuk reálisan, mi rangsorol már most**. SERP-evidence > GSC-export.
 
+#### F.4.F Methodology-revision — a SERP-test értéke aszimmetrikus (2026-05-02 02:16 felhasználói pushback)
+
+**Felhasználói pushback (2026-05-02 02:02):** *"ezt nem értem, ha ilyen jó helyeken vagyunk, akkor miért nem kattint senki????"* — kiderült hogy a "MI MÁR DOMINÁLUNK 7/10 query-n" claim **WebSearch-tool-eredményen alapul**, ami **nem feltétlenül egyezik a Google US ranking-jével**. A claim ellentmond a klikk-adatok hiányának.
+
+**Felhasználói filozófia (2026-05-02 02:16):** *"egyelőre elég az az ellenőrzés amit csinálsz, abból legalább azt megtudjuk hogy mivel nem szabad foglalkozzunk, hogy hova rangsorola google az tökmindegy, úgyse tudunk vele semmit csinálni, majd kiderül az export adatokból"* — pragmatikus átkeretezés: a SERP-test értékét nem dobjuk el, csak újra-pozicionáljuk.
+
+**Új methodology-rule (F. policy-bővítés):** A SERP-test értéke **aszimmetrikus**:
+
+| Evidence-típus | Megbízhatóság | Action-érték |
+|---|---|---|
+| **Negatív evidence** (F-tilos territory, SaaS-fal, brand-confusion) | **MEGBÍZHATÓ** akkor is, ha a tool nem Google — mert ezek a SERP-territory-pattern-ek minden search engine-n hasonlóak (IRS dominál tax-query-n Bing-en is, Cash App brand-name foglal "cash app"-keresést akárhol) | **Bizalom magas**: ezek a query-k **biztosan SKIP-elendők** |
+| **Pozitív evidence** (TOP 1, TOP 5) | **PRELIMINARY** — Google US ranking-en lehet más, geo-personalization, AI Overview-effect, query-volume-faktor együttesen befolyásolják | **Csak hipotézis**: GSC-impression-data validálja vagy cáfolja |
+
+**Konzekvencia:** A SERP-test **kiváló SKIP-szűrő** (negatív-side), és **csak gyenge promóter** (pozitív-side). Használat:
+
+1. **F-policy-screening** (negatív): WebSearch-test ELÉG bizonyíték F-tilos jelölt SKIP-eléséhez
+2. **Pozitív-claim validation**: WebSearch-test "TOP 1" eredménye **kiegészítendő** GSC-impression-data audit-tal mielőtt prioritás-ranking-be kerül
+3. **Top-N priority-ranking**: a F.3.B "Top 5 quick-win" risk-tier-besorolásom **post-checkpoint újra-validálandó**
+
+**Felhasználói filozófia mint alapelv:** *"hova rangsorol a google, az tökmindegy, úgyse tudunk vele semmit csinálni"* — amit nem tudunk befolyásolni, azzal **ne foglalkozzunk**. A figyelem a **befolyásolható dolgokra** koncentrálódik:
+- Mit írunk meg (új landing, ahol nem-tilos)
+- Mit nem írunk meg (F-tilos, SaaS-fal, brand-confusion)
+- Mit augmentálunk (meglévő top-1 oldalak)
+- Hogyan disclaimer-positionálunk (TIER A standard)
+
+A pontos Google-ranking **kimenet, nem bemenet** — ezt majd GSC-export méri. **Methodology-prioritás**: SKIP-decisions > priority-rankings.
+
 # 🛡️ STRATEGIC GUARDRAILS — 2026-04-28 ÉJSZAKA (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis) — REFERENCIA
 
 > **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).
