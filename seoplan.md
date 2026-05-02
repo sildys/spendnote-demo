@@ -1163,7 +1163,183 @@ A Codex 9 változtatásából **5 elem értékes** (post-checkpoint Step 2.A vag
 - ✅ Új F-policy: multi-agent koordinációs protokoll (J.12.4)
 - ✅ Post-checkpoint backlog frissítve: 5 értékes Codex-element (Step 2.A meta-description + Step 3.A schema fields) MENTVE inline; 4 revert-tartandó (title-shift + mojibake) ELUTASÍTVA
 
-# 🛡️ STRATEGIC GUARDRAILS — 2026-04-28 ÉJSZAKA (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis) — REFERENCIA
+### J.12.6 EPILOGUE (2026-05-03 00:53) — opció-C felhasználói override → Codex draft RE-APPLIED encoding-fix-szel
+
+**Trigger:** A J.12 revert után a felhasználó explicite közölte, hogy a multi-pivot SERP-validation alatt félreértelmeztem a UI-választását. A felhasználó a Full Execute (C opció) mellett döntött a UI-ban, én a textuális "a b mert..." választ B opciónak (Partial Relaxation) értelmeztem. A felhasználó reprimand-je után az alábbi végrehajtás történt:
+
+**1. `index.html` re-apply (encoding-fix-szel):**
+- meta description, og:title/description, twitter:title/description, `<title>` — mind a J.12.3-ban "MEGTARTANDÓ post-checkpoint" verzió alkalmazva
+- Mojibake fix: `&mdash;` HTML-entity (NEM `ÔÇö`)
+- `<title>` shift "Petty Cash" → "Cash Handoff" — **a J.12.3-ban "REVERT-TARTANDÓ"-ként megjelölt verzió IS alkalmazva** (felhasználói override felülírja az Opus risk-judgment-jét)
+- SoftwareApplication schema: `applicationSubCategory: "Cash Handoff Tracking"` + 6-elemű `featureList` hozzáadva
+
+**2. 3 alacsony-traffic landing pain-language tweak (Step 2.A scope eredetileg post-checkpoint, NOW):**
+- `cash-paid-out-log.html` → `<title>` "Record Every Cash That Leaves the Drawer" + meta description "Drawer short at end of shift?..." pain-hook
+- `event-cash-handling.html` → `<title>` "Shared Cash Log for Volunteers & Booths" + meta description "Event cash flying around between volunteers and booths?..." pain-hook
+- `petty-cash-does-not-balance.html` → `<title>` "Petty Cash Short? — Stop Chasing Receipts, Find the Missing Money" + meta description "Stop chasing receipts at month-end..." pain-hook
+
+**3. `who-has-the-cash-right-now.html` body-bővítés:**
+- Új `<h2>Office Cash Log: One Shared View for the Whole Team</h2>` szekció + 4-elemű use-case bullet list
+- Office cash log + cash drawers + event floats + multi-location vocabulary
+- **Indok:** A SERP-test pivot-3 megerősítette, hogy ez az URL MÁR Google #1 az `office cash tracking app online` query-re — bővítés a top-1 megerősítéséért, NEM új landing kanibalizálás
+
+**4. Tudatosan elhagyott risk-elemek (post-checkpoint maradnak vagy soha):**
+- `<title>` hibrid alternatíva (`SpendNote — Petty Cash & Cash Handoff Tracking for Teams`) → most **NEM** lett használva, a tisztán "Cash Handoff" verzió ment ki (felhasználói explicit "csináld meg a Codex javaslatait")
+- 3 új landing (`/cash-envelope-tracker`, `/office-cash-log`, `/safe-cash-log`) — **HOLD**: a 6-query SERP-pivot-validation 5/6-ban negatív lett, a Codex 2. SERP-gap-hunting iteráció eredményét várjuk (J.13)
+
+**Mérési kockázat (tudatosan vállalt):**
+- Homepage `<title>` shift = ranking-shock kockázat az aktív "petty cash" keyword-en
+- 3 + 1 landing copy-tweak = a Phase 1 Apposing hipotézis-mérés (Article→SoftwareApplication conversion) "tiszta" mérési-ablaka degradált
+- A 14-napos checkpoint (## B) most **2026-05-17-re csúszik** (másfél hét a 04-29 → 05-19 moratórium-ablakhoz képest), és a hipotézisek **összemosódnak** a pain-language wedge-csel
+- Indok a vállalásra: **0 klikk a teljes site-on** + **csökkenő impression-trend** = a "tiszta mérés" elhanyagolható értékű, mert nincs mit mérni; gyors iteráció > tiszta A/B
+
+## J.13 SERP-pivot-validation eredmény + Codex 2nd gap-hunting iteráció (waiting state)
+
+### J.13.1 6-query SERP-pivot-validation eredmény (2026-05-03 00:45)
+
+A J.12.6 "Full Execute" override előtt 6 SERP-query-t teszteltem (3 eredeti + 3 pivot), 3 új landing-jelölt validálására. A pivot-validation döntésszerepe már nem aktuális (a felhasználó override-ja után az új landing-ek nem SERP-test alapon történnek), DE az evidence dokumentálandó későbbi referenciára.
+
+| Cluster | Query | Top 5 SERP-tartalom | Verdikt |
+|---|---|---|---|
+| `/cash-envelope-tracker` | `cash envelope tracker app online` | Dave Ramsey envelope-budgeting apps (személyes pénzügy, NEM cash collection) | ❌ Intent-mismatch |
+| `/office-cash-log` | `office cash log spreadsheet template` | Excel + Google Sheets template-letöltések | ❌ Template-fal |
+| `/safe-cash-log` | `safe cash log restaurant tracking` | POS-tools + Excel templates + Toast Community thread | ⚠️ MIXED |
+| `/cash-envelope-tracker` (pivot) | `event cash collection log nonprofit volunteer` | Nonprofit how-to guide-ok + 1-2 template, **NINCS SaaS-fal** | ⚠️ MAYBE-GO |
+| `/office-cash-log` (pivot) | `office cash tracking app online` | **#1 SpendNote `/who-has-the-cash-right-now`** + #2 `/index.html` | ✅ MÁR top-1 — bővít, ne új landing |
+| `/safe-cash-log` (pivot) | `restaurant safe drop log app` | Food-safety apps (`log app` → temperature logs!) + Toast | ❌ Vocab-csapda |
+
+**Konklúzió:**
+- 3 eredeti landing-jelöltből 0 jó (template-fal vagy intent-mismatch)
+- 3 pivot-jelöltből 1 MAYBE-GO (event-cash-collection-log nonprofit), 1 redundáns (office cash log → meglévő top-1 bővítendő, nem új URL), 1 csapda
+- A **pivot-3 felfedezés** (`/who-has-the-cash-right-now` MÁR Google #1 az `office cash tracking app online`-ra) → bővítés Step 2.A scope-ban végrehajtva (J.12.6 / 3. pont)
+
+### J.13.2 Codex 2nd SERP-gap-hunting iteráció (waiting state)
+
+**Felhasználói döntés (2026-05-03 00:54):** A 3 új landing-jelölt többségi NO-GO eredménye után a felhasználó a Codex-et küldte rá egy **2. SERP-gap-hunting iterációra** — más query-cluster-ek vagy más vocab-szögek után, hátha talál olyan rést, ahol a SERP nem fal, és ahol a SpendNote kompetitív landinggel be tud jönni.
+
+**Codex 2nd gap-hunting receiving-template (mit várunk vissza):**
+
+Minden javasolt új cluster-re a Codex-nek a következő evidence-csomagot kell visszaadnia, hogy a 10-percen-belüli execution lehetséges legyen:
+
+1. **Target-query** (1 fő + 2-3 long-tail variáns)
+2. **SERP top 5 audit** — domain + page-type-szel (Excel-template? SaaS-landing? Forum thread? Wikipedia/Investopedia?)
+3. **NO-walled-garden evidence** — magyarul: nincs Investopedia/Wikipedia/QuickBooks/Shopify a top 3-ban, mert akkor esélytelen
+4. **Pain-language sample** — fórum/Reddit/Quora idézet a target-keresőre
+5. **Compliance check** — F-policy (## F.) szerint: érinti-e a payroll/donor-receipt/tax-deductible/loan/wage-deduction zónát? Ha igen → REJECT
+6. **SpendNote feature-fit** — melyik létező feature/H2-block fedi le a query-t (nem írunk új feature-t SEO-ért)
+7. **Cannibalization-check** — érinti-e meglévő top-30 ranking-keyword-et? (ha igen → bővítés a meglévőn, NEM új URL)
+
+**Implementációs cél:** ha a Codex 1-2 valid clusterrel jön vissza (mindegyik 7/7 pont megfelel), 1 cluster = 1 új landing, 10-15 perc per landing.
+
+**Ha Codex 0 valid clustert hoz:** ez nem kudarc — azt jelenti, hogy a "petty cash" / "cash handoff" / "cash log" semantic-tér jelenleg **kompetitíven telített** rövidtávon, és az értékesebb action: **meglévő top-30-as ranking-ek bővítése + `dateModified` re-crawl-trigger sweep**.
+
+### J.13.3 Az új landing-ek mérési-protokollja (ha Codex 2nd gap-hunting talál rést)
+
+Mivel a J.12.6-ban a homepage `<title>` shift és 3 landing pain-language tweak már degradálta a Phase 1 Apposing hipotézis-mérési-ablakát, **a 14-napos checkpoint (## B) most 2026-05-17-re csúszik** (eredetileg 05-12). Ha Codex talál rést és ezen iterációban új landing(ek) is kimennek, akkor:
+
+- A 14-napos checkpoint 2026-05-19-re csúszik (3 nappal tovább, az új landing-ek minimum 14-nap indexelési-ablakához)
+- A new-landing performance-mérése **különálló kohorszként** értékelendő (nem mosható össze a Phase 1 Apposing 3-oldalas kohorsszal)
+- A new-landing `<lastmod>` és sitemap-resubmit kötelező commit után
+
+### J.13.4 Codex 2nd batch eredmény (2026-05-03 01:00) — 5 cluster + cannibalization-audit + 1 új URL + 3 meglévő bővítés
+
+**Codex 2nd batch beérkezett** (a J.13.2 receiving-template alapján): 5 új cluster + 5 megerősített "elhagyandó" cluster.
+
+**Codex 5 új cluster:**
+
+| # | Cluster | SERP top 5 | Forum/PDF evidence | SpendNote feature-fit |
+|---|---|---|---|---|
+| 1 | `cash handover receipt form` / `cash handoff receipt` | Jotform / Scribd / form-template, gyenge SaaS-kategória | Jotform cash handover receipt form | ★★★★★ — core feature |
+| 2 | `cash box request form` / `PTO cash box request form` | PTO Today, helyi PTO oldalak, PDF-ek | PTO Today cash box request form | ★★★★ — operational handoff |
+| 3 | `event cash count sheet` / `post-event cash count form` | Templateroller, church/school PDF-ek | Templateroller cash counting sheet for events | ★★★ — close-out flow |
+| 4 | `cash box log` + event/PTO/fundraiser context | sportsklub/policy oldalak, PDF-ek | McKinney Ice Hockey cash box log policy (két volunteer, starting cash, closeout) | ★★★★ — core feature |
+| 5 | `petty cash envelope` (film/production) | GreenSlate, Wrapbook, Revolution | GreenSlate petty cash envelope, Wrapbook petty cash | ★★ — specializált niche |
+
+**Codex 5 megerősített elhagyandó (Codex saját ELHAGY-listája):**
+- `cash drawer reconciliation` (POS/restaurant — Toast/Lightspeed/Lavu)
+- `cash collection tracker` (SAP/AR)
+- `cash envelope tracker` (Dave Ramsey personal budgeting)
+- `cash float tracker` (POS/hotel)
+- `missing receipts` (expense management OCR óriások)
+
+**Cannibalization-audit (Opus végrehajtott, J.12.4 protocol szerint):**
+
+| Codex cluster | Meglévő SpendNote URL | Cannibalization | Akció |
+|---|---|---|---|
+| 1. cash handover receipt form | `/cash-handoff-receipt` (handover már szerepel meta+H1-ben) | ★★★★★ TELJES MATCH | **BŐVÍT a meglévőn** — `form` keyword integration title+meta+H2 |
+| 2. PTO cash box request form | NINCS | ✅ tiszta | **ÚJ landing**: `/cash-box-request-form` |
+| 3. event cash count sheet | `/cash-count-sheet-template` (általános) | ⚠️ részleges overlap | **BŐVÍT a meglévőn** — új H2 "Event Cash Count Sheet & Post-Event Close-Out" |
+| 4. cash box log fundraiser/event/PTO | `/event-cash-handling` (most "Shared Cash Log for Volunteers & Booths" tweak) + `/who-has-the-cash-right-now` (most office cash log H2) | ⚠️ részleges overlap | **BŐVÍT a meglévőn** — új H2 "Cash Box Log for Fundraisers, PTAs, PTOs & Booster Clubs" az event-cash-handling-en |
+| 5. petty cash envelope (film) | NINCS | ✅ tiszta | **DEFER** — Codex maga is mondja "csak ha érdemes film felé nyitni" |
+
+**Eredmény: 1 új URL + 3 meglévő bővítés + 1 defer.**
+
+#### J.13.4.1 Új landing: `/cash-box-request-form` (Codex #2)
+
+- **`<title>`:** `Cash Box Request Form — Hand Off & Get It Back, Every Time`
+- **Meta description (pain-hook):** `Volunteers grabbing the cash box at an event? Track every request — who took it, how much was inside, and when it came back — instead of guessing at close-out.`
+- **H1:** `Cash Box Request Form`
+- **Hero subtitle:** Pain-vocab opening (PTA bake sale, fundraiser, game night, school dance, registration table)
+- **Body szerkezet (8 H2):** When You Need / Lifecycle 5-Step (Request → Handoff → Track → Close Out → Return) / What to Include / PTA-PTO-School-Volunteer Use Cases / Why Paper Isn't Enough / From Paper to Live Log / FAQ / Related
+- **Schema:** Article + FAQPage (5 Q) + SoftwareApplication page-specific (`applicationSubCategory: "Cash Box Request Tracking"` + 6-elemű `featureList`)
+- **Compliance (Tier B disclaimer — strengthened a school/nonprofit donor-receipt zóna miatt):** `SpendNote tracks the operational cash box workflow — who held the box, what came in, what went out. SpendNote is not a donor receipt system, not a charitable contribution tracker, and not a tax document. For 501(c)(3) donor receipts (US IRS $250 rule), Form 990 reporting, UK Gift Aid claims, or any tax-deductible donation acknowledgment, your treasurer, accountant, or dedicated nonprofit accounting tool handles those.`
+- **Internal link diversification (5 anchor):** `/cash-handoff-receipt`, `/event-cash-handling`, `/who-has-the-cash-right-now`, `/cash-count-sheet-template`, `/petty-cash-policy-template`
+- **Sitemap:** új sor `priority 0.8`, `lastmod 2026-05-03`
+
+#### J.13.4.2 `/cash-handoff-receipt` bővítés (Codex #1)
+
+- **`<title>` rewrite:** `Cash Handoff Receipt (Handover) — Sign & Print` → `Cash Handover Receipt Form — Sign & Print Cash Handoff`
+- **Meta description rewrite:** "for shift changes and internal transfers" → "for shift changes, **volunteer handoffs**, and internal transfers"
+- **og:title + twitter:title:** ugyanaz, `Cash Handover Receipt Form — Sign & Print Cash Handoff`
+- **Article schema headline + description:** frissítve "form" + "volunteer handoffs" inclusion-nel
+- **Új use-case-box body-ban:** `Volunteer & Event Handoffs` — PTA bake sales, school fundraisers, sports concession stands, festival booths + internal link `/cash-box-request-form`
+- **dateModified:** 2026-05-02 → 2026-05-03
+
+#### J.13.4.3 `/event-cash-handling` bővítés (Codex #4)
+
+- Új `<h2>Cash Box Log for Fundraisers, PTAs, PTOs & Booster Clubs</h2>` szekció (a "How SpendNote Works for Events" után, a "Frequently Asked Questions" előtt)
+- 5-elemű use-case bullet list: bake sale tables, ticket booths, raffle stands, snack bars + treasurer-shared visibility
+- Internal link: `/cash-box-request-form` (request flow) + `/cash-count-sheet-template` (close-out denomination count)
+- Pain-vocab: "binder at the treasurer's table", "whose handwriting is this?", "send me your version"
+- (Title + meta description már a J.12.6-ban "Shared Cash Log for Volunteers & Booths"-ra állítva — nem érintve)
+
+#### J.13.4.4 `/cash-count-sheet-template` bővítés (Codex #3)
+
+- Új `<h2>Event Cash Count Sheet & Post-Event Close-Out</h2>` szekció (a "When to Use" után, a "From Paper Sheet" előtt)
+- 3-bekezdéses content + Codex value-prop blockquote: "A cash count sheet tells you the total after the event. SpendNote records every cash handoff *during* the event — so the close-out count actually has something to be compared against."
+- Internal link: `/cash-box-request-form` (request flow) + `/event-cash-handling` (operational backbone)
+- Meta description rewrite: + "Plus event & post-event close-out flow."
+- dateModified: 2026-05-02 → 2026-05-03
+
+#### J.13.4.5 DEFER: `/petty-cash-envelope` film/production (Codex #5)
+
+NEM most. Codex maga is megjegyezte: "Erős intent, de specializált és verseny van. Csak akkor mennék rá, ha Opus szerint érdemes film/production felé nyitni." Indok: SpendNote pozitionálás operational team-cash-handoff (PTA/SMB/event), NEM film-production-specific (GreenSlate/Wrapbook erős industry-fit). Backlog: ha 14-napos checkpoint mutatja hogy a `/cash-box-request-form` PTA-cluster traffic-ot húz, akkor érdemes film-production angle-t **különálló kohorszban** is teszt-landing-ezni, DE most a fókusz a PTA/SMB/event vertical.
+
+### J.13.5 Indexing-prioritás (felhasználói task — opcionális, GSC kvóta-figyelve max 5/nap)
+
+Új URL → első indexelés:
+1. **`https://spendnote.app/cash-box-request-form`** (P0 — új landing, GSC URL Inspection → "Request Indexing")
+
+Bővített URL-ek → re-crawl trigger:
+2. `https://spendnote.app/cash-handoff-receipt` (P1 — `<title>` shift "form"-ra)
+3. `https://spendnote.app/event-cash-handling` (P1 — új H2 cash-box-log szekció)
+4. `https://spendnote.app/cash-count-sheet-template` (P1 — új H2 event-cash-count szekció)
+
+A J.12.6-os 5 URL-t (homepage + 4 landing) **az előző commit-tal együtt** kell indexelni (max 5/nap kvóta!).
+
+### J.13.6 Sitemap-resubmit Bing Webmaster Tools-on is
+
+A `<lastmod>` 9 oldalon frissült 2026-05-03-ra ezzel az iterációval:
+- `/` (homepage)
+- `/cash-paid-out-log`
+- `/event-cash-handling`
+- `/petty-cash-does-not-balance`
+- `/who-has-the-cash-right-now`
+- `/cash-handoff-receipt` (új)
+- `/cash-count-sheet-template` (új)
+- `/cash-box-request-form` (új URL)
+
+**Bing Webmaster Tools** sitemap-resubmit ajánlott a 9 frissített URL-re, mert a Bing crawl-szabad kapacitása nagyobb, mint Google-é, és gyorsabban jelennek meg az eredmények ott. (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis) — REFERENCIA
 
 > **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).
 >
