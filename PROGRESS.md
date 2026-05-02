@@ -98,7 +98,80 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-03 00:30 — B opció: részleges moratórium-lazítás végrehajtva — Step 2.C viral loop footer csere mindkét NOINDEX PDF-mockup oldalon (`spendnote-pdf-receipt.html` 1×, `spendnote-receipt-print-two-copies.html` 2×) + Step 0.A G2 review-acquisition pilot kick-off protokoll dokumentálva. Apposing Phase 1 + how-much-to-keep snippet-rewrite mérése ÉRINTETLEN.)
+## Where we are now (last updated: 2026-05-03 00:35 — Codex independent action audit + revert (`seoplan.md` `## J.12`): a Codex párhuzamosan módosította az index.html head-jét + schemáját mojibake-bug-gal és aggressive `<title>` shift-tel "Petty Cash" → "Cash Handoff", revert-elve, 5 értékes Codex-element inline mentve post-checkpoint backlog-ra (Step 2.A meta-description + Step 3.A schema fields), új F-policy: multi-agent koordinációs protokoll)
+
+### 2026-05-03 00:35 — Codex independent action audit + revert (J.12)
+
+**Trigger:** A Step 2.C (viral footer) végrehajtása alatt a Codex (másik agent másik környezetben) **párhuzamosan** és **engedély nélkül** módosította az `index.html` head-jét + SoftwareApplication schemáját. A felhasználó észrevette és leállította a Codex-et, kérte a változtatások revert-elését (a B opció kifejezetten kizárta a marketing landing-ek érintését).
+
+**Audit eredmény: 6 sor változás + 9 új sor (head-only — body NEM érintett):**
+
+| # | Mi változott | Verdikt |
+|---|---|---|
+| 1 | meta description: pain-language wedge ("Record who took cash...") | ⚠️ Step 2.A scope (post-checkpoint kéne) |
+| 2 | `<title>`: "Petty Cash" → "Cash Handoff" | ❌ **MAJOR brand-fókusz-shift** — homepage top-impression URL-en mérés-megsemmisítő |
+| 3-4 | og:title + og:description | ⚠️ Following title-shift + ⚠️ **MOJIBAKE** (`ÔÇö` az `—` helyett) |
+| 5-6 | twitter:title + twitter:description | ⚠️ Following + ⚠️ **MOJIBAKE** |
+| 7 | schema description: pain-language | ⚠️ Step 3.A scope |
+| 8 | + új mező: `applicationSubCategory: "Cash Handoff Tracking"` | ⚠️ Step 3.A scope (J.10/J.11 metodika) |
+| 9 | + új mező: `featureList` (6 page-specific item) | ⚠️ Step 3.A scope (J.10/J.11 metodika) |
+
+**Két önállóan elegendő ok a revertra:**
+1. **Mojibake bug** (3 occurrence: og:title, twitter:title, valószínűleg `<title>` is) — `ÔÇö` az `—` em-dash UTF-8 mishandling-je → azonnali visual-bug minden FB/Twitter share-en + esetleg SERP-en is
+2. **`<title>` brand-fókusz-shift** "Petty Cash" → "Cash Handoff" — homepage = top-impression URL, "Petty Cash" aktív ranking-keyword. Title-shift → ranking-shock-kockázat → **összes folyamatban lévő hipotézis-mérés megsemmisítése** (Apposing Phase 1 + how-much-to-keep snippet-rewrite)
+
+**Revert-protokoll végrehajtva:**
+- `git diff index.html > .codex-index-draft-2026-05-03.diff` (lokális mentés ref-ként)
+- `git checkout HEAD -- index.html` (visszaállítás 9569501 commit-ra, ami a viral footer commit)
+- Inline mentés a `seoplan.md` `## J.12.3`-ba (5 értékes Codex-element + 4 elutasított element)
+- `.codex-index-draft-2026-05-03.diff` lokális ref-fájl — text-formában mentve, törölhető a következő commit-ban (vagy gitignore-olható)
+
+**Mit MENTSÜNK MEG post-checkpoint backlog-ra (text-formában a `seoplan.md` `## J.12.3`-ban):**
+
+✅ **Step 2.A — meta description (encoding-fix-szel):**
+```
+Record who took cash, who received it, and what it was for. SpendNote creates cash handoff receipts, cash box logs, and searchable history for small teams.
+```
+(Em-dash NORMÁLISAN: `&mdash;` HTML-entity vagy U+2014, NEM `ÔÇö`!)
+
+✅ **Step 3.A — page-specific schema fields:**
+```json
+"applicationSubCategory": "Cash Handoff Tracking",
+"featureList": [6 page-specific item]
+```
+
+❌ **REVERT-TARTANDÓ (NE használjuk post-checkpoint sem):**
+- `<title>` shift "Petty Cash" → "Cash Handoff" — too aggressive a homepage-en. Helyette: SERP-validation után **hibrid-megfontolás** lehetséges (`SpendNote — Petty Cash & Cash Handoff Tracking for Teams` keyword-megőrző stílus)
+- Mojibake `ÔÇö` (3 occurrence) — encoding-bug, mindenképp tilos. Helyette: `&mdash;` HTML-entity (jelenlegi konvenció a kódbázisban)
+
+**Új F-policy (J.12.4) — multi-agent koordinációs protokoll:**
+1. Stop + git status audit ha párhuzamos AI-agent módosít fájlt
+2. Diff-mentés ref-fájlba
+3. Audit + risk-reasoning (J.7 Step-scope alapján)
+4. Revert (default) ha bármi moratórium-protected URL-en van
+5. Inline mentés a `seoplan.md`-be text-formában (encoding-fix-szel)
+6. Diff-fájl törölhető az inline mentés után
+
+**Indoklás:** A multi-agent setup (külön agent külön környezetben) **EXTRÉM ÉRTÉKES** brainstorming-fázisban (Codex 1-2-3 batch-research valós insight-okat hozott), DE veszélyes az élesvégrehajtási fázisban — koordinátor agent-nek (Opus) központi audit-protokoll kell.
+
+**Implementáció (kód + docs ezen a commit-on):**
+- ✅ `index.html` revert-elve (vissza a 9569501 commit-re — a viral footer commit, ami nem érintette az index.html-t)
+- ✅ `seoplan.md` `## J.12` szekció dokumentálva (5 sub-szekció: J.12.1-J.12.5)
+- ✅ PROGRESS.md ezen entry
+- ✅ Új F-policy: multi-agent koordinációs protokoll (J.12.4)
+- ✅ Post-checkpoint backlog frissítve (5 értékes Codex-element inline)
+- ❌ `.codex-index-draft-2026-05-03.diff` lokálisan marad (NEM committed) — törölhető
+
+**Mit NE csináljunk most (B opció + J.12 megerősítés):**
+1. NE érintsük az index.html-t (Codex draft elutasítva)
+2. NE érintsük a 4 Apposing-oldalt + /petty-cash-how-much-to-keep — fő hipotézis-mérés
+3. NE új landing — SERP-validation hiányzik
+4. NE pain-language copy-tweak más landingeken sem — mérés-noise
+
+**Következő lépés (változatlan):**
+- 2026-05-15 GSC checkpoint a 3 Apposing-URL-en (Step 1)
+- Felhasználói task: G2 outreach 1-2 user-re (Step 0.A — independent timeline)
+- Felhasználói task: a párhuzamos Codex/ChatGPT-konverzációk **read-only** módja (csak brainstorm, NE éles fájl-módosítás) — koordinációs F-policy J.12.4
 
 ### 2026-05-03 00:30 — B opció: részleges moratórium-lazítás (Step 2.C + Step 0.A kick-off)
 

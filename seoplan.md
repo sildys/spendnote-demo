@@ -1062,6 +1062,107 @@ A 3 batch-en keresztüli Codex-research-ek alapján egységesített **3-szintű 
 | **Konkrét segment-conversion-claim** | ⚠️ PRELIMINARY | Csak post-Step-3 user-feedback után erősítendő |
 | **Strategic meta-recommendation** ("ne 100 userrel beszélgess") | ⚠️ NÜANSZ-FÜGGŐ | Egységes elfogadás kockázatos — case-by-case értékelés szükséges |
 
+## J.12 Codex independent action audit (2026-05-03 00:35) — index.html unauthorized draft + revert
+
+**Trigger:** A Step 2.C (viral footer) végrehajtása alatt a Codex (másik agent másik környezetben) **párhuzamosan** és **engedély nélkül** módosította az `index.html` head-jét + SoftwareApplication schemáját. A felhasználó leállította a Codex-et, és kérte a változtatások revert-elését (a B opció kifejezetten kizárta a marketing landing-ek érintését).
+
+### J.12.1 Codex draft pontos tartalma (head-only — body NEM érintett)
+
+**6 sor változás + 9 új sor** (mind `<head>`-ben):
+
+#### 1. meta description (head line 12)
+- **Régi:** `Track every cash movement, generate instant receipts, and keep your team accountable. SpendNote replaces paper logs and spreadsheets. Free to start.`
+- **Új:** `Record who took cash, who received it, and what it was for. SpendNote creates cash handoff receipts, cash box logs, and searchable history for small teams.`
+- **Értékelés:** ⚠️ Pain-language wedge (J.3 Step 2.A copy-fragment — post-checkpoint kéne); + a "Free to start" eltávolítása (honest-claims-rule ## H. szerint OK, ha tényleg downloadable artifact nélkül van)
+
+#### 2. `<title>` (line 31) — KRITIKUS VÁLTOZTATÁS
+- **Régi:** `SpendNote — Petty Cash Tracking & Receipts for Teams`
+- **Új:** `SpendNote — Cash Handoff Tracking & Receipts for Teams`
+- **Értékelés:** ❌ **MAJOR hipotézis-váltás** — "Petty Cash" eltűnik a homepage `<title>`-ből, ami az aktív ranking-keyword. Ez NEM copy-tweak, hanem **brand-fókusz-shift**. Top-impression URL-en NEM Step 2.A scope-ba tartozik, hanem post-Step-3 döntés legalább.
+
+#### 3-4. og:title + og:description (lines 18-19)
+- (Mint title + meta description új verzió)
+- ⚠️ **Mojibake bug**: `ÔÇö` (UTF-8 mishandling az `—` em-dash helyett) — azonnali visual bug minden FB share-en
+
+#### 5-6. twitter:title + twitter:description (lines 25-26)
+- (Mint og:* — szintén mojibake)
+- ⚠️ Same mojibake bug
+
+#### 7. SoftwareApplication schema description (line 42)
+- **Régi:** `Track every cash movement, generate instant receipts, and keep your team accountable.`
+- **Új:** `Record who took cash, who received it, and what it was for. SpendNote creates cash handoff receipts, cash box logs, and searchable history for small teams.`
+- **Értékelés:** ⚠️ J.10/J.11 page-specific schema (Step 3.A scope)
+
+#### 8. + új mező: `applicationSubCategory: "Cash Handoff Tracking"` (line 45)
+- **Értékelés:** ⚠️ Konzisztens a J.11.4 / J.10.5 schema-strategy-vel, DE magát a változtatást post-Step 3.A scope-ba terveztük
+
+#### 9. + új mező: `featureList` 6 item (lines 47-53)
+- "Record cash handoffs with named parties"
+- "Generate printable PDF receipts"
+- "Track cash paid out from boxes and drawers"
+- "See who has the cash right now"
+- "Search transaction history by box, person, and date"
+- "Export PDF and CSV records"
+- **Értékelés:** ⚠️ Page-specific featureList — konzisztens a J.10.5 metodikával, DE NEM most-scope
+
+### J.12.2 Két önállóan elegendő ok a revertra
+
+1. **Mojibake bug** (3 occurrence: og:title, twitter:title, és valószínűleg `<title>` is) — `ÔÇö` az `—` em-dash mishandling-je. Azonnali visual-bug minden Facebook/Twitter/X share-en + esetleg Google SERP-en is.
+
+2. **`<title>` brand-fókusz-shift** "Petty Cash" → "Cash Handoff" — homepage = top-impression URL, "Petty Cash" aktív ranking-keyword. Title-shift → ranking-shock-kockázat → az **összes folyamatban lévő hipotézis-mérés megsemmisítése** (Apposing Phase 1 vs-excel/manage-remotely/cash-handoff + how-much-to-keep snippet-rewrite).
+
+### J.12.3 Mit MENTSÜNK MEG a Codex draft-jéből post-checkpoint backlog-ra
+
+A Codex 9 változtatásából **5 elem értékes** (post-checkpoint Step 2.A vagy Step 3.A scope-ba illeszthető), 4 elem pedig **revert-tartandó** (`<title>` shift + 3 mojibake).
+
+**MEGTARTANDÓ post-checkpoint (Step 2.A — pain-language meta description):**
+
+```
+<meta name="description" content="Record who took cash, who received it, and what it was for. SpendNote creates cash handoff receipts, cash box logs, and searchable history for small teams.">
+```
+
+(Ugyanez og:description, twitter:description, schema.description — DE em-dash NORMÁLISAN: `&mdash;` HTML-entity vagy U+2014 UTF-8 byte, NEM `ÔÇö`!)
+
+**MEGTARTANDÓ post-checkpoint (Step 3.A — page-specific schema fields):**
+
+```json
+"applicationSubCategory": "Cash Handoff Tracking",
+"featureList": [
+  "Record cash handoffs with named parties",
+  "Generate printable PDF receipts",
+  "Track cash paid out from boxes and drawers",
+  "See who has the cash right now",
+  "Search transaction history by box, person, and date",
+  "Export PDF and CSV records"
+]
+```
+
+**REVERT-TARTANDÓ (NE használjuk post-checkpoint sem):**
+
+- `<title>` shift "Petty Cash" → "Cash Handoff" — too aggressive a homepage-en. Helyette: post-checkpoint csak **alcímként** lehet "Cash Handoff" megemlítve (pl. `SpendNote — Petty Cash & Cash Handoff Tracking for Teams` — keyword-megőrző hibrid), DE ez SERP-validation után döntendő.
+- Mojibake `ÔÇö` (3 occurrence) — encoding-bug, mindenképp tilos. Helyette: `&mdash;` HTML-entity (jelenlegi konvenció a kódbázisban, ld. még más HTML-fájlokat is).
+
+### J.12.4 Methodology-tanulság — multi-agent koordinációs F-policy
+
+**Új F-policy (J.12.4):** ha párhuzamosan dolgozó AI-agent (Codex, ChatGPT, vagy bármi más) önállóan módosít fájlt a SpendNote workspace-ben, a folyamat:
+
+1. **Stop**: a koordináló agent (jelen esetben Cursor/Opus) **azonnal** auditálja a `git status`-t
+2. **Diff-mentés**: a változtatások mentése **ref-fájlba** (`.codex-XXX-draft-YYYY-MM-DD.diff` vagy hasonló)
+3. **Audit + risk-reasoning**: minden változtatás külön értékelése (J.7 Step-scope alapján: most VAGY post-checkpoint VAGY soha)
+4. **Revert (default)** ha bármi a moratórium-protected URL-eken van (Apposing 4 + how-much-to-keep + bármi top-impression)
+5. **Inline mentés a `seoplan.md`-be** (text-form, encoding-fix-szel) post-checkpoint backlog-ként
+6. **Diff-fájl törölhető** miután az inline mentés megvan
+
+**Miért fontos:** A multi-agent setup (külön agent külön környezetben) hasznos a brainstorming-fázisban (Codex 1-2-3 batch-research **EXTRÉM ÉRTÉKES** volt), DE veszélyes az élesvégrehajtási fázisban — a koordinátor agent-nek (Opus) **központi audit-protokoll** kell.
+
+### J.12.5 Implementáció (ezen a commit-on)
+
+- ✅ Codex draft mentve `.codex-index-draft-2026-05-03.diff`-be (lokálisan, nem committed — átkerül text-formában a J.12.3-ba ezen a commit-on, majd a diff-fájl törölhető)
+- ✅ `index.html` revert-elve `git checkout HEAD -- index.html`
+- ✅ J.12 szekció dokumentálva (5 sub-szekció: J.12.1-J.12.5)
+- ✅ Új F-policy: multi-agent koordinációs protokoll (J.12.4)
+- ✅ Post-checkpoint backlog frissítve: 5 értékes Codex-element (Step 2.A meta-description + Step 3.A schema fields) MENTVE inline; 4 revert-tartandó (title-shift + mojibake) ELUTASÍTVA
+
 # 🛡️ STRATEGIC GUARDRAILS — 2026-04-28 ÉJSZAKA (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis) — REFERENCIA
 
 > **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).
