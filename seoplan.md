@@ -164,6 +164,203 @@ A 2026-05-02 01:30-i brainstorm-session-ben összegyűjtött 8 új angle-bucket 
 
 A teljes szűrt lista a `PROGRESS.md`-ben a 2026-05-02 brainstorm-szekciója alatt.
 
+### F.3.A Bucket-onkénti rationale + target-keyword + priority-ranking — 2026-05-02 02:10 (full recovery)
+
+**Felhasználói pushback (2026-05-02 02:08):** *"a korábbi ötleteidet elmentetted már, mielőtt beleszóltam a saját gondolataimmal?"* — kiderült hogy a F.3 szekció **csak névsort + dispositiont mentett**, a brainstorm "miért"-jét (rationale, target-keyword, priority) **nem**.
+
+**Beismerés a F.3 inkonzisztenciára:** Az F.3 összegzés "15 ✅ / 9 ⚠️ / 5 ❌" számai **félrevezetőek voltak** — a "15" valójában csak az iparág-vertikál bucket darabszáma, nem a total ✅ szám. A teljes accurate összegzés: **36 ✅ + 12 ⚠️ + 5 ❌ = 53 jelölt** 8 bucket-ben.
+
+#### Bucket 1 — Iparág-vertikál (15 ✅)
+
+**Rationale:** A `petty-cash` cluster eddig generic small-business-targeted volt. Az iparág-specifikus content **15 long-tail landing-jelöltet** ad, ahol az intent **explicit** (pl. "petty cash veterinary clinic" konkrét pain-pointot keres: gyógyszer-rendelés készpénzben, állat-tulajdonos-előleg-készpénzben). Mindegyik vertikál: saját query-tér (alacsony konkurencia), konkrét use-case-ek (real-world példák a content-be), social-proof potenciál (case-study).
+
+| Slug | Target-keyword | Risk-impact tier |
+|---|---|---|
+| `petty-cash-for-veterinary-clinic` | `petty cash veterinary clinic` | Med-impact, low-risk |
+| `petty-cash-for-auto-repair-shop` | `petty cash auto repair shop` | **High** (cash-heavy) |
+| `petty-cash-for-property-management` | `property management petty cash` | Medium |
+| `petty-cash-for-cleaning-business` | `cleaning business petty cash` | Medium |
+| `petty-cash-for-daycare` | `daycare petty cash management` | **High** (cash-heavy, parent-payments) |
+| `petty-cash-for-salon` | `hair salon petty cash` | **High** (very cash-heavy, tip-pool overlap) |
+| `petty-cash-for-food-truck` | `food truck petty cash` | Medium-high |
+| `petty-cash-for-dentist-office` | `dental office petty cash` | Medium |
+| `petty-cash-for-coffee-shop` | `coffee shop petty cash` | Medium-high |
+| `petty-cash-for-barbershop` | `barbershop petty cash` | Medium |
+| `petty-cash-for-nail-salon` | `nail salon petty cash` | Medium-high |
+| `petty-cash-for-spa` | `spa petty cash management` | Medium |
+| `petty-cash-for-hvac-business` | `hvac business petty cash` | Low-medium |
+| `petty-cash-for-landscaping` | `landscaping business petty cash` | Low-medium |
+| `petty-cash-for-photography-studio` | `photography studio petty cash` | Low |
+
+**Top 5 quick-win** (cash-heavy + low-SaaS-competition): salon → daycare → auto-repair → coffee-shop → food-truck.
+
+#### Bucket 2 — Role-driven (4 ✅ + 2 ⚠️)
+
+**Rationale:** Pivot "what kind of business"-ról "who is the person managing it"-re. **Persona-targeting** — különböző role-ok különbözőképp guglinak ugyanarra a problémára.
+
+| Slug | Target-keyword | Disposition + magyarázat |
+|---|---|---|
+| `petty-cash-for-office-manager` | `office manager petty cash` | ✅ Direct fit, leggyakoribb persona |
+| `petty-cash-for-executive-assistant` | `executive assistant petty cash management` | ✅ EA-k gyakran custodianok |
+| `petty-cash-for-construction-site-foreman` | `construction foreman site cash` | ✅ Field-cash, ad-hoc beszerzések |
+| `petty-cash-for-restaurant-manager` | `restaurant manager cash float` | ✅ Tip-pool/till-overlap, óvatos vocabulary |
+| `petty-cash-for-bookkeeper` | `bookkeeper petty cash workflow` | ⚠️ Bookkeeper persona → tax/accounting territory pull-risk |
+| `petty-cash-for-hr-manager` | `hr manager office cash advances` | ⚠️ HR + cash-advance → payroll territory pull-risk |
+
+**⚠️ átkeretezés-mód:**
+- **`bookkeeper-role`**: framing = "what your bookkeeper expects from you" (operations-side, NOT accounting-side). Tilos: journal entries, GAAP, ledger treatment, debit/credit. Megengedett: receipt-handoff workflow, monthly export, "what to deliver to bookkeeper".
+- **`hr-manager-role`**: framing = "office cash for incidentals" (snacks, taxis, office-supplies for new hires). Tilos: employee advances, payroll-deductions, garnishment, tip-pooling. Ha bármilyen payroll-vocab kell → SKIP.
+
+#### Bucket 3 — Use-case (5 ✅ + 1 ⚠️)
+
+**Rationale:** What the cash actually gets used for. **Specific-scenario** landings, very targeted long-tail. Mindegyik egy mini-pain-point a felhasználó workflow-jában.
+
+| Slug | Target-keyword | Disposition + magyarázat |
+|---|---|---|
+| `petty-cash-for-office-snacks` | `office snacks petty cash` | ✅ Klasszikus use-case, evergreen |
+| `petty-cash-for-parking-fees` | `parking fees petty cash office` | ✅ Urban-office pain |
+| `petty-cash-for-team-lunches` | `team lunch petty cash` | ✅ Egyszerű, gyakori |
+| `petty-cash-for-postage-mailing` | `postage petty cash log` | ✅ Recurring small expense |
+| `petty-cash-for-emergency-repairs` | `emergency repairs office petty cash` | ✅ HVAC-failure / lock-replace pain |
+| `petty-cash-for-client-gifts` | `client gifts cash log` | ⚠️ Gift-tax-territory adjacent |
+
+**⚠️ átkeretezés-mód:**
+- **`client-gifts-use-case`**: framing = "tracking the cash spent on small client gifts so the bookkeeper can categorize later". Tilos: IRS gift-tax limit ($25/person/year), deductibility, business-entertainment classification. Megengedett: "tracking the spend, the receipt, and who received what — your accountant decides the category".
+
+#### Bucket 4 — Pain-driven (3 ✅ + 1 ⚠️ + 1 ❌)
+
+**Rationale:** **Crisis/anxiety queries** — a leg-magasabb-converting search-intent. User már fáj neki, **NOW** keres megoldást.
+
+| Slug | Target-keyword | Disposition + magyarázat |
+|---|---|---|
+| `petty-cash-receipt-missing` | `petty cash receipt missing what to do` | ✅ Heti-szintű probléma |
+| `petty-cash-custodian-quitting` | `petty cash custodian leaving handoff` | ✅ Transition-pain, magas conversion |
+| `petty-cash-multiple-people-accessing` | `multiple people accessing petty cash chaos` | ✅ Scale-pain |
+| `petty-cash-balance-doesnt-match-ledger` | `petty cash balance ledger mismatch` | ⚠️ Cannibalization-risk — meglévő `petty-cash-does-not-balance.html` overlap |
+| `petty-cash-stolen-what-to-do` | `petty cash stolen office what to do` | ❌ Police/insurance/legal territory |
+
+**⚠️ átkeretezés-mód:**
+- **`balance-vs-ledger-mismatch`**: KILL vagy MERGE — a meglévő `petty-cash-does-not-balance.html` (2026-04-15 előtt készült) **erősen overlap**. Nem érdemes új landing, viszont a meglévő oldalt **bővíteni** lehet "ledger mismatch" angle-lel.
+
+#### Bucket 5 — Comparison (2 ✅ + 3 ⚠️ + 1 ❌)
+
+**Rationale:** "X vs Y" landings active comparison-mode user-eknek. **Magas commercial intent.**
+
+| Slug | Target-keyword | Disposition + magyarázat |
+|---|---|---|
+| `quickbooks-petty-cash-alternative` | `quickbooks petty cash alternative` | ✅ Magas-volume, generic pain |
+| `expensify-vs-spendnote-petty-cash` | `expensify vs spendnote petty cash` | ✅ Konkrét tool-comparison |
+| `pleo-vs-spendnote` | `pleo alternative small office` | ⚠️ Pleo Europe-focused, brand-comparison-policy kérdés |
+| `wave-vs-spendnote-petty-cash` | `wave accounting petty cash alternative` | ⚠️ Wave ≈ free-accounting, scope-mismatch |
+| `freshbooks-vs-spendnote-petty-cash` | `freshbooks petty cash alternative` | ⚠️ FreshBooks = invoicing-first, scope-mismatch |
+| `mint-vs-spendnote` | `mint petty cash alternative` | ❌ Mint shutdown 2024 + personal-vs-business intent-mismatch |
+
+**⚠️ átkeretezés-mód:**
+- **`pleo` / `wave` / `freshbooks`**: ezek **full SaaS-platformok** ahol a petty-cash csak sub-feature. Framing = "a focused petty-cash tool vs. an all-in-one platform that includes petty cash". Honest scope-comparison: SpendNote = receipt-handoff focus, vs. = full accounting/expense-management. NEM kell mind a 3 — érdemes 1 indítani (Pleo legjobb jelölt: petty-cash a központi positioning-jukban).
+
+#### Bucket 6 — Workflow-concept (3 ✅ + 1 ⚠️ + 1 ❌)
+
+**Rationale:** **Educational concepts** ami comparison/awareness traffic-et hoz. Top-of-funnel user-ek "what is X" / "X vs Y" / "when to X" query-kkel.
+
+| Slug | Target-keyword | Disposition + magyarázat |
+|---|---|---|
+| `when-to-replenish-petty-cash` | `when to replenish petty cash` | ✅ Practical, frequent question |
+| `petty-cash-vs-change-fund` | `petty cash vs change fund difference` | ✅ Confused-vocabulary clarification |
+| `petty-cash-vs-cash-drawer` | `petty cash vs cash drawer` | ✅ Confused-vocabulary clarification |
+| `imprest-system-petty-cash` | `imprest system petty cash explained` | ⚠️ Academic-accounting term |
+| `petty-cash-journal-entries` | `petty cash journal entries gaap` | ❌ GAAP/journal-entries territory |
+
+**⚠️ átkeretezés-mód:**
+- **`imprest-system-explained`**: framing = "how the float-based system works **in practice**" — operations-focused. Tilos: journal-entry-mechanics, debit/credit, ledger-account-postings. Megengedett: "fixed float, replenish-when-low, the cash + receipts always equal the float" workflow-magyarázat.
+
+#### Bucket 7 — Migration (4 ✅, all clean)
+
+**Rationale:** **Switching-moment queries** — user éppen váltani készül egy rendszerről másikra. **Magas commercial intent**, transition-pain.
+
+| Slug | Target-keyword | Disposition + magyarázat |
+|---|---|---|
+| `corporate-card-switch-to-petty-cash` | `switch from corporate card petty cash` | ✅ Reverse-trend (legtöbben card-ra váltanak) |
+| `quickbooks-petty-cash-migration` | `migrate quickbooks petty cash dedicated tool` | ✅ QB-sub-ledger → dedicated-tool flow |
+| `csv-export-petty-cash-for-accountant` | `petty cash csv export accountant` | ✅ Workflow-handoff focus |
+| `replace-paper-petty-cash-with-app` | `replace paper petty cash app` | ✅ ⚠️ Cannibalization-warning a `digital-petty-cash-book`-kal (lásd F.4 SERP-test) |
+
+**⚠️ post-F.4-finding**: A 4. jelölt (`replace-paper-petty-cash-with-app`) overlap-ben van a `digital-petty-cash-book` és `digital-receipt-book` jelenlegi top-1-2 dominanciájával. Vagy KILL, vagy radically-different angle (pl. "30-day migration plan" step-by-step vs. a meglévő concept-pages).
+
+#### Bucket 8 — Seasonal (3 ⚠️ + 1 ❌ + 1 ❌)
+
+**Rationale:** **Time-of-year queries** — Q4 audit, year-end, new-year setup. Volume-spike specific időszakokban. **DE** mindegyik közeledik a tax/audit-territory-hoz, ezért 0 azonnali ✅.
+
+| Slug | Target-keyword | Disposition + magyarázat |
+|---|---|---|
+| `petty-cash-year-end-checklist` | `petty cash year-end checklist` | ⚠️ Year-end → tax/audit territory pull |
+| `petty-cash-q4-audit-prep` | `petty cash q4 audit preparation` | ⚠️ Audit territory pull |
+| `petty-cash-setup-new-business` | `setup petty cash new small business` | ⚠️ "Starting a business" tax-territory pull |
+| `petty-cash-tax-season-prep` | `petty cash tax season preparation` | ❌ Explicit tax pozicionálás |
+| `petty-cash-for-nonprofit-charity` | `nonprofit petty cash management` | ❌ Donor-receipt jogi kockázat (501c3) |
+
+**⚠️ átkeretezés-mód:**
+- **`year-end-checklist`**: framing = "what to **gather and hand off to your bookkeeper** at year-end" (operations handoff). Tilos: tax-deductions, write-offs, year-end-tax-prep. Megengedett: reconciliation-checklist, receipt-archive-export, custodian-handover-if-changing.
+- **`q4-audit-prep`**: framing = "**internal Q4 reconciliation**" (cleanup before bookkeeper review). Tilos: external-audit-prep, IRS-audit, tax-audit. Megengedett: "your own monthly/quarterly self-check before you hand over to anyone".
+- **`setup-new-business`**: framing = "**first 30 days of cash tracking**" — operations-only. Tilos: business-registration, EIN, sales-tax-setup, business-license. Megengedett: "you've opened the doors, here's how to start tracking petty cash from day 1".
+
+### F.3.B Top 5 priority quick-win — full ranking (post-2026-05-15 SERP-validation queue)
+
+A 36 ✅-ből risk-adjusted impact-szerint sorba rendezve (HIGH-impact + LOW-risk + low-competitive):
+
+| # | Slug | Bucket | Indok |
+|---|---|---|---|
+| **1** | `petty-cash-for-salon` | Industry | Very cash-heavy, low SaaS competition, clear pain-point, magas regional-search-volume |
+| **2** | `petty-cash-for-daycare` | Industry | Cash-heavy, parents pay cash for events/snacks/extras, recurring intent |
+| **3** | `petty-cash-for-auto-repair-shop` | Industry | Cash-heavy (parts-runners), older-demographic less-likely-to-use-card |
+| **4** | `expensify-vs-spendnote-petty-cash` | Comparison | Magas commercial intent, active comparison-mode |
+| **5** | `petty-cash-custodian-quitting` | Pain | Transition-pain, **HIGH conversion** intent (crisis-moment) |
+
+**6-10**: `petty-cash-receipt-missing` (Pain), `quickbooks-petty-cash-alternative` (Comparison), `petty-cash-for-coffee-shop` (Industry), `petty-cash-for-food-truck` (Industry), `when-to-replenish-petty-cash` (Workflow).
+
+### F.3.C ⚠️ átkeretezés-mód összegzés (12 jelölt)
+
+| Bucket | Jelölt | Átkeretezés egy-mondatban |
+|---|---|---|
+| Role | `bookkeeper-role` | "What your bookkeeper expects from you" — operations-side, NO journal entries |
+| Role | `hr-manager-role` | "Office cash for incidentals" — NOT employee advances/payroll |
+| Use-case | `client-gifts` | "Track the spend, your accountant categorizes" — NO gift-tax-limits |
+| Pain | `balance-vs-ledger-mismatch` | KILL vagy MERGE meglévő `petty-cash-does-not-balance`-szal |
+| Comparison | `pleo-vs-spendnote` | "Focused tool vs all-in-one platform" — honest scope-comparison |
+| Comparison | `wave-vs-spendnote` | Ugyanaz framing |
+| Comparison | `freshbooks-vs-spendnote` | Ugyanaz framing |
+| Workflow | `imprest-system-explained` | "How the float-based system works in practice" — NO journal mechanics |
+| Migration | `replace-paper-with-app` | KILL vagy radically-different angle (cannibalization F.4 alapján) |
+| Seasonal | `year-end-checklist` | "What to hand off to your bookkeeper at year-end" — NO tax-deductions |
+| Seasonal | `q4-audit-prep` | "Internal Q4 reconciliation" — NO external/tax audit |
+| Seasonal | `setup-new-business` | "First 30 days of cash tracking" — NO business-registration |
+
+### F.3.D ❌ SKIP-jelöltek + indok (5 jelölt)
+
+| Jelölt | SKIP-indok | Mit lehetne csinálni helyette |
+|---|---|---|
+| `petty-cash-stolen-what-to-do` | Police/insurance/legal territory | Esetleg `petty-cash-security-tips`-en (létező TIER A-near) egy "If theft is suspected" sub-section, prevention-focus |
+| `petty-cash-accounting-entries` | GAAP/journal-entries territory | NOTHING — ez tisztán accountant-territory |
+| `petty-cash-tax-season-prep` | Explicit tax pozicionálás | Az `year-end-checklist` átkeretezés (lásd F.3.C) közelebbről lefedi az op-side-ot |
+| `mint-vs-spendnote` | Mint shutdown 2024 + personal-vs-business intent-mismatch | Ha valaha hasonló jön → frame: "from personal-finance app to business cash log" |
+| `petty-cash-for-nonprofit-charity` | Donor-receipt jogi kockázat (501c3-rules) | NOTHING — túl-szabályozott terület, jogi-tanácsadás-szükség |
+
+### F.3.E Methodology-tanulság (2026-05-02 02:10 felhasználói pushback)
+
+**A felhasználói pushback ("a korábbi ötleteidet elmentetted már?") mutatott rá hogy a F.3 dokumentáció hiányos volt:**
+
+- **Mit mentettem ✓**: jelölt-nevek + disposition (✅/⚠️/❌)
+- **Mit NEM mentettem ✗**: bucket-rationale, target-keyword, ⚠️-átkeretezés-mód, ❌-indok, priority-ranking
+- **F.3.A→F.3.D-vel pótolva**
+
+**Új methodology-rule (F. policy-bővítés):** Minden brainstorm-session output **kötelezően tartalmazza**:
+1. Bucket-onkénti rationale (miért ez a kategória?)
+2. Jelöltenkénti target-keyword (mire céloz?)
+3. Disposition + indok (✅/⚠️/❌ MIÉRT?)
+4. ⚠️ esetén explicit átkeretezés-mód
+5. Priority-ranking (top-N quick-win)
+
+A "csak névsor" mentés **NEM elég** — egy hét múlva visszanézve nem fogom tudni ki miért került ✅ vagy ⚠️ alá.
+
 ### F.4 Felhasználói extra-brainstorm 4 új bucket — 2026-05-02 01:50 (vita-/félreértés-elkerülés + everyday vocab + spreadsheet + carbonless paper)
 
 **Felhasználói felvetés:** *"esetleg más szavakat vagy más megközelítést mit használhatnánk. egyrészt az igazoás kp kiadásról vagy igazolás kb átvételről, a viták vagy a félreértések elkerülése miatt. vagy más hétköznapi szavak használata mint money vagy mittudomén mit használnak amerikában... nem csak excellel hasonlítanám hanem google sheettel is... olyasmivel ami hétköznapi, carbonless nyugtatömbbel..."*

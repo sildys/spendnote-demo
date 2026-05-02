@@ -98,7 +98,7 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-02 ÉJJEL — Felhasználói extra-brainstorm 4 új bucket + 10-query élő SERP-validation + hibrid-augmentation backlog)
+## Where we are now (last updated: 2026-05-02 02:10 — Brainstorm full-recovery: F.3.A–F.3.E rationale + target-keyword + priority-ranking + ⚠️-átkeretezés + ❌-indok)
 
 ### 2026-05-02 ÉJSZAKA — Compliance-border hard-rule + disclaimer audit + 4-page hardening (commit `a3ef5cf`) + post-checkpoint brainstorm-pipeline szűrve (`seoplan.md` `## F.`)
 
@@ -234,6 +234,32 @@ Trigger feltétel a 2026-05-15 checkpoint-on: ha a `petty-cash-log-template` Bin
 **Stratégiai tanulság:** A felhasználói brainstorm-pushback ("more vocabulary, more angles") gyakran megerősíti, hogy **MÁR jobban lefedjük a területet, mint ahogy a saját self-assessment alapján gondoltuk**. A `petty-cash` cluster mély és széles, és a Bing-discovery-pattern (`how much petty cash should i keep` 04-29-en, `how to avoid disputes over petty cash` 05-02-én) azt mutatja, hogy a **GSC-data 4-8 hetes lag-je miatt nem látjuk reálisan, mi rangsorol már most**. **SERP-evidence > GSC-export.**
 
 **Mit nem csináltunk:** Nem írtunk új HTML kódot, nem érintettük a meglévő oldalakat. A 2026-05-02 ÉJSZAKA blokk (compliance hardening, commit `a3ef5cf`) teljesen érintetlen marad. Csak documentation-update: `seoplan.md` `## F.4` új subsection (5 sub-block: F.4.A SERP-tábla, F.4.B 4 felfedezés, F.4.C hibrid-koncepció, F.4.D backlog, F.4.E konzekvencia).
+
+### 2026-05-02 02:10 — Brainstorm full-recovery (`seoplan.md` `## F.3.A`–`F.3.E`) — felhasználói pushback nyomán
+
+**Kontextus:** A felhasználó 02:08-kor megkérdezte: *"a korábbi ötleteidet elmentetted már, mielőtt beleszóltam a saját gondolataimmal?"* — kiderült hogy a F.3 dokumentáció **csak névsort + dispositiont mentett**, a brainstorm "miért"-jét (rationale, target-keyword, ⚠️-átkeretezés-mód, ❌-indok, priority-ranking) **nem rögzítette**.
+
+**Beismerés F.3 inkonzisztenciára:** Az F.3 "15 ✅ / 9 ⚠️ / 5 ❌" számai **félrevezetőek voltak** — a "15" csak az iparág-vertikál bucket darabszáma, nem a total. A teljes accurate összegzés: **36 ✅ + 12 ⚠️ + 5 ❌ = 53 jelölt** 8 bucket-ben.
+
+**Mit pótoltunk a `seoplan.md`-be (5 új sub-block):**
+
+- **F.3.A Bucket-onkénti rationale + target-keyword + risk-impact tier** — mind a 8 bucket részletesen kifejtve (rationale-mondat + jelölt-tábla target-keyword-del és tier-besorolással)
+- **F.3.B Top 5 priority quick-win ranking** — risk-adjusted impact alapján: salon → daycare → auto-repair → expensify-comparison → custodian-quitting (+ 6-10 ranking)
+- **F.3.C ⚠️-átkeretezés-mód összegzés** — 12 ⚠️-jelölt mindegyikéhez egy-mondatos explicit reframing-instrukció (mit szabad, mit tilos)
+- **F.3.D ❌-SKIP-jelöltek + indok + alternatíva** — 5 ❌-jelölt SKIP-indoka + "mit lehetne csinálni helyette"
+- **F.3.E Methodology-tanulság** — F. policy-bővítés: minden jövő-brainstorm-session output kötelezően tartalmazza bucket-rationale + target-keyword + disposition-indok + ⚠️-átkeretezés + priority-ranking
+
+**Methodology-rule a F. policy-be (új):** A "csak névsor" mentés **NEM elég**. Egy hét múlva visszanézve nem tudható ki miért került ✅ vagy ⚠️ alá. Brainstorm-output minimum 5 elemet kell tartalmazzon (lásd F.3.E).
+
+**Top 5 priority a 2026-05-15 SERP-validation queue-ra:**
+
+1. `petty-cash-for-salon` (industry, very cash-heavy)
+2. `petty-cash-for-daycare` (industry, parent-payment-heavy)
+3. `petty-cash-for-auto-repair-shop` (industry, parts-runner-heavy)
+4. `expensify-vs-spendnote-petty-cash` (comparison, high commercial intent)
+5. `petty-cash-custodian-quitting` (pain, transition-crisis, HIGH conversion)
+
+**FONTOS warning:** Ez a Top 5 a **WebSearch-tool methodology hibájának fényében** post-2026-05-15-en újra-validálandó **GSC-impression-data + incognito Google US** kombinációval (lásd a 02:02-i felhasználói pushback: "ha ilyen jó helyeken vagyunk, miért nem kattint senki?"). Lehet hogy a "high impact" tier-besorolásom **felülbecsült**, mert a SERP-test nem feltétlenül reflektálja a Google US ranking-et.
 
 ### 2026-05-01 ESTE — `/petty-cash-app` Google-discoverability micro-sprint (commit `421e5b9`) + SoftwareApplication schema annual-price alignment (commit `03d39a8`)
 
