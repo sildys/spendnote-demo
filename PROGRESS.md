@@ -98,7 +98,57 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-05 21:40 — `/babysitter-cash-payment-receipt` audience-pivot + teljes tartalom-átírás (seoplan.md J.14.7): kettős audience (parent + sitter) framing, semleges hangnem, erősített compliance-disclaimer (Form W-10 / Form 2441 / 1099 / Schedule H / Dependent Care FSA explicit említés mind amit SpendNote NEM csinál — TIER A), FAQ 4→7 kérdéssel (2 parent + 2 sitter + 1 közös tax + 1 compliance-border CCTC/FSA + 1 cluster-bridge), title+meta+H1+hero+How-It-Works+Article+FAQPage schema mind szinkronban. Plus 4 cluster-társ floor-link anchor-diverzifikáció (`/tutor` + `/handyman` + `/contractor` mind unique anchor + 1 új inline kontextus-link `/tutor`-ban) + sitemap `lastmod` bump 4 URL-re. A 14-napos checkpoint (2026-05-19) érvényben.)
+## Where we are now (last updated: 2026-05-05 22:05 — `/babysitter` audience-pivot RÉSZLEGES VISSZAVONÁS (B-opció, seoplan.md J.14.11): a J.14.7-es kettős audience (parent + sitter egyenrangú) átírást a felhasználó megkérdőjelezte, mert ellentmond a SpendNote core `for teams` / `$15.83/hó` pozícionálásnak. Most **sitter-primary** (3 sitter use-case-box) + **multi-sitter household manager secondary** (1 use-case-box, **explicit pricing-mention** + alkalmi szülő elhárítása) + **új H2 "Heads-Up: This Is for Sitters Who Deal with Cash Often"** (E-E-A-T szignál, megnevezi a pricing-et és a Notes app/Excel alternatívát). FAQ 7→6 kérdés szinkronban, TIER A tax disclaimer marad. Új SEO-szabály a F-policy-ba: AUDIENCE-FIT KOHERENCIA = aki nem fizetne $15.83/hó-t, annak nincs hard-CTA. A 14-napos checkpoint (2026-05-19) érvényben.)
+
+### 2026-05-05 22:00 — `/babysitter` audience-pivot RÉSZLEGES VISSZAVONÁS (B-opció, seoplan.md J.14.11)
+
+**Trigger:** A J.14.7-es kettős audience átírás után a felhasználó azonnal feltette a kulcskérdést: *"akkor ezt a trackert mi a szülőknek ajánljuk???"* — ez **valós ellentmondást** tárt fel:
+
+| Hely | Pozícionálás |
+|---|---|
+| `index.html` `<title>` | `for Teams` |
+| `index.html` meta | `for small teams` |
+| `spendnote-pricing.html` | `$15.83/mo`, `Solo users & small teams`, `+$5/user` (team-pricing) |
+| `/tutor`, `/handyman`, `/contractor` | mind **service-provider** |
+| `/babysitter` (J.14.7 után) | kettős audience egyenrangúan ⚠️ |
+
+A baj: egy **alkalmi szülő** rákattan a `Track Every Babysitter Payment` CTA-ra → meglátja a `$15.83/hó` pricing-et → **bouncel** → Google high bounce rate-ot lát → minőség-szignál csökken.
+
+**3 opció a felhasználói megfontolásra:**
+- A) BACKTRACK 100% sitter-only
+- **B) RÉSZLEGES BACKTRACK ⭐ (felhasználó választotta)** — sitter-primary, multi-sitter household manager secondary, alkalmi szülő explicit elhárítva
+- C) Marad ahogy J.14.7 lette (max forgalom, de bait-and-switch)
+
+**B-opció implementáció (1 commit, csak `/babysitter-cash-payment-receipt.html`):**
+- `<title>`: `Track Every Sitter Payment` → **`Track Cash from Every Family`** (sitter-side, multi-family persona)
+- Meta description: szülő-nyitó → **sitter-nyitó** (`Sit for several families, all in cash?`)
+- OG/Twitter sync
+- Article schema headline + description sync sitter-side
+- H1 marad
+- Hero p: semleges → **sitter-narratíva** (`You sit for the Garcias on Tuesdays, the Johnsons on Thursdays...`)
+- CTA: `Track Every Babysitter Payment` → **`Track Every Family's Payments`**
+- Why H2: `Why Both Sides Want a Receipt` → **`Why a Babysitter Needs a Receipt for Every Cash Session`**
+- **ÚJ H2: `Heads-Up: This Is for Sitters Who Deal with Cash Often`** — E-E-A-T szignál: explicit pricing-mention ($15.83/hó) + alkalmi sitter/szülő elhárítása ("If you sit for one family every other Friday, the Notes app or a single Excel row will do — don't buy a tool you don't need")
+- Who 4 use-case-box: 2 parent + 2 sitter → **3 sitter (Regular Multi-Family Babysitters / Nannies Paid Weekly / Tutors+Helpers) + 1 multi-sitter household manager** (explicit kizárás: "For an occasional Friday-night sitter, you don't need this — the Notes app is enough.")
+- What + How: semleges → **sitter-side**
+- Disclaimer-box + Tax H2: TIER A megmarad, sitter-szempont előtérbe
+- FAQ: 7 → **6 kérdés** (2 sitter + 1 közös tax + 1 multi-sitter household manager [explicit pricing-mention] + 1 CCTC + 1 cluster bridge)
+- FAQPage schema sync 6 kérdéssel
+- Article schema `dateModified` bump 2026-05-05T21:30 → **2026-05-05T22:00**
+
+**ÚJ F-POLICY SZABÁLY: AUDIENCE-FIT KOHERENCIA** (seoplan.md J.14.11.6):
+- Tilos: konzumer-CTA olyan személynek aki a $15.83/hó pricing-tier-en NEM fizetne
+- Megengedett: konzumer-szempont **secondary** szegmens (multi-sitter household, multi-volunteer event organizer) VAGY **informational** szint (FAQ, side-context)
+- E-E-A-T-szignál: explicit elhárítás a rossz közönségtől
+- Audit-kérdés minden új landing-nél: "Ez az olvasó tényleg fizetne $15.83/hó-t, vagy bouncel a pricing-page-en?"
+
+**Sitemap:** `<lastmod>` 2026-05-05 marad (a J.14.7 már bumpolta), nem szükséges újabb update.
+
+**Felhasználói GSC-teendő:** indexing-request `/babysitter`-re ha kvóta van — major content rewrite, friss `dateModified` = erős re-crawl trigger.
+
+**Commits:** `<sha-tbd>` (2 fájl, 1 commit: babysitter rewrite + seoplan.md J.14.11 + PROGRESS.md update).
+
+### 2026-05-05 21:35 — `/babysitter` audience-pivot + tartalom-átírás (seoplan.md J.14.7) + 4 cluster-társ anchor-diverzifikáció
 
 ### 2026-05-05 21:35 — `/babysitter` audience-pivot + tartalom-átírás (seoplan.md J.14.7) + 4 cluster-társ anchor-diverzifikáció
 
