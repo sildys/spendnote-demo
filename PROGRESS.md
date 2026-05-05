@@ -98,7 +98,31 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-03 01:33 — GSC indexing request mind a 8 érintett URL-re beküldve (új landing + homepage + 6 bővített/tweak-elt landing); 14-napos checkpoint 2026-05-19, addig NE módosítsuk őket. Codex 2nd batch full execution + cluster bidirectionality fix befejezve két commit-ban (`8aae362` + `d1d3b57`): 1 új URL `/cash-box-request-form` (PTO/PTA/event-volunteer angle, Tier B disclaimer) + 3 meglévő bővítés (cash-handoff-receipt `form` keyword + event-cash-handling cash-box-log H2 + cash-count-sheet-template event-cash-count H2) + bidirektális Related/Also-see linkek 4 oldalon)
+## Where we are now (last updated: 2026-05-05 21:15 — GSC indexing-audit (J.14): a felhasználó "káosz az indexelés körül" jelzésére 6 GSC screenshot diagnózisa után 5 anomália azonosítva; 1 sitemap ↔ noindex KONFLIKTUS javítva: `/how-to-manage-petty-cash-small-business` URL eltávolítva a sitemap-ből (50→49 URL), mert 04-10 óta noindex (a 04-28-i `69907f4` commit véletlenül "previously missing"-ként visszatette). Új koherencia-szabály + audit-script seoplan.md J.14-be. Mostantól: minden sitemap-be tett URL-nek `index, follow`-nak (vagy hiányzó `<meta robots>`-nak) kell lennie. A 14-napos checkpoint (2026-05-19) érvényben.)
+
+### 2026-05-05 21:15 — GSC indexing-audit (seoplan.md J.14) — 1 sitemap↔noindex konfliktus javítva
+
+**Trigger:** Felhasználó GSC `Indexelés > Oldalak` riportban "káoszt" jelzett (Indexelt 46 / Nem indexelt 33, ebből 3 "Feltérképezve – jelenleg nincs indexelve").
+
+**Sitemap.xml + összes HTML-fájl meta-robots audit eredménye:**
+- 50 sitemap URL → 49 OK (`index, follow` vagy hiányzó) + **1 KONFLIKTUS**
+- A konfliktus: `/how-to-manage-petty-cash-small-business` — `<meta name="robots" content="noindex, follow">` DE a sitemap-ben volt!
+
+**Root cause:** A `7fba051` commit (2026-04-10) szándékosan kivette a sitemap-ből a 6 noindex-elt "worst performer" URL-t. 18 nappal később a `69907f4` commit (2026-04-28) commit-üzenete azt írta: "*also added the previously missing how-to-manage-petty-cash-small-business URL*" — vagyis "hibásnak gondolva" visszatette, anélkül hogy ellenőrizte volna a meta robots tag-et a fájl head-jében.
+
+**Fix:** `sitemap.xml`-ből az `/how-to-manage-petty-cash-small-business` URL-block törölve (1 commit, 6 sor). A `.html` fájl noindex marad (04-10-i döntés érvényben). Sitemap-méret: 50 → 49 URL.
+
+**Új preventív szabály (seoplan.md J.14.4):** Minden sitemap-be tett URL-nek `index, follow`-nak (vagy hiányzó `<meta robots>`-nak) kell lennie. Audit-script (Node one-liner) dokumentálva, futtatandó minden olyan commit ELŐTT, ami `sitemap.xml`-t VAGY HTML `<meta name="robots">` tag-et érint.
+
+**A többi 4 anomália értelmezése (NEM kell javítani):**
+1. `/cash-box-request-form` (új URL, 2 napos, indexing-request 05-03-án) — VÁRJUK
+2. `/babysitter-cash-payment-receipt` (sitemap+`index, follow`, de NINCS indexelt — minőség-szignál) — opcionális belső-link-erősítés a `/tutor`/`/handyman`/`/contractor` cluster-társakból
+3. `/petty-cash-log-template` (noindex, de még indexelt — utolsó crawl 03-03) — várjuk a re-crawlot
+4. `/what-is-petty-cash` (ugyanaz — utolsó crawl 04-09) — várjuk a re-crawlot
+
+**Felhasználói GSC-teendő:** Indexelés > Sitemapek → Sitemap újra-beküldés (hogy a Google észrevegye a `/how-to-manage` URL-eltávolítást → a 3 "Feltérképezve – jelenleg nincs indexelve" sorszám csökkenni fog 1-2 héten belül).
+
+**Commits:** `<sha-tbd>` (sitemap fix + seoplan.md J.14 + PROGRESS.md update — 1 commit).
 
 ### 2026-05-03 01:10 — Codex 2nd batch execution (J.13.4) — 1 új URL + 3 meglévő bővítés
 

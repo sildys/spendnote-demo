@@ -1341,6 +1341,57 @@ A `<lastmod>` 9 oldalon frissült 2026-05-03-ra ezzel az iterációval:
 
 **Bing Webmaster Tools** sitemap-resubmit ajánlott a 9 frissített URL-re, mert a Bing crawl-szabad kapacitása nagyobb, mint Google-é, és gyorsabban jelennek meg az eredmények ott. (3 új oldal + 4 meta-tweak + cloud/online framing + Pro Custom Labels conversion-content után, sleep-on-it fázis) — REFERENCIA
 
+## J.14 GSC indexing-audit (2026-05-05) — sitemap ↔ noindex koherencia-szabály
+
+**Trigger:** Felhasználó a GSC `Indexelés > Oldalak` riportban "káoszt" jelzett (Indexelt 46 / Nem indexelt 33). 6 GSC screenshot diagnózisa után 5 anomália került azonosításra:
+
+### J.14.1 Az 5 anomália
+
+| # | URL | Sitemap | Meta robots | GSC státusz | Diagnózis |
+|---|-----|---------|-------------|-------------|-----------|
+| 1 | `/how-to-manage-petty-cash-small-business` | **VAN** | `noindex, follow` | "Feltérképezve – jelenleg nincs indexelve" (gyaníthatóan) | **ÖNMAGUNKKAL HARCOLUNK** — sitemap mondja "indexeld", meta robots mondja "ne indexeld" |
+| 2 | `/cash-box-request-form` | VAN | `index, follow` | Még nincs az indexed-listán (49 példa) | NORMÁL — új URL (2 napos), indexing-request 2026-05-03-án ment ki, Google 2-7 nap szokott |
+| 3 | `/babysitter-cash-payment-receipt` | VAN | `index, follow` | NINCS az indexed-listán | "Feltérképezve – jelenleg nincs indexelve" gyaníthatóan — minőség/duplikátum-szignál |
+| 4 | `/petty-cash-log-template` | NINCS (kivettük 2026-04-10) | `noindex, follow` | MÉG INDEXELT (utolsó crawl 2026-03-03) | NORMÁL ZAJ — Google őrzi a régi indexet, mert nem crawl-olta újra a noindex óta |
+| 5 | `/what-is-petty-cash` | NINCS (kivettük 2026-04-10) | `noindex, follow` | MÉG INDEXELT (utolsó crawl 2026-04-09) | UGYANAZ — várjuk a következő re-crawlot |
+
+### J.14.2 Root cause: a `69907f4` commit (2026-04-28) "previously missing" hiba
+
+A `7fba051` commit (2026-04-10) szándékosan kivette a sitemap-ből a 6 noindex-elt oldalt (köztük `/how-to-manage-petty-cash-small-business`). 18 nappal később a `69907f4` commit-üzenet azt írta: "*also added the previously missing how-to-manage-petty-cash-small-business URL*" — vagyis **véletlenül "hibásnak gondolva" visszatette**, anélkül hogy ellenőrizte volna a meta robots tag-et. Klasszikus self-foot-shooting: a Google a sitemap-utasítást követve crawl-olta, majd a meta robots ütközés miatt nem indexelte → a 3 "Feltérképezve – jelenleg nincs indexelve" egyik biztos lakója lett 1 hete.
+
+### J.14.3 Fix (2026-05-05) — 1 sor a sitemap-ből
+
+`sitemap.xml`: `/how-to-manage-petty-cash-small-business` URL block törölve (50 → 49 URL). A `.html` fájl noindex marad — szándékosan, mert a 04-10-i "worst performers" döntés érvényben van.
+
+### J.14.4 ÚJ KOHERENCIA-SZABÁLY (preventív)
+
+**Sitemap-be tett URL-eknek `index, follow` (vagy hiányzó) meta robots-szal kell rendelkezniük.** A két jelzésnek mindig **egybe kell hangoznia**, különben a Google "Feltérképezve – jelenleg nincs indexelve" buktatóba kerül és minőség-szignált is leoszt érte.
+
+**Audit-script** (manuálisan futtatható ellenőrzés, ad-hoc commit-előtt):
+
+```bash
+# pszeudo-Node, sitemap.xml-ben szereplő minden URL <-> .html fájl meta robots koherencia-check
+node -e "const fs=require('fs');const xml=fs.readFileSync('sitemap.xml','utf8');const urls=[...xml.matchAll(/<loc>([^<]+)</loc>/g)].map(m=>m[1].replace('https://spendnote.app',''));for(const u of urls){let f=u==='/'?'index.html':u.slice(1)+'.html';if(!fs.existsSync(f)){console.log('MISSING FILE:',u);continue;}const c=fs.readFileSync(f,'utf8');const m=c.match(/<meta\s+name=[\"']robots[\"']\s+content=[\"']([^\"']+)/i);if(m && m[1].toLowerCase().includes('noindex'))console.log('CONFLICT:',u,'['+m[1]+']');}"
+```
+
+**Mikor futtassuk:** minden olyan commit ELŐTT, ami `sitemap.xml`-t VAGY HTML-fájl `<meta name="robots">` tag-et érint.
+
+### J.14.5 Felhasználói GSC-teendők (a fix után)
+
+1. **Sitemap-resubmit** GSC-ben (Indexelés > Sitemapek → újra "Beküldés"), hogy a Google észrevegye az URL-eltávolítást → így a `/how-to-manage-petty-cash-small-business` "Feltérképezve – jelenleg nincs indexelve" sorból "Kizárva noindex címke miatt" sorba költözik (legitim kategória, nem minőség-leszámolás).
+2. **Diagnózis-ellenőrzés:** GSC > Indexelés > Oldalak > "Feltérképezve – jelenleg nincs indexelve" sorra kattintva a 3 érintett URL listája megjelenik. **Várt eredmény** a fix után 1-2 héten belül:
+   - `/how-to-manage-petty-cash-small-business` → eltűnik (átkerül "noindex" sorba)
+   - `/cash-box-request-form` → eltűnik (indexelődik)
+   - `/babysitter-cash-payment-receipt` → marad (külön analízis kell — minőség, vagy belső link-erősítés a `/handyman`/`/tutor`/`/contractor` cluster-társakból)
+3. **Indexing-request NEM kell** a `/how-to-manage-petty-cash-small-business`-re — szándékosan elengedjük (worst performer, 04-10-i döntés érvényes).
+4. **`/babysitter-cash-payment-receipt`-re** opcionálisan indexing-request beadható (ha kvóta engedi), DE előtte érdemes 1-2 internal linket adni hozzá a hasonló thematikájú `/tutor-cash-payment-receipt` és `/handyman-cash-payment-receipt` oldalakból, hogy ne csak a sitemap-ből és a homepage footer-ből legyen elérhető.
+
+### J.14.6 Tanulság
+
+- A `index, follow` és `noindex, follow` címkék **státuszkódot** jelentenek a Google-nak; a sitemap **felfedezési listát**. A kettőnek egybe kell csengenie, különben a sitemap "promise"-ot követő Googlebot a meta robots-tól rosszallás-jelet kap.
+- A "Feltérképezve – jelenleg nincs indexelve" kategória **minőség-szignált is hordoz**: a Google nemcsak hogy nem indexel, de a domain-szintű minőség-pontszámodat is rontja, ha sok URL-ed kerül ide. Ezért az ilyen konfliktusokat **azonnal** rendezni kell.
+- "Previously missing" típusú commit-üzeneteknél (különösen multi-agent környezetben) ALAPSZABÁLY: ellenőrizni a meta robots tag-et a fájl head-jében — NE feltételezzük, hogy "csak véletlen volt kihagyva".
+
 > **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).
 >
 > **2026-04-28 ÉJSZAKA-update:** A felhasználó override-ja után a 23:30-as SERP-evidence (F.2.F + F.2.G) alapján **2 további meta/content-tweak** is végrehajtásra került ma (lásd a fenti két szekció VÉGREHAJTVA blokkjait). Ezzel az "A. NE PISZKÁLJUK" moratóriumot **a holnaptól (2026-04-29)** számoljuk újra. Új URL-t továbbra sem adunk hozzá, és új H1-rewrite sincs az érintett 2 oldalon kívül.
