@@ -1548,9 +1548,11 @@ Ez **counter-intuitive SEO-mozdulat** (eltagad érdekeltséget!), de a Google he
 
 ### J.14.11.7 Felhasználói GSC-teendők (J.14.11 fix után)
 
-1. **GSC indexing-request** `/babysitter`-re (ha kvóta van) — major content rewrite + friss `dateModified` 2026-05-05T22:00 = erős re-crawl trigger
-2. **Sitemap-resubmit** GSC-ben (a `/babysitter` `lastmod` 2026-05-05 marad — már a J.14.7-tel friss)
-3. **Várt eredmény 1-2 hét múlva**:
+> **2026-05-05 23:50 — felhasználói döntés (J.14.10 + J.14.11 + J.14.12 + J.14.13 + cluster-link sweep mindegyikére kiterjesztve):** **NEM kérünk** indexing-request-et és **NEM csinálunk** sitemap-resubmit-et a mai (2026-05-05) változtatásokra. Indok: a 04-30 körüli hétvégi tartalmi-dömpinget a Google még nem dolgozta fel (van olyan friss URL ami még indexelve sincs), úgyhogy a kvóta-égetés értelmetlen lenne. A friss `lastmod` (sitemap.xml) + `dateModified` (Article schema) a következő organikus crawl-cycle-en jelez. A lenti pontok (`indexing-request`, `sitemap-resubmit`) csak referencia — most NEM hajtjuk végre.
+
+1. ~~**GSC indexing-request** `/babysitter`-re (ha kvóta van) — major content rewrite + friss `dateModified` 2026-05-05T22:00 = erős re-crawl trigger~~ — **NEM most** (lásd fenti döntés)
+2. ~~**Sitemap-resubmit** GSC-ben (a `/babysitter` `lastmod` 2026-05-05 marad — már a J.14.7-tel friss)~~ — **NEM most**
+3. **Várt eredmény 1-2 hét múlva** (organikus crawl, nem manuális push):
    - A SERP-snippet konkrét sitter-pain-point-tal jelenik meg (`Sit for several families, all in cash?`)
    - A bounce rate alacsonyabb mint J.14.7 lett volna (alkalmi szülő nem kattant rá, csak akit megfog a "several families" pain)
    - A `/babysitter` átkerül a "Feltérképezve – jelenleg nincs indexelve" sorból az "Indexelt"-be
@@ -1682,7 +1684,7 @@ A SERP-elemzés mellékterméke 2 új candidate a heti-modellbe:
 
 ### J.14.12.8 Felhasználói GSC-teendő + várt eredmény
 
-**Felhasználói GSC-teendő (opcionális):** indexing-request `/digital-petty-cash-book`-re ha kvóta van — major content rewrite + friss `dateModified` = erős re-crawl trigger.
+**Felhasználói GSC-teendő (2026-05-05 23:50 felhasználói döntés — lásd J.14.11.7 átfogó megjegyzés):** **NEM kérünk** indexing-request-et és **NEM csinálunk** sitemap-resubmit-et — a felhasználó kifejezetten kiterjesztette ezt a döntést **mind a 4 mai változtatásra** (babysitter J.14.11, digital-petty-cash-book J.14.12, petty-cash-app J.14.13, cluster-link sweep). Indok: a 04-30 körüli hétvégi dömpinget a Google még nem dolgozta fel (van olyan friss URL ami még nincs is indexelve), úgyhogy a kvóta-égetés értelmetlen lenne. Organikus crawl-cycle-re várunk — a friss `lastmod` (sitemap.xml) + `dateModified` (Article schema) jelzi a freshness-t a következő crawl-on.
 
 **Várt eredmény 2-4 hét múlva (mérendő):**
 - `digital petty cash book` query: #1 marad (a fő keyword még benne van Title + H1 + hero p + URL-ben)
@@ -1829,7 +1831,7 @@ Indok 2 oldalról:
 
 ### J.14.13.7 Felhasználói GSC-teendő + várt eredmény
 
-**Felhasználói GSC-teendő (opcionális):** URL Inspection a `/petty-cash-app`-ra → "Request Indexing" gomb. A friss `dateModified` + 5 új cluster-link = erős re-crawl trigger.
+**Felhasználói GSC-teendő (2026-05-05 23:50 felhasználói döntés — lásd J.14.11.7 átfogó megjegyzés):** **NEM kérünk** indexing-request-et és **NEM csinálunk** sitemap-resubmit-et — kiterjesztett döntés mind a 4 mai változtatásra (babysitter / digital-petty-cash-book / petty-cash-app / 5 cluster-link). Ugyanaz az indok: a hétvégi dömping organikus feldolgozása még folyamatban van, kvóta-megőrzés szükségesebb URL-eknek (pl. még indexeletlen oldalak). A friss `dateModified` + 5 új cluster-link a következő organikus crawl-on jelez.
 
 **Várt eredmény 2-4 hét múlva (mérendő):**
 - Első impression-ok long-tail query-kre (`petty cash app for multi-site`, `multi site petty cash app`, `petty cash app for multiple locations`, `school petty cash app`)
