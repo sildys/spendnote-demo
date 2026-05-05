@@ -98,7 +98,82 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-05 22:20 — Site-wide content audit BACKLOG rögzítve seoplan.md J.15-ben: a felhasználó "tartok tőle hogy még jó pár ilyen szarul megírt oldalam van" megfigyelése után **48 sitemap landing diagnosztikai scan** lefutott (NULLA fájl-módosítás). 6 problémakategória azonosítva: A) 20 oldal régi `Start free./Free to start.` pricing-note-ot használ (P1 batch-fix), B) 5 oldal "Need a simple X?" copy-pasta hero pattern (P1 rewrite), C) 4 oldal H1/Title-ben `Template` szó maradt (P0 — ellentmond a 04-26-i user-instrukciónak), D) 4 oldal audience-fit gyanú (P1 — J.14.11.6 audit), E) ~12 oldal stale `dateModified` >2 hónap (P2 — automatikusan B/C/D-vel), F) `audit trail` vocabulary deep-audit (P2 — F-policy 80% OK, ~20% finomítás). Sprint-terv post-checkpoint (2026-05-19 után), 8-pontos audit-template + startoló forgatókönyv készen áll. **Most semmi nem módosul az oldalakon**, hogy a babysitter J.14.11 + cash-box-request-form + 8 indexing-request mérése tiszta maradjon. A 14-napos checkpoint (2026-05-19) érvényben.)
+## Where we are now (last updated: 2026-05-05 23:00 — `/digital-petty-cash-book` MULTI-SITE PIVOT (seoplan.md J.14.12): a felhasználó "ezt az oldalt nézd meg, mert nagyon mélyen van" jelzése után 0. lépés **téma-audit** + SERP-elemzés (6 query) → felfedezve **belső cannibalization** (4 oldal verseng ugyanazért: `/petty-cash-app`, `/petty-cash-app-vs-excel`, `/digital-petty-cash-book`, `/digital-receipt-book`) + GSC-evidencia: `digital petty cash book` ZERO-VOLUME (#1 vagyunk, de 0 impr), `online cash book` query #80 / 2 impr → friss SERP-jel. **DUAL-KEYWORD pivot**: új angle `Online Petty Cash Book for Multi-Site Teams — One Dashboard, Many Cash Boxes` (USP = SpendNote multi-cash-box architektúra, EGYIK versenytárs SEM specializált erre). Title/H1/meta `Digital → Online` csere (`Petty` szó tartja a meglévő `digital petty cash book` matching-et, `online cash book` substring beemelve). Body teljes restructure: 6 új H2 (pain-narratíva / heads-up / 4 use-case-box [multi-site SMB / school-PTA / construction PM / multi-department ops] / hogyan működik / void-szakasz / TIER B disclaimer / This Is Not Accounting Software / FAQ 5 kérdés). F-policy szóhasználat tisztítva (`ledger entry` → `logged transaction / record`, `void system` → `void instead of delete`). FAQPage schema 3 → 5, Article `dateModified` 2026-04-16 → 2026-05-05T22:55. Sitemap `lastmod` bump. **NEM módosított a jövő-heti backlog (J.15) — a heti-modell szerint ez ennek a hétnek az 1 mély átírása.** Várt eredmény: `digital petty cash book` #1 marad + `online cash book` #80 → top 30-50 pár hét alatt. **NEM redirect-eltük** (49 oldal megmarad). 2 másodlagos felfedezés rögzítve a heti-modell backlog-ba: `/petty-cash-app` cannibalization a homepage-dzsel (jövő hét), `/digital-receipt-book` push #2 → #1 (két hét múlva). A J.15 site-wide audit BACKLOG (post-checkpoint, 2026-05-19) érvényben marad, ezzel nem érintkezik.)
+
+### 2026-05-05 23:00 — `/digital-petty-cash-book` MULTI-SITE PIVOT (seoplan.md J.14.12) — téma-audit alapú teljes átírás
+
+**Trigger:** Felhasználó: *"ma ezt az oldalt nézd még meg, mert nagyon mélyen van: https://spendnote.app/digital-petty-cash-book"*. Ez a heti-modell (2-3 oldal/hét mély-átírás) első konkrét feladata.
+
+**0. lépés — téma-audit (NEM csak szöveg-fix):**
+SERP-elemzés 6 query-re lefutott. Felfedezve: **belső cannibalization** — 4 oldal próbál ugyanazért az intent-ért versenyezni:
+- `/petty-cash-app`, `/petty-cash-app-vs-excel`, `/digital-petty-cash-book`, `/digital-receipt-book`
+
+| Query | SERP-pos | Verseny | Sikerpotenciál |
+|---|---|---|---|
+| `petty cash app vs excel` | **#1** | gyenge | EGYÉRTELMŰ NYERTES |
+| `digital receipt book` | **#2** (ceipto.com #1) | közepes | push #1-re reális |
+| `digital petty cash book` | **#1** | gyenge | DE 0 impr GSC-ben → **zero-volume** |
+| `petty cash book online` | nem top 5 (homepage + `/petty-cash-log-template` jön be helyette) | közepes | cannibalization-jel |
+| `petty cash app` | nem top 5 (homepage jön be) | erős | másik cannibalization (jövő-heti audit) |
+| `petty cash book` (generic) | NEM versenyzünk | erős, info-intent | helyes — tool-oldal nem nyer info-intent-re |
+
+**4 sors-opció bemutatva a felhasználónak**: A) átírás új angle-lel, B) NOINDEX, C) 301 redirect `/petty-cash-app-vs-excel`-re, D) törlés. **Felhasználó: A** ("ha redirecteljük akkor még kevesebb oldalunk lesz").
+
+**4 angle-opció bemutatva** (multi-site / migration / industry-specific / examples-gallery), felhasználó: **A2 — multi-site / multi-cash-box angle** (USP-fit: SpendNote multi-cash-box architektúra ✓, paying-audience ✓, zero cannibalization ✓).
+
+**SERP-igazolás**: `online cash book` top 5 (expensly.ch, ecashbooks, ftax.co.uk, play.google.com/CashBook, ajons) mind kis-közepes DA niche tool, EGYIK SEM multi-site/multi-cash-box specializált → **differenciátor van**.
+
+**Felhasználói GSC-evidencia (új info, stratégia-módosító):** `/digital-petty-cash-book` az `online cash book` query-n **#80 pos / 2 impressions** — friss jel. `digital petty cash book` query-n: 0 impr (zero-volume megerősítve).
+
+**DUAL-KEYWORD STRATÉGIA** (felhasználó jóváhagyta):
+- **Primary keep**: `digital petty cash book` (#1-poz védve — keyword 1× hero p-ben + 1× FAQ-ban + URL-ben)
+- **Primary push**: `online petty cash book for multi-site teams` (új angle)
+- **Secondary push**: `online cash book` (#80 → várhatóan top 30-50 pár hét alatt)
+
+**Akciók (1 commit, 3 fájl):**
+
+**A. `/digital-petty-cash-book.html` (full rewrite):**
+- `<title>`: `Digital Petty Cash Book Online — Log Transactions in Seconds` → **`Online Petty Cash Book for Multi-Site Teams — One Dashboard, Many Cash Boxes`** (~75 char, mobil-on enyhén csonk de első 25 char-ban a kulcs)
+- Meta description: generikus `Replace your paper or Excel...` → **`Running petty cash across two or three locations? Replace per-site paper books and Excel files with one online petty cash book — every cash box on its own running balance, all on one dashboard.`** (pain-point + persona + USP)
+- OG/Twitter sync
+- Article schema headline + description sync, `dateModified` 2026-04-16 → **2026-05-05T22:55:00+00:00**
+- H1: `Digital Petty Cash Book` → **`Online Petty Cash Book for Multi-Site Teams`**
+- Hero p: generikus 1-mondat termék-feature → **multi-szempontú pain-narratíva** (`Running petty cash across two locations? Three sites? A school office plus a half-dozen clubs?`) + meglévő `digital petty cash book` keyword 1× beemelve (`Some teams call this an online petty cash book or a digital petty cash book — same idea, same problem it solves.`)
+- Subline: `Small teams • Simple tracking • No accounting complexity` → **`Multi-site teams • Per-site running balances • One dashboard`**
+- CTA: `Start Free Trial` → **`Track Every Cash Box From One Place`** (audience-action)
+- Pricing-note: régi `Start free.` (kategória A) → **új standard `Free 14-day trial. Paid plans from $15.83/month. No credit card required.`** (J.15 A-kategória batch-fix előrejátszva ezen az 1 oldalon)
+- **Body teljes restructure**: 6 új H2 + 4 use-case-box + 4 feature-card átírva multi-site framing-re + TIER B inline disclaimer-box + tax/accounting border H2 + 5 FAQ
+  - H2 "Why a Multi-Site Team Needs an Online Cash Book, Not a Paper Stack" (pain-narratíva 2 paragrafus + meglévő dashboard-kép)
+  - H2 "Heads-Up: Built for Teams Running 2+ Cash Boxes" (J.14.11.6 AUDIENCE-FIT KOHERENCIA: explicit `$15.83/hó` mention + 1-cashbox single-office user elhárítása + 4 paying persona felsorolva)
+  - H2 "Who This Is For" — **4 use-case-box**: Multi-Site Small Business Owner / School Office or Club Treasurer / Construction or Field-Site Project Manager / Multi-Department Operations Manager
+  - H2 "How One Dashboard Manages Many Cash Boxes" — 4 feature-card átírva: Per-Site Cash Box Per-Site Balance / Role-Based Access Per Site / Searchable Across All Sites / One Export All Sites
+  - H2 "Original Record Stays Visible" (F-policy szótisztítva: `ledger entry` → `logged transaction / record`, `void system instead of deletion` → `void instead of delete`)
+  - **Új TIER B disclaimer-box** (előtte csak footer-only-ben volt)
+  - H2 "This Is Not Accounting Software" — explicit "It does / It does not" lista (border-szakasz: nem journal entry, nem invoice, nem payroll, nem tax-return-filing)
+  - FAQ 3 → **5 kérdés** (mind multi-site-fókuszú): how many cash boxes / role-based per location / real-time balance update / export all sites in one CSV / does this replace bookkeeper)
+  - FAQPage schema sync 5 kérdéssel
+- F-policy szóhasználat-tisztítás végig: `ledger entry` (5×) → `logged transaction` / `record`, `permanent ledger entry` → kihagyva, `void system instead of deletion` → `void instead of delete`, `ledger book` → `paper book`
+- Új CSS: `.use-case-box`, `.disclaimer-box`, `.faq-section`, `.faq-item` hozzáadva (másolva a babysitter-stílusból)
+
+**B. Floor-link anchor diversification** (a `/digital-petty-cash-book`-ról 8 cluster-társra mutató belső link):
+- `Cash float vs petty cash` → `cash float vs petty cash explained`
+- `Office expense reimbursement form` → `multi-department reimbursement form` (multi-site framing)
+- `Petty cash reconciliation` → `petty cash reconciliation across sites`
+- `Petty cash receipt generator` → `per-site petty cash receipt generator`
+- `Petty cash app vs Excel` → `why teams switch from Excel to a petty cash app`
+- `Digital receipt book` → `digital receipt book` (változatlan, már jó)
+- `Manage petty cash remotely` → `remote multi-site petty cash management`
+- `Petty cash app` → `petty cash app for small teams`
+
+**C. Sitemap `<lastmod>` bump:** `/digital-petty-cash-book` 2026-04-28 → **2026-05-05**.
+
+**Másodlagos felfedezések (a SERP-elemzés mellékterméke, JÖVŐ-heti backlog — most NEM módosítva):**
+1. **`/petty-cash-app` cannibalization a HOMEPAGE-dzsel** — a `petty cash app` query-n a homepage van top 5-ben, nem a `/petty-cash-app`. Erős cluster (versenytársak: usepetty.cash, pleo, jettycash) — érdemes mélyebb audit. **Heti-modell prioritás 1 (jövő hét)**
+2. **`/digital-receipt-book` push #2 → #1** — most #2 ceipto.com mögött. Egy fókuszált javítás (pain-point hero + use-case-boxok) push-olhat #1-re. **Heti-modell prioritás 2 (két hét múlva)**
+
+**Felhasználói GSC-teendő (opcionális):** indexing-request `/digital-petty-cash-book`-re — major content rewrite, friss `dateModified` = erős re-crawl trigger. Várt eredmény 2-4 hét: `online cash book` #80 → top 30-50, `digital petty cash book` #1 marad.
+
+**Commits:** `<sha-tbd>` (3 fájl, 1 commit: digital-petty-cash-book rewrite + sitemap lastmod + seoplan.md J.14.12 + PROGRESS.md update).
 
 ### 2026-05-05 22:15 — Site-wide content audit BACKLOG rögzítés (seoplan.md J.15) — NULLA fájl-módosítás
 
