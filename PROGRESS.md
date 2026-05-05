@@ -98,7 +98,35 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-05 22:05 — `/babysitter` audience-pivot RÉSZLEGES VISSZAVONÁS (B-opció, seoplan.md J.14.11): a J.14.7-es kettős audience (parent + sitter egyenrangú) átírást a felhasználó megkérdőjelezte, mert ellentmond a SpendNote core `for teams` / `$15.83/hó` pozícionálásnak. Most **sitter-primary** (3 sitter use-case-box) + **multi-sitter household manager secondary** (1 use-case-box, **explicit pricing-mention** + alkalmi szülő elhárítása) + **új H2 "Heads-Up: This Is for Sitters Who Deal with Cash Often"** (E-E-A-T szignál, megnevezi a pricing-et és a Notes app/Excel alternatívát). FAQ 7→6 kérdés szinkronban, TIER A tax disclaimer marad. Új SEO-szabály a F-policy-ba: AUDIENCE-FIT KOHERENCIA = aki nem fizetne $15.83/hó-t, annak nincs hard-CTA. A 14-napos checkpoint (2026-05-19) érvényben.)
+## Where we are now (last updated: 2026-05-05 22:20 — Site-wide content audit BACKLOG rögzítve seoplan.md J.15-ben: a felhasználó "tartok tőle hogy még jó pár ilyen szarul megírt oldalam van" megfigyelése után **48 sitemap landing diagnosztikai scan** lefutott (NULLA fájl-módosítás). 6 problémakategória azonosítva: A) 20 oldal régi `Start free./Free to start.` pricing-note-ot használ (P1 batch-fix), B) 5 oldal "Need a simple X?" copy-pasta hero pattern (P1 rewrite), C) 4 oldal H1/Title-ben `Template` szó maradt (P0 — ellentmond a 04-26-i user-instrukciónak), D) 4 oldal audience-fit gyanú (P1 — J.14.11.6 audit), E) ~12 oldal stale `dateModified` >2 hónap (P2 — automatikusan B/C/D-vel), F) `audit trail` vocabulary deep-audit (P2 — F-policy 80% OK, ~20% finomítás). Sprint-terv post-checkpoint (2026-05-19 után), 8-pontos audit-template + startoló forgatókönyv készen áll. **Most semmi nem módosul az oldalakon**, hogy a babysitter J.14.11 + cash-box-request-form + 8 indexing-request mérése tiszta maradjon. A 14-napos checkpoint (2026-05-19) érvényben.)
+
+### 2026-05-05 22:15 — Site-wide content audit BACKLOG rögzítés (seoplan.md J.15) — NULLA fájl-módosítás
+
+**Trigger:** Felhasználó megfigyelése: *"tartok tőle hogy még jó pár ilyen szarul megírt oldalam van... egyszer értelmeznünk kell mindegyik oldal szövegét, mert szerintem vannak köztük nagyon felületesen megírt szarok"*. Explicit kérés: "most nem akarom megzavarni ezt a tesztet" → backlog-rögzítés, nem fix.
+
+**Diagnosztikai scan eredménye (48 sitemap landing, 6 problémakategória):**
+
+| Cat | Probléma | Érintett oldalak | Priority | Becsült munka |
+|---|---|---|---|---|
+| A | Régi `Start free./Free to start.` pricing-note (vs új `Free 14-day trial. Paid plans from $15.83/month.`) | 20 oldal (15 `Start free.` + 4 `Free to start.` + 1 `Start Trackin...`) | P1 | 1 commit, batch-fix, triviális |
+| B | "Need a simple X?" copy-pasta hero (semmi konkrét pain-point) | `/handyman`, `/tutor`, `/cash-deposit-receipt`, `/employee-cash-advance-receipt`, `/school-money-collection-tracker` | P1 | 5 hero-rewrite, közepes munka |
+| C | H1/Title-ben `Template` szó maradt (a 04-26-i user-instrukció ellen) | `/petty-cash-policy-template` H1, `/cash-count-sheet-template` H1, `/daily-cash-report-template` H1, `/two-person-cash-count-policy` Title | **P0** | 4 string-csere, alacsony kockázat |
+| D | Audience-fit gyanú (J.14.11.6 alapján) | `/school-money-collection-tracker`, `/event-cash-handling`, `/payroll-cash-receipt`, `/cash-handoff-receipt` (audit + esetleges pivot) | P1 | 4 audit + esetleges rewrite |
+| E | Stale `dateModified` >2 hónap | ~12 oldal | P2 | automatikusan a B/C/D-vel |
+| F | `audit trail` vocabulary deep-audit (F-policy szerint OK technical-context-ben, TILOS auditor-vibe-ban) | 21 HTML-ben van használva — ~80% OK becslés szerint | P2 | eseti finomítás 4-5 helyen |
+
+**Sprint-terv (post-checkpoint, 2026-05-19 után):**
+- Sprint 1 (1-2 nap): A. pricing-note batch + C. template-szó kivétel
+- Sprint 2 (3-5 nap): B. copy-pasta hero rewrite + D. audience-fit audit + fix
+- Sprint 3 (1 nap): F. vocabulary deep-audit
+
+**Feltételes startolás:** Csak akkor indul a J.15 sprint, ha a babysitter J.14.11 sikeres (átkerül "Crawled-not-indexed"-ből "Indexelt"-be). Ha NEM, először az image-uniqueness backlog (J.14.9) — `/tutor` és `/handyman` saját képeket kapnak.
+
+**8-pontos audit-template** (seoplan.md J.15.3) készen áll: title↔H1 szinkron / meta keyword+pain+USP / hero pain-point (NEM generikus) / CTA action-driven / pricing-note egységes / use-case-boxok primary audience / audience-fit koherencia / compliance border + tilos-szavak.
+
+**Commits:** `<sha-tbd>` (1 fájl: seoplan.md J.15 + PROGRESS.md update — NULLA HTML-módosítás).
+
+### 2026-05-05 22:00 — `/babysitter` audience-pivot RÉSZLEGES VISSZAVONÁS (B-opció, seoplan.md J.14.11)
 
 ### 2026-05-05 22:00 — `/babysitter` audience-pivot RÉSZLEGES VISSZAVONÁS (B-opció, seoplan.md J.14.11)
 

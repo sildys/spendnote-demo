@@ -1555,6 +1555,112 @@ Ez **counter-intuitive SEO-mozdulat** (eltagad érdekeltséget!), de a Google he
    - A bounce rate alacsonyabb mint J.14.7 lett volna (alkalmi szülő nem kattant rá, csak akit megfog a "several families" pain)
    - A `/babysitter` átkerül a "Feltérképezve – jelenleg nincs indexelve" sorból az "Indexelt"-be
 
+## J.15 SITE-WIDE CONTENT AUDIT BACKLOG (2026-05-05 22:15) — post-checkpoint sprint, NEM most
+
+**Trigger:** A felhasználó megfigyelése a `/babysitter` audience-zagyvasága után: *"tartok tőle hogy még jó pár ilyen szarul megírt oldalam van... egyszer értelmeznünk kell mindegyik oldal szövegét, mert szerintem vannak köztük nagyon felületesen megírt szarok"*. Ezt a backlog-tervet a **2026-05-19-i checkpoint UTÁN** indítjuk; addig moratórium érvényben (lásd J.14.7 + J.14.11).
+
+### J.15.1 A site-wide diagnostic scan (2026-05-05) eredménye — 48 sitemap landing oldal
+
+**Diagnostikai kategóriák, prioritás szerint:**
+
+#### A. PRICING-NOTE INKONZISZTENCIA (P1 — könnyű, batch-fixable)
+
+A J.14.11 után a babysitter már az új standard pricing-note-ot használja: `Free 14-day trial. Paid plans from $15.83/month. No credit card required.` De **20+ oldal** még a régi `Start free.` vagy `Free to start.` formulát használja. Ez E-E-A-T inkonzisztencia (azt mondjuk a homepage-en `for teams`/$15.83/hó, és a landing-eken `Start free.` ami konzumer-vibe-ot ad).
+
+**Régi `Start free.` (15 oldal):** `/petty-cash-receipt-generator`, `/cash-handoff-receipt`, `/small-business-cash-receipt`, `/office-expense-reimbursement-form`, `/digital-petty-cash-book`, `/petty-cash-reconciliation`, `/how-to-fill-out-petty-cash-voucher`, `/petty-cash-policy-template`, `/contractor-advance-payment-receipt`, `/cash-payment-received-proof`, `/handyman-cash-payment-receipt`, `/tutor-cash-payment-receipt`, `/employee-cash-advance-receipt`, `/cash-deposit-receipt`, `/custom-cash-receipt-with-logo`, `/school-money-collection-tracker`
+
+**Régi `Free to start.` (4 oldal):** `/cash-drawer-reconciliation`, `/event-cash-handling`, `/boss-cant-see-where-cash-goes`, `/what-is-petty-cash`
+
+**Akció:** site-wide find/replace `Start free.` és `Free to start.` → `Free 14-day trial.` az összes hero-pricing-note-ban. 1 commit, 20 oldal. **Triviális, alacsony kockázat.**
+
+#### B. COPY-PASTA HERO PARAGRAFUS (P1 — közepes munka, magas érték)
+
+Több oldal a `Need a simple X?` generikus pattern-t használja a hero-ban, **konkrét pain-point nélkül**. Ez ugyanaz a "felületes" probléma amit a babysitter-en is láttunk. Nem mond pain-point-ot → Google nem érti a kereső közönséget → SERP CTR csökken.
+
+**Érintett oldalak:**
+- `/handyman-cash-payment-receipt` HP: `Need a simple cash receipt for handyman services?`
+- `/tutor-cash-payment-receipt` HP: `Need a simple cash receipt for tutoring sessions?`
+- `/cash-deposit-receipt` HP: `Need a simple cash deposit receipt?`
+- `/employee-cash-advance-receipt` HP: `Need a simple employee cash advance receipt?`
+- `/school-money-collection-tracker` HP: `Need a simple way to track school money collections?`
+
+**Akció:** mindegyikre konkrét pain-point hero (mint a babysitter-en `You sit for the Garcias on Tuesdays...`). Audience-fit koherencia (J.14.11.6) szerint mindegyikhez audit-kérdés: "ki fizetne $15.83/hó-t — a service-NYÚJTÓ vagy az ügyfél?" → a hero CTA azt szólítsa meg.
+
+#### C. "TEMPLATE" SZÓ MARADT FONTOS HELYEN (P0 — ellentmond a 04-26-i user-instrukciónak)
+
+A user 2026-04-26-án explicit kérte: *"a template szót szándékosan száműztük mindenhonnan mert akkor a 80dik oldalon landolunk"*. De a H1-ekben és Title-ben még maradt 4 helyen:
+
+| URL | Hol maradt | Akció |
+|---|---|---|
+| `/petty-cash-policy-template` | H1: `Petty Cash Policy Template` | H1 → `Petty Cash Policy` (title-vel sync) |
+| `/cash-count-sheet-template` | H1: `Cash Count Sheet Template` | H1 → `Cash Count Sheet` (title-vel sync) |
+| `/daily-cash-report-template` | H1: `Daily Cash Report Template` | H1 → `Daily Cash Report` (title-vel sync) |
+| `/two-person-cash-count-policy` | Title: `Two-Person Cash Count Policy + Free Sign-Off Template` | Title → `Two-Person Cash Count Policy + Sign-Off Form` |
+
+**Megjegyzés:** Az URL-ekben marad a `template` szó (URL-stable, redirect-zaj nem éri meg). Csak a látható szöveg tisztul.
+
+#### D. AUDIENCE-FIT KOHERENCIA GYANÚ (P1 — ugyanaz a kategória mint a babysitter J.14.11)
+
+Néhány oldal kettős audience-gyanú vagy unclear-target:
+
+| URL | Gyanú | Mit auditálni |
+|---|---|---|
+| `/school-money-collection-tracker` | Tanár? PTA-volunteer? Szülő? Ki gyűjt? | A sheet-pivotálás után meta-D `Collecting cash for a class trip, PTA fund, or school event?` széles felé szétfolyik. Fókuszálni kéne PTA-treasurer / class teacher szempontra. |
+| `/event-cash-handling` | Szervező? Volonteer? | D: `Event cash flying around between volunteers and booths?` — kell-e háttér szervezőnek vagy bookzelőnek beszélni? |
+| `/payroll-cash-receipt` | HR? Manager? Worker? | D: `Paying a wage in cash?` — fizető-fél perspektíva, OK. De részletesen ellenőrizni a body-t. |
+| `/cash-handoff-receipt` | Shift-team? Volunteer? Manager? | Title `Cash Handover Receipt Form` — semleges, OK. De a body-t auditálni. |
+
+**Akció:** mindegyik oldalon azonosítani a primary audience-t, ellenőrizni hogy a meta + hero + CTA + use-case-boxok mind ugyanazt szólítják-e meg, és hogy a primary audience tényleg fizetne-e $15.83/hó-t.
+
+#### E. STALE `dateModified` (P2 — friss-szignál hiánya)
+
+A 48 oldalból ~12 oldal `dateModified` >2 hónapos (>2026-03-05). Ezek vagy csak `lastmod`-bumppal frissíthetők (sitemap-ben), vagy érdemes egy kis content-fresshez kötni.
+
+**Példák:** `/handyman` (2026-03-06), `/tutor` (2026-03-06), `/cash-deposit-receipt` (2026-03-08), `/cash-refund-receipt` (2026-03-08), `/digital-receipt-book` (2026-03-08), `/cash-count-sheet-template` (2026-03-08 → DE 2026-05-03 a sitemap-en), stb.
+
+**Akció:** A B/C/D fix-ekkel együtt automatikusan bumpolódik a `dateModified`. Külön sprint nem kell.
+
+#### F. VOCABULARY ELLENŐRZÉS (P2 — F-policy és J.10 alapján)
+
+A `seoplan.md` 566. és 583. sorai szerint az **"audit trail"** szó **technical-context-ben (Excel-vs-App feature comparison) OK**, **auditor/compliance-vibe-ban TILOS**. Jelenleg 21 HTML-ben van "audit trail" — végig kell auditálni hogy melyik kontextusban. **Becslés szerint ~80% rendben** (technical-feature-context), ~20% lehet hogy auditor-compliance-vibe-ot ad → finomítás kell.
+
+**Egyéb ellenőrzendő kifejezések** (J.10 + F-policy alapján): `evidence trail`, `governance`, `immutable history`, `tip pool tracking`, `wage deduction for cash shortage`, `cash advance loan to employee`. Ezek mind **TILOSAK**. Quick-grep all .html files során 0 előfordulás várt — ellenőrizni a sprint elején.
+
+### J.15.2 SPRINT-TERV (post-checkpoint, kb. 2026-05-19 után)
+
+A 14-napos checkpoint sikere/sikertelensége határozza meg a sprint-méretet:
+
+**Ha a babysitter J.14.11 sikeres** (`/babysitter` átkerül "Indexelt"-be 1-2 héten belül):
+- **Sprint 1 (1-2 nap):** A. pricing-note batch-fix (20 oldal, triviális) + C. template-szó kivétel (4 oldal)
+- **Sprint 2 (3-5 nap):** B. copy-pasta hero rewrite (5 oldal) + D. audience-fit audit + fix (4-5 oldal)
+- **Sprint 3 (1 nap):** F. vocabulary deep-audit (eseti finomítások, ~5 helyen)
+
+**Ha a babysitter J.14.11 NEM sikeres** (továbbra is "Crawled — currently not indexed"):
+- Először az image-uniqueness backlog (J.14.9) — `/tutor` és `/handyman` saját képeket kapnak
+- Csak utána a J.15 site-wide audit
+
+### J.15.3 AUDIT-TEMPLATE (egy oldalra, gyors checklist)
+
+Minden auditált oldalra futtassuk le ezt a 8-pontos check-listát:
+
+1. **`<title>`** ↔ **H1** szinkron? (60-70 char-on belül, kulcsszó az elején)
+2. **Meta description** primary keyword + pain-point + 1 USP? (150-160 char)
+3. **Hero p**: konkrét pain-point (nem `Need a simple X?` generikus formula), specifikus persona-narratíva
+4. **CTA button**: action-driven, primary audience-hez illő ige
+5. **Hero pricing-note**: az új standard `Free 14-day trial. Paid plans from $15.83/month. No credit card required.`
+6. **Use-case-boxok**: mind ugyanazt a primary audience-t szólítják meg + 1 cluster-bridge use-case
+7. **Audience-fit koherencia (J.14.11.6)**: a primary audience tényleg fizetne $15.83/hó-t? Ha NEM, **explicit elhárítás** (E-E-A-T-szignál) vagy **secondary szegmensbe** átkerülés
+8. **Compliance border (F-policy)**: TIER A/B/C disclaimer megfelelő szintű? Tilos-szavak (J.10.4) NINCSENEK? "Audit trail"-szó technical-context-ben van, NEM compliance-vibe-ban?
+
+### J.15.4 STARTOLÓ FORGATÓKÖNYV (a sprint napján)
+
+1. **Reggel:** GSC `/babysitter` státusz check (Indexelt? Még mindig Crawled-not-indexed?)
+2. **Audit-script futtatás**: a fenti J.15.1 diagnostic scan újrafuttatása — talán pár oldalon közben már változás történt
+3. **Sprint 1 indítása:** A. pricing-note batch + C. template-szó (1 commit, alacsony kockázat)
+4. **Sitemap `lastmod` bump** mindegyik érintett oldalon → 1 commit
+5. **GSC indexing-request** csak a B/D/F sprintek után, mert a meta-tag csere önmagában nem indokolja a kvóta-elhasználást
+6. **Új checkpoint** a sprint-vég utáni 14 napra
+
 > **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).
 >
 > **2026-04-28 ÉJSZAKA-update:** A felhasználó override-ja után a 23:30-as SERP-evidence (F.2.F + F.2.G) alapján **2 további meta/content-tweak** is végrehajtásra került ma (lásd a fenti két szekció VÉGREHAJTVA blokkjait). Ezzel az "A. NE PISZKÁLJUK" moratóriumot **a holnaptól (2026-04-29)** számoljuk újra. Új URL-t továbbra sem adunk hozzá, és új H1-rewrite sincs az érintett 2 oldalon kívül.
