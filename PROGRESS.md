@@ -98,7 +98,60 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-05 21:15 — GSC indexing-audit (J.14): a felhasználó "káosz az indexelés körül" jelzésére 6 GSC screenshot diagnózisa után 5 anomália azonosítva; 1 sitemap ↔ noindex KONFLIKTUS javítva: `/how-to-manage-petty-cash-small-business` URL eltávolítva a sitemap-ből (50→49 URL), mert 04-10 óta noindex (a 04-28-i `69907f4` commit véletlenül "previously missing"-ként visszatette). Új koherencia-szabály + audit-script seoplan.md J.14-be. Mostantól: minden sitemap-be tett URL-nek `index, follow`-nak (vagy hiányzó `<meta robots>`-nak) kell lennie. A 14-napos checkpoint (2026-05-19) érvényben.)
+## Where we are now (last updated: 2026-05-05 21:40 — `/babysitter-cash-payment-receipt` audience-pivot + teljes tartalom-átírás (seoplan.md J.14.7): kettős audience (parent + sitter) framing, semleges hangnem, erősített compliance-disclaimer (Form W-10 / Form 2441 / 1099 / Schedule H / Dependent Care FSA explicit említés mind amit SpendNote NEM csinál — TIER A), FAQ 4→7 kérdéssel (2 parent + 2 sitter + 1 közös tax + 1 compliance-border CCTC/FSA + 1 cluster-bridge), title+meta+H1+hero+How-It-Works+Article+FAQPage schema mind szinkronban. Plus 4 cluster-társ floor-link anchor-diverzifikáció (`/tutor` + `/handyman` + `/contractor` mind unique anchor + 1 új inline kontextus-link `/tutor`-ban) + sitemap `lastmod` bump 4 URL-re. A 14-napos checkpoint (2026-05-19) érvényben.)
+
+### 2026-05-05 21:35 — `/babysitter` audience-pivot + tartalom-átírás (seoplan.md J.14.7) + 4 cluster-társ anchor-diverzifikáció
+
+**Trigger:** Felhasználói kérés: "csináld meg a belső linkeket [a `/babysitter`-re], a title és a meta nem szorul javításra a babysitter oldalon? Az egész oldalt írd át ha szükséges, mert nem tudom milyen zagyvaság van benne."
+
+**Diagnózis a `/babysitter` oldalon (audience-perspective inkonzisztens):**
+- Meta description **szülő-szemszögből** szólított ("Paying your babysitter in cash?")
+- Hero + 4 use-case-box + How It Works + 4 FAQ **a babysitter szemszögéből** beszélt ("Family pays YOU")
+- Eredmény: a Google sem értette ki a kereső közönség, SERP-snippet semmi konkrét pain-point-ot nem adott egyik audiencre sem
+
+**Belső-link helyzet a `/babysitter`-re (audit eredmény):** a 4 cluster-társ + `/spendnote-resources` MÁR mind linkel kifelé erre az URL-re — tehát NEM link-szám hiány a probléma. Az igazi 3 ok:
+1. **Anchor monotonitás** (mind az 5 link szinte ugyanazt a `Babysitter cash payment receipt` stringet használja)
+2. **Friss-szignál hiánya** (`dateModified: 2026-03-05` 2 hónapos)
+3. **Audience-zagyvaság** (lásd fent — a fő ok)
+
+**Akciók (1 commit):**
+
+**A. `/babysitter-cash-payment-receipt.html` (full content rewrite, kettős audience):**
+- `<title>`: "Instant Proof for Families" → **"Track Every Sitter Payment"** (action-driven, mindkét audiencre)
+- Meta description: szülő-only → kettős audience + "no template, no paper slips" (template-domain ellen-pozícionálás)
+- OG/Twitter sync
+- Article schema headline + description sync, "Not a tax document" explicit
+- H1: "Babysitter Payment Receipt" → **"Babysitter Cash Payment Receipt"** (alignment a title-vel)
+- Hero p: sitter-szemszög → **semleges** ("Cash on the kitchen counter, then days later: 'wait, did we pay you for last Thursday?'")
+- CTA: "Create Babysitting Payment Receipt" → **"Track Every Babysitter Payment"**
+- Why H2: "Why Keep Receipts for Babysitting?" → **"Why Both Sides Want a Receipt for Cash Babysitting"**
+- Who 4 use-case-box: mind sitter → **2 parent + 2 sitter** (Families Paying Sitters / Babysitters & Nannies / Parents Tracking Multi-Sitter / Tutors+Cash-Paid Helpers)
+- How It Works: "Open SpendNote AFTER THE FAMILY PAYS YOU" → **"After cash changes hands ... Tap IN if sitter, OUT if family"** (semleges)
+- Disclaimer-box **erősített** (TIER A): explicit említi Form W-10, Form 2441, 1099, Schedule H, Dependent Care FSA — mind amit SpendNote NEM csinál
+- "This Is Not a Tax Document" H2: TIER A disclaimer + explicit form-felsorolás + "use a tax professional / nanny payroll service" → határvonal a tax intent kereső előtt
+- FAQ: 4 sitter-only → **7 kérdés kettős audience** (2 parent + 2 sitter + 1 közös tax + 1 compliance-border CCTC/FSA + 1 cluster-bridge)
+- FAQPage schema: 4 → 7 kérdés szinkron a HTML-lel
+
+**B. 4 cluster-társ floor-link anchor-diverzifikáció:**
+- `/tutor`: floor-anchor `Babysitter cash payment receipt` → **`cash receipts for babysitters and nannies`** + **új inline kontextus-link** a "Why Tutors Need Receipts" után (cross-cluster bridge)
+- `/handyman`: → **`babysitting payment receipt for families`**
+- `/contractor`: → **`nanny & babysitter cash receipts`**
+- `/cash-payment-received-proof` + `/spendnote-resources`: NEM piszkáljuk
+
+**C. Sitemap `<lastmod>` bump 4 URL-en**: 2026-04-26 → **2026-05-05** (`/babysitter`, `/tutor`, `/handyman`, `/contractor`).
+
+**D. Compliance-border erősítés (TIER A szint):** a US Child and Dependent Care Credit (Form 2441) és Dependent Care FSA téma különösen veszélyes terület — sok kereső azt hiszi, egy "babysitter receipt template" elég lesz a tax credit-hez. Az új tartalom **explicit** elirányítja ezeket a kereséseket "tax professional / tax software / nanny payroll service" felé, ahelyett hogy hagyná őket azt hinni, "lesz nálunk valami credit form is".
+
+**E. Future backlog (J.14.9, NEM most):** image-uniqueness — a `/tutor` és `/handyman` oldalak más oldalak SEO-illusztrációit kölcsönzik, ami erős duplikátum-szignál. 3-3 új tool-specifikus kép generálása szükséges, de nem most (a 14-napos checkpoint előtt nem akarunk újabb large-scope sprint-et).
+
+**Felhasználói GSC-teendők (opcionális):**
+1. GSC indexing-request `/babysitter`-re (ha kvóta van) — major content rewrite + friss `dateModified` = erős re-crawl trigger
+2. Sitemap-resubmit (4 URL `lastmod` frissült)
+3. Várt eredmény 1-2 hét múlva: `/babysitter` "Feltérképezve – jelenleg nincs indexelve" → "Indexelt"
+
+**Commits:** `<sha-tbd>` (5 fájl, 1 commit: babysitter rewrite + 3 cluster-társ anchor + sitemap lastmod + seoplan.md J.14.7-J.14.10 + PROGRESS.md update).
+
+### 2026-05-05 21:15 — GSC indexing-audit (seoplan.md J.14) — 1 sitemap↔noindex konfliktus javítva
 
 ### 2026-05-05 21:15 — GSC indexing-audit (seoplan.md J.14) — 1 sitemap↔noindex konfliktus javítva
 

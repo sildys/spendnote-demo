@@ -1392,6 +1392,80 @@ node -e "const fs=require('fs');const xml=fs.readFileSync('sitemap.xml','utf8');
 - A "Feltérképezve – jelenleg nincs indexelve" kategória **minőség-szignált is hordoz**: a Google nemcsak hogy nem indexel, de a domain-szintű minőség-pontszámodat is rontja, ha sok URL-ed kerül ide. Ezért az ilyen konfliktusokat **azonnal** rendezni kell.
 - "Previously missing" típusú commit-üzeneteknél (különösen multi-agent környezetben) ALAPSZABÁLY: ellenőrizni a meta robots tag-et a fájl head-jében — NE feltételezzük, hogy "csak véletlen volt kihagyva".
 
+### J.14.7 `/babysitter-cash-payment-receipt` audience-pivot + teljes tartalom-átírás (2026-05-05 21:35)
+
+**Trigger:** A J.14.5 alapján a felhasználó kért belső linkeket erre az URL-re, mert a 3 "Feltérképezve – jelenleg nincs indexelve" egyik gyanús lakója. Az audit során kiderült: a 4 cluster-társ + `/spendnote-resources` MÁR linkel kifelé `/babysitter`-re — tehát **nem link-szám hiány** a probléma. A felhasználó kérte: "a title és a meta nem szorul javításra a babysitter oldalon? Az egész oldalt írd át ha szükséges, mert nem tudom milyen zagyvaság van benne."
+
+**Diagnózis:** Az oldal **audience-perspective inkonzisztens** volt — a meta description **szülő-szemszögből** szólított ("Paying your babysitter in cash?"), de a hero + 4 use-case-box + How It Works + FAQ **a babysitter szemszögéből** beszélt ("Family pays YOU"). Ez tipikus zagyvaság: a Google sem érti, ki a kereső közönség, és a SERP-snippet sem ad világos pain-point-ot egy konkrét audiencre.
+
+**Pivotálás:** Kettős audience (parent + sitter), semleges hangnem. A fő keresési intent valójában **több szülőt** takar (Child and Dependent Care Credit / Dependent Care FSA tracking, házi-költségvetés), mint sittert — de mindkét közönséget meg kell szólítani egyszerre.
+
+**Mit írtunk át (single commit):**
+
+| Elem | ELŐTTE | UTÁNA |
+|---|---|---|
+| `<title>` | `Babysitter Cash Payment Receipt — Instant Proof for Families` | `Babysitter Cash Payment Receipt — Track Every Sitter Payment` |
+| Meta description | `Paying your babysitter in cash? Create a receipt in 30 seconds as proof for both sides. Track every payment by family, date, and amount.` | `Paying your babysitter in cash? Log every payment in 30 seconds and keep one searchable record both the family and the sitter can check — no template, no paper slips.` |
+| OG/Twitter title+desc | szinkron a régi-vel | szinkron az új-jal |
+| Article schema headline | `Babysitter Payment Receipt - Track Every Payment` | `Babysitter Cash Payment Receipt — Track Every Sitter Payment` |
+| Article schema description | sitter-only | kettős audience + "Not a tax document" |
+| H1 | `Babysitter Payment Receipt` | `Babysitter Cash Payment Receipt` (alignment a title-vel) |
+| Hero p | sitter-szemszög (`Family pays you`) | semleges (`Cash on the kitchen counter, then days later: "wait, did we pay you for last Thursday?"`) |
+| CTA button | `Create Babysitting Payment Receipt` | `Track Every Babysitter Payment` |
+| Why H2 | `Why Keep Receipts for Babysitting?` (sitter-only Johnson példa) | `Why Both Sides Want a Receipt for Cash Babysitting` (kettős perspektíva) |
+| Who 4 use-case-box | mind sitter-szempontú (Regular Babysitters / Nannies / Occasional Sitters / Tutors) | kettős (Families Paying Sitters / Babysitters & Nannies / Parents Tracking Multi-Sitter / Tutors+Cash-Paid Helpers) — 2 parent + 2 sitter |
+| How It Works | `Open SpendNote AFTER THE FAMILY PAYS YOU` (sitter only) | `After cash changes hands, open SpendNote ... Tap IN if sitter, OUT if family` (semleges, mindkét oldal) |
+| Disclaimer-box | általános "not tax doc" | erősített: explicit említi Form W-10, Form 2441, 1099, Schedule H, Dependent Care FSA — mind amit SpendNote NEM csinál |
+| `This Is Not a Tax Document` H2 | általános 2-bullet | TIER A disclaimer: "Especially Not for the Child Care Credit", explicit Form-felsorolás, "use a tax professional / nanny payroll service" |
+| FAQ | 4 sitter-only kérdés | **7 kérdés** kettős audience: 2 parent (`Do I need to give...?` + `Can families track multiple sitters?`), 2 sitter (`Should a babysitter give...?` + `Multiple families?`), 1 közös tax (`Is it a tax document?`), **1 compliance-border (`Does this help with CCTC/FSA?`)**, 1 cluster-bridge (tutors/nannies/dog walkers) |
+| FAQPage schema | 4 kérdés | 7 kérdés szinkron a HTML-lel |
+
+**Compliance-border erősítés (TIER A disclaimer szint):**
+
+A US Child and Dependent Care Credit (Form 2441) és Dependent Care FSA téma **különösen veszélyes terület** — sok kereső azt hiszi, hogy egy "babysitter receipt template" elég lesz a tax credit-hez. Az új tartalom **explicit** kimondja:
+- A Form W-10 (sitter TIN/SSN) SpendNote-ból NEM jön
+- A Form 2441 (a credit maga) SpendNote-ból NEM jön
+- A 1099 / Schedule H (nanny payroll) SpendNote-ból NEM jön
+- A Dependent Care FSA reimbursement SpendNote-ból NEM jön
+- "Use SpendNote for the cash record; use a tax professional or tax software for the credit claim" — egyértelmű határvonal
+
+Ez a J.10 (köznyelvi vocabulary) és F-policy (compliance border) szerint **TIER A** disclaimer-szint, mert specifikus form-okat NEVEZÜNK MEG amit NEM csinálunk. A tax-keresőket **proaktívan** elirányítjuk a megfelelő toolhoz/szakemberhez ahelyett, hogy hagynánk őket azt hinni, "lesz nálunk valami credit form is".
+
+**Kapcsolódó: 4 cluster-társ anchor-diverzifikáció (single commit):**
+
+| Forrás | RÉGI anchor | ÚJ anchor + extra |
+|---|---|---|
+| `/tutor` floor-link | `Babysitter cash payment receipt` | `cash receipts for babysitters and nannies` + **új inline kontextus-link** a "Why Tutors Need Receipts" után (cross-cluster bridge: same family multi-service contact) |
+| `/handyman` floor-link | `Babysitter cash payment receipt` | `babysitting payment receipt for families` |
+| `/contractor` floor-link | `Babysitter cash payment receipt` | `nanny & babysitter cash receipts` |
+| `/cash-payment-received-proof` | már jó (inline + külön) | NEM piszkáljuk |
+| `/spendnote-resources` | `Babysitter Payment Receipt` | NEM piszkáljuk (resources-list legitim szintenként ismétlődő anchor) |
+
+### J.14.8 Sitemap lastmod bump (4 URL)
+
+`<lastmod>` 2026-04-26 → 2026-05-05 az alábbi 4 URL-en:
+- `/babysitter-cash-payment-receipt` (full content rewrite)
+- `/tutor-cash-payment-receipt` (1 inline link + 1 anchor)
+- `/handyman-cash-payment-receipt` (1 anchor)
+- `/contractor-advance-payment-receipt` (1 anchor)
+
+### J.14.9 Future image-uniqueness backlog (NEM most)
+
+A `/tutor-cash-payment-receipt` oldal a `/babysitter`-ből kölcsönzi mind a 3 SEO-illusztrációt (`assets/images/seo/babysitter/babysitter-*.png`). Ez **erős duplikátum-szignál Google szerint** — két különböző URL-en ugyanaz az image-fingerprint = "ugyanaz a content gyanú". A `/handyman` és `/contractor` is megosztják egymás között a `contractor/contractor-*.png` képeket.
+
+**Backlog tétel** (nem most, mert nem akarunk újabb large-scope sprint-et indítani a 14-napos checkpoint előtt):
+- 3 új tutor-specifikus képet generálni: `assets/images/seo/tutor/tutor-cash-payment-print-receipt.png`, `tutor-cash-payment-entry-form.png`, `tutor-payment-history-transaction-list.png`
+- (esetleg) 3 új handyman-specifikus képet — `assets/images/seo/handyman/handyman-*.png`
+- A target page sitemap `lastmod` bump és (kvóta engedi) GSC indexing-request
+
+**Várható hatás:** image-fingerprint diversification → Google "thin/duplicate content" gyanúja csökken → a `/tutor` (és potenciálisan `/handyman`) oldal indexelési minőség-pontszáma javul.
+
+### J.14.10 Felhasználói GSC-teendők a J.14.7 fix után (opcionális)
+
+1. **GSC indexing-request** `/babysitter-cash-payment-receipt`-re (ha kvóta van) — most már jelentős content-rewrite + audience-pivot + 7 FAQ + erősített compliance-disclaimer van, friss `dateModified` = 2026-05-05. Friss-szignál + tartalom-frissesség **erős re-crawl trigger**.
+2. **Sitemap-resubmit** GSC-ben (mind a 4 cluster-társ `lastmod`-ja frissült).
+3. **Várt eredmény 1-2 hét múlva:** a `/babysitter` átkerül a "Feltérképezve – jelenleg nincs indexelve" sorból az "Indexelt" sorba. Ha NEM, akkor az image-uniqueness backlog (J.14.9) válik elsőbbségi tétellé.
+
 > **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).
 >
 > **2026-04-28 ÉJSZAKA-update:** A felhasználó override-ja után a 23:30-as SERP-evidence (F.2.F + F.2.G) alapján **2 további meta/content-tweak** is végrehajtásra került ma (lásd a fenti két szekció VÉGREHAJTVA blokkjait). Ezzel az "A. NE PISZKÁLJUK" moratóriumot **a holnaptól (2026-04-29)** számoljuk újra. Új URL-t továbbra sem adunk hozzá, és új H1-rewrite sincs az érintett 2 oldalon kívül.
