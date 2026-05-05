@@ -98,7 +98,73 @@ If a chat thread freezes / context is lost: in the new thread say:
 - [ ] **AUDIT-L6** Sentry environment tagging és release címkézés finomítása.
 - [ ] **AUDIT-L7** Contact list pagination nagy adathalmazra.
 
-## Where we are now (last updated: 2026-05-05 23:00 — `/digital-petty-cash-book` MULTI-SITE PIVOT (seoplan.md J.14.12): a felhasználó "ezt az oldalt nézd meg, mert nagyon mélyen van" jelzése után 0. lépés **téma-audit** + SERP-elemzés (6 query) → felfedezve **belső cannibalization** (4 oldal verseng ugyanazért: `/petty-cash-app`, `/petty-cash-app-vs-excel`, `/digital-petty-cash-book`, `/digital-receipt-book`) + GSC-evidencia: `digital petty cash book` ZERO-VOLUME (#1 vagyunk, de 0 impr), `online cash book` query #80 / 2 impr → friss SERP-jel. **DUAL-KEYWORD pivot**: új angle `Online Petty Cash Book for Multi-Site Teams — One Dashboard, Many Cash Boxes` (USP = SpendNote multi-cash-box architektúra, EGYIK versenytárs SEM specializált erre). Title/H1/meta `Digital → Online` csere (`Petty` szó tartja a meglévő `digital petty cash book` matching-et, `online cash book` substring beemelve). Body teljes restructure: 6 új H2 (pain-narratíva / heads-up / 4 use-case-box [multi-site SMB / school-PTA / construction PM / multi-department ops] / hogyan működik / void-szakasz / TIER B disclaimer / This Is Not Accounting Software / FAQ 5 kérdés). F-policy szóhasználat tisztítva (`ledger entry` → `logged transaction / record`, `void system` → `void instead of delete`). FAQPage schema 3 → 5, Article `dateModified` 2026-04-16 → 2026-05-05T22:55. Sitemap `lastmod` bump. **NEM módosított a jövő-heti backlog (J.15) — a heti-modell szerint ez ennek a hétnek az 1 mély átírása.** Várt eredmény: `digital petty cash book` #1 marad + `online cash book` #80 → top 30-50 pár hét alatt. **NEM redirect-eltük** (49 oldal megmarad). 2 másodlagos felfedezés rögzítve a heti-modell backlog-ba: `/petty-cash-app` cannibalization a homepage-dzsel (jövő hét), `/digital-receipt-book` push #2 → #1 (két hét múlva). A J.15 site-wide audit BACKLOG (post-checkpoint, 2026-05-19) érvényben marad, ezzel nem érintkezik.)
+## Where we are now (last updated: 2026-05-05 23:35 — `/petty-cash-app` LONG-TAIL DIVERSIFICATION + cluster-authority push (seoplan.md J.14.13): a felhasználó GSC-evidenciája `0 impression soha` a `/petty-cash-app`-ra → **NEM klasszikus cannibalization** (a J.14.12.7-es backlog-jelölést korrigáltuk), hanem **indexing-státusz audit**: `Indexed but not ranked` (a homepage rangsorol a `petty cash app` query top 5-ben — és ott KONVERTÁL is, ma is regisztráltak). User-instrukció: **homepage off-limits** (működő conversion-csatorna). 3-opciós szűkített csomag (homepage-mentes): A) freshness, B-light) cluster-link, C-light) long-tail. Mind a 3 mehet 1 commit-ban. **Új H2 + 3 use-case-box** a `/petty-cash-app`-on (`Petty Cash App for Multi-Site Teams` — chain-iroda / school-PTA / construction-PM long-tail magnet) — más query-ket céloz amit a homepage NEM érint, így **NEM versenyez** a homepage-dzsel. Article `dateModified` 2026-04-28 → 2026-05-05T23:30 + sitemap `lastmod` bump. 5 cluster-társra inline-link sweep `/petty-cash-app`-ra anchor-diversity-vel (NO `petty cash app` exact substring): `petty-cash-receipt-generator` (`cloud petty cash tracker for teams`) + `small-business-cash-receipt` (`web-based petty cash tracker for small businesses`) + `petty-cash-policy-template` (`team petty cash tracking tool`) + `petty-cash-reconciliation` (`cloud-based petty cash tool for multi-site teams`) + `what-is-petty-cash` (`cloud petty cash management tool`). Az 5 kiegészíti a már meglévő 5 cluster-linket (`cash-float-vs-petty-cash`, `petty-cash-how-much-to-keep`, `manage-petty-cash-remotely`, `cash-handoff-receipt`, `how-to-start-petty-cash-box`) → **összesen 10 cluster-link a `/petty-cash-app`-ra**, egyetlen homepage-érintés nélkül. **Új SEO-tanulság**: a "0 impr" jelenség nem cannibalization, hanem authority/long-tail-deficit — kezelése cluster-link-build + long-tail diversification. Felhasználói GSC-teendő (opcionális): URL inspection + Request Indexing a `/petty-cash-app`-ra (friss `dateModified` re-crawl trigger). Várt eredmény 2-4 hét: első impression-ok long-tail query-kre (`petty cash app for multi-site`, `multi site petty cash app`, `petty cash app for multiple locations`, `school petty cash app`, `construction petty cash app`). A J.14.12 (`/digital-petty-cash-book` multi-site pivot) változatlan; J.15 site-wide audit BACKLOG (post-checkpoint, 2026-05-19) változatlan.)
+
+### 2026-05-05 23:35 — `/petty-cash-app` LONG-TAIL DIVERSIFICATION + cluster-authority push (seoplan.md J.14.13)
+
+**Trigger:** Felhasználói reakció a `/digital-petty-cash-book` audit utáni "másodlagos felfedezés" backlog-jelöltre: *"ok, akkor még azt találd ki hogy azzal a petty cash app oldallal mi a lófaszt csináljunk, azt találtuk ki hub oldalnak erre most benyögöd hogy kannibalizálja a landinget.... még egyetlen egyszer sem jelenítette meg a Google"*. Két fontos info: (1) `0 impr soha` a `/petty-cash-app` URL-en — friss GSC-jel, (2) felhasználói korrekció a "hub" megnevezésre.
+
+**Korrekció: a "cannibalization" rossz framing volt** (a J.14.12.7-es backlog-jelölést is ezért módosítottuk a seoplan.md J.14.13-ban). A `/petty-cash-app` SOHA nem volt hub-oldal a hagyományos értelemben:
+- Új landing 2026-04-25-én (Bing query-data alapján: "app for petty cash", "petty cash management app", "digital petty cash apps")
+- Sitemap `priority=0.9` (legmagasabb)
+- 3 schema-típus (Article + FAQPage + SoftwareApplication)
+- 04-28-i micro-sprint: 2 homepage-link + 2 inline anchor-variáció más oldalakon
+- GSC indexing-request prioritás-1 a tervben
+
+Ez egy **fókuszált cél-landing** a `petty cash app` keyword-re. A felhasználó megerősítette: **indexed van** (státusz A) → tehát **nem klasszikus cannibalization**, hanem **"indexed but not ranked"** = a `/petty-cash-app` még nem rangsorol a `petty cash app` query top 100-ban (ezért 0 impr).
+
+**Pontos diagnózis (audit a homepage-en):**
+
+| Hely | Tartalmaz `petty cash app` substring-et? |
+|---|---|
+| Homepage `<title>` (`SpendNote — Cash Handoff Tracking & Receipts for Teams`) | NEM |
+| Homepage meta description | NEM |
+| Homepage OG/Twitter | NEM |
+| Homepage body (1576. sor inline link `browser-based petty cash app` + 1651. sor inline link `SpendNote petty cash app`) | IGEN — 2× a 04-28-i micro-sprint során hozzáadva |
+
+A homepage tehát **explicit nem akarja megnyerni** a `petty cash app` query-t, mégis #2-en van a SERP-en. 3 plauzibilis ok kombinálódik: (1) brand-DA (homepage erősebb mint új landing), (2) tartalmi proximity (`Cash Handoff + Receipts + Teams` ≈ `petty cash app` intent Google-szemmel), (3) **a 04-28-i 2 belső link "visszaüt"** (anchor-text 2-irányban dolgozik: a célt is + a forrást is "tag-eli").
+
+**User-instrukció a stratégiához:** *"nem nyúlhatsz a homepage-hez, legalább jó helyen van és ma is regisztráltak rajta keresztül"* → **homepage off-limits** (D = Title-tweak ÉS E = anchor-revízió mind kizárva).
+
+**A homepage-mentes 3-opciós csomag (1 commit, 8 fájl):**
+
+**A. `/petty-cash-app.html` — long-tail tartalom-bővítés (C-light):**
+- Új H2: **`Petty Cash App for Multi-Site Teams`** — 2 paragrafus pain-narratíva (multi-site = 3 paper book + 3 Excel + 3 different "wait, why doesn't this match?" at month-end) + 3 use-case-box (Multi-Location Small Business / School Office & Club Treasurers / Construction & Field-Site Project Managers) + 1 cluster-bridge link a `/digital-petty-cash-book`-ra (`online petty cash book` anchor)
+- Új CSS: `.use-case-box` osztály (sűrített style-blokk-formátumban, oldal-stílus-konzisztens)
+- Long-tail target-query-k (NEM ütközik a homepage-dzsel): `petty cash app for multi-site teams`, `multi site petty cash app`, `petty cash app for multiple locations`, `school petty cash app`, `construction petty cash app`, `multi-location petty cash app`
+- **NEM ütközik a `/digital-petty-cash-book`-kal sem** (az "online cash book" intent, ez "petty cash app" intent)
+- Article schema `dateModified` 2026-04-28T22:00 → **2026-05-05T23:30:00+00:00**
+
+**B. Sitemap `<lastmod>` bump (A — freshness):** `/petty-cash-app` 2026-04-28 → **2026-05-05**.
+
+**C. 5 cluster-társ inline-link sweep (B-light) — anchor-diversity NO `petty cash app` exact substring:**
+
+| Cluster-társ | Új anchor-szöveg | Hova |
+|---|---|---|
+| `/petty-cash-receipt-generator` | `cloud petty cash tracker for teams` | inline a "saved with searchable history" paragraph utáni mondatban |
+| `/small-business-cash-receipt` | `web-based petty cash tracker for small businesses` | inline a "No single place to check the history" szakaszban (a régi `SpendNote` szót cseréltük linkre) |
+| `/petty-cash-policy-template` | `team petty cash tracking tool` | inline új paragrafus a "multi cash funds" figcaption után |
+| `/petty-cash-reconciliation` | `cloud-based petty cash tool for multi-site teams` | inline a step-list után, a CTA-box előtt |
+| `/what-is-petty-cash` | `cloud petty cash management tool` | inline a "skip the paper and start digital" mondat bővítésével |
+
+**Cluster-link audit eredménye (a sweep előtt):** 5 cluster-társ már linkelt (`cash-float-vs-petty-cash`, `petty-cash-how-much-to-keep`, `manage-petty-cash-remotely`, `cash-handoff-receipt`, `how-to-start-petty-cash-box`); 5 még nem (a fenti 5). Most az 5 új linkkel **összesen 10 cluster-link megy a `/petty-cash-app`-ra**, anchor-diversity-vel — egyetlen homepage-érintés nélkül.
+
+**Felhasználói GSC-teendő (opcionális):** URL Inspection + Request Indexing a `/petty-cash-app`-ra (friss `dateModified` + 5 új cluster-link = erős re-crawl trigger).
+
+**Várt eredmény 2-4 hét múlva (mérendő):**
+- Első impression-ok long-tail query-kre (`petty cash app for multi-site`, `multi site petty cash app`, `petty cash app for multiple locations`, `school petty cash app`)
+- A `petty cash app` exact-match query-n NEM várunk azonnali változást — a homepage marad #2 (és ott konvertál)
+- Sikermetrika: első nem-nulla impression a `/petty-cash-app` URL-en GSC-ben
+
+**Új SEO-tanulság:** "0 impr soha" jelenség → diagnózis-fa:
+1. **NOT INDEXED** → indexing-request push
+2. **CRAWLED – NOT INDEXED** → quality rewrite (babysitter-szindróma)
+3. **DISCOVERED – NOT INDEXED** → indexing-request + sitemap resubmit
+4. **INDEXED – NOT RANKED** → authority-build (cluster-link sweep) + long-tail diversification (új H2 más target-query-re) — **EZ a `/petty-cash-app` esete**
+
+A "cannibalization" megnevezést csak akkor használjuk, ha **MINDKÉT** oldal rangsorol — különben "homepage-overshadow" / "indexed but not ranked" / "authority-deficit" pontosabb.
+
+**Commits:** `<sha-tbd>` (8 fájl, 1 commit: petty-cash-app body-bővítés + 5 cluster-társ inline link + sitemap lastmod + seoplan.md J.14.13 + PROGRESS.md update).
 
 ### 2026-05-05 23:00 — `/digital-petty-cash-book` MULTI-SITE PIVOT (seoplan.md J.14.12) — téma-audit alapú teljes átírás
 

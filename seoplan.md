@@ -1676,7 +1676,7 @@ Hozzáadott TIER B inline disclaimer-box: `SpendNote is a digital cash handoff t
 
 A SERP-elemzés mellékterméke 2 új candidate a heti-modellbe:
 
-1. **`/petty-cash-app` cannibalization a HOMEPAGE-dzsel** (jelölt: J.14.13, jövő hét) — a `petty cash app` query-n a homepage van top 5-ben, nem a `/petty-cash-app`. Erős cluster (versenytársak: usepetty.cash, pleo, jettycash, play.google.com). Ezzel a méretű versenyt csak akkor érdemes megpróbálni, ha az audit kimutatja, hogy a `/petty-cash-app` jelenleg gyenge tartalom. **Heti-modell prioritás 1.**
+1. **`/petty-cash-app` "indexed but not ranked" (NEM cannibalization)** (kezelve: J.14.13, 2026-05-05 23:35) — eredeti megfogalmazásom hibás volt; a `petty cash app` query-n a homepage van top 5-ben (#2), de a `/petty-cash-app` URL **0 impr** soha (felhasználói GSC-evidencia) → **ez nem cannibalization** (cannibalization-hoz mindkét oldal kéne ranked legyen), hanem **homepage-overshadow / authority-deficit**. A homepage a `petty cash app` query-n KONVERTÁL is (felhasználó: "ma is regisztráltak rajta keresztül") → **homepage off-limits**. Részletes diagnózis és a homepage-mentes 3-opciós (A freshness + B-light cluster-link + C-light long-tail) implementáció a J.14.13-ban. **Helyes névhasználat backlog-előrejelzéskor:** "indexed-but-not-ranked audit" / "homepage-overshadow audit" — NE "cannibalization" amíg mindkét oldal nem rangsorol.
 
 2. **`/digital-receipt-book` push #2 → #1** (jelölt: J.14.14, két hét múlva) — most #2 ceipto.com mögött. Egy fókuszált javítás (pain-point hero + use-case-boxok) push-olhat #1-re. Versenytársak: ceipto.com (template product), leafstash.com (OCR), mmcreceipt.com (scanning). **Heti-modell prioritás 2.**
 
@@ -1712,6 +1712,147 @@ A SERP-elemzés mellékterméke 2 új candidate a heti-modellbe:
 **Mikor érvényes:** minden heti-modell 2-3 oldal-átírás kezdetén; minden "miért nincs forgalom?" felhasználói kérdésnél.
 
 **Mikor NEM kell:** ha a felhasználó már döntött a sors-opcióról és csak a szöveget kéri javítani.
+
+## J.14.13 `/petty-cash-app` LONG-TAIL DIVERSIFICATION + cluster-authority push (2026-05-05 23:35) — homepage-mentes "indexed but not ranked" kezelés
+
+### J.14.13.1 Trigger + diagnózis-korrekció
+
+**Trigger:** Felhasználói reakció a J.14.12.7-es backlog-jelölésre: *"ok, akkor még azt találd ki hogy azzal a petty cash app oldallal mi a lófaszt csináljunk, azt találtuk ki hub oldalnak erre most benyögöd hogy kannibalizálja a landinget.... még egyetlen egyszer sem jelenítette meg a Google"*. Felhasználói GSC-státusz-megerősítés: **Indexed**.
+
+**Két diagnózis-korrekció (J.14.12.7-ből):**
+
+1. **A "hub-oldal" megnevezés sosem volt pontos** a `/petty-cash-app`-ra. Ez egy **dedikált, fókuszált product landing page** volt 2026-04-25 óta (Bing query-data alapján), `priority=0.9` sitemap, 3 schema-típus, 04-28-i micro-sprint 2 homepage-link + 2 inline anchor-variáció + GSC indexing-request prioritás-1.
+
+2. **A "cannibalization" megnevezés is hibás** volt a J.14.12.7-ben. Cannibalization akkor van, ha **mindkét oldal rangsorol** és egymást rontják. Itt a `/petty-cash-app` **0 impr soha** (felhasználói GSC) → nem rangsorol semmire → tehát NEM cannibalization. A pontos diagnózis: **"indexed but not ranked"** = **"homepage-overshadow"** = **authority-deficit**.
+
+### J.14.13.2 Pontos diagnózis (homepage-audit)
+
+| Hely | Tartalmaz `petty cash app` substring-et? |
+|---|---|
+| Homepage `<title>` (`SpendNote — Cash Handoff Tracking & Receipts for Teams`) | NEM |
+| Homepage meta description (`Record who took cash, who received it, and what it was for...`) | NEM |
+| Homepage OG/Twitter | NEM |
+| Homepage body (1576. sor inline link `browser-based petty cash app` + 1651. sor inline link `SpendNote petty cash app`) | IGEN — 2× a 04-28-i micro-sprint során hozzáadva |
+
+A homepage tehát **explicit nem akarja megnyerni** a `petty cash app` query-t (Title/meta-ben nincs benne), mégis #2-en van a SERP-en. **3 plauzibilis ok kombinálódik:**
+
+1. **Brand-DA**: a homepage sokkal magasabb DA-jú mint egy 10-napos landing — Google brand-keyword közelében soha nem dobja le top 5-ből
+2. **Tartalmi proximity**: `Cash Handoff Tracking + Receipts + Teams + cash box` Google-szemmel ≈ `petty cash app` intent
+3. **A 04-28-i 2 belső link "visszaüt"**: amikor a homepage-ről `petty cash app` és `SpendNote petty cash app` anchor-szöveggel linkeltünk a `/petty-cash-app`-ra, **Google-nak elmondtuk: "a homepage releváns a petty cash app-ról"**. Anchor-text 2-irányban dolgozik: nemcsak a célt, hanem a forrást is "tag-eli". Ezt ironikusan **mi okoztuk** a 04-28-i discoverability micro-sprintben.
+
+### J.14.13.3 Felhasználói constraint + opció-szűkítés
+
+**Felhasználói instrukció (kritikus):** *"nem nyúlhatsz a homepage-hez, legalább jó helyen van és ma is regisztráltak rajta keresztül"* → **homepage off-limits**.
+
+Indok 2 oldalról:
+- A homepage az aktív conversion-csatorna a `petty cash app` query-n (a SERP impr → homepage → registration-flow tényleg konvertál)
+- Bármilyen Title/anchor változás potenciálisan ronthat (és/vagy más query-ket is befolyásolhat — `cash handoff`, `cash receipts for teams`)
+
+**Lehetőség-szűrés:**
+
+| Opció | Mit | Homepage-érintő? | Kockázat | Döntés |
+|---|---|---|---|---|
+| A) Freshness-only | `dateModified` + sitemap `lastmod` bump + GSC reindex-request | nem | nulla | **mehet** |
+| B-light) Cluster-link sweep | 3-5 cluster-társról új belső link (anchor-diversity) | nem | alacsony | **mehet** |
+| C-light) Long-tail tartalom-bővítés | új H2 + use-case-box-ok más target-query-re | nem | alacsony | **mehet** |
+| D) Homepage Title-tweak | pl. `Cash Handoff Receipts for Small Teams` | **igen** | közepes | **kizárva** |
+| E) Homepage anchor-revízió | `browser-based petty cash app` → `cloud-based cash tracking app for teams` | **igen** | alacsony | **kizárva** |
+| F) Passzív várás | csak GSC reindex-request | nem | nulla | nem most |
+
+**Felhasználói döntés:** **A + B-light + C-light** (a 3 homepage-mentes opció) együtt, 1 commit-ban.
+
+### J.14.13.4 C-light: long-tail tartalom-bővítés a `/petty-cash-app`-on
+
+**Új angle: `Petty Cash App for Multi-Site Teams`** — célzott long-tail magnet, NEM versenyez a homepage-dzsel (a homepage `Cash Handoff` általános pozícionálása NEM ütközik a multi-site specifikus angle-vel).
+
+**Beillesztés:** a `Who Uses a Petty Cash App?` H2 utáni floor-paragraph (`If you are a nonprofit specifically...`) UTÁN, a `<div class="cta-box">` ELŐTT.
+
+**Tartalom-szerkezet:**
+
+| Elem | Tartalom |
+|---|---|
+| H2 | `Petty Cash App for Multi-Site Teams` |
+| 1. paragrafus | Pain-narratíva: 1-cashbox = easy case; 2+ locations = chaos (3 paper book + 3 Excel + 3 different "wait, why doesn't this match?" at month-end) |
+| 2. paragrafus | SpendNote-megoldás: 1 cash box per site, per-site running balance, role-based access, 1 dashboard |
+| use-case-box 1 | **Multi-Location Small Business** (2-4 shops, franchise, multi-site clinic, food trucks) |
+| use-case-box 2 | **School Office & Club Treasurers** (1 main office + PTA + athletics + library + clubs) |
+| use-case-box 3 | **Construction & Field-Site Project Managers** (2-3 sites + site supplies/parking/cash purchases) |
+| Cluster-bridge | 1 paragrafus a `/digital-petty-cash-book`-ra utalva (`online petty cash book` anchor) — **NEM ütközik**, mert az "online cash book" intent, ez "petty cash app" intent |
+
+**Long-tail target-query-k (NEM ütközik a homepage-dzsel):**
+- `petty cash app for multi-site teams`
+- `multi site petty cash app`
+- `petty cash app for multiple locations`
+- `multi-location petty cash app`
+- `school petty cash app`
+- `construction petty cash app`
+- `petty cash app for multi-clinic`
+- `petty cash app for franchise`
+
+**CSS:** új `.use-case-box` osztály a sűrített style-blokkban (oldal-stílus-konzisztens).
+
+### J.14.13.5 A: freshness signal
+
+- Article schema `dateModified`: 2026-04-28T22:00:00 → **2026-05-05T23:30:00+00:00**
+- Sitemap `<lastmod>`: 2026-04-28 → **2026-05-05**
+
+### J.14.13.6 B-light: cluster-link sweep (5 új link, anchor-diversity)
+
+**Cluster-link audit eredménye (sweep ELŐTT):**
+
+| Cluster-társ | Link a `/petty-cash-app`-ra? | Anchor / hely |
+|---|---|---|
+| `/cash-float-vs-petty-cash` | IGEN (2 link) | inline `browser-based petty cash app` + related-card `Petty Cash App` |
+| `/petty-cash-how-much-to-keep` | IGEN | inline `cloud petty cash tool` |
+| `/manage-petty-cash-remotely` | IGEN (2 link) | inline `See live cash balances from any device` + related-card `Petty Cash App` |
+| `/cash-handoff-receipt` | IGEN | inline `Track every handoff in one searchable place` |
+| `/how-to-start-petty-cash-box` | IGEN | related-card `Petty Cash App` |
+| `/petty-cash-receipt-generator` | NEM | — sweep-célpont |
+| `/small-business-cash-receipt` | NEM | — sweep-célpont |
+| `/petty-cash-policy-template` | NEM | — sweep-célpont |
+| `/petty-cash-reconciliation` | NEM | — sweep-célpont |
+| `/what-is-petty-cash` | NEM | — sweep-célpont |
+
+**5 új link (mind anchor-diversity-vel, NO `petty cash app` exact substring):**
+
+| Cluster-társ | Új anchor | Hova |
+|---|---|---|
+| `/petty-cash-receipt-generator` | `cloud petty cash tracker for teams` | inline a "saved with searchable history" paragraph utáni új mondatban |
+| `/small-business-cash-receipt` | `web-based petty cash tracker for small businesses` | inline a "No single place to check the history" szakaszban (a régi `SpendNote` szót cseréltük linkre) |
+| `/petty-cash-policy-template` | `team petty cash tracking tool` | inline új paragrafus a "multi cash funds" figcaption után |
+| `/petty-cash-reconciliation` | `cloud-based petty cash tool for multi-site teams` | inline a step-list után, a CTA-box előtt |
+| `/what-is-petty-cash` | `cloud petty cash management tool` | inline a "skip the paper and start digital" mondat bővítésével |
+
+**Anchor-stratégia szabály (új):** Új internal-link a `/petty-cash-app`-ra **TILOS** a `petty cash app` exact 3-szavas substring anchor-szöveggel — kerüljük el a Google-overload-ot ami a 04-28-i micro-sprint óta már problémát okoz a homepage-overshadow miatt. Megengedett: `cloud petty cash tracker / web-based petty cash tracker / team petty cash tracking tool / cloud petty cash management tool` típusú variációk (a `petty cash app` 3 szó nem szerepel együtt).
+
+**Sweep utáni állapot:** **összesen 10 cluster-link** a `/petty-cash-app`-ra, anchor-diversity-vel — egyetlen homepage-érintés nélkül.
+
+### J.14.13.7 Felhasználói GSC-teendő + várt eredmény
+
+**Felhasználói GSC-teendő (opcionális):** URL Inspection a `/petty-cash-app`-ra → "Request Indexing" gomb. A friss `dateModified` + 5 új cluster-link = erős re-crawl trigger.
+
+**Várt eredmény 2-4 hét múlva (mérendő):**
+- Első impression-ok long-tail query-kre (`petty cash app for multi-site`, `multi site petty cash app`, `petty cash app for multiple locations`, `school petty cash app`)
+- A `petty cash app` exact-match query-n NEM várunk azonnali változást — a homepage marad #2 (és ott konvertál)
+- **Sikermetrika a 2026-05-19-i checkpoint-on:** első nem-nulla impression a `/petty-cash-app` URL-en GSC-ben
+- **Failure-jel:** ha 4 hét múlva is 0 impr → escalation: az E opció (homepage anchor-revízió, NEM Title-tweak) újra-mérlegelése
+
+### J.14.13.8 Új SEO-szabály: "0 IMPR DIAGNÓZIS-FA"
+
+**Új preventív SEO-szabály a J.14.13-ból** (G-policy alapelv-bővítés):
+
+> Ha egy URL **0 impression**-t kap GSC-ben (sosem jelent meg semmilyen query-re), a kezelés a 4-féle GSC-státusz alapján különbözik:
+>
+> | Státusz | Diagnózis | Kezelés |
+> |---|---|---|
+> | **NOT INDEXED** | Google nem fedezte fel | indexing-request push, sitemap resubmit |
+> | **DISCOVERED – NOT INDEXED** | Google tudja hogy létezik, nem crawlolta | indexing-request push, belső linkek növelése, sitemap resubmit |
+> | **CRAWLED – NOT INDEXED** | Google crawlolta, "nem érdemes indexelni" | quality rewrite (babysitter-szindróma — J.14.7/J.14.11) |
+> | **INDEXED – NOT RANKED** | Google indexelte, nincs query amin top 100-ba kerül | **authority-build** (cluster-link sweep) + **long-tail diversification** (új H2 más target-query-re) — **EZ a `/petty-cash-app` esete** |
+>
+> **Tilos terminológiai tévesztés:** a "cannibalization" megnevezést csak akkor használjuk, ha **MINDKÉT** oldal rangsorol és egymást rontják a SERP-en. Ha az egyik oldal 0 impr-t kap, az **NEM** cannibalization, hanem "homepage-overshadow" / "indexed but not ranked" / "authority-deficit". A pontos terminológia befolyásolja a kezelést.
+>
+> **Anchor-stratégia mellékterméke:** ha a homepage-ről több belső linket adunk a célzott landing-re EXACT-MATCH anchor-szöveggel, az **fordított hatást** is kifejt — a homepage is tageli magát a kulcsszóra Google-szemmel. Anchor-diversity ITT IS érvényes.
 
 ## J.15 SITE-WIDE CONTENT AUDIT BACKLOG (2026-05-05 22:15) — post-checkpoint sprint, NEM most
 
