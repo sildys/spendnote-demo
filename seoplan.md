@@ -1927,15 +1927,21 @@ Indok 2 oldalról:
 
 **Diagnostikai kategóriák, prioritás szerint:**
 
-#### A. PRICING-NOTE INKONZISZTENCIA (P1 — könnyű, batch-fixable)
+#### A. PRICING-NOTE INKONZISZTENCIA (P1 — ✅ TELJESÍTVE 2026-05-10 14:05, 22 oldal, 1 kizárás)
 
-A J.14.11 + J.14.12 után a babysitter és a digital-petty-cash-book már az új standard pricing-note-ot használja: `Free 14-day trial. Paid plans from $15.83/month. No credit card required.` De **19 oldal** még a régi `Start free.` vagy `Free to start.` formulát használja. Ez E-E-A-T inkonzisztencia (azt mondjuk a homepage-en `for teams`/$15.83/hó, és a landing-eken `Start free.` ami konzumer-vibe-ot ad).
+A J.14.11 + J.14.12 után a babysitter és a digital-petty-cash-book már az új standard pricing-note-ot használja: `Free 14-day trial. Paid plans from $15.83/month. No credit card required.` De **22 oldal** (eredeti J.15.1.A becslés 19 → ténylegesen 22, mert 4 új landing is bekerült a backlog-on kívül) még a régi `Start free.` vagy `Free to start.` formulát használta.
 
-**Régi `Start free.` (15 oldal — `/digital-petty-cash-book` a J.14.12 során levált):** `/petty-cash-receipt-generator`, `/cash-handoff-receipt`, `/small-business-cash-receipt`, `/office-expense-reimbursement-form`, `/petty-cash-reconciliation`, `/how-to-fill-out-petty-cash-voucher`, `/petty-cash-policy-template`, `/contractor-advance-payment-receipt`, `/cash-payment-received-proof`, `/handyman-cash-payment-receipt`, `/tutor-cash-payment-receipt`, `/employee-cash-advance-receipt`, `/cash-deposit-receipt`, `/custom-cash-receipt-with-logo`, `/school-money-collection-tracker`
+**Eredeti `Start free.` lista (15 oldal):** `/petty-cash-receipt-generator`, ~~`/cash-handoff-receipt`~~ (kizárva — Opció A J.14.14), `/small-business-cash-receipt`, `/office-expense-reimbursement-form`, `/petty-cash-reconciliation`, `/how-to-fill-out-petty-cash-voucher`, `/petty-cash-policy-template`, `/contractor-advance-payment-receipt`, `/cash-payment-received-proof`, `/handyman-cash-payment-receipt`, `/tutor-cash-payment-receipt`, `/employee-cash-advance-receipt`, `/cash-deposit-receipt`, `/custom-cash-receipt-with-logo`, `/school-money-collection-tracker`
 
-**Régi `Free to start.` (4 oldal):** `/cash-drawer-reconciliation`, `/event-cash-handling`, `/boss-cant-see-where-cash-goes`, `/what-is-petty-cash`
+**Új `Start free.` felfedezés (3 oldal — backlog-on kívül):** `/petty-cash-voucher-template`, `/petty-cash-log-template`, `/petty-cash-voucher-sample`
 
-**Akció:** site-wide find/replace `Start free.` és `Free to start.` → `Free 14-day trial.` az összes hero-pricing-note-ban. 1 commit, 20 oldal. **Triviális, alacsony kockázat.**
+**Eredeti `Free to start.` lista (4 oldal):** `/cash-drawer-reconciliation`, `/event-cash-handling`, `/boss-cant-see-where-cash-goes`, `/what-is-petty-cash`
+
+**Új `Free to start.` felfedezés (1 oldal — backlog-on kívül):** `/cash-receipt-template`
+
+**Akció (TELJESÍTVE):** site-wide find/replace `Start free.` és `Free to start.` → `Free 14-day trial.` az összes hero-pricing-note-ban. **17 + 5 = 22 oldal módosítva, 1 oldal kizárva** (`/cash-handoff-receipt` Opció A miatt — ott szándékosan marad a régi formula amíg az oldalt teljesen békén hagyjuk). Verifikáció: 1 commit (`b2a215c`+1), `dateModified` NEM bumpolva, `sitemap.xml lastmod` NEM bumpolva, query-rangsor NEM érintve, cluster-link NEM érintve.
+
+**Tanulság (új SEO-meta-szabály):** A site-wide audit-listák **gyorsan elavulnak** új landing-ek beillesztésével. Bármilyen batch-fix előtt **mindig friss grep** kell hogy az aktuális állapotot tükrözze, NEM az audit-doku 5 napos pillanatfelvételét. A J.15.1.A esetén az audit 19 oldalt sorolt fel, ténylegesen 22 oldal érintett — a 16%-os tévedés "alapértelmezett vakfolt" a manuálisan karbantartott audit-listákban.
 
 #### B. COPY-PASTA HERO PARAGRAFUS (P1 — közepes munka, magas érték)
 
@@ -1950,18 +1956,20 @@ Több oldal a `Need a simple X?` generikus pattern-t használja a hero-ban, **ko
 
 **Akció:** mindegyikre konkrét pain-point hero (mint a babysitter-en `You sit for the Garcias on Tuesdays...`). Audience-fit koherencia (J.14.11.6) szerint mindegyikhez audit-kérdés: "ki fizetne $15.83/hó-t — a service-NYÚJTÓ vagy az ügyfél?" → a hero CTA azt szólítsa meg.
 
-#### C. "TEMPLATE" SZÓ MARADT FONTOS HELYEN (P0 — ellentmond a 04-26-i user-instrukciónak)
+#### C. "TEMPLATE" SZÓ MARADT FONTOS HELYEN (P0 — ✅ RÉSZBEN TELJESÍTVE 2026-05-10 14:05, 3 oldal, 1 kizárás)
 
 A user 2026-04-26-án explicit kérte: *"a template szót szándékosan száműztük mindenhonnan mert akkor a 80dik oldalon landolunk"*. De a H1-ekben és Title-ben még maradt 4 helyen:
 
-| URL | Hol maradt | Akció |
-|---|---|---|
-| `/petty-cash-policy-template` | H1: `Petty Cash Policy Template` | H1 → `Petty Cash Policy` (title-vel sync) |
-| `/cash-count-sheet-template` | H1: `Cash Count Sheet Template` | H1 → `Cash Count Sheet` (title-vel sync) |
-| `/daily-cash-report-template` | H1: `Daily Cash Report Template` | H1 → `Daily Cash Report` (title-vel sync) |
-| `/two-person-cash-count-policy` | Title: `Two-Person Cash Count Policy + Free Sign-Off Template` | Title → `Two-Person Cash Count Policy + Sign-Off Form` |
+| URL | Hol maradt | Akció | Státusz |
+|---|---|---|---|
+| `/petty-cash-policy-template` | H1: `Petty Cash Policy Template` | H1 → `Petty Cash Policy` | ✅ **TELJESÍTVE 2026-05-10** |
+| `/cash-count-sheet-template` | H1: `Cash Count Sheet Template` | H1 → `Cash Count Sheet` | ✅ **TELJESÍTVE 2026-05-10** |
+| `/daily-cash-report-template` | H1: `Daily Cash Report Template` | H1 → `Daily Cash Report` | ✅ **TELJESÍTVE 2026-05-10** |
+| `/two-person-cash-count-policy` | Title: `Two-Person Cash Count Policy + Free Sign-Off Template` | Title → `Two-Person Cash Count Policy + Sign-Off Form` | ⏸️ **KIZÁRVA — post-checkpoint** |
 
 **Megjegyzés:** Az URL-ekben marad a `template` szó (URL-stable, redirect-zaj nem éri meg). Csak a látható szöveg tisztul.
+
+**Kizárás indoka (`/two-person-cash-count-policy`):** Az oldal a 2026-05-10-i 24h GSC adatban **poz 1.5-en (TOP 2!)** rangsorol. Title-csere magas-rangsorú oldalon **rangsor-vesztés kockázat** (kihúznánk a `Free Sign-Off Template` szövegrészt amely valószínűleg behozza a #1 helyezést). Post-checkpoint mérlegelendő — vagy hagyjuk békén, vagy A/B-tesztet kell csinálni. **Új SEO-óvszabály:** **page 1 TOP 3 oldalon Title-cseréhez önmagában gyenge indok az "instrukció-koherencia" — kell hozzá egy magasabb prioritású (pl. policy-szegés vagy CTR-kollapsis) ok is.**
 
 #### D. AUDIENCE-FIT KOHERENCIA GYANÚ (P1 — ugyanaz a kategória mint a babysitter J.14.11)
 
