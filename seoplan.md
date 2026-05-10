@@ -1856,6 +1856,69 @@ Indok 2 oldalról:
 >
 > **Anchor-stratégia mellékterméke:** ha a homepage-ről több belső linket adunk a célzott landing-re EXACT-MATCH anchor-szöveggel, az **fordított hatást** is kifejt — a homepage is tageli magát a kulcsszóra Google-szemmel. Anchor-diversity ITT IS érvényes.
 
+## J.14.14 `/cash-handoff-receipt` audit (2026-05-10 13:45) — visszavont snippet-fix, "0% CTR ≠ snippet-baj" tanulság
+
+### J.14.14.1 Trigger + felhasználói korrekció
+
+**Trigger:** A 2026-05-09 → 05-10-i heti GSC-elemzés (`Where we are now` 2026-05-10 13:25) alapján az asszisztens javasolta egy "snippet-revízió" sprint-et a `/cash-handoff-receipt`-re, mert page 1-en TOP 1-5 helyen rangsorolt 5 query-n (`cash handover sheet`, `cash handover format`, `cash hand over format`, `handover receipt`, `cash handover receipt`) **0% CTR**-rel (32 megj./hét, 0 klikk).
+
+**Felhasználói korrekció (2026-05-10 13:36):** *"vagyis állj, az az oldal nem szorul átírásra vagy frissítésre, ha már egyszer hozzányúlunk, tudod elterveztük a minőségi és tartalmi revizítót apránként és a neten is ellenőrizd az ötelteidet mielőtt bármit is átírsz"*. Két kulcs-tanulság:
+
+1. **Heti modell konzisztencia**: ha hozzányúlunk egy oldalhoz, **teljes revizíró** (body + Title + meta + schema + cluster + audience-fit), nem izolált snippet-fix. A heti modellünk (J.14.7→J.14.13) eddig minden esetben body+meta+schema+cluster együtt-revíziót tartalmazott.
+2. **SERP-evidence ELŐTT, ötlet UTÁN**: a légből kapott Title-javaslat fail-mode — a Google már bizonyítja milyen snippet-eket jutalmaz a query-kre, ezt kell olvasni először.
+
+### J.14.14.2 SERP-evidencia (3 query, élő Google-találat 2026-05-10)
+
+| Query | Top 5 SERP | Domináns intent |
+|---|---|---|
+| `cash handover sheet` (4 megj./hét, mi #1) | SafetyCulture template / pdfFiller form / US Legal Forms / Scribd PDF / Vertex42 Excel | **PDF/Excel template-letöltés** — egyetlen SaaS sincs a top 5-ben |
+| `cash handover receipt between employees shift change` | **4 SpendNote a top 5-ben** (`/cash-handoff-receipt` #1, `/cash-discrepancy-between-shifts` #2, `/small-business-cash-receipt` #4, `/cash-drawer-reconciliation` #5) | tool-intent — itt mi domináljuk, csak a query ritka |
+| `handover receipt cash format example` | SpendNote #1, signNow Excel-guide, SafetyCulture, US Legal Forms, examples.com | vegyes — template + how-to-format |
+
+**Kulcskövetkeztetés:** A 0% CTR **NEM** Title/Description-bug, hanem **query-intent mismatch**: a `cash handover sheet` keresők letölthető PDF-et akarnak (a top 5 más eredménye mind az), mi #1-en vagyunk mert a contentünk relevant — **de a klikker rácsap, lát egy SaaS app-ot, és visszamegy a Vertex42 PDF-re**. Bármilyen snippet-tweak ezt **NEM oldja meg**, sőt: ha "no template needed" promise-ra váltunk, **rangsor-vesztés** kockázat (kihúznánk a `template`/`format`/`sheet` szavakat amik most behozzák a #1-et).
+
+### J.14.14.3 Body + cluster audit eredménye
+
+- **Body**: 7 use-case-box, 5 FAQ schema, Article + SoftwareApplication + FAQPage schema mind friss (`dateModified` 2026-05-03), audience-fit OK, F-policy compliant, conversion-fit OK, 8 cluster-link már van.
+- **Cluster-státusz**: **21 másik HTML oldal linkel** rá → ez egy **cluster-hub** (nem cluster-versenyző). Nincs cannibalization.
+- **GSC**: stabilan #1-5 page 1-en több query-n, a 0% CTR konzisztens (nem napi zaj).
+
+### J.14.14.4 Sors-opciók (4 választás, nem egyenlő risk-profil)
+
+| # | Opció | Risk | Választás |
+|---|---|---|---|
+| **A** | **Hagyjuk békén most** (NEM nyúlunk hozzá) | Nincs (status quo) | ✅ **VÁLASZTOTT** |
+| B | Title/Description tool-intent-erősítés (`Sign & Print` még explicitebb) | Magas — `template`/`format`/`sheet` szavak kihúzása → rangsor-vesztés | ❌ |
+| C | Komplett cluster-bővítés (új `/cash-handover-template` standalone landing template-letöltési intent-re) | Nagy munka — J.15 site-wide auditba való | 🔄 J.15 backlog-ba |
+| D | Csak `dateModified` bump (manipulatív freshness-signal) | Alacsony, de 0 üzleti hatás | ❌ |
+
+### J.14.14.5 Felhasználói döntés (2026-05-10 13:46)
+
+**Opció A** — `/cash-handoff-receipt` változatlan marad. **Body / Title / Description / schema EGY SOR sem módosul.** Az Opció C (új `/cash-handover-template` standalone landing) bekerül a J.15 backlogba mint cluster-bővítési jelölt, post-checkpoint sprint-re.
+
+### J.14.14.6 Új SEO-szabály: "0% CTR ≠ snippet-baj" (G-policy alapelv-bővítés)
+
+> **Page 1-en rangsoroló oldal 0% CTR-rel — diagnózis-fa:**
+>
+> | Lépés | Mit nézzünk | Diagnózis |
+> |---|---|---|
+> | **0. (kötelező)** | **Élő SERP-elemzés** a top 5-10 versenytárson — milyen oldal-fajta dominál a query-n? (template / blog / SaaS / how-to / e-commerce) | A user-intent itt derül ki, NEM a query szavaiból |
+> | 1. | Mi vagyunk-e a top 5-ben **fajta-szempontból outlier**? (pl. mi SaaS, többiek mind PDF) | **Query-intent mismatch** — nem snippet-baj |
+> | 2. | A top 5 más SaaS-ek snippet-stílusa hogyan különbözik? | Ha nincs más SaaS → ld. 1. pont; ha van más SaaS és magasabb CTR-rel → snippet-tanulság |
+> | 3. | A title/description ígér-e **konkrét végeredményt** ami a query-intent-re válaszol? | Ha nem → snippet-fix indokolt; ha igen → query-intent mismatch |
+>
+> **Kezelés a diagnózis szerint:**
+> - **Query-intent mismatch (a `/cash-handoff-receipt` esete):** snippet-fix **TILOS** önmagában — `cluster-bővítés` kell (új landing a hiányzó intent-re), VAGY békén hagyás. A snippet-tweak kihúzná a #1 pozíciót adó kulcsszavakat.
+> - **Valódi snippet-baj:** Title/Description átírás indokolt, de **MINDIG** body+meta együtt-revízió heti modell szerint, NEM izolált meta-fix.
+>
+> **Tilos lépés:** "page 1 / 0 klikk" mintára azonnal Title-tweaket javasolni anélkül hogy a SERP-en megnéznénk milyen versenytárs-fajta van ott.
+
+### J.14.14.7 Lessons learned (asszisztens-saját tanulság)
+
+1. **A "page 1 / 0 klikk" pattern self-evidence-nek tűnik snippet-bug-ra, de nem az.** A query-intent (template-letöltés vs. SaaS-tool) explicit ellenőrzése **0. lépés** kell hogy legyen.
+2. **A heti modell konzisztencia**: ha javaslunk egy oldal-modositast, az mindig **teljes revizíró** kell hogy legyen (body+meta+schema+cluster), nem izolált meta-fix. Az asszisztens javaslata "csak Title/Meta" formában a heti modellt sértené.
+3. **A J.14.12.9 `TÉMA-AUDIT ELŐSZÖR` szabály kiterjesztése**: nem csak "deep" oldalakra (rosszul rangsorolóakra) érvényes, hanem **page 1 0% CTR oldalakra is** — mindkét eset előtt SERP-evidencia és sors-opciók kötelező.
+
 ## J.15 SITE-WIDE CONTENT AUDIT BACKLOG (2026-05-05 22:15) — post-checkpoint sprint, NEM most
 
 **Trigger:** A felhasználó megfigyelése a `/babysitter` audience-zagyvasága után: *"tartok tőle hogy még jó pár ilyen szarul megírt oldalam van... egyszer értelmeznünk kell mindegyik oldal szövegét, mert szerintem vannak köztük nagyon felületesen megírt szarok"*. Ezt a backlog-tervet a **2026-05-19-i checkpoint UTÁN** indítjuk; addig moratórium érvényben (lásd J.14.7 + J.14.11).
@@ -1909,7 +1972,7 @@ Néhány oldal kettős audience-gyanú vagy unclear-target:
 | `/school-money-collection-tracker` | Tanár? PTA-volunteer? Szülő? Ki gyűjt? | A sheet-pivotálás után meta-D `Collecting cash for a class trip, PTA fund, or school event?` széles felé szétfolyik. Fókuszálni kéne PTA-treasurer / class teacher szempontra. |
 | `/event-cash-handling` | Szervező? Volonteer? | D: `Event cash flying around between volunteers and booths?` — kell-e háttér szervezőnek vagy bookzelőnek beszélni? |
 | `/payroll-cash-receipt` | HR? Manager? Worker? | D: `Paying a wage in cash?` — fizető-fél perspektíva, OK. De részletesen ellenőrizni a body-t. |
-| `/cash-handoff-receipt` | Shift-team? Volunteer? Manager? | Title `Cash Handover Receipt Form` — semleges, OK. De a body-t auditálni. |
+| ~~`/cash-handoff-receipt`~~ | ~~Shift-team? Volunteer? Manager?~~ | ✅ **J.14.14-ben tisztázva (2026-05-10)** — body audit megtörtént, audience-fit OK, F-policy OK, cluster-hub státusz (21 belső link), 7 use-case-box mind shift+volunteer+employee+location-transfer szegmensekre. **Nincs revízió-igény.** |
 
 **Akció:** mindegyik oldalon azonosítani a primary audience-t, ellenőrizni hogy a meta + hero + CTA + use-case-boxok mind ugyanazt szólítják-e meg, és hogy a primary audience tényleg fizetne-e $15.83/hó-t.
 
@@ -1926,6 +1989,24 @@ A 48 oldalból ~12 oldal `dateModified` >2 hónapos (>2026-03-05). Ezek vagy csa
 A `seoplan.md` 566. és 583. sorai szerint az **"audit trail"** szó **technical-context-ben (Excel-vs-App feature comparison) OK**, **auditor/compliance-vibe-ban TILOS**. Jelenleg 21 HTML-ben van "audit trail" — végig kell auditálni hogy melyik kontextusban. **Becslés szerint ~80% rendben** (technical-feature-context), ~20% lehet hogy auditor-compliance-vibe-ot ad → finomítás kell.
 
 **Egyéb ellenőrzendő kifejezések** (J.10 + F-policy alapján): `evidence trail`, `governance`, `immutable history`, `tip pool tracking`, `wage deduction for cash shortage`, `cash advance loan to employee`. Ezek mind **TILOSAK**. Quick-grep all .html files során 0 előfordulás várt — ellenőrizni a sprint elején.
+
+#### G. CLUSTER-BŐVÍTÉSI JELÖLT — `/cash-handover-template` standalone landing (P2 — J.14.14 Opció C-ből, post-checkpoint mérlegelendő)
+
+**Trigger:** A J.14.14 audit (2026-05-10) felfedezte hogy a `cash handover sheet` / `cash handover format` / `handover receipt` query-családon a SERP top 5 **dominánsan template-letöltési intent** (SafetyCulture / pdfFiller / US Legal Forms / Scribd / Vertex42), NEM SaaS-tool intent. A `/cash-handoff-receipt` rangsorol #1-5 helyen ezeken (32 megj./hét), de a klikker letölthető PDF-et akar → 0% CTR.
+
+**Hipotézis:** Egy új, **template-letöltési intentre dedikált** standalone landing (`/cash-handover-template` vagy `/free-cash-handover-template`) magához vonhatja ezeket a kattintásokat, és **soft-funnel-en** vezetheti tovább a SaaS-felé:
+- Hero: "Free Cash Handover Template — PDF + Excel"
+- Body: 1 letölthető PDF + 1 letölthető Excel + how-to-fill-out útmutató
+- Soft-funnel CTA a végén: "Tired of printing this every shift? Try [SpendNote] for digital handoffs that auto-record both signatures." → vezet a `/cash-handoff-receipt`-re VAGY közvetlenül a signup-ra
+
+**Risk:**
+- **Cannibalization-risk** a `/cash-handoff-receipt`-tel — a két oldal ugyanazokra a query-kre verseng, de a Google kell hogy eldöntse hogy melyiket részesíti előnyben (template-intent-re az új, tool-intent-re a régi). A J.14.13 tanulság: ha mindkettő rangsorol különböző intent-re, az nem klasszikus cannibalization.
+- **Új tartalom-előállítás munka** — PDF + Excel template tervezés, 1-2 nap design + body content
+- **Sors-opció döntés a sprint előtt:** template letöltése vs. email-gate (lead-capture) — utóbbi konverziósabb, de bounce-növelő
+
+**Mérési-keret:** 4-6 héttel az új landing live után visszaellenőrzés a `cash handover sheet` query-n. Sikermetrika: **az új landing impr-jainak ≥30%-a klikk-konverzióvá válik** (vs. a `/cash-handoff-receipt` jelenlegi 0%-a).
+
+**Nem most, hanem post-checkpoint** (2026-05-19 után), és csak ha a J.14.13 (`/petty-cash-app`) + J.14.12 (`/digital-petty-cash-book`) érlelődési metrikák megerősítik hogy a long-tail diversification stratégia működik (vagyis hogy érdemes új landing-eket nyitni nem csak meglévőket finomítani).
 
 ### J.15.2 SPRINT-TERV (post-checkpoint, kb. 2026-05-19 után)
 
