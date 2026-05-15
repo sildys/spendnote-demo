@@ -2161,7 +2161,7 @@ Minden auditált oldalra futtassuk le ezt a 8-pontos check-listát:
 
 **Státusz:** ÉLES. Pre-checkpoint indítva (felhasználó: *"nem akarok várni, semmi értelme nincs:("*), cannibal-vizsgálat tiszta volt. Reindex-request NEM kérve (organikus érlelés).
 
-**URL:** `/petty-cash-app-vs-google-sheets` (új) — `cleanUrls: true` Vercel routing miatt automatikusan elérhető.
+**URL:** `/petty-cash-app-vs-google-sheets` (új) — Cloudflare Pages natív `.html`-extension-stripping miatt automatikusan elérhető rewrite-szabály nélkül (a `_redirects` fájlban semmi extra nem szükséges).
 **Primary keyword:** `petty cash app vs google sheets`, `replace google sheets petty cash`
 **Secondary:** `outgrow google sheets petty cash`, `google sheets petty cash limitations`
 **Title (LIVE):** `Petty Cash App vs Google Sheets — When the Shared Sheet Hits Its Limit`
