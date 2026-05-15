@@ -1919,6 +1919,96 @@ Indok 2 oldalról:
 2. **A heti modell konzisztencia**: ha javaslunk egy oldal-modositast, az mindig **teljes revizíró** kell hogy legyen (body+meta+schema+cluster), nem izolált meta-fix. Az asszisztens javaslata "csak Title/Meta" formában a heti modellt sértené.
 3. **A J.14.12.9 `TÉMA-AUDIT ELŐSZÖR` szabály kiterjesztése**: nem csak "deep" oldalakra (rosszul rangsorolóakra) érvényes, hanem **page 1 0% CTR oldalakra is** — mindkét eset előtt SERP-evidencia és sors-opciók kötelező.
 
+## J.14.15 AI-OVERVIEW-VULNERABILITY MAPPING + content-strategy pivot (2026-05-15 13:25) — informational query-családok klikk-cannibalizációja, fókusz-shift a tool/commercial intent zónába
+
+### J.14.15.1 Trigger + felhasználói intuíció
+
+**Trigger:** A 2026-05-15-i 7-napos GSC-elemzés (606 megj./hét, 4 klikk, 0,66% CTR — iparági benchmark 3,4%-hoz képest 87%-os underperformance) szisztematikus CTR-anomáliát mutatott TOP 10 page 1 oldalakon is. Az asszisztens kezdeti hipotézise "snippet-stílus / brand-recognition / SERP-feature-competition" volt — de a felhasználó éles megfigyelése pontosabban beazonosította a root-cause-t:
+
+> *"az egyik leganagyobb problléma szerintem, hogy az információs oldalak hiába tűnnek page egynek, valószínűleg nincsenek is az első oldalaon a google ai lófasza miatt"* (felhasználó, 2026-05-15 13:15)
+
+A hipotézis: a Google **AI Overviews / SGE (Search Generative Experience)** funkció **informational query-knél** elnyeli a SERP felső 60-80%-át, az organikus listát scroll-alá nyomja, és a teljes választ kiteszi az AI-overlay-ben → a user **nem klikkel** annak ellenére hogy a SpendNote-content oldalt **citáció-forrásként** használja.
+
+### J.14.15.2 SERP-evidencia (4 élő query-teszt, 2026-05-15 13:18)
+
+| Query | Heti megj. | Heti klikk | AI Overview? | SERP-fajta | Citáció? |
+|---|---|---|---|---|---|
+| `how much petty cash should be on hand` | 137 | 1 | **IGEN — TELJES VÁLASZ** (formula + business-type táblázat + parameters) | **AI-dominált informational** | SpendNote `/petty-cash-how-much-to-keep` #3, **idézik 3×** (`[3]`) |
+| `where to keep petty cash` | 46 | 1 | **IGEN — TELJES VÁLASZ** (storage + security + best practices) | **AI-dominált informational** | SpendNote `/petty-cash-security-tips` #1, **idézik 4×** (`[1]`). A `/where-to-keep-petty-cash` URL **nincs is a top 5 link-listában** annak ellenére hogy heti átlag poz 9,15! |
+| `petty cash app` | (nincs URL-szintű impr — homepage rangsorol) | (homepage konvertál: 50% conv-ráta) | **NEM — APP-LISTING SERP** | **Tool/commercial — AI-immune** | "Several petty cash management apps are available..." SpendNote **#1**, JettyCash, Pleo, Petty Cash (Google Play) — alkalmazás-katalógus, NEM AI-válasz |
+| `cash handover sheet` | 4 | 0 | **IGEN — DOKUMENTUM-MAGYARÁZAT** + J.14.14 template-intent mismatch is rákumulálódik | **Vegyes (AI + template)** | SpendNote `/cash-handoff-receipt` #4, idézik 1× — DUPLA-akadály: AI-Overview + template-intent |
+
+**Verifikáció**: 4 független Google-keresés, mind 2026-05-15 13:18 körül, US/EN locale-ban (a SpendNote primary piaca). Az AI Overview a 4 query-ből 3 esetén explicit megjelent — **75% prevalence az informational/dokumentum-jellegű query-családon**, **0% prevalence a tool/commercial query-családon**.
+
+### J.14.15.3 Query-családi tipologizálás (új SEO-szótár)
+
+A 4-es minta alapján a SpendNote query-portfolio **3 nagy AI-Overview-szerinti** kategóriába esik:
+
+| Kategória | Query-példák | AI-Overview-prevalence | Klikk-potenciál (ha page 1) | Üzleti érték |
+|---|---|---|---|---|
+| **A. INFORMATIONAL** (`how X works`, `how much`, `where to`, `what is`, `why does`, `how to do X`) | `how much petty cash should be on hand`, `where to keep petty cash`, `what is petty cash`, `petty cash how much to keep`, `how to track cash payments`, `how to fill out petty cash voucher` | **80-95% — AI-dominálta** | **5-15%-a annak amit a poz alapján várnánk** (azért nem 0%, mert ~5-15% user mégis scrollol, vagy a query nuance miatt szerencsénk van) | **Nagyon alacsony direct-conversion**; közepes brand-citation-érték long-term |
+| **B. TEMPLATE/DOCUMENT** (`X template`, `X format`, `X sheet`, `X form`, `X PDF`, `X Excel`, `free X`, `X printable`) | `cash handover sheet`, `cash handover format`, `petty cash log template`, `cash receipt template`, `petty cash voucher template` | **40-70% (vegyes)** — vagy AI-Overview vagy template-letöltés-SERP | **0-5%** — a `/cash-handoff-receipt` esete (J.14.14) bizonyítja |
+| **C. TOOL/COMMERCIAL** (`X app`, `X software`, `X tracker`, `X system`, `X solution`, `X tool`, `online X`, `cloud X`, `digital X`, `web-based X`) | `petty cash app`, `petty cash software`, `petty cash management app`, `digital petty cash book`, `online petty cash book`, `cloud petty cash tracker` | **0-15% — AI-immune** (vagy app-listing SERP, vagy tradicionális organic) | **40-70%** — vagy a SpendNote-ot választják, vagy egy másik vendor-t (de a click MEGTÖRTÉNIK) | **Magas direct-conversion** — a homepage 50% conv-ráta is ezt bizonyítja |
+
+**Plus 2 kisebb kategória:**
+
+- **D. GEO/SPECIFIC LONG-TAIL** (`X for Y`, `X in Z country`, `X for [vertical]`): vegyes AI-prevalence; klikk-potenciál közepes; üzleti érték magas mert vertical-targeted.
+- **E. BRAND/NAVIGATIONAL** (`spendnote`, `spendnote app`, `spendnote pricing`): 0% AI-Overview; 60-80% klikk; legmagasabb conversion. Most még 0 ilyen volume mert a brand nem ismert.
+
+### J.14.15.4 Üzleti következmény — a CTR-anomália magyarázata
+
+A SpendNote heti 606 megjelenése **így bomlik szét**:
+
+| Kategória | Heti megj. (becslés) | Reális klikk-potenciál | Megjegyzés |
+|---|---|---|---|
+| A. Informational | ~350 | ~5-10 klikk/hét max | A nagy "felszívás" — AI-Overview-cannibalization |
+| B. Template/document | ~30 | ~0 klikk | J.14.14 megerősítve |
+| C. Tool/commercial | ~20 | ~3-6 klikk/hét (jelenleg, ha page 1-en vagyunk) | **Itt van a futurism** — még alacsony volume, de magas conv |
+| D. Geo/specific long-tail | ~50 | ~2-4 klikk/hét | Vegyes |
+| E. Brand | ~5-10 | ~3-7 klikk/hét | Most még low-volume |
+| **Egyéb low-volume long-tail** | ~150 | ~1-2 klikk/hét | Zaj |
+| **TOTAL várható** | 606 | **10-22 klikk/hét** | Magyarázza a tényleges 4 klikket — **a SpendNote nem CTR-bug-ban szenved, hanem traffic-mix-bug-ban** |
+
+**Kulcskövetkeztetés:** A "page 1 informational rangsor" **nem üzleti érték önmagában** — csak brand-citation és long-term recognition. A direct-conversion **kizárólag a C+D+E kategóriákból** várható. **A SEO-effort 80%-át a C+D-be kell terelni**, az A+B-t fenntartani de NEM expandálni.
+
+### J.14.15.5 Új SEO-szabály: "AI-OVERVIEW-VULNERABILITY-CHECK ÚJ TARTALOM ELŐTT" (G-policy alapelv-bővítés)
+
+> **Új landing / új cluster-page tervezésekor a 0. lépés (kötelező):**
+>
+> 1. **AI-Overview-jelenlét-teszt**: a tervezett primary keyword Google-keresés US/EN locale-ban. Megjelenik az "AI Overview" (vagy "Overview from AI") panel a SERP tetején? IGEN/NEM rögzítendő a content-tervben.
+> 2. **Query-családi besorolás (J.14.15.3)**: A/B/C/D/E kategóriákba sorolás. Ha A vagy B → **figyelmeztető szignál**, ha C vagy D → **zöld szignál**.
+> 3. **Sors-opciók AI-Overview-vulnerable query esetén:**
+>    - **Opció 1 — STOP**: ne csináljunk landinget erre a query-re. A traffic illuzórikus, klikk nem jön.
+>    - **Opció 2 — TOOL-PIVOT**: ha lehet, dolgozzuk át a query-célt **tool-intent variánsra** (pl. `how to track petty cash` helyett `petty cash tracker app for [vertical]`).
+>    - **Opció 3 — VÁLLALT BRAND-CITATION-PLAY**: szándékosan írjuk meg az oldalt **AI-citation-friendly stílusban** (rövid, definitív válaszok, számszerű adatok, idézhető listák), és tudatosítsuk hogy az érték brand-citation, NEM klikk. Csak akkor érdemes, ha a query magas volume-ú és brand-építés-célú.
+>
+> **Tilos lépés:** AI-Overview-vulnerable query-re landing-content gyártás anélkül hogy az AI-Overview-jelenlétet 0. lépésként ellenőriznénk. A J.15.1.B (`copy-pasta hero rewrite` 5 informational oldalon) ezért downgrade-elve P1 → P3 a J.14.15.6-ban.
+>
+> **Mérési-keret:** AI-Overview-citation-tracking — 4-6 hetes intervallumokban a SpendNote-citáció-aránya az AI-Overview-ban (manuális SERP-check-tel). Ha nő → brand-recognition épül; ha 0 marad → a content nem AI-friendly, javítás kell.
+
+### J.14.15.6 J.15 backlog priorítás-shuffle (közvetlen következmény)
+
+A J.14.15.3-as kategorizálás alapján a J.15 SITE-WIDE CONTENT AUDIT BACKLOG (lentebb) tételei **átrendezésre kerülnek** a következőképpen:
+
+| J.15 tétel | Eredeti priorítás | **Új priorítás (J.14.15 után)** | Indok |
+|---|---|---|---|
+| **A. Pricing-note batch-fix** | P1 | ✅ **TELJESÍTVE** (2026-05-10) | — |
+| **B. Copy-pasta hero rewrite** (5 informational oldal) | P1 | **P3 — DOWNGRADE** | Mind az 5 oldal A. INFORMATIONAL kategória; AI-Overview-vulnerable. Hero-rewrite NEM oldja meg az alap-problémát (klikk akkor sem fog jönni). A `/handyman` és `/tutor` audience-pivot része még elképzelhető de B. COPY-PASTA önmagában értelmetlen. |
+| **C. "Template" szó H1-tisztítás** | P0 (3/4 oldal) | ✅ **3 TELJESÍTVE** (2026-05-10), 4. (`/two-person-cash-count-policy`) **kizárva** | Nincs változás — ez NEM AI-Overview-relevant kérdés, hanem felhasználói direktíva |
+| **D. Audience-fit koherencia gyanú** | P1 | **CONDITIONAL** — query-családi besorolás **kötelező a J.14.15.5 szerint mielőtt revíziót indítunk** | A `/event-cash-handling`, `/payroll-cash-receipt`, `/school-money-collection-tracker` mindegyikére előzetes SERP-test (AI-Overview-jelenlét + intent), és ha A/B kategória → STOP, ha C/D → MEHET |
+| **E. Stale dateModified** | P2 | P2 (változatlan) | Nem AI-Overview-issue |
+| **F. Vocabulary ellenőrzés** | P2 | P2 (változatlan) | Nem AI-Overview-issue |
+| **G. `/cash-handover-template` standalone landing** | P2 (J.14.14 Opció C) | **KUKA — TÖRÖLT** | A `cash handover sheet` query mindkét akadállyal terhelt: (1) AI-Overview rákumulálódik (J.14.15.2 evidencia), (2) template-intent mismatch (J.14.14). Egy új landing **dupla-akadályba** futna. Az erőforrást a J.15.5-be (vertical-tool-landing) terelni. |
+
+**Új P0 prioritású szekció: `J.15.5` — VERTICAL-TOOL-LANDING-MULTIPLIKÁCIÓ** (lentebb részletesen). Ez az AI-Overview-pivot konkrét sprint-formában: új landingek a C. TOOL/COMMERCIAL kategóriában, AI-immune zónában.
+
+### J.14.15.7 Lessons learned (asszisztens-saját tanulság)
+
+1. **A felhasználói SEO-intuíció gyakran pontosabb mint az asszisztens kezdeti hipotézise.** A "google AI lófasza" diagnózis 5 perc alatt eljutott a root-cause-hoz, miközben az asszisztens kezdetben "brand-recognition / SERP-feature-competition" hipotézist fontolgatott. **Tanulság:** felhasználói diagnózist **élő evidence-tel validálni**, ne vitatkozni vele előbb.
+2. **A "CTR-bug" mint univerzális magyarázat illuzórikus.** A 87%-os industry-underperformance MEGFELELŐ magyarázata nem "rossz snippet" hanem "rossz traffic-mix" — a heti 606 megj. nagyobb része AI-Overview-cannibalizált informational. **Tanulság:** mindig query-családi felbontással analizálni a CTR-anomáliát, NEM aggregát átlaggal.
+3. **Az AI-Overview-jelenlét-check új standard 0. lépés** — a J.14.12.9 (`TÉMA-AUDIT ELŐSZÖR`) + J.14.13.8 (`0 IMPR DIAGNÓZIS-FA`) + J.14.14.6 (`0% CTR ≠ snippet-baj`) szabály-trió kiegészítve egy **PRE-CONTENT** SERP-ellenőrzéssel. Ez kötelező minden új landing-tervezésnél a J.14.15.5 szerint.
+4. **A J.15 backlog "elavul" gyorsan** — már az ELSŐ kontextus-shift (AI-Overview-evidence) után 7 tétel közül 3 átsorolódott. **Tanulság:** minden post-checkpoint sprint **kezdés előtt** újra kell rendezni a backlog-ot a friss SERP-evidencia alapján, NEM ragaszkodni a 10 napos audit-felvételhez.
+
 ## J.15 SITE-WIDE CONTENT AUDIT BACKLOG (2026-05-05 22:15) — post-checkpoint sprint, NEM most
 
 **Trigger:** A felhasználó megfigyelése a `/babysitter` audience-zagyvasága után: *"tartok tőle hogy még jó pár ilyen szarul megírt oldalam van... egyszer értelmeznünk kell mindegyik oldal szövegét, mert szerintem vannak köztük nagyon felületesen megírt szarok"*. Ezt a backlog-tervet a **2026-05-19-i checkpoint UTÁN** indítjuk; addig moratórium érvényben (lásd J.14.7 + J.14.11).
@@ -1943,7 +2033,7 @@ A J.14.11 + J.14.12 után a babysitter és a digital-petty-cash-book már az új
 
 **Tanulság (új SEO-meta-szabály):** A site-wide audit-listák **gyorsan elavulnak** új landing-ek beillesztésével. Bármilyen batch-fix előtt **mindig friss grep** kell hogy az aktuális állapotot tükrözze, NEM az audit-doku 5 napos pillanatfelvételét. A J.15.1.A esetén az audit 19 oldalt sorolt fel, ténylegesen 22 oldal érintett — a 16%-os tévedés "alapértelmezett vakfolt" a manuálisan karbantartott audit-listákban.
 
-#### B. COPY-PASTA HERO PARAGRAFUS (P1 — közepes munka, magas érték)
+#### B. COPY-PASTA HERO PARAGRAFUS (P1 → ⚠️ **DOWNGRADE P3** 2026-05-15 J.14.15.6 alapján — AI-Overview-vulnerable, alacsony várható megtérülés)
 
 Több oldal a `Need a simple X?` generikus pattern-t használja a hero-ban, **konkrét pain-point nélkül**. Ez ugyanaz a "felületes" probléma amit a babysitter-en is láttunk. Nem mond pain-point-ot → Google nem érti a kereső közönséget → SERP CTR csökken.
 
@@ -1954,7 +2044,9 @@ Több oldal a `Need a simple X?` generikus pattern-t használja a hero-ban, **ko
 - `/employee-cash-advance-receipt` HP: `Need a simple employee cash advance receipt?`
 - `/school-money-collection-tracker` HP: `Need a simple way to track school money collections?`
 
-**Akció:** mindegyikre konkrét pain-point hero (mint a babysitter-en `You sit for the Garcias on Tuesdays...`). Audience-fit koherencia (J.14.11.6) szerint mindegyikhez audit-kérdés: "ki fizetne $15.83/hó-t — a service-NYÚJTÓ vagy az ügyfél?" → a hero CTA azt szólítsa meg.
+**Akció (eredeti):** mindegyikre konkrét pain-point hero (mint a babysitter-en `You sit for the Garcias on Tuesdays...`). Audience-fit koherencia (J.14.11.6) szerint mindegyikhez audit-kérdés: "ki fizetne $15.83/hó-t — a service-NYÚJTÓ vagy az ügyfél?" → a hero CTA azt szólítsa meg.
+
+**⚠️ J.14.15.6 DOWNGRADE-INDOK (2026-05-15):** A 5 oldal mindegyikének primary keyword-je (`handyman cash payment receipt`, `tutor cash payment receipt`, `cash deposit receipt`, `employee cash advance receipt`, `school money collection tracker`) **B. TEMPLATE/DOCUMENT** vagy **A. INFORMATIONAL** kategóriába esik a J.14.15.3 szerint — vagyis AI-Overview-vulnerable. Hero-rewrite a CTR-t **nem fogja látható mértékben mozdítani**, mert az alap-akadály nem a snippet-stílus, hanem hogy a klikk **nem éri el az organic listát** (AI-Overview leveszi). **Kivétel:** a `/handyman-cash-payment-receipt` és `/tutor-cash-payment-receipt` esetében az audience-pivot kérdés (service-nyújtó vs ügyfél) önmagában érdekes — DE az is csak akkor ér erőforrást, ha a query-családi besorolás zöld jelzést ad. **Javasolt kezelés:** post-checkpoint az 5 oldalon J.14.15.5 szerinti AI-Overview-jelenlét-tesztet futtatni; csak a C. vagy D. kategóriába eső query-családú oldalak hero-ját rewriten.
 
 #### C. "TEMPLATE" SZÓ MARADT FONTOS HELYEN (P0 — ✅ RÉSZBEN TELJESÍTVE 2026-05-10 14:05, 3 oldal, 1 kizárás)
 
@@ -1971,18 +2063,20 @@ A user 2026-04-26-án explicit kérte: *"a template szót szándékosan száműz
 
 **Kizárás indoka (`/two-person-cash-count-policy`):** Az oldal a 2026-05-10-i 24h GSC adatban **poz 1.5-en (TOP 2!)** rangsorol. Title-csere magas-rangsorú oldalon **rangsor-vesztés kockázat** (kihúznánk a `Free Sign-Off Template` szövegrészt amely valószínűleg behozza a #1 helyezést). Post-checkpoint mérlegelendő — vagy hagyjuk békén, vagy A/B-tesztet kell csinálni. **Új SEO-óvszabály:** **page 1 TOP 3 oldalon Title-cseréhez önmagában gyenge indok az "instrukció-koherencia" — kell hozzá egy magasabb prioritású (pl. policy-szegés vagy CTR-kollapsis) ok is.**
 
-#### D. AUDIENCE-FIT KOHERENCIA GYANÚ (P1 — ugyanaz a kategória mint a babysitter J.14.11)
+#### D. AUDIENCE-FIT KOHERENCIA GYANÚ (P1 → ⚠️ **CONDITIONAL P1** 2026-05-15 J.14.15.6 alapján — query-családi pre-test kötelező)
 
 Néhány oldal kettős audience-gyanú vagy unclear-target:
 
-| URL | Gyanú | Mit auditálni |
-|---|---|---|
-| `/school-money-collection-tracker` | Tanár? PTA-volunteer? Szülő? Ki gyűjt? | A sheet-pivotálás után meta-D `Collecting cash for a class trip, PTA fund, or school event?` széles felé szétfolyik. Fókuszálni kéne PTA-treasurer / class teacher szempontra. |
-| `/event-cash-handling` | Szervező? Volonteer? | D: `Event cash flying around between volunteers and booths?` — kell-e háttér szervezőnek vagy bookzelőnek beszélni? |
-| `/payroll-cash-receipt` | HR? Manager? Worker? | D: `Paying a wage in cash?` — fizető-fél perspektíva, OK. De részletesen ellenőrizni a body-t. |
-| ~~`/cash-handoff-receipt`~~ | ~~Shift-team? Volunteer? Manager?~~ | ✅ **J.14.14-ben tisztázva (2026-05-10)** — body audit megtörtént, audience-fit OK, F-policy OK, cluster-hub státusz (21 belső link), 7 use-case-box mind shift+volunteer+employee+location-transfer szegmensekre. **Nincs revízió-igény.** |
+| URL | Gyanú | Mit auditálni | J.14.15.5 pre-test |
+|---|---|---|---|
+| `/school-money-collection-tracker` | Tanár? PTA-volunteer? Szülő? Ki gyűjt? | A sheet-pivotálás után meta-D `Collecting cash for a class trip, PTA fund, or school event?` széles felé szétfolyik. Fókuszálni kéne PTA-treasurer / class teacher szempontra. | **KÖTELEZŐ:** `school money collection tracker` query AI-Overview-check + kategorizálás (gyanú: B. TEMPLATE → STOP, vagy C. TOOL → MEHET) |
+| `/event-cash-handling` | Szervező? Volonteer? | D: `Event cash flying around between volunteers and booths?` — kell-e háttér szervezőnek vagy bookzelőnek beszélni? | **KÖTELEZŐ:** `event cash handling` query AI-Overview-check (gyanú: A. INFORMATIONAL "how to handle event cash" → STOP) |
+| `/payroll-cash-receipt` | HR? Manager? Worker? | D: `Paying a wage in cash?` — fizető-fél perspektíva, OK. De részletesen ellenőrizni a body-t. | **KÖTELEZŐ:** `payroll cash receipt` query AI-Overview-check (gyanú: B. TEMPLATE → mérlegelendő) |
+| ~~`/cash-handoff-receipt`~~ | ~~Shift-team? Volunteer? Manager?~~ | ✅ **J.14.14-ben tisztázva (2026-05-10)** — body audit megtörtént, audience-fit OK, F-policy OK, cluster-hub státusz (21 belső link), 7 use-case-box mind shift+volunteer+employee+location-transfer szegmensekre. **Nincs revízió-igény.** | — |
 
-**Akció:** mindegyik oldalon azonosítani a primary audience-t, ellenőrizni hogy a meta + hero + CTA + use-case-boxok mind ugyanazt szólítják-e meg, és hogy a primary audience tényleg fizetne-e $15.83/hó-t.
+**Akció (eredeti):** mindegyik oldalon azonosítani a primary audience-t, ellenőrizni hogy a meta + hero + CTA + use-case-boxok mind ugyanazt szólítják-e meg, és hogy a primary audience tényleg fizetne-e $15.83/hó-t.
+
+**⚠️ J.14.15.6 CONDITIONAL-INDOK (2026-05-15):** Az audience-fit revízió **csak akkor ér erőforrást**, ha a query-családi besorolás (J.14.15.3) **zöld** szignált ad (C vagy D kategória). Ha a query AI-Overview-vulnerable (A vagy B), akkor a "tökéletes audience-fit"-tel sem fog jönni klikk — előbb pivot-stratégia kell (pl. `/event-cash-handling` vs. `/event-cash-tracker-app-for-organizers`). Sprint-elejei 0. lépés: 3 SERP-test mind a 3 query-re.
 
 #### E. STALE `dateModified` (P2 — friss-szignál hiánya)
 
@@ -1998,23 +2092,19 @@ A `seoplan.md` 566. és 583. sorai szerint az **"audit trail"** szó **technical
 
 **Egyéb ellenőrzendő kifejezések** (J.10 + F-policy alapján): `evidence trail`, `governance`, `immutable history`, `tip pool tracking`, `wage deduction for cash shortage`, `cash advance loan to employee`. Ezek mind **TILOSAK**. Quick-grep all .html files során 0 előfordulás várt — ellenőrizni a sprint elején.
 
-#### G. CLUSTER-BŐVÍTÉSI JELÖLT — `/cash-handover-template` standalone landing (P2 — J.14.14 Opció C-ből, post-checkpoint mérlegelendő)
+#### G. CLUSTER-BŐVÍTÉSI JELÖLT — `/cash-handover-template` standalone landing (P2 → ❌ **TÖRÖLT** 2026-05-15 J.14.15.6 alapján — DUPLA-akadály: AI-Overview + template-intent)
 
-**Trigger:** A J.14.14 audit (2026-05-10) felfedezte hogy a `cash handover sheet` / `cash handover format` / `handover receipt` query-családon a SERP top 5 **dominánsan template-letöltési intent** (SafetyCulture / pdfFiller / US Legal Forms / Scribd / Vertex42), NEM SaaS-tool intent. A `/cash-handoff-receipt` rangsorol #1-5 helyen ezeken (32 megj./hét), de a klikker letölthető PDF-et akar → 0% CTR.
+**Trigger (eredeti):** A J.14.14 audit (2026-05-10) felfedezte hogy a `cash handover sheet` / `cash handover format` / `handover receipt` query-családon a SERP top 5 **dominánsan template-letöltési intent** (SafetyCulture / pdfFiller / US Legal Forms / Scribd / Vertex42), NEM SaaS-tool intent. A `/cash-handoff-receipt` rangsorol #1-5 helyen ezeken (32 megj./hét), de a klikker letölthető PDF-et akar → 0% CTR.
 
-**Hipotézis:** Egy új, **template-letöltési intentre dedikált** standalone landing (`/cash-handover-template` vagy `/free-cash-handover-template`) magához vonhatja ezeket a kattintásokat, és **soft-funnel-en** vezetheti tovább a SaaS-felé:
-- Hero: "Free Cash Handover Template — PDF + Excel"
-- Body: 1 letölthető PDF + 1 letölthető Excel + how-to-fill-out útmutató
-- Soft-funnel CTA a végén: "Tired of printing this every shift? Try [SpendNote] for digital handoffs that auto-record both signatures." → vezet a `/cash-handoff-receipt`-re VAGY közvetlenül a signup-ra
+**Hipotézis (eredeti):** Egy új, **template-letöltési intentre dedikált** standalone landing (`/cash-handover-template` vagy `/free-cash-handover-template`) magához vonhatja ezeket a kattintásokat, és **soft-funnel-en** vezetheti tovább a SaaS-felé.
 
-**Risk:**
-- **Cannibalization-risk** a `/cash-handoff-receipt`-tel — a két oldal ugyanazokra a query-kre verseng, de a Google kell hogy eldöntse hogy melyiket részesíti előnyben (template-intent-re az új, tool-intent-re a régi). A J.14.13 tanulság: ha mindkettő rangsorol különböző intent-re, az nem klasszikus cannibalization.
-- **Új tartalom-előállítás munka** — PDF + Excel template tervezés, 1-2 nap design + body content
-- **Sors-opció döntés a sprint előtt:** template letöltése vs. email-gate (lead-capture) — utóbbi konverziósabb, de bounce-növelő
+**❌ J.14.15.6 TÖRLÉSI INDOK (2026-05-15):** A 2026-05-15-i `cash handover sheet` SERP-teszt (J.14.15.2) bizonyította hogy **AI Overview is megjelenik** ezen a query-n, dokumentum-magyarázat formájában. Vagyis az új `/cash-handover-template` landing **DUPLA-akadályba** futna:
+1. **Template-intent-mismatch a SERP-en** (J.14.14): a top 5 PDF/Excel template, mi lehet hogy SaaS-tool-funnel akarunk lenni → kettős üzenet
+2. **AI Overview rákumulálódik** (J.14.15): a query teljes válaszát az AI adja meg, az organic listát scroll-alá nyomva → klikk-akadály
 
-**Mérési-keret:** 4-6 héttel az új landing live után visszaellenőrzés a `cash handover sheet` query-n. Sikermetrika: **az új landing impr-jainak ≥30%-a klikk-konverzióvá válik** (vs. a `/cash-handoff-receipt` jelenlegi 0%-a).
+A két akadály **multiplikatív** — még a tökéletes template-letöltési landing is csak ~10-20%-os klikk-aránnyal működne. **Az erőforrást a J.15.5 (vertical-tool-landing-multiplikáció) szekcióba terelni** — ott AI-immune zónában dolgozunk. A `/cash-handover-template` projekt **hivatalosan kuka**, NEM kerül sprint-be.
 
-**Nem most, hanem post-checkpoint** (2026-05-19 után), és csak ha a J.14.13 (`/petty-cash-app`) + J.14.12 (`/digital-petty-cash-book`) érlelődési metrikák megerősítik hogy a long-tail diversification stratégia működik (vagyis hogy érdemes új landing-eket nyitni nem csak meglévőket finomítani).
+**Megőrzött tanulság:** A "új landing → cluster-bővítés template-intent-re" stratégia **általánosan kockázatos** ha a SERP-en AI Overview is van. Csak akkor érdemes, ha a query (1) **NEM** AI-Overview-vulnerable ÉS (2) **NEM** template-letöltési intent-domináns. A két feltétel együtt ritka. Lásd a J.14.15.5 szabály "Opció 1 — STOP" pontját.
 
 ### J.15.2 SPRINT-TERV (post-checkpoint, kb. 2026-05-19 után)
 
@@ -2050,6 +2140,220 @@ Minden auditált oldalra futtassuk le ezt a 8-pontos check-listát:
 4. **Sitemap `lastmod` bump** mindegyik érintett oldalon → 1 commit
 5. **GSC indexing-request** csak a B/D/F sprintek után, mert a meta-tag csere önmagában nem indokolja a kvóta-elhasználást
 6. **Új checkpoint** a sprint-vég utáni 14 napra
+
+### J.15.5 STRUKTURÁLIS-MOAT TOOL-LANDING SPRINT-TERV (P0 — 2026-05-15, hibrid strategia Codex-megbeszélés után)
+
+**Trigger:** A J.14.15-ös AI-Overview-mapping bizonyította hogy a SpendNote SEO-traffic-jának nagyobb része (A. INFORMATIONAL + B. TEMPLATE kategória, becsült 60-70%) **AI-Overview-cannibalizált**. **A direct-conversion-traffic kizárólag a C. TOOL/COMMERCIAL + D. GEO/SPECIFIC LONG-TAIL kategóriából jöhet.**
+
+**A tervezési folyamat (2026-05-15):**
+1. **Asszisztens 12-jelölt-portfolio** (vertical-tool-landingek + replacement + competitor-comparison + USP-driven) — 3 körös SERP-research-szel validálva (16 keresés)
+2. **Felhasználói pivot (1):** church kihagyás (F-policy / 501(c)(3) regulatori kockázat); Apple Numbers háttérinfó-szerepre korlátozva (NINCS Apple-natív petty cash sablon)
+3. **Felhasználói pivot (2):** "a többi petty cash app helyett, mert mi tudunk receipt-et adni" — strukturális moat hipotézis
+4. **Kompetitor-research (4 query)**: Pleo Pocket / JettyCash / Pluto / Zoho Expense receipt-feature-ek → **MIND vendor-receipt-UPLOAD-ot csinál, EGYIK SE generál per-tx PDF receipt-et a recipient-nek**. SpendNote "OUTPUT-side workflow" strukturális moat **bizonyítva**.
+5. **Cannibalization-vizsgálat (6 meglévő oldal × 3 új jelölt)**: a `/multi-location-petty-cash-app` jelölt **TRIPLA-cannibal** a friss `/digital-petty-cash-book` (J.14.12 multi-site pivot, 10 napos) + `/petty-cash-app` (J.14.13 multi-site H2, 10 napos) — **kiejt**.
+6. **Codex-megbeszélés (2026-05-15 ~14:00)**: drip-feed kötelező; A1 → A3 → A4 sorrend; A4 csak A3-stabilizálás után; A3 sharper distinction (CTA, H1-ben "App", FAQ); MRR-projekció óvatosabb (1-5 / 5-15); blind-spot warning (receipt-template-csapda)
+7. **Felhasználói meglátás:** "ha nem új oldalt csinálnánk, hanem azokat módosítanánk amiket amúgy is kanibalizálnának?" → **HIBRID stratégia** mérlegelése
+8. **Felhasználói döntés:** A1 = új landing (a /petty-cash-app-vs-excel #1 védelmében); A3 = decision-point post-checkpoint (/petty-cash-app metrikák alapján augm vs új); A4 = parkol
+
+**Cél:** 4-6 hónap alatt **2-4 új tool-landing** (NEM 8-12!) — strukturális-moat angle-re fókuszálva (receipt-OUTPUT workflow), drip-feed sprint-stílusban, post-checkpoint mérés-vezérelten.
+
+#### J.15.5.1 SPRINT-1: A1 ÚJ LANDING — `/petty-cash-app-vs-google-sheets` (P0, post-checkpoint hét 1)
+
+**URL:** `/petty-cash-app-vs-google-sheets` (új)
+**Primary keyword:** `petty cash app vs google sheets`, `replace google sheets petty cash`
+**Secondary:** `outgrow google sheets petty cash`, `google sheets petty cash limitations`
+**Title (draft):** `Petty Cash App vs Google Sheets — When the Spreadsheet Stops Scaling`
+**Meta D (draft):** `Tracking petty cash in Google Sheets? See where it breaks at 30+ transactions, why teams switch to a dedicated app, and what receipts you can't generate from a spreadsheet.`
+**H1 (draft):** `Petty Cash App vs Google Sheets: When to Switch (and Why Teams Do)`
+
+**Body H2-outline (draft, 9 H2):**
+1. Why Google Sheets feels enough at first
+2. The Sheets Wall — at what point it breaks (formulas, version-conflicts, no audit-trail)
+3. What a dedicated app does that a spreadsheet can't
+4. The receipt gap — Sheets templates can't generate signed PDF receipts (← strukturális moat)
+5. Side-by-side comparison (Google Sheets template vs SpendNote)
+6. When Sheets is actually fine (1 mondat: *"The same problem shows up in Apple Numbers or any shared spreadsheet."* — Codex finomítás, NEM külön H2)
+7. What switching looks like
+8. FAQ
+9. Related Resources
+
+**Cannibal-mitigálás:**
+- **vs `/petty-cash-app-vs-excel`** (#1 a `petty cash app vs excel` query-n): direkt analóg, **más query-családra céloz** (Excel vs. Google Sheets független keresési piacok). Inline-link a két comparison-oldal között ("Excel user? See our Excel comparison instead." + fordítva).
+- **NEM nyúlunk a /petty-cash-app-vs-excel Title/H1-jéhez** — a meglévő #1 rangsort védjük.
+
+**Cluster-link:** 4-6 inline-link a meglévő hub-okról (/petty-cash-app, /petty-cash-app-vs-excel, /petty-cash-receipt-generator, /digital-petty-cash-book).
+
+**Indok az új landing választására (vs Codex augmentációs javaslat):** A /petty-cash-app-vs-excel jelenleg #1 a `petty cash app vs excel` query-n — saját URL-ünk! Két forgatókönyv:
+- Title változatlan + body Google Sheets H2 → Google nem promotálja az új query-családra (Title-relevance hiányzik)
+- Title átírva ("vs Excel & Google Sheets") → meglévő #1 rangsor-vesztés-kockázat
+
+Az új landing megőrzi a /petty-cash-app-vs-excel #1-jét **és** új query-családot fog meg.
+
+#### J.15.5.2 SPRINT-2: A3 DECISION-POINT — `/petty-cash-app-with-receipts` augmentaltas vs új (P0, post-checkpoint hét 2-3, /petty-cash-app érlelődési metrikák alapján)
+
+**Két lehetőség, döntés a /petty-cash-app J.14.13-érlelődési metrikák alapján:**
+
+| /petty-cash-app státusz post-checkpoint (hét 2-3) | A3 stratégia | Indok |
+|---|---|---|
+| **Stabilizálódik page 1 TOP 5-re** (heti 30+ megj. szilárd) | **A3-V1: ÚJ LANDING** `/petty-cash-app-with-receipts` (Codex finomításokkal) | A meglévő oldal jól fut, ne piszkáljuk; az új landing dedikáltan a receipt-USP-comparison-intent-et célozza |
+| **Stagnál (poz 30-40, ~5-10 megj./hét)** | **A3-V2: AUGMENTÁLÁS** `/petty-cash-app` receipt-USP H2-blokk (Codex augmentation javaslat) | A meglévő oldalon TÖBB SIGNAL kell, NEM még egy landing ami szét-disperzálja |
+| **Vegyes (poz 15-25)** | **A3-V3: HIBRID** body-szintű receipt-USP H2 a /petty-cash-app-on (Title/H1 NEM változik) + 4-6 hét múlva új A3 landing ha a body-bővítés se nem mozdít | Mindkét world-jó kis kockázattal |
+
+**A3-V1 (ÚJ LANDING) — Codex sharper distinction:**
+- **URL:** `/petty-cash-app-with-receipts` (új)
+- **Primary keyword:** `petty cash app with receipts`, `cash receipt app for teams`, `petty cash app that prints receipts`
+- **Title (draft):** `Petty Cash App with Built-In Receipts — One Dashboard, Signed PDFs Every Time`
+- **Meta D (draft):** `Most petty cash apps capture vendor receipts. We generate them: every cash handoff produces a signed PDF receipt for both parties, auto-numbered, instantly downloadable.`
+- **H1 (draft):** `The Petty Cash App That Generates Receipts — Not Just Captures Them` (Codex: "App", NEM "Generator")
+- **CTA (Codex):** `Track petty cash with built-in receipts` (NEM "Create receipt")
+- **Schema:** SoftwareApplication hangsúlyos (Codex)
+- **FAQ explicit (Codex):** "Is this just a receipt generator?" → "No, it's a petty cash tracking app where each transaction can produce a receipt."
+
+**Disztinkciós táblázat (Codex sharper):**
+
+| Oldal | Audience | Intent | Receipt-szempont |
+|---|---|---|---|
+| `/petty-cash-app` | Generic researcher | "what is a petty cash app" | Receipt mint mellék-feature, category page |
+| `/petty-cash-receipt-generator` | One-time-user | "I need 1 receipt now" | Receipt mint single-task tool |
+| `/cash-handoff-receipt` | Shift-team manager | "I need a shift handover form" | Receipt mint document/process intent |
+| **A3 `/petty-cash-app-with-receipts`** | **Team-buyer evaluating apps** | **"I need an app where receipts are built into the workflow"** | **Receipt mint USP-comparison** |
+
+**A3-V2 (AUGMENTÁLÁS) — meglévő /petty-cash-app receipt-USP H2-blokk:** A H1/Title/Meta NEM változik (érlelődési mérés folytatódik). Új H2-szakasz a body-ban "Why SpendNote Generates Receipts (Not Just Captures Them)" + a Codex-finomított disztinkciós-táblázat egyszerűsített verziója + cluster-link a /petty-cash-receipt-generator-ra. Plus a /petty-cash-receipt-generator-on egy új H2-bekezdés "Part of the SpendNote Petty Cash App" (NEM H1-csere — rangsor-védelem).
+
+**Blind-spot warning (Codex):** Mindkét variánsban (V1 és V2) a copy-frame: **"app workflow with generated proof"**, NEM "downloadable form / template". Receipt szót használhatjuk, DE a fő promise NEM letölthető form, hanem "app-erősítő USP".
+
+#### J.15.5.3 PARKOL: A4 — `/cash-handoff-receipt-app` (FÜGGŐBEN, A3-stabilizálás után újraértékelendő)
+
+**Indok a parkolásra:**
+- A `/cash-handoff-receipt` template/document intent-en jól rangsorol (J.14.14 Opció A: békén hagyós); app-osítás közelebb tolná a két oldalt
+- A Codex egyetért: "csak akkor vinném, ha A3 szöge már stabil"
+- A4-en kell lenne **következetesen app-nyelv** (dashboard, team members, transaction history, signed PDF, searchable record, recurring workflow) — NE rántódjon vissza receipt-template világba
+
+**Aktiv feltétel-monitoring** (a J.15.5.4 mérési-keret szerint):
+- A3 (V1 vagy V2) live legalább 4-6 hét, és impr-érlelés látszik (5+ megj./hét)
+- A /cash-handoff-receipt rangsor-rangsor stabil (poz 1-5 megmarad)
+- Nincs cannibal-jel a `cash handoff` vagy `cash handover` query-családon
+
+**Ha mind a 3 feltétel teljesül:** A4 jöhet sprint-3 (kb. 6-8 hét múlva)
+**Ha nem:** A4 marad parkolva, helyette a Codex-által felvetett plus-jelöltekből választunk
+
+#### J.15.5.4 PLUS-FUTURE JELÖLTEK (Codex 2026-05-15 javaslata, post-A1+A3-stabilizálás)
+
+A Codex 5-jelölt-listája az AI-Overview-immune zónában a strukturális-moat angle-erősítő keyword-ökre:
+- `petty cash app with approval` — workflow-feature angle
+- `cash handoff app` (A4 alternatíva)
+- `cash tracking app for teams` — generic team-fókusz
+- `petty cash tracker with receipts` — receipt-USP variánsa
+- `cash box app for small business` — small-business vertical
+
+**Ezek mind jelölt-listán** — egyikre se haladunk amíg az A1 és A3 érlelődési metrikák nem stabilizálódtak. Sprint-4 vagy későbbi mérlegelendő (kb. 8-12 hét múlva).
+
+#### J.15.5.5 KIHÚZOTT JELÖLTEK (és indok)
+
+| Jelölt | Indok |
+|---|---|
+| `/church-petty-cash-management` | F-policy / 501(c)(3) regulatori kockázat — SpendNote nem accounting-tool |
+| `/petty-cash-app-for-nonprofits` | Volo Cash + ExpensePoint dominálják a niche-t |
+| `/petty-cash-app-for-construction` | Niche, India-fókuszú versenytársak (Yojo, Dux, BuildControl); alacsony US-volume |
+| `/petty-cash-app-for-schools` | School-fókuszú vendor-mező már létezik (SchoolBanks, Pupil Wallet, Volo Cash); mini-summary AI Overview |
+| `/cloud-petty-cash-system` | Pleo + Zoho big-name kompetitor; SpendNote MÁR #4 organic érlelés |
+| `/multi-location-petty-cash-app` (eredeti C1) | **TRIPLA-cannibal a /digital-petty-cash-book + /petty-cash-app multi-site H2-ekkel.** Friss J.14.12 + J.14.13 pivot érlelődési méréseit megzavarná |
+| `/cash-handover-template` (J.14.14 Opció C-ből) | Dupla-akadály: AI-Overview + template-intent mismatch (J.14.15.6) |
+| `/spendnote-vs-pleo-pocket`, `/spendnote-vs-jettycash`, `/spendnote-vs-pluto` (B-csoport) | Másodlagos prioritás; kompetitor brand-recognition US-ben gyenge; A-csoport után érdemes |
+| Apple Numbers dedikált landing | NINCS Apple-natív petty cash sablon (4. SERP-teszt explicit megerősítve); a Numbers-felhasználók Excel-template-eket nyitnak. Bekerül A1 body-ba 1 mondatként (Codex finomítás), NEM dedikált landing. |
+
+#### J.15.5.6 SPRINT-STÍLUS: DRIP-FEED KÖTELEZŐ (Codex egyetért, asszisztens megerősíti)
+
+**Egyértelműen drip-feed:**
+- Hét 1 (post-checkpoint indítás): A1 új landing live + cluster-link sweep
+- Hét 2-3: /petty-cash-app érlelődési metrikák monitorozása + A3 decision-point
+- Hét 3-4: A3 (V1, V2 vagy V3) live
+- Hét 5-7: érlelődési-mérés A1 + A3 mindkettőre
+- Hét 8+: A4-feltétel-ellenőrzés vagy plus-future jelöltekre váltás
+
+**NEM burst (3 új landing 1-2 nap alatt):** A J.14.7 + J.14.13 lessons learned + a Codex-figyelmeztetés szerint a burst URL-diszperzió rontja az érlelést, és pont most próbáljuk megérteni mit csinál a Google. **3 új URL egyszerre megint elmosná az ok-okozatot.**
+
+#### J.15.5.7 MÉRÉSI-KERET (Codex óvatosabb MRR-projekciójával)
+
+**Per-landing érlelődés:**
+- 30 nap után: első impr-ok GSC-ben (várt: 5-30 megj./hét, pos 30-60 között)
+- 60 nap után: ranking-érlelés (várt: pos 15-30 között)
+- 90 nap után: első klikkek (várt: 1-3 klikk/hét/landing, **Codex: 0-2** ha kompetitor-erősség magas)
+
+**6 hónap kumulatív (2-3 új landing — A1 + A3 [+ esetleg A4]):**
+
+| Forgatókönyv | Klikk/hó | Conv-ráta | Új trial/hó | MRR-impact ($15.83 ARPU, 30% trial→paid) |
+|---|---|---|---|---|
+| **Konzervatív (Codex)** | 5-15 | 5-10% | **1-5 trial/hó** | $5-25/hó addicionális MRR |
+| **Realisztikus** | 15-40 | 7-12% | **3-8 trial/hó** | $15-40/hó addicionális MRR |
+| **Optimista (Codex jó esetben)** | 30-80 | 10-15% | **5-15 trial/hó** | $25-75/hó addicionális MRR |
+
+**Feltétel az optimista forgatókönyvre (Codex):** legalább az A1 vagy A3 elkezd top 10-20 környéken stabilizálódni 90 nap után.
+
+#### J.15.5.8 KOCKÁZATOK ÉS MITIGÁLÁS
+
+| Kockázat | Mitigálás |
+|---|---|
+| Új URL-diszperzió megzavarja a friss /digital-petty-cash-book + /petty-cash-app érlelődést | Drip-feed: 1 új landing/hét; A3 csak akkor mehet ha /petty-cash-app metrikák lezárhatók |
+| Cannibalization a meglévő oldalakkal | Disztinkciós táblázatok (A3-nál Codex-szigorítva), inline-cross-link minden új landingen |
+| **Receipt-template-csapda** (Codex blind-spot) | Mindkét A3-variánsban frame: "app workflow with generated proof", NEM "downloadable form" |
+| Strukturális-moat angle gyengébb mint hisszük (A3) | A1 továbbra is működik (független USP); plus-future jelöltek tartalék-irány |
+| Új landingek lassú érlelődése (3-6 hónap) | Cluster-link-támogatás indulás napján; sitemap.xml lastmod bump; szükség esetén GSC indexing-request |
+| Pricing-note + audience-fit koherencia (J.14.11.6) | Mind a landingek standard `Free 14-day trial. Paid plans from $15.83/month.` pricing-note, multi-team CTA |
+
+#### J.15.5.9 INDÍTÁS-FELTÉTEL (sprint-1 START-CHECKLIST)
+
+**A1 sprint-1 indulása előtt** (post-checkpoint, kb. 2026-05-19+):
+
+- [ ] 2026-05-19-i checkpoint áttekintés: /digital-petty-cash-book + /petty-cash-app + /babysitter érlelődési metrikák mind stabilak (poz-mozgás <±10)
+- [ ] Friss SERP-test a `petty cash app vs google sheets` query-n: AI-Overview-jelenlét NULLA marad (J.14.15.5 0. lépés)
+- [ ] Felhasználói zöld jelzés a végleges A1 Title/H1/Meta-ra (Codex finomítások beépítve)
+- [ ] Cluster-link-tervezés: konkrét 4-6 inline-link pontosítása (melyik oldalon, melyik anchor-szöveggel)
+- [ ] /petty-cash-app-vs-excel cross-link előkészítve ("Looking for the Excel comparison instead?")
+- [ ] sitemap.xml új URL hozzáadása + lastmod bump
+
+**A3 sprint-2 indulása előtt** (kb. 2026-05-26+, hét 2-3):
+
+- [ ] /petty-cash-app post-checkpoint érlelődési metrikák kiértékelése (poz, megj/hét, klikk/hét)
+- [ ] A3-V1 / A3-V2 / A3-V3 döntés a táblázat alapján
+- [ ] V1 esetén: friss SERP-test a `petty cash app with receipts` + 2 secondary query-n
+- [ ] V2 esetén: /petty-cash-app body-szakasz draft + felhasználói áttekintés
+- [ ] Felhasználói zöld jelzés a végleges variánsra
+
+**A4 sprint-3 indulása előtt** (kb. 2026-06-15+, opcionális):
+
+- [ ] A3 érlelődés legalább 4-6 hét, impr-növekedés látszik
+- [ ] /cash-handoff-receipt rangsor stabil (poz 1-5 megmarad)
+- [ ] Nincs cannibal-jel a `cash handoff` / `cash handover` query-családon
+- [ ] Mindhárom feltétel teljesülése esetén: A4 mehet; egyébként parkolás folytatódik vagy plus-future jelöltekre váltás
+
+#### J.15.5.10 CODEX-MEGBESZÉLÉS AUDIT-TRAIL (2026-05-15 ~14:00)
+
+**Felhasználói trigger:** *"itt van a codex válasza és utána felvetettem neki egy kérdést, de ezt beszéljük át mi is"*
+
+**A Codex 6 kulcs-finomítása az asszisztens A1+A3+A4-tervére:**
+1. Drip-feed kötelező (1 új landing/hét, NEM 3 egyszerre)
+2. A3 sharper distinction: CTA "Track petty cash with built-in receipts", H1-ben "App" NEM "Generator", FAQ explicit "Is this just a receipt generator?", SoftwareApplication schema hangsúlyos
+3. A4 csak A3-stabilizálás után (app-nyelv konzisztencia)
+4. /cash-handoff-receipt H1-jét NEM piszkálni (J.14.14 békén hagyós)
+5. Apple Numbers csak 1 mondat (NEM külön H2)
+6. MRR-projekció óvatosabb (1-5 / 5-15 trial/hó); blind-spot warning: receipt-template-csapda
+
+**Felhasználói plus-kérdés a Codexnek:** *"mi lenne ha nem új oldalt csinálnák, hanem azokat az oldalakat módosítanánk amiket amúgy is kanibalizálnának???"*
+
+**Codex válasz (Input #2):** "felnőttebb irány" — meglévő oldal augmentálás új URL helyett. Konkrét javaslatok: A1 helyett /petty-cash-app-vs-excel bővítés Google Sheets H2-vel; A3 helyett /petty-cash-app receipt-USP blokk + /petty-cash-receipt-generator app-erősítés; A4 parkol.
+
+**Asszisztens-mérlegelés a hibrid-stratégiához:**
+- A1: az augmentálás a /petty-cash-app-vs-excel #1-jét veszélyeztetné (Title-csere rangsor-vesztés-kockázat) VAGY nem fog megfogni az új query-családot (ha Title változatlan). Új landing biztonságosabb.
+- A3: a /petty-cash-app aktív tesztelési ablakban van (J.14.13 érlelődés) — augmentálás megszakítaná. Decision-point post-checkpoint logikusabb.
+- A4: Codex egyetért parkolásra.
+
+**Felhasználói végső döntés (2026-05-15 ~14:15):**
+- A1 = új landing (sprint-1)
+- A3 = decision-point post-checkpoint (/petty-cash-app metrikák alapján augm vs új)
+- A4 = parkol
+
+**Új SEO-meta-tanulság (J.14.15.7-hez kiegészítés):** *"Új landing vs. meglévő oldal augmentálás döntés — KÖTELEZŐ ellenőrzés-pontok: (1) a meglévő oldal aktív tesztelési ablakban van-e? Igen → augm tilos amíg az ablak le nem zárult. (2) a meglévő oldal Title/H1 jelenlegi rangsort hoz-e? Igen → Title-csere kockázatos, body-szintű augm vagy új landing. (3) az új query-család lényegesen különbözik-e a meglévő oldalétól? Igen → új landing tisztább; Nem → augm preferred."*
 
 > **Megelőző iránymutatás** (a 05-01-i guardrails-blokk fent felülírja a teendőlistát, de ez a stratégiai megfontolásokat / SERP-research-eredményeket / conditional backlogot változatlanul érvényben tartja).
 >
