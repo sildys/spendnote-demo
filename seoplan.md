@@ -2157,14 +2157,25 @@ Minden auditált oldalra futtassuk le ezt a 8-pontos check-listát:
 
 **Cél:** 4-6 hónap alatt **2-4 új tool-landing** (NEM 8-12!) — strukturális-moat angle-re fókuszálva (receipt-OUTPUT workflow), drip-feed sprint-stílusban, post-checkpoint mérés-vezérelten.
 
-#### J.15.5.1 SPRINT-1: A1 ÚJ LANDING — `/petty-cash-app-vs-google-sheets` (P0, post-checkpoint hét 1)
+#### J.15.5.1 SPRINT-1: A1 ÚJ LANDING — `/petty-cash-app-vs-google-sheets` ✅ **VÉGREHAJTVA (2026-05-15 14:55)**
 
-**URL:** `/petty-cash-app-vs-google-sheets` (új)
+**Státusz:** ÉLES. Pre-checkpoint indítva (felhasználó: *"nem akarok várni, semmi értelme nincs:("*), cannibal-vizsgálat tiszta volt. Reindex-request NEM kérve (organikus érlelés).
+
+**URL:** `/petty-cash-app-vs-google-sheets` (új) — `cleanUrls: true` Vercel routing miatt automatikusan elérhető.
 **Primary keyword:** `petty cash app vs google sheets`, `replace google sheets petty cash`
 **Secondary:** `outgrow google sheets petty cash`, `google sheets petty cash limitations`
-**Title (draft):** `Petty Cash App vs Google Sheets — When the Spreadsheet Stops Scaling`
-**Meta D (draft):** `Tracking petty cash in Google Sheets? See where it breaks at 30+ transactions, why teams switch to a dedicated app, and what receipts you can't generate from a spreadsheet.`
-**H1 (draft):** `Petty Cash App vs Google Sheets: When to Switch (and Why Teams Do)`
+**Title (LIVE):** `Petty Cash App vs Google Sheets — When the Shared Sheet Hits Its Limit`
+**Meta D (LIVE):** `Tracking petty cash in Google Sheets? See where the shared sheet breaks at 30+ transactions, why teams switch to a dedicated app, and what receipts a spreadsheet template can't generate.`
+**H1 (LIVE):** `Petty Cash App vs Google Sheets: When the Shared Sheet Hits Its Limit`
+**CTA (LIVE):** `Track Petty Cash with Built-In Receipts`
+**Schema (LIVE):** Article + SoftwareApplication (`applicationSubCategory: "Petty Cash Tracking (Spreadsheet Replacement)"`) + FAQPage (5 tétel).
+
+**App-side boosting (Codex-szigorítás betartva — 1 inline-link / oldal, NULLA Title/H1/Meta/schema-csere):**
+- `/petty-cash-app` — meglévő comparison-szakaszban a sibling-link bővítve a `/petty-cash-app-vs-google-sheets`-re ("the same wall — slightly differently shaped"). Sitemap lastmod bump.
+- `/petty-cash-app-vs-excel` — hero-alatti zöld inline-style `<p>` sibling-link-box ("Google Sheets user? See the comparison instead"). Tükör-formátum az új A1 hero-link-boxával. Sitemap lastmod bump.
+- `/digital-petty-cash-book` — KIHAGYVA: Codex "max 1 kontextuális link, csak ha tényleg illik" → ezen az oldalon multi-site/online cash book intent dominál, Google Sheets-link erőltetett lenne.
+
+**Mérési időablak:** 2026-05-19-i 14-napos checkpoint része (sprint-1 first-impressions a következő 4-7 napban várható, ha indexelődik). Sitemap-discovery + organic crawl, NEM indexing-request.
 
 **Body H2-outline (draft, 9 H2):**
 1. Why Google Sheets feels enough at first
@@ -2265,8 +2276,8 @@ A Codex 5-jelölt-listája az AI-Overview-immune zónában a strukturális-moat 
 #### J.15.5.6 SPRINT-STÍLUS: DRIP-FEED KÖTELEZŐ (Codex egyetért, asszisztens megerősíti)
 
 **Egyértelműen drip-feed:**
-- Hét 1 (post-checkpoint indítás): A1 új landing live + cluster-link sweep
-- Hét 2-3: /petty-cash-app érlelődési metrikák monitorozása + A3 decision-point
+- ✅ **Hét 1 (2026-05-15, pre-checkpoint felhasználói sürgetésre): A1 új landing live + app-side boosting** (`/petty-cash-app` 1 inline-link, `/petty-cash-app-vs-excel` hero-sibling-box, `/digital-petty-cash-book` ÉRINTETLEN)
+- Hét 2-3 (2026-05-19 → 2026-05-29): A1 first-impressions GSC monitorozás + /petty-cash-app érlelődési metrikák + A3 decision-point
 - Hét 3-4: A3 (V1, V2 vagy V3) live
 - Hét 5-7: érlelődési-mérés A1 + A3 mindkettőre
 - Hét 8+: A4-feltétel-ellenőrzés vagy plus-future jelöltekre váltás

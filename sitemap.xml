@@ -140,9 +140,15 @@
   </url>
   <url>
     <loc>https://spendnote.app/petty-cash-app-vs-excel</loc>
-    <lastmod>2026-05-02</lastmod>
+    <lastmod>2026-05-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://spendnote.app/petty-cash-app-vs-google-sheets</loc>
+    <lastmod>2026-05-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://spendnote.app/construction-site-petty-cash</loc>
@@ -212,7 +218,7 @@
   </url>
   <url>
     <loc>https://spendnote.app/petty-cash-app</loc>
-    <lastmod>2026-05-05</lastmod>
+    <lastmod>2026-05-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
